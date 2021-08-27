@@ -2,7 +2,7 @@
 //  Generated code. Do not modify.
 //  source: date_range.proto
 //
-
+// @dart = 2.3
 // ignore_for_file: camel_case_types,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type
 
 import 'dart:core' as $core;
@@ -69,7 +69,7 @@ class DatepickerDateRange extends $pb.GeneratedMessage {
       create()..mergeFromJson(i, r);
   DatepickerDateRange clone() => DatepickerDateRange()..mergeFromMessage(this);
   DatepickerDateRange copyWith(void Function(DatepickerDateRange) updates) =>
-      super.copyWith((message) => updates(message as DatepickerDateRange)) as DatepickerDateRange;
+      super.copyWith((message) => updates(message as DatepickerDateRange));
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static DatepickerDateRange create() => DatepickerDateRange._();
@@ -79,9 +79,9 @@ class DatepickerDateRange extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static DatepickerDateRange getDefault() => _defaultInstance ??=
       $pb.GeneratedMessage.$_defaultFor<DatepickerDateRange>(create);
-  static DatepickerDateRange? _defaultInstance;
+  static DatepickerDateRange _defaultInstance;
 
-  DatepickerDateRange_RelativePreset? whichRelativePreset() =>
+  DatepickerDateRange_RelativePreset whichRelativePreset() =>
       _DatepickerDateRange_RelativePresetByTag[$_whichOneof(0)];
   void clearRelativePreset() => clearField($_whichOneof(0));
 
@@ -251,7 +251,7 @@ class DateRange extends $pb.GeneratedMessage {
       create()..mergeFromJson(i, r);
   DateRange clone() => DateRange()..mergeFromMessage(this);
   DateRange copyWith(void Function(DateRange) updates) =>
-      super.copyWith((message) => updates(message as DateRange)) as DateRange;
+      super.copyWith((message) => updates(message as DateRange));
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static DateRange create() => DateRange._();
@@ -260,7 +260,7 @@ class DateRange extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static DateRange getDefault() =>
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<DateRange>(create);
-  static DateRange? _defaultInstance;
+  static DateRange _defaultInstance;
 
   @$pb.TagNumber(1)
   $0.Date get start => $_getN(0);

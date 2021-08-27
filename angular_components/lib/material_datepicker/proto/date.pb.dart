@@ -2,7 +2,7 @@
 //  Generated code. Do not modify.
 //  source: date.proto
 //
-
+// @dart = 2.3
 // ignore_for_file: camel_case_types,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type
 
 import 'dart:core' as $core;
@@ -29,7 +29,7 @@ class Date extends $pb.GeneratedMessage {
       create()..mergeFromJson(i, r);
   Date clone() => Date()..mergeFromMessage(this);
   Date copyWith(void Function(Date) updates) =>
-      super.copyWith((message) => updates(message as Date)) as Date;
+      super.copyWith((message) => updates(message as Date));
   $pb.BuilderInfo get info_ => _i;
   @$core.pragma('dart2js:noInline')
   static Date create() => Date._();
@@ -38,7 +38,7 @@ class Date extends $pb.GeneratedMessage {
   @$core.pragma('dart2js:noInline')
   static Date getDefault() =>
       _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Date>(create);
-  static Date? _defaultInstance;
+  static Date _defaultInstance;
 
   @$pb.TagNumber(1)
   $core.int get year => $_getIZ(0);

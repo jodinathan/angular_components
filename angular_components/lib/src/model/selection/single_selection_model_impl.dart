@@ -6,13 +6,13 @@ part of angular_components.model.selection.selection_model;
 
 class _SingleSelectionModelImpl<T> extends Observable<ChangeRecord>
     with SelectionChangeNotifier<T>, CastIterable<T>
-    implements SingleSelectionModel<T?> {
+    implements SingleSelectionModel<T> {
   final KeyProvider<T> _keyOf;
   final List<T> _selectedValues = [];
   @override
   final isSingleSelect = true;
 
-  Object? _selectedKey;
+  Object _selectedKey;
 
   _SingleSelectionModelImpl(T selectedValue, this._keyOf) {
     if (selectedValue != null) {
@@ -95,6 +95,6 @@ class _SingleSelectionModelImpl<T> extends Observable<ChangeRecord>
   Iterable<T> get selectedValues => _selectedValues;
 
   @override
-  T? get selectedValue =>
+  T get selectedValue =>
       _selectedValues.isEmpty ? null : _selectedValues.single;
 }

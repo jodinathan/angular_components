@@ -53,11 +53,11 @@ Stream<Event> triggersOutside(dynamic /* Element | ElementRef */ element) {
 /// A stream of click, mouseup or focus events of any node none of whose parents
 /// pass the check inside function.
 Stream<Event> triggersOutsideAny(Predicate<Node> checkNodeInside) {
-  late StreamController<Event> controller;
-  StreamSubscription<MouseEvent>? clickListener;
-  StreamSubscription<MouseEvent>? mouseDownListener;
-  StreamSubscription<MouseEvent>? mouseUpListener;
-  EventListener? listener;
+  StreamController<Event> controller;
+  StreamSubscription<MouseEvent> clickListener;
+  StreamSubscription<MouseEvent> mouseDownListener;
+  StreamSubscription<MouseEvent> mouseUpListener;
+  EventListener listener;
 
   controller = StreamController.broadcast(
       sync: true,
@@ -66,12 +66,12 @@ Stream<Event> triggersOutsideAny(Predicate<Node> checkNodeInside) {
         assert(mouseDownListener == null);
         assert(mouseUpListener == null);
 
-        Event? lastEvent;
-        Event? lastDownEvent;
+        Event lastEvent;
+        Event lastDownEvent;
 
         listener = (Event e) {
           lastEvent = e;
-          var node = e.target as Node?;
+          var node = e.target as Node;
           while (node != null) {
             if (checkNodeInside(node)) {
               return;
@@ -94,8 +94,8 @@ Stream<Event> triggersOutsideAny(Predicate<Node> checkNodeInside) {
           // Allow for the event to be listened to if there was no down event
           // for example if it was canceled or if the target is the same as
           // where the 'click' started.
-          if (lastDownEvent == null || e.target == lastDownEvent!.target) {
-            listener!(e);
+          if (lastDownEvent == null || e.target == lastDownEvent.target) {
+            listener(e);
           }
           lastEvent = e;
         });
@@ -114,8 +114,8 @@ Stream<Event> triggersOutsideAny(Predicate<Node> checkNodeInside) {
           // Allow for the event to be listened to if there was no down event
           // for example if it was canceled or if the target is the same as
           // where the 'click' started.
-          if (lastDownEvent == null || e.target == lastDownEvent!.target) {
-            listener!(e);
+          if (lastDownEvent == null || e.target == lastDownEvent.target) {
+            listener(e);
           }
           lastDownEvent = null;
         });
@@ -130,11 +130,11 @@ Stream<Event> triggersOutsideAny(Predicate<Node> checkNodeInside) {
         document.addEventListener('touchend', listener);
       },
       onCancel: () {
-        clickListener!.cancel();
+        clickListener.cancel();
         clickListener = null;
         mouseDownListener?.cancel();
         mouseDownListener = null;
-        mouseUpListener!.cancel();
+        mouseUpListener.cancel();
         mouseUpListener = null;
         document.removeEventListener('focus', listener, true);
         document.removeEventListener('touchend', listener);
@@ -149,11 +149,11 @@ Stream<Event> triggersOutsideAny(Predicate<Node> checkNodeInside) {
 ///
 /// NOTE: This only works in browsers that support [ResizeObserver]. Check
 /// [supportsResizeObserver] from feature_detector.dart before using this.
-Stream<Rectangle?> onResize(Element element) {
+Stream<Rectangle> onResize(Element element) {
   assert(supportsResizeObserver, 'ResizeObserver support is required');
-  late StreamController<Rectangle?> controller;
-  late ResizeObserver observer;
-  controller = StreamController<Rectangle?>.broadcast(
+  StreamController<Rectangle> controller;
+  ResizeObserver observer;
+  controller = StreamController<Rectangle>.broadcast(
       sync: true,
       onListen: () {
         observer = ResizeObserver(allowInterop((entries, _) {
@@ -175,7 +175,7 @@ Stream<Rectangle?> onResize(Element element) {
 /// For example, MaterialAutoSuggestInput need close suggest popup when
 /// lose focus from the input, but not for the case when clicking the popup
 /// itself.
-bool anyParentHasAttribute(Element? target, String attribute) {
+bool anyParentHasAttribute(Element target, String attribute) {
   while (target != null) {
     if (target.attributes.containsKey(attribute)) {
       return true;
@@ -190,7 +190,7 @@ bool anyParentHasAttribute(Element? target, String attribute) {
 /// It's used to handle lose focus (or blur) event for composite components.
 /// For example, FilterBarComponent needs to enter summary mode when it loses
 /// focus, unless the focus is moving to one of the components it spawned.
-bool anyParentHasTag(Element? target, String componentTag) {
+bool anyParentHasTag(Element target, String componentTag) {
   componentTag = componentTag.toLowerCase();
   while (target != null) {
     if (target.tagName.toLowerCase() == componentTag) {
@@ -211,7 +211,7 @@ bool anyParentHasClass(Element target, String className) =>
     closestWithClass(target, className) != null;
 
 /// This element or the closest of its ancestor with the given class.
-Element? closestWithClass(Element? target, String className) {
+Element closestWithClass(Element target, String className) {
   while (target != null) {
     if (target.attributes.containsKey("class") &&
         target.classes.contains(className)) {
@@ -223,7 +223,7 @@ Element? closestWithClass(Element? target, String className) {
 }
 
 /// Whether [element] is a parent of [node] in the dom tree.
-bool isParentOf(Element? element, Node? node) {
+bool isParentOf(Element element, Node node) {
   while (node != null) {
     if (node == element) {
       return true;

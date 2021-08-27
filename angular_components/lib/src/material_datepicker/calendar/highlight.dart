@@ -30,14 +30,14 @@ class Highlight {
 
   final int group;
 
-  List<String>? _classes;
+  List<String> _classes;
 
   Highlight(this.start, this.end, this.containedRanges,
       {this.classIndexOffset = 0, this.group = 0});
 
-  List<String>? get classes => _classes ?? _initClasses();
+  List<String> get classes => _classes ?? _initClasses();
 
-  List<String>? _initClasses() {
+  List<String> _initClasses() {
     _classes = ['highlight']
       ..addAll(_positionClasses())
       ..addAll(_colorClasses());
@@ -59,18 +59,18 @@ abstract class _HasHighlights {
   static final Function _setEq = UnorderedIterableEquality().equals;
 
   /// `true` if the two highlights are for the same set of calendar selections.
-  static bool? _matchingRangesEq(Highlight a, Highlight b) => _setEq(
+  static bool _matchingRangesEq(Highlight a, Highlight b) => _setEq(
       a.containedRanges.map((r) => r.id), b.containedRanges.map((r) => r.id));
 
-  CalendarState? _state;
-  List<Highlight>? _highlights;
+  CalendarState _state;
+  List<Highlight> _highlights;
 
   _HasHighlights(this._state);
 
-  List<Highlight>? get highlights => _highlights;
+  List<Highlight> get highlights => _highlights;
 
   Iterable<Highlight> highlightsInGroup(int group) {
-    return highlights!.where((h) => h.group == group);
+    return highlights.where((h) => h.group == group);
   }
 
   /// Rebuilds the highlights in the time period based on the
@@ -80,7 +80,7 @@ abstract class _HasHighlights {
     _highlights = _mergedHighlights().toList();
 
     // Force initialize highlights' classes
-    _highlights!.forEach((h) => h.classes);
+    _highlights.forEach((h) => h.classes);
   }
 
   /// Gets the selected ranges which contain both given dates.
@@ -88,7 +88,7 @@ abstract class _HasHighlights {
     List<CalendarSelection> selections = _state?.selections ?? [];
     return selections
         .where(
-            (r) => _state!.highlighted(r.id, a) && _state!.highlighted(r.id, b))
+            (r) => _state.highlighted(r.id, a) && _state.highlighted(r.id, b))
         .toList();
   }
 
@@ -115,7 +115,7 @@ abstract class _HasHighlights {
   Iterable<Highlight> _mergedHighlights() sync* {
     var current = Highlight(0, 0, []);
     for (var h in _generateHighlights()) {
-      if (_matchingRangesEq(h, current)!) {
+      if (_matchingRangesEq(h, current)) {
         // This range matches the same set of selections as the last; merge them
         // into one larger range
         current = Highlight(current.start, h.end, h.containedRanges);

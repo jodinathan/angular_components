@@ -14,7 +14,7 @@ class DelegatingSelectionModel<T> extends Object
   final SelectionModel<T> _delegateModel;
 
   @override
-  final bool? isSingleSelect;
+  final bool isSingleSelect;
 
   DelegatingSelectionModel(this._delegateModel)
       : isSingleSelect = _delegateModel.isSingleSelect;
@@ -53,7 +53,7 @@ class DelegatingSelectionModel<T> extends Object
   bool deliverChanges() => _delegateModel.deliverChanges();
 
   @override
-  void notifyChange([ChangeRecord? changeRecord]) {
+  void notifyChange([ChangeRecord changeRecord]) {
     _delegateModel.notifyChange(changeRecord);
   }
 
@@ -79,7 +79,7 @@ class DelegatingSelectionModel<T> extends Object
 
   @override
   void notifySelectionChange(
-      {Iterable<T>? added = const [], Iterable<T>? removed = const []}) {
+      {Iterable<T> added = const [], Iterable<T> removed = const []}) {
     _delegateModel.notifySelectionChange(added: added, removed: removed);
   }
 

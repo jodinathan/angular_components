@@ -29,9 +29,9 @@ Stream<T> asyncWhere<T>(List<T> items, Future<bool> filter(T item)) async* {
 ///
 /// Example: newKing = asyncFirst(sons, survivesToMaturity);
 Future<T> asyncFirst<T>(List<T> items, Future<bool> filter(T item),
-        {orElse()?}) =>
+        {orElse()}) =>
     asyncWhere<T>(items, filter)
-        .firstWhere((_) => true, orElse: orElse as T Function()?)
+        .firstWhere((_) => true, orElse: orElse)
         .then((x) => x);
 
 /// Returns a future that completes with the unique item in [items] for which

@@ -72,7 +72,7 @@ class AcxImperativeViewUtils {
       ComponentFactory<T> componentFactory,
       ViewContainerRef viewContainer,
       HtmlElement intoDomElement,
-      {Injector? injector}) async {
+      {Injector injector}) async {
     final ref = _componentLoader.loadNextToLocation<T>(
         componentFactory, viewContainer,
         injector: injector ?? viewContainer.parentInjector);

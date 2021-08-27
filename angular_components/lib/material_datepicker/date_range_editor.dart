@@ -93,7 +93,7 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
   /// A mutable model which fully describes the selected date range and the
   /// state of the calendar.
   @Input()
-  late DateRangeEditorModel model;
+  DateRangeEditorModel model;
 
   /// Set this to false to temporarily suppress updates to the calendar's range
   /// highlights.
@@ -203,23 +203,23 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
 
   /// The [DateFormat] used to format dates.
   @Input()
-  DateFormat? dateFormat;
+  DateFormat dateFormat;
 
   /// The [DateFormat] used to format dates when the input is active.
   @Input()
-  DateFormat? activeDateFormat;
+  DateFormat activeDateFormat;
 
   final Element _elementRef;
   final DomService _domService;
   final NgZone _ngZone;
-  MenuModel? _presetsMenu;
+  MenuModel _presetsMenu;
 
   // This controls when the calendar is created.
   // By default, this is null, and the calendar will be created shortly
   // after this component is initialized. However, when you specify
   // calendarCreated as an input, the calendar will be created (and
   // destroyed) when your input is true (or false).
-  bool? _isCalendarCreated;
+  bool _isCalendarCreated;
   bool get isCalendarCreated => _isCalendarCreated ?? false;
 
   @Input('calendarCreated')
@@ -234,10 +234,10 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
   bool supportsClearRange = false;
 
   @ViewChild(MaterialCalendarPickerComponent)
-  late MaterialCalendarPickerComponent calendarPicker;
+  MaterialCalendarPickerComponent calendarPicker;
 
   @ViewChild(MaterialMonthPickerComponent)
-  late MaterialMonthPickerComponent monthSelector;
+  MaterialMonthPickerComponent monthSelector;
 
   /// Whether or not this date range picker supports choosing custom range.
   /// Calendar will be hidden when custom range is not supported.
@@ -259,7 +259,7 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
   static const _defaultNumDays = 30;
 
   set daysToToday(String value) {
-    int? numDays = _parseDaysInput(value);
+    int numDays = _parseDaysInput(value);
     if (numDays == null) return;
     _daysToToday = value;
     daysToTodayRange = _createDaysToTodayRange(numDays);
@@ -270,17 +270,17 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
   String _daysToToday = '$_defaultNumDays';
 
   /// A range corresponding to the 'days up to today' input.
-  late DatepickerDateRange daysToTodayRange;
+  DatepickerDateRange daysToTodayRange;
 
   DatepickerDateRange _createDaysToTodayRange(int numDays) =>
       relativeDaysToToday
           ? LastNDaysToTodayRange.beforeToday(_clock, numDays)
           : DatepickerDateRange('$numDays $daysToTodayMsg',
-              _today!.add(days: -(numDays - 1)), _today,
+              _today.add(days: -(numDays - 1)), _today,
               isPredefined: true);
 
   set daysToYesterday(String value) {
-    int? numDays = _parseDaysInput(value);
+    int numDays = _parseDaysInput(value);
     if (numDays == null) return;
     _daysToYesterday = value;
     daysToYesterdayRange = _createDaysToYesterdayRange(numDays);
@@ -303,7 +303,7 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
   bool get isBasic => model.basic;
 
   /// A range corresponding to the 'days to yesterday' input.
-  late DatepickerDateRange daysToYesterdayRange;
+  DatepickerDateRange daysToYesterdayRange;
 
   DatepickerDateRange _createDaysToYesterdayRange(int numDays) =>
       LastNDaysRange.beforeToday(_clock, numDays);
@@ -311,8 +311,8 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
   // Dart doesn't support arbitrarily large DateTimes.
   static const int _maxDaysInputLength = 4;
   int get maxDaysInputLength => _maxDaysInputLength;
-  static final int _maxDays = pow(10, _maxDaysInputLength) - 1 as int;
-  int? _parseDaysInput(String value) {
+  static final int _maxDays = pow(10, _maxDaysInputLength) - 1;
+  int _parseDaysInput(String value) {
     int numDays;
     try {
       numDays = int.parse(value);
@@ -323,8 +323,8 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
     return numDays;
   }
 
-  Clock? _clock;
-  Date? _today;
+  Clock _clock;
+  Date _today;
 
   DateRangeEditorComponent(
       this._elementRef,
@@ -338,9 +338,9 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
     _today = Date.today(_clock);
     editorHost?.dateRangeEditorCreated(this);
     nextPrevModel = DateRangeEditorNextPrevModel(onNext: () {
-      calendarPicker.scrollToDate(_visibleMonth!.add(months: 1));
+      calendarPicker.scrollToDate(_visibleMonth.add(months: 1));
     }, onPrev: () {
-      calendarPicker.scrollToDate(_visibleMonth!.add(months: -1));
+      calendarPicker.scrollToDate(_visibleMonth.add(months: -1));
     });
   }
 
@@ -360,7 +360,7 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
 
     // Give the browser a chance to do other work before creating the
     // calendar component (for a snappier UX)
-    _domService.nextFrame!.then((_) {
+    _domService.nextFrame.then((_) {
       _ngZone.run(() {
         if (_isCalendarCreated != null) return;
         _isCalendarCreated = true;
@@ -385,12 +385,12 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
 
   /// Event which fires when one of the ranges is selected.
   @Output()
-  Stream<UIEvent?> get presetRangeSelected => _controller.stream;
+  Stream<UIEvent> get presetRangeSelected => _controller.stream;
   // TODO(google): change to async.
-  final _controller = StreamController<UIEvent?>.broadcast(sync: true);
+  final _controller = StreamController<UIEvent>.broadcast(sync: true);
 
   static String _renderPreset(DatepickerPreset value) => value.title;
-  static String? _renderAlternativePreset(DatepickerPreset value) =>
+  static String _renderAlternativePreset(DatepickerPreset value) =>
       value.shortTitle;
   final _presetSelection = SingleSelectionModel<DatepickerPreset>();
 
@@ -400,7 +400,7 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
       bool isValid = preset.range.clamp(min: minDate, max: maxDate) != null;
       if (isValid) _validPresets.add(preset);
       if (preset.alternatives != null) {
-        for (var alternative in preset.alternatives!) {
+        for (var alternative in preset.alternatives) {
           bool isValidAlternative =
               alternative.range.clamp(min: minDate, max: maxDate) != null;
           if (isValidAlternative) _validPresets.add(alternative);
@@ -416,10 +416,10 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
   void _buildMenu() {
     final items = <SelectableMenuItem<DatepickerPreset>>[];
     for (var preset in _presets) {
-      MenuModel? subMenu;
+      MenuModel subMenu;
       if (preset.alternatives != null) {
         final subitems = <SelectableMenuItem<DatepickerPreset>>[];
-        for (var alternative in preset.alternatives!) {
+        for (var alternative in preset.alternatives) {
           bool isValid = _validPresets.contains(alternative);
           subitems.add(SelectableMenuItem(
               cssClasses: ['preset-dropdown-item'],
@@ -459,7 +459,7 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
     ]);
   }
 
-  void onRangeClicked(UIEvent? event, DatepickerDateRange range) {
+  void onRangeClicked(UIEvent event, DatepickerDateRange range) {
     if (_presetSelection.isNotEmpty &&
         _presetSelection.selectedValue.range != range) {
       _presetSelection.clear();
@@ -469,7 +469,7 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
   }
 
   void onAlternativePresetClicked(
-      UIEvent? event, DatepickerPreset parent, DatepickerPreset alternative) {
+      UIEvent event, DatepickerPreset parent, DatepickerPreset alternative) {
     // Replace parent preset with alternative in main menu.
     for (var i = 0; i < _presets.length; i++) {
       if (_presets[i] == parent) {
@@ -490,8 +490,8 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
   bool get isClearRangeSelected =>
       supportsClearRange &&
       model.value != null &&
-      model.value!.range == null &&
-      model.value!.comparison == null;
+      model.value.range == null &&
+      model.value.comparison == null;
 
   /// Replace existing range with a Custom range having the same endpoints as
   /// the current selection
@@ -519,7 +519,7 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
     showMonthSelector = !showMonthSelector;
     if (showMonthSelector) {
       _domService.scheduleWrite(() {
-        monthSelector.scrollToYear(_visibleMonth!.year);
+        monthSelector.scrollToYear(_visibleMonth.year);
       });
     }
   }
@@ -534,7 +534,7 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
           CalendarState.empty(resolution: CalendarResolution.months);
       final selectedMonth = state.selection(state.currentSelection);
       _domService.scheduleWrite(() {
-        calendarPicker.scrollToDate(selectedMonth.start!);
+        calendarPicker.scrollToDate(selectedMonth.start);
       });
     }
   }
@@ -544,7 +544,7 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
       CalendarState.empty(resolution: CalendarResolution.months);
 
   static final _monthFormatter = DateFormat.yMMM();
-  Date? _visibleMonth;
+  Date _visibleMonth;
 
   String get visibleMonthName => _visibleMonthName;
   String _visibleMonthName = '';
@@ -556,7 +556,7 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
   }
 
   /// The model for scrolling to the next or previous month.
-  late DateRangeEditorNextPrevModel nextPrevModel;
+  DateRangeEditorNextPrevModel nextPrevModel;
 
   bool showMonthSelector = false;
 
@@ -578,7 +578,7 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
 
   String get customRangeDescription => formatRange(model.range.value);
 
-  MenuModel? get presetsMenu => _presetsMenu;
+  MenuModel get presetsMenu => _presetsMenu;
 
   static final navigateBeforeMsg = Intl.message('Previous date range',
       name: 'navigateBeforeMsg',
@@ -624,8 +624,8 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
 typedef NextPrevCallback = void Function();
 
 class DateRangeEditorNextPrevModel implements Sequential {
-  final NextPrevCallback? onNext;
-  final NextPrevCallback? onPrev;
+  final NextPrevCallback onNext;
+  final NextPrevCallback onPrev;
 
   DateRangeEditorNextPrevModel({this.onNext, this.onPrev});
 
@@ -636,12 +636,12 @@ class DateRangeEditorNextPrevModel implements Sequential {
   ObservableReference<bool> hasPrev = ObservableReference<bool>(false);
 
   @override
-  void next() => onNext!();
+  void next() => onNext();
 
   @override
-  void prev() => onPrev!();
+  void prev() => onPrev();
 
-  void update(Date? visibleMonth, Date minDate, Date maxDate) {
+  void update(Date visibleMonth, Date minDate, Date maxDate) {
     if (visibleMonth == null) return;
     hasPrev.value = compareDatesAtResolution(
             visibleMonth, minDate, CalendarResolution.months) >

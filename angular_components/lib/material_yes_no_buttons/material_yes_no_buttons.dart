@@ -85,7 +85,7 @@ class MaterialYesNoButtonsComponent implements HasDisabled {
   ///
   /// Default value is `false`.
   @Input()
-  bool? disabled = false;
+  bool disabled = false;
 
   /// Whether the yes button should be disabled.
   ///
@@ -126,14 +126,14 @@ class MaterialYesNoButtonsComponent implements HasDisabled {
   /// For example, `Ok`, `Apply`, etc. Defaults to `null` so screen readers will
   /// read the button text as the label.
   @Input()
-  String? yesAriaLabel;
+  String yesAriaLabel;
 
   /// The text to be used as an ARIA label on the cancel button.
   ///
   /// For example, `Dismiss`, `Not now`, etc. Defaults to `null` so screen
   /// readers will read the button text as the label.
   @Input()
-  String? noAriaLabel;
+  String noAriaLabel;
 
   /// Whether the yes button should be auto-focused.
   ///
@@ -149,17 +149,17 @@ class MaterialYesNoButtonsComponent implements HasDisabled {
 
   /// The description which will be set to yes button's aria-describedby.
   @Input()
-  String? yesAriaDescribedBy;
+  String yesAriaDescribedBy;
 
   /// The description which will be set to no button's aria-describedby.
   @Input()
-  String? noAriaDescribedBy;
+  String noAriaDescribedBy;
 
   @ViewChild('yesButton')
-  MaterialButtonComponent? yesButton;
+  MaterialButtonComponent yesButton;
 
   @ViewChild('noButton')
-  MaterialButtonComponent? noButton;
+  MaterialButtonComponent noButton;
 
   void onYes(UIEvent event) {
     _yes.add(event);
@@ -220,7 +220,7 @@ class MaterialSubmitCancelButtonsDirective
 /// By default it listens only on the element itself, but if an ancestor has the
 /// `keyupBoundary` directive, it will listen on the whole subtree.
 abstract class BoundaryAwareKeyDirective implements OnDestroy {
-  StreamSubscription? _subscription;
+  StreamSubscription _subscription;
 
   BoundaryAwareKeyDirective.keypress(
       Element element, @Optional() KeyUpBoundaryDirective boundary) {
@@ -238,7 +238,7 @@ abstract class BoundaryAwareKeyDirective implements OnDestroy {
 
   @override
   ngOnDestroy() {
-    _subscription!.cancel();
+    _subscription.cancel();
     _subscription = null;
   }
 
@@ -260,8 +260,8 @@ abstract class BoundaryAwareKeyDirective implements OnDestroy {
 )
 class KeyUpBoundaryDirective {
   final HtmlElement _element;
-  Stream<KeyboardEvent>? _keyUpStream;
-  Stream<KeyboardEvent>? _keyPressStream;
+  Stream<KeyboardEvent> _keyUpStream;
+  Stream<KeyboardEvent> _keyPressStream;
 
   KeyUpBoundaryDirective(this._element);
 
@@ -288,7 +288,7 @@ class EscapeCancelsDirective extends BoundaryAwareKeyDirective
     implements OnDestroy {
   final MaterialYesNoButtonsComponent _yesNo;
 
-  MaterialButtonComponent? get noButton => _yesNo.noButton;
+  MaterialButtonComponent get noButton => _yesNo.noButton;
 
   EscapeCancelsDirective(
       this._yesNo, Element element, @Optional() KeyUpBoundaryDirective boundary)
@@ -298,7 +298,7 @@ class EscapeCancelsDirective extends BoundaryAwareKeyDirective
   bool _isKeyMatching(KeyboardEvent event) {
     if (event.keyCode != KeyCode.ESC) return false;
     // Make sure the no button is visible and enabled
-    if (noButton == null || noButton!.disabled!) return false;
+    if (noButton == null || noButton.disabled) return false;
 
     return true;
   }
@@ -318,8 +318,8 @@ class EnterAcceptsDirective extends BoundaryAwareKeyDirective
     implements OnDestroy {
   final MaterialYesNoButtonsComponent _yesNo;
 
-  MaterialButtonComponent? get yesButton => _yesNo.yesButton;
-  MaterialButtonComponent? get noButton => _yesNo.noButton;
+  MaterialButtonComponent get yesButton => _yesNo.yesButton;
+  MaterialButtonComponent get noButton => _yesNo.noButton;
 
   EnterAcceptsDirective(
       this._yesNo, Element element, @Optional() KeyUpBoundaryDirective boundary)
@@ -334,10 +334,10 @@ class EnterAcceptsDirective extends BoundaryAwareKeyDirective
     if (!enterAccepts) return false;
     if (event.keyCode != KeyCode.ENTER || event.repeat == true) return false;
     // Make sure the yes button is visible and enabled
-    if (yesButton == null || yesButton!.disabled!) return false;
+    if (yesButton == null || yesButton.disabled) return false;
     // If the no button is visible, it must not be focused (otherwise enter must
     // select the no button).
-    if (noButton != null && noButton!.focused) return false;
+    if (noButton != null && noButton.focused) return false;
 
     return true;
   }

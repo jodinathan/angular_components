@@ -53,9 +53,9 @@ class MaterialStepperComponent {
   static const defaultSize = sizeDefault;
   List<StepDirective> steps = [];
 
-  int? _activeStepIndex;
-  int? get activeStepIndex => _activeStepIndex;
-  set activeStepIndex(int? value) {
+  int _activeStepIndex;
+  int get activeStepIndex => _activeStepIndex;
+  set activeStepIndex(int value) {
     _activeStepIndex = value;
     _recalculatePropertiesOfSteps();
   }
@@ -64,11 +64,11 @@ class MaterialStepperComponent {
 
   var _orientation = defaultOrientation;
   var _size = defaultSize;
-  String? _legalJumps;
+  String _legalJumps;
 
-  List<StepDirective>? _stepDirectiveList;
+  List<StepDirective> _stepDirectiveList;
   final _activeStepController =
-      StreamController<StepDirective?>.broadcast(sync: true);
+      StreamController<StepDirective>.broadcast(sync: true);
   final _stepAriaLabel = <StepDirective, String>{};
 
   @ContentChildren(StepDirective)
@@ -78,7 +78,7 @@ class MaterialStepperComponent {
     _stepDirectiveList = value;
     activeStepIndex ??= 0;
     scheduleMicrotask(() {
-      _onStepsChange(_stepDirectiveList!);
+      _onStepsChange(_stepDirectiveList);
     });
   }
 
@@ -117,14 +117,14 @@ class MaterialStepperComponent {
     event.stopPropagation();
 
     AsyncActionController<bool> ctrl = AsyncActionController<bool>();
-    step.requestStepContinue(ctrl.action!);
+    step.requestStepContinue(ctrl.action);
     ctrl.execute(() {
-      activeStep!.complete = true;
-      if (activeStep!.isLast) {
+      activeStep.complete = true;
+      if (activeStep.isLast) {
         stepperDone = true;
         return true;
       }
-      return _stepTo(activeStepIndex! + 1);
+      return _stepTo(activeStepIndex + 1);
     });
   }
 
@@ -137,10 +137,10 @@ class MaterialStepperComponent {
     event.stopPropagation();
 
     AsyncActionController<bool> ctrl = AsyncActionController<bool>();
-    step.requestStepCancel(ctrl.action!);
+    step.requestStepCancel(ctrl.action);
     ctrl.execute(() {
-      activeStep!.complete = false;
-      return _stepTo(activeStepIndex! - 1);
+      activeStep.complete = false;
+      return _stepTo(activeStepIndex - 1);
     });
   }
 
@@ -186,8 +186,8 @@ class MaterialStepperComponent {
 
   /// Get the step directive that is currently active.  The stepper will
   /// only have 1 step active at a time.
-  StepDirective? get activeStep =>
-      steps.isNotEmpty ? steps[activeStepIndex!] : null;
+  StepDirective get activeStep =>
+      steps.isNotEmpty ? steps[activeStepIndex] : null;
 
   /// Jumps (defined as step-switches not triggered by the Continue/Cancel
   /// buttons) that are legal.
@@ -208,7 +208,7 @@ class MaterialStepperComponent {
   /// This is helpful for ensuring that animations don't go above or behind
   /// the stepper.
   @ViewChild('stepper')
-  HtmlElement? stepperNativeElement;
+  HtmlElement stepperNativeElement;
 
   /// Because of the button decorator enclosing the inline portal eats up
   /// SPACE and ENTER key-presses (by preventing the default on them),
@@ -234,13 +234,13 @@ class MaterialStepperComponent {
     if (index == activeStepIndex) return Future.value(true);
 
     final actionController = AsyncActionController<bool>();
-    steps[index].requestStepJump(actionController.action!);
+    steps[index].requestStepJump(actionController.action);
     actionController.execute(() {
       activeStepIndex = index;
       _activeStepController.add(activeStep);
       return true;
     }, valueOnCancel: false);
-    return actionController.action!.onDone;
+    return actionController.action.onDone;
   }
 
   /// Call callback when func does not return false.
@@ -275,21 +275,21 @@ class MaterialStepperComponent {
           s.isSelectable = false;
           break;
         case backwards:
-          s.isSelectable = i < activeStepIndex!;
+          s.isSelectable = i < activeStepIndex;
       }
       i++;
     }
   }
 
   String stepAriaLabel(StepDirective step) => _stepAriaLabel[step] ??=
-      _stepAriaAnnounce(step.index! + 1, steps.length, step.name!);
+      _stepAriaAnnounce(step.index + 1, steps.length, step.name);
 
   String get stepAriaAnnounce =>
-      activeStep == null ? '' : stepAriaLabel(activeStep!);
+      activeStep == null ? '' : stepAriaLabel(activeStep);
 
   /// Event that fires when the active step has changed.
   @Output('activeStepChanged')
-  Stream<StepDirective?> get activeStepChanged => _activeStepController.stream;
+  Stream<StepDirective> get activeStepChanged => _activeStepController.stream;
 
   static final optionalMsg = Intl.message('Optional',
       name: 'optionalMsg',

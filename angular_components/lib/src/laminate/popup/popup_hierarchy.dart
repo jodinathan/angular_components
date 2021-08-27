@@ -15,12 +15,12 @@ class PopupHierarchy {
   final _visiblePopupStack = <PopupHierarchyElement>[];
 
   /// Parent pane of the first popup hierarchy element.
-  Element? _rootPane;
+  Element _rootPane;
 
-  StreamSubscription<Event>? _triggerListener;
-  StreamSubscription<Event>? _keyUpListener;
+  StreamSubscription<Event> _triggerListener;
+  StreamSubscription<Event> _keyUpListener;
 
-  Event? _lastTriggerEvent;
+  Event _lastTriggerEvent;
 
   /// Whether last trigger event is a keyboard event or focus event.
   bool get islastTriggerWithKeyboard =>
@@ -40,7 +40,7 @@ class PopupHierarchy {
     assert(child != null);
     if (_visiblePopupStack.isEmpty) {
       _rootPane =
-          events.closestWithClass(child.elementRef!.nativeElement, 'pane');
+          events.closestWithClass(child.elementRef.nativeElement, 'pane');
     }
     _visiblePopupStack.add(child);
 
@@ -54,8 +54,8 @@ class PopupHierarchy {
   }
 
   void _disposeListeners() {
-    _triggerListener!.cancel();
-    _keyUpListener!.cancel();
+    _triggerListener.cancel();
+    _keyUpListener.cancel();
     _triggerListener = null;
     _keyUpListener = null;
   }
@@ -100,13 +100,13 @@ class PopupHierarchy {
       final current = _visiblePopupStack[i];
       if (current?.container == null) continue;
 
-      if (events.isParentOf(current.container, event.target as Node?)) return;
+      if (events.isParentOf(current.container, event.target)) return;
 
       for (var blockerElement in current.autoDismissBlockers) {
-        if (events.isParentOf(blockerElement, event.target as Node?)) return;
+        if (events.isParentOf(blockerElement, event.target)) return;
       }
 
-      if (current.autoDismiss!) current.onAutoDismiss(event);
+      if (current.autoDismiss) current.onAutoDismiss(event);
     }
   }
 
@@ -123,14 +123,14 @@ class PopupHierarchy {
         final current = _visiblePopupStack[i];
         if (current?.container == null) continue;
 
-        if (events.isParentOf(current.container, event.target as Node?)) {
+        if (events.isParentOf(current.container, event.target)) {
           event.stopPropagation();
           current.onDismiss();
           return;
         }
 
         for (var blockerElement in current.autoDismissBlockers) {
-          if (events.isParentOf(blockerElement, event.target as Node?)) {
+          if (events.isParentOf(blockerElement, event.target)) {
             event.stopPropagation();
             current.onDismiss();
             return;
@@ -144,12 +144,12 @@ class PopupHierarchy {
 /// An electable element for the [PopupHierarchy].
 abstract class PopupHierarchyElement {
   PopupHierarchy get hierarchy;
-  bool? get autoDismiss;
+  bool get autoDismiss;
 
   /// The html element corresponding to the popup.
-  Element? get container;
+  Element get container;
 
-  ElementRef? get elementRef => null;
+  ElementRef get elementRef => null;
 
   /// The outer element which should prevent the auto dismiss logic.
   List<Element> get autoDismissBlockers;

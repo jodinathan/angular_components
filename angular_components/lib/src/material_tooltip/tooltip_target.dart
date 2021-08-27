@@ -6,7 +6,7 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:angular/angular.dart';
-import 'package:angular/src/meta.dart';
+import 'package:angular/meta.dart';
 import 'package:angular_components/laminate/overlay/constants.dart';
 import 'package:angular_components/laminate/popup/popup.dart';
 import 'package:angular_components/model/action/delayed_action.dart';
@@ -28,7 +28,7 @@ import 'tooltip_source.dart' show tooltipShowDelay;
 )
 class MaterialTooltipTargetDirective extends TooltipBehavior
     implements AfterViewInit, OnDestroy {
-  HtmlElement? element;
+  HtmlElement element;
 
   MaterialTooltipTargetDirective(
       DomPopupSourceFactory domPopupSourceFactory,
@@ -57,7 +57,7 @@ class MaterialTooltipTargetDirective extends TooltipBehavior
 abstract class TooltipBehavior extends TooltipTarget {
   final _tooltipActivate = StreamController<bool>.broadcast(sync: true);
   final ChangeDetectorRef _changeDetector;
-  late DelayedAction _show;
+  DelayedAction _show;
 
   // Whether the mouse is currently inside the component.
   bool _isMouseInside = false;
@@ -69,7 +69,7 @@ abstract class TooltipBehavior extends TooltipTarget {
   TooltipBehavior(
       DomPopupSourceFactory domPopupSourceFactory,
       ViewContainerRef viewContainerRef,
-      HtmlElement? element,
+      HtmlElement element,
       this._changeDetector,
       String initAriaAttributes)
       : super(domPopupSourceFactory, viewContainerRef, element,
@@ -128,8 +128,8 @@ abstract class TooltipBehavior extends TooltipTarget {
     if (event.relatedTarget == null) return;
 
     // Don't hide the tooltip if focus went to an element inside the tooltip.
-    HtmlElement? el;
-    for (el = event.relatedTarget as HtmlElement?; el!.parent != null; el = el.parent as HtmlElement?) {
+    HtmlElement el;
+    for (el = event.relatedTarget; el.parent != null; el = el.parent) {
       if (el.className == overlayContainerClassName) return;
     }
 
@@ -153,8 +153,8 @@ abstract class TooltipBehavior extends TooltipTarget {
 )
 class ClickableTooltipTargetDirective extends TooltipBehavior
     implements AfterViewInit, OnDestroy {
-  late StreamSubscription _tooltipSubscription;
-  HtmlElement? element;
+  StreamSubscription _tooltipSubscription;
+  HtmlElement element;
   bool _tooltipVisible = false;
 
   ClickableTooltipTargetDirective(
@@ -204,10 +204,10 @@ class ClickableTooltipTargetDirective extends TooltipBehavior
 /// This component is the target of alignment for a tooltip and
 /// the object responsible for controlling a tooltip.
 abstract class TooltipTarget extends PopupSourceDirective {
-  Tooltip? _tooltip;
+  Tooltip _tooltip;
   final ViewContainerRef viewContainerRef;
-  final HtmlElement? _element;
-  String? _previousDescribedbyId;
+  final HtmlElement _element;
+  String _previousDescribedbyId;
 
   TooltipTarget(DomPopupSourceFactory domPopupSourceFactory,
       this.viewContainerRef, this._element, String initAriaAttributes)
@@ -223,9 +223,9 @@ abstract class TooltipTarget extends PopupSourceDirective {
     _tooltip = component;
   }
 
-  String? _id;
+  String _id;
   @override
-  set popupId(String? id) {
+  set popupId(String id) {
     super.popupId = id;
     _id = id;
     if (id == null) return;
@@ -234,17 +234,17 @@ abstract class TooltipTarget extends PopupSourceDirective {
   @override
   void onOpen() {
     if (_id == null) return;
-    _previousDescribedbyId = _element!.getAttribute('aria-describedby');
-    _element!.setAttribute('aria-describedby', _id!);
+    _previousDescribedbyId = _element.getAttribute('aria-describedby');
+    _element.setAttribute('aria-describedby', _id);
   }
 
   @override
   void onClose() {
     if (_id == null) return;
     if (_previousDescribedbyId != null) {
-      _element!.setAttribute('aria-describedby', _previousDescribedbyId!);
+      _element.setAttribute('aria-describedby', _previousDescribedbyId);
     } else {
-      _element!.attributes.remove('aria-describedby');
+      _element.attributes.remove('aria-describedby');
     }
   }
 }

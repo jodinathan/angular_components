@@ -15,7 +15,7 @@ abstract class SelectionObservable<T> {
   bool get hasSelectionObservers;
 
   /// Schedules a [SelectionChangeRecord].
-  void notifySelectionChange({Iterable<T>? added, Iterable<T>? removed});
+  void notifySelectionChange({Iterable<T> added, Iterable<T> removed});
 
   /// A stream that returns changes to selected elements.
   Stream<List<SelectionChangeRecord<T>>> get selectionChanges;
@@ -23,18 +23,18 @@ abstract class SelectionObservable<T> {
 
 /// Mixin for providing [SelectionModel.selectionChanges].
 abstract class SelectionChangeNotifier<T> implements SelectionModel<T> {
-  StreamController<List<SelectionChangeRecord<T>>>? _selectionChangeController;
-  List<SelectionChangeRecord<T>>? _selectionChangeRecords;
+  StreamController<List<SelectionChangeRecord<T>>> _selectionChangeController;
+  List<SelectionChangeRecord<T>> _selectionChangeRecords;
 
   @override
   bool deliverSelectionChanges() {
     if (hasSelectionObservers &&
         _selectionChangeRecords != null &&
-        _selectionChangeRecords!.isNotEmpty) {
+        _selectionChangeRecords.isNotEmpty) {
       var records = UnmodifiableListView<SelectionChangeRecord<T>>(
-          _selectionChangeRecords!);
+          _selectionChangeRecords);
       _selectionChangeRecords = null;
-      _selectionChangeController!.add(records);
+      _selectionChangeController.add(records);
       return true;
     } else {
       return false;
@@ -43,21 +43,21 @@ abstract class SelectionChangeNotifier<T> implements SelectionModel<T> {
 
   @override
   void notifySelectionChange(
-      {Iterable<T>? added = const [], Iterable<T>? removed = const []}) {
+      {Iterable<T> added = const [], Iterable<T> removed = const []}) {
     if (hasSelectionObservers) {
       var record = SelectionChangeRecord<T>(added: added, removed: removed);
       if (_selectionChangeRecords == null) {
         _selectionChangeRecords = [];
         scheduleMicrotask(deliverSelectionChanges);
       }
-      _selectionChangeRecords!.add(record);
+      _selectionChangeRecords.add(record);
     }
   }
 
   @override
   bool get hasSelectionObservers {
     return _selectionChangeController != null &&
-        _selectionChangeController!.hasListener;
+        _selectionChangeController.hasListener;
   }
 
   @override
@@ -67,7 +67,7 @@ abstract class SelectionChangeNotifier<T> implements SelectionModel<T> {
           StreamController<List<SelectionChangeRecord<T>>>.broadcast(
               sync: true);
     }
-    return _selectionChangeController!.stream;
+    return _selectionChangeController.stream;
   }
 }
 
@@ -75,14 +75,14 @@ abstract class SelectionChangeNotifier<T> implements SelectionModel<T> {
 class _SelectionChangeRecordImpl<T> extends ChangeRecord
     implements SelectionChangeRecord<T> {
   @override
-  final Iterable<T>? added;
+  final Iterable<T> added;
 
   @override
-  final Iterable<T>? removed;
+  final Iterable<T> removed;
 
-  factory _SelectionChangeRecordImpl({Iterable<T>? added, Iterable<T>? removed}) {
-    added = (added != null ? UnmodifiableListView(added) : const []) as Iterable<T>?;
-    removed = (removed != null ? UnmodifiableListView(removed) : const []) as Iterable<T>?;
+  factory _SelectionChangeRecordImpl({Iterable<T> added, Iterable<T> removed}) {
+    added = added != null ? UnmodifiableListView(added) : const [];
+    removed = removed != null ? UnmodifiableListView(removed) : const [];
     return _SelectionChangeRecordImpl._(added, removed);
   }
 

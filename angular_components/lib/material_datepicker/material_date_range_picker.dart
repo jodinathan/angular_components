@@ -6,7 +6,7 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:angular/angular.dart';
-import 'package:angular/src/meta.dart';
+import 'package:angular/meta.dart';
 import 'package:angular_components/button_decorator/button_decorator.dart';
 import 'package:angular_components/content/deferred_content.dart';
 import 'package:angular_components/focus/focus.dart';
@@ -38,7 +38,7 @@ import 'package:intl/intl.dart';
 import 'package:quiver/time.dart';
 
 /// Custom date range formatter interface.
-typedef RangeFormatter = String Function(DateRange? range);
+typedef RangeFormatter = String Function(DateRange range);
 
 /// Default height of the date range picker, if no [PopupSizeProvider] is
 /// provided.
@@ -103,7 +103,7 @@ class MaterialDateRangePickerComponent
         OnDestroy,
         DateRangeEditorHost,
         PopupSizeProvider {
-  Focusable? _dateRangeEditor;
+  Focusable _dateRangeEditor;
   bool _focusOnDateRangeEditorInit = false;
   final PopupSizeProvider _popupSizeProvider;
 
@@ -174,7 +174,7 @@ class MaterialDateRangePickerComponent
   /// This can be used if it's more convenient to mutate something in-place
   /// instead of getting and setting new date range values.
   @Input('reference')
-  ObservableReference<DatepickerComparison?> selection =
+  ObservableReference<DatepickerComparison> selection =
       ObservableReference(null);
 
   /// Whether or not this date range picker supports choosing time comparison
@@ -189,7 +189,7 @@ class MaterialDateRangePickerComponent
     _supportsComparison = value;
     if (!supportsComparison && selection.value?.comparison != null) {
       selection.value =
-          DatepickerComparison.noComparison(selection.value!.range);
+          DatepickerComparison.noComparison(selection.value.range);
     }
   }
 
@@ -227,30 +227,30 @@ class MaterialDateRangePickerComponent
 
   bool get movingStartMaintainsLength =>
       _movingStartMaintainsLength ?? _config.movingStartMaintainsLength;
-  bool? _movingStartMaintainsLength;
+  bool _movingStartMaintainsLength;
 
   /// The label for the 'Apply' button. Set this variable only if you want a
   /// different label other than 'Apply'. If set, the input label should be
   /// internationalized.
   @Input()
-  String? applyButtonLabel;
+  String applyButtonLabel;
 
   /// The ARIA label for the dropdown button.
   @Input()
-  String? dropdownButtonAriaLabel;
+  String dropdownButtonAriaLabel;
 
   /// Whether changing the selected date range should be disabled.
   @Input()
-  set disabled(bool? value) {
+  set disabled(bool value) {
     _disabled = value;
     // Hide popup if visible.
-    if (_popupVisible && disabled!) close();
+    if (_popupVisible && disabled) close();
   }
 
-  bool? _disabled = false;
+  bool _disabled = false;
 
   @HostBinding('class.disabled')
-  bool? get disabled => _disabled;
+  bool get disabled => _disabled;
 
   /// Dates earlier than `minDate` cannot be chosen.
   ///
@@ -259,13 +259,13 @@ class MaterialDateRangePickerComponent
   /// is available for analysis. Changes to `minDate` are only applied to the
   /// selected `range' when the user reopens the popup.
   @Input()
-  set minDate(Date? date) {
+  set minDate(Date date) {
     _minDate = date;
     model.minDate = _minDate;
   }
 
-  Date? get minDate => _minDate;
-  Date? _minDate;
+  Date get minDate => _minDate;
+  Date _minDate;
 
   /// Dates later than `maxDate` cannot be chosen.
   ///
@@ -274,21 +274,21 @@ class MaterialDateRangePickerComponent
   /// historical data, this could be the current day.  Changes to `maxDate` are
   /// only applied to the selected `range' when the user reopens the popup.
   @Input()
-  set maxDate(Date? date) {
+  set maxDate(Date date) {
     _maxDate = date;
     model.maxDate = _maxDate;
   }
 
-  Date? get maxDate => _maxDate;
-  Date? _maxDate;
+  Date get maxDate => _maxDate;
+  Date _maxDate;
 
   /// The [DateFormat] used to format dates.
   @Input()
-  DateFormat? dateFormat;
+  DateFormat dateFormat;
 
   /// The [DateFormat] used to format dates when the input is active.
   @Input()
-  DateFormat? activeDateFormat;
+  DateFormat activeDateFormat;
 
   /// When 'requireFullPeriods' is true, 'prev/next' button will be disabled
   /// if previous or next period is not a full predefined period, like 'week'.
@@ -307,7 +307,7 @@ class MaterialDateRangePickerComponent
 
   /// An error displayed below the dropdown button.
   @Input()
-  String? error;
+  String error;
 
   /// A placeholder message to display if no date range is selected.
   @Input()
@@ -317,7 +317,7 @@ class MaterialDateRangePickerComponent
   }
 
   String get placeHolderMsg => _customPlaceHolderMsg ?? _placeHolderMsg;
-  String? _customPlaceHolderMsg;
+  String _customPlaceHolderMsg;
 
   /// [ComparisonOption]s the user can choose from.
   ///
@@ -337,13 +337,13 @@ class MaterialDateRangePickerComponent
   @Input()
   RangeFormatter rangeFormatter = formatRange;
 
-  List<ComparisonOption>? _comparisonOptions;
+  List<ComparisonOption> _comparisonOptions;
 
   @ViewChild('focusOnClose')
-  late KeyboardOnlyFocusIndicatorDirective focusOnClose;
+  KeyboardOnlyFocusIndicatorDirective focusOnClose;
 
   final model = DateRangeEditorModel();
-  ModelState? _lastState;
+  ModelState _lastState;
 
   bool _popupVisible = false;
   bool applyBarVisible = false;
@@ -366,7 +366,7 @@ class MaterialDateRangePickerComponent
 
   final Disposer _disposer = Disposer.oneShot();
 
-  DatepickerComparison? get range => selection.value;
+  DatepickerComparison get range => selection.value;
 
   /// The selected date range and comparison.
   ///
@@ -374,13 +374,13 @@ class MaterialDateRangePickerComponent
   /// [DateRangeComparison] objects -- this internal implementation adds extra
   /// needed features like names and next/prev support.
   @Input()
-  set range(DatepickerComparison? cmp) {
+  set range(DatepickerComparison cmp) {
     selection.value = _maybeStripComparison(cmp);
   }
 
   /// Published when the selected date range or comparison range changes.
   @Output()
-  Stream<DatepickerComparison?> get rangeChange => selection.stream;
+  Stream<DatepickerComparison> get rangeChange => selection.stream;
 
   /// Published when the datepicker popup starts opening or closing.
   @Output('popupVisible')
@@ -455,7 +455,7 @@ class MaterialDateRangePickerComponent
     if (supportsComparison &&
         _comparisonOptions != null &&
         selection.value != null &&
-        !_isComparisonOptionsSupported(selection.value!)) {
+        !_isComparisonOptionsSupported(selection.value)) {
       throw UnsupportedError('Your comparisonOptions don\'t support your'
           ' input datePickerComparison: ${selection.value}');
     }
@@ -465,11 +465,11 @@ class MaterialDateRangePickerComponent
   void ngOnDestroy() => _disposer.dispose();
 
   @ViewChild(MaterialPopupComponent)
-  late MaterialPopupComponent popup;
+  MaterialPopupComponent popup;
 
   /// Open the datepicker popup.
   void open() {
-    if (_popupVisible || disabled!) return;
+    if (_popupVisible || disabled) return;
 
     _popupVisible = true;
     _onPopupVisible.add(true);
@@ -483,8 +483,8 @@ class MaterialDateRangePickerComponent
     // after that. The result is that the popup animates open while the
     // date picker is initializing, rather than after it has finished
     // initializing.
-    _domService.nextFrame!.then((_) {
-      _domService.nextFrame!.then((_) {
+    _domService.nextFrame.then((_) {
+      _domService.nextFrame.then((_) {
         // Double-check that the popup is still opening.
         if (!_popupVisible) return;
 
@@ -520,7 +520,7 @@ class MaterialDateRangePickerComponent
     _onPopupVisible.add(false);
     popup.close();
 
-    _domService.nextFrame!.then((_) {
+    _domService.nextFrame.then((_) {
       // Double-check that the popup is still closing.
       if (_popupVisible) return;
 
@@ -528,8 +528,8 @@ class MaterialDateRangePickerComponent
         // Cancel changes if apply isn't in progress.
         if (!_isApplying) {
           model.restore(_lastState);
-          selection.value = _lastState!.value;
-          _showApplyBar(!_isPreset(_lastState!.value));
+          selection.value = _lastState.value;
+          _showApplyBar(!_isPreset(_lastState.value));
         }
         _isApplying = false;
       });
@@ -544,18 +544,18 @@ class MaterialDateRangePickerComponent
   // Width and min-height are unconstrained by default (return null), but
   // do delegate to the popupSizeProvider if one is provided.
   @override
-  num? getMaxWidth(num positionX, num viewportWidth) =>
+  num getMaxWidth(num positionX, num viewportWidth) =>
       _popupSizeProvider?.getMaxWidth(positionX, viewportWidth);
   @override
-  num? getMinHeight(num positionY, num viewportHeight) =>
+  num getMinHeight(num positionY, num viewportHeight) =>
       _popupSizeProvider?.getMinHeight(positionY, viewportHeight);
   @override
-  num? getMinWidth(num positionX, num viewportWidth) =>
+  num getMinWidth(num positionX, num viewportWidth) =>
       _popupSizeProvider?.getMinWidth(positionX, viewportWidth);
 
   /// Whether or not the given range is "complicated" -- i.e. if it has a
   /// comparison or a custom range.
-  bool _isPreset(DatepickerComparison? cmp) =>
+  bool _isPreset(DatepickerComparison cmp) =>
       cmp?.comparison == null && cmp?.range?.isPredefined == true;
 
   void _showApplyBar(bool b) {
@@ -565,7 +565,7 @@ class MaterialDateRangePickerComponent
   void onRangeClicked(UIEvent event) {
     // Close eagerly for preset ranges and the cleared range.
     final shouldCloseEagerly = _isPreset(model.value) ||
-        (model.value!.range == null && model.value!.comparison == null);
+        (model.value.range == null && model.value.comparison == null);
     if (shouldCloseEagerly) {
       // Don't render preset changes to the calendar while the popup is closing
       allowHighlightUpdates = false;
@@ -588,8 +588,8 @@ class MaterialDateRangePickerComponent
 
   void cancel() {
     model.restore(_lastState);
-    selection.value = _lastState!.value;
-    _showApplyBar(!_isPreset(_lastState!.value));
+    selection.value = _lastState.value;
+    _showApplyBar(!_isPreset(_lastState.value));
     close();
     focusOnClose.focus();
   }
@@ -603,19 +603,19 @@ class MaterialDateRangePickerComponent
   bool get hasTitle => selection.value?.range?.title != null;
   String get rangeTitle => selection.value?.range?.title ?? '';
 
-  String? _formattedRange;
-  String? get formattedRange => _formattedRange;
-  String _getFormattedRange(DatepickerComparison? value) =>
-      value?.range != null ? rangeFormatter(value!.range) : placeHolderMsg;
+  String _formattedRange;
+  String get formattedRange => _formattedRange;
+  String _getFormattedRange(DatepickerComparison value) =>
+      value?.range != null ? rangeFormatter(value.range) : placeHolderMsg;
 
   bool get hasComparison => selection.value?.comparison != null;
 
-  String? _formattedComparison;
-  String? get formattedComparison => _formattedComparison;
-  String _getFormattedComparison(DatepickerComparison? value) =>
+  String _formattedComparison;
+  String get formattedComparison => _formattedComparison;
+  String _getFormattedComparison(DatepickerComparison value) =>
       _compareMsg(rangeFormatter(value?.comparison));
 
-  void _updateFormattedRanges(DatepickerComparison? value) {
+  void _updateFormattedRanges(DatepickerComparison value) {
     _formattedRange = _getFormattedRange(value);
     _formattedComparison = _getFormattedComparison(value);
   }
@@ -624,13 +624,13 @@ class MaterialDateRangePickerComponent
     _dateRangeEditor = editor;
     if (_dateRangeEditor != null && _focusOnDateRangeEditorInit) {
       _focusOnDateRangeEditorInit = false;
-      _dateRangeEditor!.focus();
+      _dateRangeEditor.focus();
     }
   }
 
   void setFocusToDateRangeEditor() {
     if (_dateRangeEditor != null) {
-      _dateRangeEditor!.focus();
+      _dateRangeEditor.focus();
     } else {
       _focusOnDateRangeEditorInit = true;
     }
@@ -646,7 +646,7 @@ class MaterialDateRangePickerComponent
 
   /// Remove comparison range from a [DatepickerComparison] if that feature is
   /// not supported by this component instance.
-  DatepickerComparison? _maybeStripComparison(DatepickerComparison? cmp) {
+  DatepickerComparison _maybeStripComparison(DatepickerComparison cmp) {
     if (cmp != null && cmp.isComparisonEnabled && !supportsComparison) {
       return DatepickerComparison.noComparison(cmp.range);
     } else {
@@ -658,8 +658,8 @@ class MaterialDateRangePickerComponent
   /// current configuration.
   bool _isComparisonOptionsSupported(DatepickerComparison cmp) =>
       !cmp.isComparisonEnabled ||
-      _comparisonOptions!.contains(ComparisonOption.custom) ||
-      _comparisonOptions!.any((option) => cmp.comparesTo(option));
+      _comparisonOptions.contains(ComparisonOption.custom) ||
+      _comparisonOptions.any((option) => cmp.comparesTo(option));
 
   static final cancelButtonMsg = Intl.message('Cancel',
       meaning: 'Button in a date picker',

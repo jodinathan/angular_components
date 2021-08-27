@@ -44,14 +44,14 @@ import 'package:angular_components/utils/id_generator/id_generator.dart';
 class DropdownButtonComponent extends Object
     with FocusableMixin, MaterialButtonWrapper
     implements OnInit {
-  String? _role;
-  String? _ariaRole;
+  String _role;
+  String _ariaRole;
 
   DropdownButtonComponent() {
     iconName = 'arrow_drop_down';
   }
 
-  late ButtonDirective _button;
+  ButtonDirective _button;
 
   @ViewChild(ButtonDirective)
   set button(ButtonDirective b) {
@@ -59,17 +59,17 @@ class DropdownButtonComponent extends Object
     focusable = b;
   }
 
-  String? get role => _role;
+  String get role => _role;
 
   /// The ARIA role of the dropdown button.
   @Input()
-  set role(String? value) {
+  set role(String value) {
     assert(
         ariaRole == null, 'Aria role can only be set before initialization.');
     _role = value;
   }
 
-  String? get ariaRole => _ariaRole;
+  String get ariaRole => _ariaRole;
 
   @override
   void ngOnInit() {
@@ -86,57 +86,57 @@ class DropdownButtonComponent extends Object
   ///
   /// The button also gets a red underline when this is set.
   @Input()
-  String? error;
+  String error;
 
   /// The id of the content of the dropdown.
   @Input()
-  String? ariaOwns;
+  String ariaOwns;
 
   /// True if the dropdown is expanded.
   @Input()
-  bool? ariaExpanded;
+  bool ariaExpanded;
 
   /// The id of the active element of the dropdown.
   @Input()
-  String? ariaActiveDescendant;
+  String ariaActiveDescendant;
 
   /// A unique id for the button element.
   final String uuid = SequentialIdGenerator.fromUUID().nextId();
 
-  String? _ariaLabelledBy;
+  String _ariaLabelledBy;
 
   /// The id of an element that additionally describes the button.
   ///
   /// For example, a text element that says "results per page" for a dropdown
   /// with numerical options.
   @Input()
-  set ariaLabelledBy(String? labelledBy) => _ariaLabelledBy = labelledBy;
+  set ariaLabelledBy(String labelledBy) => _ariaLabelledBy = labelledBy;
 
   /// The aria-labelledby value to apply to the button, or null.
   ///
   /// Must also include the id of the button to read both.
-  String? get ariaLabelledBy =>
+  String get ariaLabelledBy =>
       _ariaLabelledBy == null ? null : '$_ariaLabelledBy $uuid';
 
   @Input()
-  String? ariaDescribedBy;
+  String ariaDescribedBy;
 
   bool get invalid => error != null;
 
   /// Whether to show the bottom border of the dropdown button.
   @Input()
-  set showButtonBorder(bool? value) {
+  set showButtonBorder(bool value) {
     _showButtonBorder = value;
   }
 
-  bool? get showButtonBorder {
+  bool get showButtonBorder {
     if (_showButtonBorder != null) return _showButtonBorder;
     // If the input field is not specified, maitain backwards compatible
     // behavior, which decides based on whether the text is null.
     return buttonText != null;
   }
 
-  bool? _showButtonBorder;
+  bool _showButtonBorder;
 
   /// Event that fires when the dropdown button is blurred.
   @Output('blur')

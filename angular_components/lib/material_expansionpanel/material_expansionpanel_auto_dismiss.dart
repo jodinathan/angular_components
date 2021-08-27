@@ -32,9 +32,9 @@ class MaterialExpansionPanelAutoDismiss implements OnDestroy {
   final Element _overlayContainerToken;
   final HtmlElement _element;
 
-  late StreamController<Event> _clicksOutsideController;
-  StreamSubscription<Event>? _clicksOutsideSubscription;
-  StreamSubscription<MouseEvent>? _mouseUpListener;
+  StreamController<Event> _clicksOutsideController;
+  StreamSubscription<Event> _clicksOutsideSubscription;
+  StreamSubscription<MouseEvent> _mouseUpListener;
 
   MaterialExpansionPanelAutoDismiss(
       this._expansionPanel,
@@ -46,7 +46,7 @@ class MaterialExpansionPanelAutoDismiss implements OnDestroy {
           _mouseUpListener = document.onMouseUp.listen(_onMouseUp);
         },
         onCancel: () {
-          _mouseUpListener!.cancel();
+          _mouseUpListener.cancel();
           _mouseUpListener = null;
         });
   }
@@ -67,7 +67,7 @@ class MaterialExpansionPanelAutoDismiss implements OnDestroy {
   }
 
   void _onMouseUp(MouseEvent e) {
-    var node = e.target as Element?;
+    var node = e.target as Element;
     while (node != null) {
       var tagName = node.tagName.toLowerCase();
       if (node == this._element) {

@@ -5,7 +5,7 @@
 import 'dart:html';
 
 import 'package:angular/angular.dart';
-import 'package:angular/src/meta.dart';
+import 'package:angular/meta.dart';
 import 'package:angular_components/utils/browser/dom_service/dom_service.dart';
 import 'package:meta/meta.dart';
 
@@ -85,7 +85,7 @@ class KeyboardOnlyFocusIndicatorDirective {
   /// response to clicks on the button, which is undesirable. Using this
   /// function, the outline is hidden in response to button clicks but shown in
   /// response to keypresses on the button.
-  void focus([UIEvent? event]) {
+  void focus([UIEvent event]) {
     _domService.scheduleWrite(() {
       _element.focus();
     });

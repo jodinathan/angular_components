@@ -19,7 +19,7 @@ import 'package:angular/angular.dart';
   exportAs: 'ref',
 )
 class ReferenceDirective {
-  final ElementRef? elementRef;
+  final ElementRef elementRef;
 
   ReferenceDirective(this.elementRef);
 }

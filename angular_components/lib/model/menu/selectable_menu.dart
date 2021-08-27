@@ -37,10 +37,10 @@ class MenuItemGroupWithSelection<SelectionItemType>
   final bool shouldCloseMenuOnSelection;
 
   MenuItemGroupWithSelection(
-      {required List<SelectableMenuItem<SelectionItemType>> items,
-      required this.selectionModel,
-      String? label,
-      bool? shouldCloseMenuOnSelection})
+      {@required List<SelectableMenuItem<SelectionItemType>> items,
+      @required this.selectionModel,
+      String label,
+      bool shouldCloseMenuOnSelection})
       : shouldCloseMenuOnSelection = shouldCloseMenuOnSelection ??
             selectionModel is! MultiSelectionModel,
         itemsRole = (selectionModel?.isSingleSelect ?? true)
@@ -68,10 +68,10 @@ class MenuItemGroupWithSelection<SelectionItemType>
 /// A selectable [MenuItem].
 class SelectableMenuItem<ItemType> extends PropertyChangeNotifier
     implements MenuItem {
-  MenuAction? _action;
-  ActionWithContext? _actionWithContext;
+  MenuAction _action;
+  ActionWithContext _actionWithContext;
   SelectableOption _selectableState;
-  String? ariaChecked;
+  String ariaChecked;
 
   /// Converts [ItemType] into a string.
   ///
@@ -92,16 +92,16 @@ class SelectableMenuItem<ItemType> extends PropertyChangeNotifier
   final bool shouldSelectOnItemClick;
 
   @override
-  final Icon? icon;
+  final Icon icon;
 
   @override
-  final MenuModel? subMenu;
+  final MenuModel subMenu;
 
   @override
-  final String? tooltip;
+  final String tooltip;
 
   @override
-  final String? labelAnnotation;
+  final String labelAnnotation;
 
   @override
   final ObservableList<MenuItemAffix> itemSuffixes;
@@ -110,7 +110,7 @@ class SelectableMenuItem<ItemType> extends PropertyChangeNotifier
   final BuiltList<String> cssClasses;
 
   @override
-  final String? secondaryLabel;
+  final String secondaryLabel;
 
   /// The constructor for a selectable [MenuItem].
   ///
@@ -125,26 +125,26 @@ class SelectableMenuItem<ItemType> extends PropertyChangeNotifier
   ///     constructing an ObservableList and using [itemSuffixes]. If
   ///     [itemSuffixes] is also passed in, [itemSuffixes] takes precedence.
   SelectableMenuItem(
-      {required this.value,
+      {@required this.value,
       this.itemRenderer = defaultItemRenderer,
       this.icon,
       this.subMenu,
       this.tooltip,
       this.secondaryLabel,
       this.labelAnnotation,
-      Iterable<String>? cssClasses,
-      MenuAction? action,
-      ActionWithContext? actionWithContext,
+      Iterable<String> cssClasses,
+      MenuAction action,
+      ActionWithContext actionWithContext,
       SelectableOption selectableState = SelectableOption.Selectable,
-      bool? shouldSelectOnItemClick,
-      MenuItemAffix? itemSuffix,
-      ObservableList<MenuItemAffix>? itemSuffixes})
+      bool shouldSelectOnItemClick,
+      MenuItemAffix itemSuffix,
+      ObservableList<MenuItemAffix> itemSuffixes})
       : _selectableState = selectableState,
         shouldSelectOnItemClick = shouldSelectOnItemClick ?? subMenu == null,
         itemSuffixes = itemSuffixes ??
             ObservableList<MenuItemAffix>.from(
                 Optional.fromNullable(itemSuffix)),
-        cssClasses = BuiltList<String>((cssClasses ?? const []) as Iterable<dynamic>) {
+        cssClasses = BuiltList<String>(cssClasses ?? const []) {
     assert(itemSuffix == null || itemSuffixes == null,
         'Only one of itemSuffix or itemSuffixes should be provided');
     assert(action == null || actionWithContext == null,
@@ -162,10 +162,10 @@ class SelectableMenuItem<ItemType> extends PropertyChangeNotifier
   }
 
   @override
-  String? get label => itemRenderer(value);
+  String get label => itemRenderer(value);
 
   @override
-  String? get ariaLabel => label;
+  String get ariaLabel => label;
 
   @override
   bool get hasIcon => icon != null;
@@ -177,10 +177,10 @@ class SelectableMenuItem<ItemType> extends PropertyChangeNotifier
   bool get showTooltip => isNotEmpty(tooltip);
 
   @override
-  Icon? get uiIcon => icon;
+  Icon get uiIcon => icon;
 
   @override
-  String? get uiDisplayName => label;
+  String get uiDisplayName => label;
 
   @override
   bool get enabled => selectableState == SelectableOption.Selectable;
@@ -192,26 +192,26 @@ class SelectableMenuItem<ItemType> extends PropertyChangeNotifier
   }
 
   @override
-  MenuAction? get action => _action;
+  MenuAction get action => _action;
 
   @override
-  set action(MenuAction? value) {
+  set action(MenuAction value) {
     if (value == _action) return;
 
     _action = value;
-    _actionWithContext = (_) => value!();
+    _actionWithContext = (_) => value();
     notifyPropertyChange(#action, _action, value);
   }
 
   @override
-  ActionWithContext? get actionWithContext => _actionWithContext;
+  ActionWithContext get actionWithContext => _actionWithContext;
 
   @override
-  set actionWithContext(ActionWithContext? value) {
+  set actionWithContext(ActionWithContext value) {
     if (value == _actionWithContext) return;
 
     _actionWithContext = value;
-    _action = () => value!(null);
+    _action = () => value(null);
     notifyPropertyChange(#actionWithContext, _actionWithContext, value);
   }
 

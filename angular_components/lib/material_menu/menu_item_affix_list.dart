@@ -5,7 +5,7 @@
 import 'dart:async';
 
 import 'package:angular/angular.dart';
-import 'package:angular/src/meta.dart';
+import 'package:angular/meta.dart';
 import 'package:angular_components/dynamic_component/dynamic_component.dart';
 import 'package:angular_components/interfaces/has_disabled.dart';
 import 'package:angular_components/material_menu/affix/base_affix.dart';
@@ -34,28 +34,28 @@ import 'package:quiver/core.dart' as qc;
 class MenuItemAffixListComponent implements HasDisabled, OnDestroy {
   final ChangeDetectorRef _cdRef;
 
-  StreamSubscription? _itemChangeStreamSub;
+  StreamSubscription _itemChangeStreamSub;
 
   final _affixComponentRefs = <_AffixRef>[];
 
-  ObservableList<MenuItemAffix>? _items;
+  ObservableList<MenuItemAffix> _items;
 
   @ViewChild('loadPoint', read: ViewContainerRef)
   @visibleForTemplate
-  late ViewContainerRef viewRef;
+  ViewContainerRef viewRef;
 
-  bool? _disabled = false;
+  bool _disabled = false;
 
   MenuItemAffixListComponent(this._cdRef);
 
   @Input()
-  set disabled(bool? disabled) {
+  set disabled(bool disabled) {
     _disabled = disabled;
 
     _updateItemProperties();
   }
 
-  bool? get disabled => _disabled;
+  bool get disabled => _disabled;
 
   /// Observable list of affix items.
   @Input()
@@ -135,7 +135,7 @@ class MenuItemAffixListComponent implements HasDisabled, OnDestroy {
 
     return _AffixRef(
         affix,
-        viewRef.createComponent(affix.componentFactory!, index)
+        viewRef.createComponent(affix.componentFactory, index)
           ..location.classes.add('affix')
           ..instance.value = affix
           ..instance.disabled = disabled);

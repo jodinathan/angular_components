@@ -13,7 +13,7 @@ import 'package:angular_components/model/observable/observable.dart';
 import 'package:angular_components/utils/comparators/comparators.dart';
 
 /// A calendar date. Year / month / day.
-class Date extends Comparators<Date?> {
+class Date extends Comparators<Date> {
   final DateTime _time;
 
   Date(int year, [int month = 1, int day = 1])
@@ -33,7 +33,7 @@ class Date extends Comparators<Date?> {
   ///     new Date.fromTime(time); // 2015-11-17
   ///     new Date.fromTime(time, tzOffset: est); // 2015-11-16
   ///
-  factory Date.fromTime(DateTime time, {Duration? tzOffset}) {
+  factory Date.fromTime(DateTime time, {Duration tzOffset}) {
     if (time.timeZoneOffset.inMicroseconds.isNaN) {
       throw ArgumentError.value(time, 'time', 'has a NaN time zone offset');
     }
@@ -54,7 +54,7 @@ class Date extends Comparators<Date?> {
   // TODO(google): Passing in a timezone here every time would be
   // frustrating. How about a "Calendar" class -- like a Clock, but for dates
   // instead of times?
-  factory Date.today([Clock? clock]) {
+  factory Date.today([Clock clock]) {
     var now = (clock ?? const Clock()).now();
     if (now.timeZoneOffset.inMicroseconds.isNaN) {
       throw StateError('Clock $clock returned a time with a NaN timezone '
@@ -98,13 +98,13 @@ class Date extends Comparators<Date?> {
   int get day => asUtcTime().day;
   int get weekday => asUtcTime().weekday;
 
-  bool isBefore(Date? other) => this < other;
+  bool isBefore(Date other) => this < other;
   bool isOnOrBefore(Date other) => this <= other;
-  bool isAfter(Date? other) => this > other;
+  bool isAfter(Date other) => this > other;
   bool isOnOrAfter(Date other) => this >= other;
 
   @override
-  int compareTo(Date? other) => asUtcTime().compareTo(other!.asUtcTime());
+  int compareTo(Date other) => asUtcTime().compareTo(other.asUtcTime());
 
   @override
   int get hashCode => asUtcTime().hashCode;
@@ -124,18 +124,18 @@ int daysSpanned(Date start, Date end, {bool inclusive = true}) =>
 /// Gets the earlier of the two given dates.
 ///
 /// Requires both dates to be non-null.
-Date? earlierOf(Date a, Date? b) => a.isAfter(b) ? b : a;
+Date earlierOf(Date a, Date b) => a.isAfter(b) ? b : a;
 
 /// Gets the later of the two given dates.
 ///
 /// Requires both dates to be non-null.
-Date? laterOf(Date a, Date? b) => a.isAfter(b) ? a : b;
+Date laterOf(Date a, Date b) => a.isAfter(b) ? a : b;
 
 /// A date range with a start and end, inclusive. `null` values for either means
 /// the range is unbounded in that direction.
 class DateRange {
-  final Date? start;
-  final Date? end;
+  final Date start;
+  final Date end;
   // TODO(google): Nikhil brought up some good reasons for wanting a
   // localized title and date rendering here. Might be worth adding, or maybe
   // creating a `NamedDateRange` subclass would make sense.
@@ -162,7 +162,7 @@ class DateRange {
   /// dates.
   ///
   /// In this context, a null date represents the start of time.
-  static Date? _laterStartDateOf(Date? a, Date? b) {
+  static Date _laterStartDateOf(Date a, Date b) {
     if (a == null) return b;
     if (b == null) return a;
     return laterOf(a, b);
@@ -172,7 +172,7 @@ class DateRange {
   /// dates.
   ///
   /// In this context, a null date represents the end of time.
-  static Date? _earlierEndDateOf(Date? a, Date? b) {
+  static Date _earlierEndDateOf(Date a, Date b) {
     if (a == null) return b;
     if (b == null) return a;
     return earlierOf(a, b);
@@ -193,9 +193,9 @@ class DateRange {
 /// Whether or not [date] is inside [range].
 ///
 /// Inclusive, and treats a null [range.start] or [range.end] as unbounded.
-bool rangeContains(DateRange range, Date? date) =>
-    (range.start == null || date! >= range.start) &&
-    (range.end == null || date! <= range.end);
+bool rangeContains(DateRange range, Date date) =>
+    (range.start == null || date >= range.start) &&
+    (range.end == null || date <= range.end);
 
 /// Whether or not [subrange] is fully contained by [range].
 ///
@@ -213,7 +213,7 @@ bool rangeContainsRange(DateRange range, DateRange subrange) {
 ///
 /// For example, if [start] is 2016-01-01 and [end] is 2016-01-02, then two
 /// elements, [2016-01-01, 2016-01-02], will be in the returned iterator.
-Iterable<Date> enumerateDates(Date start, Date? end) sync* {
+Iterable<Date> enumerateDates(Date start, Date end) sync* {
   for (var date = start; date <= end; date = date.add(days: 1)) {
     yield date;
   }
@@ -232,13 +232,13 @@ Iterable<Date> enumerateRange(DateRange range) {
     throw ArgumentError(
         'Cannot call enumerateRange with a range with a null start or end.');
   }
-  return enumerateDates(range.start!, range.end);
+  return enumerateDates(range.start, range.end);
 }
 
 /// A date range and an optional comparison date range.
 class DateRangeComparison {
-  final DateRange? range;
-  final DateRange? comparison;
+  final DateRange range;
+  final DateRange comparison;
   bool get isComparisonEnabled => comparison != null;
   DateRangeComparison(this.range, {this.comparison});
 }
@@ -250,21 +250,21 @@ class DateRangeComparison {
 /// so that dependency injection can be used without going through all that
 /// TypeLiteral unpleasantness. Having an actual implementation around is also
 /// handy in tests.
-class DatepickerSelection extends ObservableViewMixin<DateRangeComparison?> {
-  final ObservableView<DateRangeComparison?> _ref;
+class DatepickerSelection extends ObservableViewMixin<DateRangeComparison> {
+  final ObservableView<DateRangeComparison> _ref;
   DatepickerSelection.wrap(this._ref);
 
   /// Constructs a new selection. Intended for tests: this creates a new
   /// [ObservableReference] but doesn't give you any way of disposing of its
   /// streams, so it'd result in memory leaks in prod.
-  DatepickerSelection.test([DateRangeComparison? initialValue])
+  DatepickerSelection.test([DateRangeComparison initialValue])
       : _ref = ObservableReference(initialValue);
 
   @override
-  DateRangeComparison? get value => _ref.value;
+  DateRangeComparison get value => _ref.value;
 
   @override
-  Stream<DateRangeComparison?> get stream => _ref.stream;
+  Stream<DateRangeComparison> get stream => _ref.stream;
 
   @override
   void dispose() {}

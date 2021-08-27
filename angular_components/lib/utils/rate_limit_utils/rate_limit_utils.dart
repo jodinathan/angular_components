@@ -24,18 +24,18 @@ typedef RateLimitStrategy<T> = UnaryFunction<T> Function(
 /// function is called. The future is completed with the return results of the
 /// [delegate] function.
 DebouncedFunction<T> debounce<T>(UnaryFunction<T> delegate, Duration delay) {
-  Timer? timer;
-  Completer? completer;
+  Timer timer;
+  Completer completer;
 
   return (argument) {
     timer?.cancel();
     completer ??= Completer();
     timer = Timer(delay, () {
-      completer!.complete(delegate(argument));
+      completer.complete(delegate(argument));
       completer = null;
       timer = null;
     });
-    return completer!.future;
+    return completer.future;
   };
 }
 
@@ -48,23 +48,23 @@ DebouncedNullaryFunction debounceNullary(void callback(), Duration delay) {
 /// Returns a wrapper function that, when called with x, executes delegate(x)
 /// immediately and prevents further calls to the wrapper from executing
 /// [delegate] until [interval] has elapsed.
-UnaryFunction<T> throttle<T>(UnaryFunction<T?> delegate, Duration interval) =>
+UnaryFunction<T> throttle<T>(UnaryFunction<T> delegate, Duration interval) =>
     _throttle(delegate, interval, guaranteeLast: false);
 
 /// Like [throttle], but if the last call to this function is throttled, it will
 /// be executed once the throttling period expires, starting a new throttling
 /// period.
 UnaryFunction<T> throttleGuaranteeLast<T>(
-        UnaryFunction<T?> delegate, Duration interval) =>
+        UnaryFunction<T> delegate, Duration interval) =>
     _throttle(delegate, interval, guaranteeLast: true);
 
-UnaryFunction<T> _throttle<T>(UnaryFunction<T?> delegate, Duration interval,
-    {required bool guaranteeLast}) {
+UnaryFunction<T> _throttle<T>(UnaryFunction<T> delegate, Duration interval,
+    {@required bool guaranteeLast}) {
   bool onCooldown = false;
   bool hasLastArg = false;
-  T? lastArg;
-  late UnaryFunction<T?> self;
-  self = (T? argument) {
+  T lastArg;
+  UnaryFunction<T> self;
+  self = (T argument) {
     if (!onCooldown) {
       onCooldown = true;
       Timer(interval, () {
