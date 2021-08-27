@@ -21,3 +21,7 @@ doc/api/
 *.iml
 *.ipr
 *.iws
+
+# Vim
+*.yaml~
+*.dart~
