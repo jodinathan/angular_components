@@ -5,7 +5,7 @@
 import 'package:angular_components/framework_stabilizers/testability.dart';
 import 'package:angular_components/utils/browser/dom_service/dom_service.dart';
 
-Testability createDomServiceWebdriverTestability(DomService domService) {
+Testability createDomServiceWebdriverTestability(DomService? domService) {
   if (testabilitiesEnabled) {
     return DomServiceWebdriverTestability._(domService);
   }
@@ -15,12 +15,12 @@ Testability createDomServiceWebdriverTestability(DomService domService) {
 /// The DomService Webdriver Testability API allows test frameworks to wait for
 /// all pending activities to finish before executing the next test action.
 class DomServiceWebdriverTestability extends AbstractTestability {
-  final DomService _domService;
+  final DomService? _domService;
 
   DomServiceWebdriverTestability._(this._domService) {
-    _domService.onQueuesProcessed.listen((_) => checkStable());
+    _domService!.onQueuesProcessed!.listen((_) => checkStable());
   }
 
   @override
-  bool get isStable => _domService.isStable;
+  bool get isStable => _domService!.isStable;
 }

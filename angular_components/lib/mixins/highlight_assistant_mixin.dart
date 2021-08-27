@@ -22,10 +22,10 @@ abstract class HighlightAssistantMixin<T>
   final FactoryRenderer highlightFactoryRenderer =
       (_) => highlight.HighlightedValueComponentNgFactory;
 
-  HighlightAssistant _highlightAssistant;
+  HighlightAssistant? _highlightAssistant;
 
-  Highlighter _optionHighlighter;
-  Highlighter get optionHighlighter => _optionHighlighter;
+  Highlighter? _optionHighlighter;
+  Highlighter? get optionHighlighter => _optionHighlighter;
 
   /// Function which returns a list of [HighlightedTextSegment] for the given
   /// query and value.
@@ -33,7 +33,7 @@ abstract class HighlightAssistantMixin<T>
   /// If no `optionHighlighter` is provided, a `TextHighlighter` is used in
   /// conjunction with the `itemRenderer` to produce the list of text segments.
   @Input()
-  set optionHighlighter(Highlighter value) {
+  set optionHighlighter(Highlighter? value) {
     _optionHighlighter = value;
     _highlightAssistant = null;
   }
@@ -49,7 +49,7 @@ abstract class HighlightAssistantMixin<T>
 
   /// The query to highlight.
   String get highlightQuery =>
-      options is Filterable ? (options as Filterable).currentQuery ?? '' : '';
+      options is Filterable ? (options as Filterable).currentQuery as String? ?? '' : '';
 
   ItemRenderer<T> get _highlightRenderer {
     if ((componentRenderer == null ||
@@ -62,11 +62,11 @@ abstract class HighlightAssistantMixin<T>
   }
 
   @override
-  List<HighlightedTextSegment> highlightOption(Object item) {
+  List<HighlightedTextSegment> highlightOption(Object? item) {
     _highlightAssistant ??= HighlightAssistant(
         optionHighlighter: optionHighlighter,
         matchFromStartOfWord: _highlightMatchFromStartOfWord);
-    return _highlightAssistant.highlightOption(
+    return _highlightAssistant!.highlightOption(
         highlightQuery, item, _highlightRenderer);
   }
 }

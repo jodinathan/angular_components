@@ -6,7 +6,7 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:angular/angular.dart';
-import 'package:angular/meta.dart';
+import 'package:angular/src/meta.dart';
 import 'package:angular_components/button_decorator/button_decorator.dart';
 import 'package:angular_components/content/deferred_content.dart';
 import 'package:angular_components/focus/focus.dart';
@@ -80,17 +80,17 @@ class MenuItemGroupsComponent
   /// IMPORTANT: The menu model must be immutable. This component won't reflect
   /// any changes to the model's internal state
   @Input()
-  set menu(MenuModel menu) {
+  set menu(MenuModel? menu) {
     _menu = menu;
     _updateItemsAriaCheckedState(menu);
     menu?.itemGroups?.forEach(_listenForSelectionChanges);
   }
 
-  MenuModel get menu => _menu;
-  MenuModel _menu;
+  MenuModel? get menu => _menu;
+  MenuModel? _menu;
 
   @ViewChildren(FocusableActivateItem)
-  List<FocusableActivateItem> focusableItems;
+  late List<FocusableActivateItem> focusableItems;
 
   List<RelativePosition> get preferredSubMenuPositions =>
       _preferredSubMenuPositions;
@@ -122,8 +122,8 @@ class MenuItemGroupsComponent
   bool get isKeyboardDriven => !isMouseDriven;
 
   /// Optional model that is used to track keyboard active item.
-  ActiveItemModel _activeModel;
-  StreamSubscription _activeModelChange;
+  late ActiveItemModel _activeModel;
+  StreamSubscription? _activeModelChange;
 
   @Input()
   set activeModel(ActiveItemModel v) {
@@ -161,13 +161,13 @@ class MenuItemGroupsComponent
   DropdownHandle _dropdownHandle;
 
   /// The delayed action to open the [_hoveredItem] submenu on mouse hover.
-  DelayedAction _subMenuOpener;
+  late DelayedAction _subMenuOpener;
 
   /// The last hovered item of this menu.
-  MenuItem _hoveredItem;
+  MenuItem? _hoveredItem;
 
   /// The parent of current or future visible submenu.
-  MenuItem _submenuParent;
+  MenuItem? _submenuParent;
 
   /// Stores the item ID of the item that is initially selected in this menu
   /// group.
@@ -175,7 +175,7 @@ class MenuItemGroupsComponent
   /// If absent, then no item should be focused initially. This is used when
   /// opening a sub-menu by keyboard shortcut, and the first menu item of the
   /// sub-menu should be selected.
-  qc.Optional<String> _autoFocusItemId = const qc.Optional.absent();
+  qc.Optional<String?> _autoFocusItemId = const qc.Optional.absent();
 
   bool isKeyboardOpenedSubmenu = false;
 
@@ -186,7 +186,7 @@ class MenuItemGroupsComponent
 
   /// Highlighter to use, need to be to be provided if [highlight] is used.
   @Input()
-  TextHighlighter highlighter;
+  late TextHighlighter highlighter;
 
   /// Part of the string to highlight.
   @Input()
@@ -195,7 +195,7 @@ class MenuItemGroupsComponent
     _highlightCache = {};
   }
 
-  String _highlight;
+  String? _highlight;
 
   /// CSS classes to append onto the sub-menu popups.
   ///
@@ -204,7 +204,7 @@ class MenuItemGroupsComponent
   /// this component is rendered in and need to be propagated down to any
   /// sub-menus this component will open.
   @Input()
-  String popupClass;
+  String? popupClass;
 
   bool get hasHighlight => _highlight?.isNotEmpty ?? false;
 
@@ -225,7 +225,7 @@ class MenuItemGroupsComponent
 
   /// Returns list of highlighted segments for a given input, using provided
   /// highlighter.
-  List<HighlightedTextSegment> highlighted(String input) {
+  List<HighlightedTextSegment>? highlighted(String input) {
     if (_highlightCache.containsKey(input)) return _highlightCache[input];
     return _highlightCache[input] = highlighter.highlight(input, [_highlight]);
   }
@@ -252,7 +252,7 @@ class MenuItemGroupsComponent
     // the DOM moved but mouse didn't.
     if (!_isMouseDriven) return;
 
-    MenuItem item = _itemForTarget(event.target);
+    MenuItem? item = _itemForTarget(event.target);
     if (item == null) return;
 
     if (item == _hoveredItem) {
@@ -280,7 +280,7 @@ class MenuItemGroupsComponent
     // If the item is in a multi-select group, keep the menu open so the user
     // can select multiple items.
     if (group is! MenuItemGroupWithSelection ||
-        (group as MenuItemGroupWithSelection).shouldCloseMenuOnSelection) {
+        group.shouldCloseMenuOnSelection) {
       _menuRoot?.closeHierarchy();
     }
   }
@@ -292,7 +292,7 @@ class MenuItemGroupsComponent
     if (event.keyCode == KeyCode.TAB) return;
 
     var keyCode = event.keyCode;
-    var activeMenuItem = activeModel.activeItem as MenuItem;
+    var activeMenuItem = activeModel.activeItem as MenuItem?;
 
     switch (keyCode) {
       case KeyCode.UP:
@@ -344,14 +344,14 @@ class MenuItemGroupsComponent
     _submenuParent = item.hasSubMenu ? item : null;
   }
 
-  MenuItem _itemForTarget(EventTarget target) {
+  MenuItem? _itemForTarget(EventTarget? target) {
     if (target is! Element) return null;
-    Element element = target as Element;
+    Element? element = target;
     while (element != null) {
       if (element.attributes['role'] == 'menuitem') {
         MenuItemGroup group =
-            menu.itemGroups[int.parse(element.attributes['data-group-index'])];
-        MenuItem item = group[int.parse(element.attributes['data-item-index'])];
+            menu!.itemGroups[int.parse(element.attributes['data-group-index']!)];
+        MenuItem item = group[int.parse(element.attributes['data-item-index']!)];
         return item;
       }
       element = element.parent;
@@ -361,7 +361,7 @@ class MenuItemGroupsComponent
 
   @HostListener('focus')
   void onFocus(FocusEvent event) {
-    MenuItem item = _itemForTarget(event.target);
+    MenuItem? item = _itemForTarget(event.target);
     if (item == null) return;
 
     activeModel?.activate(item);
@@ -395,8 +395,8 @@ class MenuItemGroupsComponent
 
   /// Toggle the expansion of the group if it's collapsible.
   void toggleExpansionIfCollapsible(MenuItemGroup group) {
-    if (group.isCollapsible) {
-      group.isExpanded = !group.isExpanded;
+    if (group.isCollapsible!) {
+      group.isExpanded = !group.isExpanded!;
     }
   }
 
@@ -419,12 +419,12 @@ class MenuItemGroupsComponent
     _disposer.dispose();
   }
 
-  SelectionModel getSelectionModel(MenuItemGroup group) =>
+  SelectionModel? getSelectionModel(MenuItemGroup group) =>
       group is MenuItemGroupWithSelection ? group.selectionModel : null;
 
   /// Returns the value for a menu item's `aria-checked` attribute value.
   @visibleForTemplate
-  String itemAriaChecked(MenuItem item) =>
+  String? itemAriaChecked(MenuItem item) =>
       (item is SelectableMenuItem) ? item.ariaChecked : null;
 
   dynamic getItemValue(MenuItem item) =>
@@ -459,7 +459,7 @@ class MenuItemGroupsComponent
   /// Returns `true` if any of the affix shortcut actions are triggered. If
   /// multiple shortcut keys match the given [keyCode], then all matching
   /// shortcut actions are triggered.
-  bool _triggerAffixShortcutActions(MenuItem item, int keyCode) {
+  bool _triggerAffixShortcutActions(MenuItem? item, int keyCode) {
     if (item == null || !item.enabled) return false;
 
     final matching = item.itemSuffixes
@@ -516,8 +516,8 @@ class MenuItemGroupsComponent
     }
 
     // If the group containing the active item is collapsed, expand it.
-    for (final group in menu.itemGroups) {
-      if (group.contains(activeModel.activeItem) && group.isCollapsible) {
+    for (final group in menu!.itemGroups) {
+      if (group.contains(activeModel.activeItem) && group.isCollapsible!) {
         group.isExpanded = true;
         break;
       }
@@ -536,7 +536,7 @@ class MenuItemGroupsComponent
   }
 
   void _openSubMenuOnHover() {
-    _openSubMenu(_hoveredItem);
+    _openSubMenu(_hoveredItem!);
     _changeDetector.markForCheck();
   }
 
@@ -559,10 +559,10 @@ class MenuItemGroupsComponent
   /// menu item is checked (true), unchecked (false), or represents a sub-level
   /// menu of other menu items that have a mixture of checked and unchecked
   /// values (mixed)." - https://www.w3.org/TR/wai-aria-1.1/#menuitemcheckbox
-  void _updateItemsAriaCheckedState(MenuModel menu) {
+  void _updateItemsAriaCheckedState(MenuModel? menu) {
     if (menu?.itemGroups?.isEmpty ?? true) return;
 
-    for (final group in menu.itemGroups) {
+    for (final group in menu!.itemGroups) {
       if (group is MenuItemGroupWithSelection) {
         for (final item in group) {
           // Update the submenu's items first.
@@ -574,7 +574,7 @@ class MenuItemGroupsComponent
 
           if (!item.hasSubMenu) {
             item.ariaChecked = isSelected.toString();
-          } else if (group.selectionModel.isSingleSelect) {
+          } else if (group.selectionModel.isSingleSelect!) {
             item.ariaChecked =
                 (isSelected || _anyChildrenSelected(group, item)).toString();
           } else {
@@ -592,13 +592,13 @@ class MenuItemGroupsComponent
 
   /// Whether any children in an item's submenu are selected.
   bool _anyChildrenSelected(MenuItemGroup group, MenuItem item) =>
-      item.subMenu.itemGroups.any((g) =>
+      item.subMenu!.itemGroups.any((g) =>
           g is MenuItemGroupWithSelection &&
           g.any((i) => _isSelected(g.selectionModel, i)));
 
   /// Whether all children in an item's submenu are selected.
   bool _everyChildrenSelected(MenuItemGroup group, MenuItem item) =>
-      item.subMenu.itemGroups.every((g) =>
+      item.subMenu!.itemGroups.every((g) =>
           g is MenuItemGroupWithSelection &&
           g.every((i) => _isSelected(g.selectionModel, i)));
 }

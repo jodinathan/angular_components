@@ -6,7 +6,7 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:angular/angular.dart';
-import 'package:angular/meta.dart';
+import 'package:angular/src/meta.dart';
 import 'package:angular_components/button_decorator/button_decorator.dart';
 import 'package:angular_components/dynamic_component/dynamic_component.dart';
 import 'package:angular_components/glyph/glyph.dart';
@@ -44,10 +44,10 @@ import 'package:angular_components/utils/disposer/disposer.dart';
 class MaterialSelectItemComponent<T> extends ButtonDirective
     implements
         OnDestroy,
-        SelectionItem<T>,
+        SelectionItem<T?>,
         HasRenderer<T>,
         HasComponentRenderer,
-        HasFactoryRenderer<RendersValue, T> {
+        HasFactoryRenderer<RendersValue, T?> {
   @HostBinding('class')
   static const hostClass = 'item';
 
@@ -58,7 +58,7 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
 
   final HtmlElement element;
 
-  StreamSubscription _selectionChangeStreamSub;
+  StreamSubscription? _selectionChangeStreamSub;
 
   MaterialSelectItemComponent(
       this.element,
@@ -76,7 +76,7 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
 
   @HostBinding('class.disabled')
   @override
-  bool get disabled => super.disabled;
+  bool? get disabled => super.disabled;
 
   /// Whether the item should be hidden.
   ///
@@ -93,7 +93,7 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
   /// (via the `itemRenderer` property).
   @Input()
   @override
-  T value;
+  T? value;
 
   bool _supportsMultiSelect = false;
 
@@ -115,13 +115,13 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
   /// still be passed as content).
   @Input()
   @override
-  ItemRenderer<T> itemRenderer = nullRenderer;
+  ItemRenderer<T>? itemRenderer = nullRenderer;
 
   @Input()
   @override
   @Deprecated('Use factoryrenderer instead as it will produce more '
       'tree-shakeable code.')
-  ComponentRenderer componentRenderer;
+  ComponentRenderer? componentRenderer;
 
   /// Returns a [ComponentFactory] for dynamic component loader to use to render
   /// an item.
@@ -131,7 +131,7 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
   /// update the component.
   @Input()
   @override
-  FactoryRenderer<RendersValue, T> factoryRenderer;
+  FactoryRenderer<RendersValue, T?>? factoryRenderer;
 
   /// If true, check marks are used instead of checkboxes to indicate whether or
   /// not the item is selected for multi-select items.
@@ -161,25 +161,25 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
   bool _deselectOnActivate = true;
 
   bool get valueHasLabel => valueLabel != null;
-  String get valueLabel {
+  String? get valueLabel {
     if (value == null) {
       return null;
     } else if (componentRenderer == null &&
         factoryRenderer == null &&
         !identical(itemRenderer, nullRenderer)) {
-      return itemRenderer(value);
+      return itemRenderer!(value);
     }
     return null;
   }
 
-  SelectionModel<T> _selection;
+  SelectionModel<T?>? _selection;
   @override
-  SelectionModel<T> get selection => _selection;
+  SelectionModel<T?> get selection => _selection!;
 
   /// Selection model to update with changes.
   @Input()
   @override
-  set selection(SelectionModel<T> sel) {
+  set selection(SelectionModel<T?> sel) {
     _selection = sel;
     _supportsMultiSelect = sel is MultiSelectionModel<T>;
 
@@ -203,14 +203,14 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
   bool closeOnActivate = true;
 
   // TODO(google): Remove after migration from ComponentRenderer is complete
-  Type get componentType =>
-      componentRenderer != null ? componentRenderer(value) : null;
+  Type? get componentType =>
+      componentRenderer != null ? componentRenderer!(value) : null;
 
-  ComponentFactory get componentFactory =>
-      factoryRenderer != null ? factoryRenderer(value) : null;
+  ComponentFactory? get componentFactory =>
+      factoryRenderer != null ? factoryRenderer!(value) : null;
 
   @HostBinding('attr.aria-checked')
-  bool get isAriaChecked =>
+  bool? get isAriaChecked =>
       !supportsMultiSelect || hideCheckbox ? null : isSelected;
 
   /// Whether this item should be marked as selected.
@@ -232,10 +232,10 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
 
     if (_activationHandler?.handle(e, value) ?? false) return;
     if (_selectOnActivate && _selection != null && value != null) {
-      if (!_selection.isSelected(value)) {
-        _selection.select(value);
+      if (!_selection!.isSelected(value)) {
+        _selection!.select(value);
       } else if (_deselectOnActivate) {
-        _selection.deselect(value);
+        _selection!.deselect(value);
       }
     }
   }

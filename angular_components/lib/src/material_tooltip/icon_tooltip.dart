@@ -124,7 +124,7 @@ class MaterialIconTooltipComponent implements DeferredContentAware {
   }
 
   @ViewChild('tooltipRef')
-  TooltipBehavior tooltipBehavior;
+  TooltipBehavior? tooltipBehavior;
 
   @ViewChild(MaterialPaperTooltipComponent)
   set deferredContentAware(DeferredContentAware deferredContentAware) {

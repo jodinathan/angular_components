@@ -68,7 +68,7 @@ class TooltipController {
   }
 
   /// The currently active tooltip.
-  Tooltip _activeTooltip;
+  Tooltip? _activeTooltip;
 
   /// Timers to close each tooltip.
   final _closeTimerByTooltip = <Tooltip, Timer>{};

@@ -49,12 +49,12 @@ class ComparisonRangeEditorComponent {
   /// A mutable model describing a comparison date range. The only expected
   /// non-test implementation is [DateRangeEditorModel].
   @Input()
-  HasComparisonRange model;
+  late HasComparisonRange model;
   final Map<ComparisonOption, String> _optionMsgCache = {};
-  DatepickerDateRange _primaryDateRange;
+  DatepickerDateRange? _primaryDateRange;
 
   // Handle the comparison toggle.
-  bool get comparisonEnabled => model.comparisonEnabled;
+  bool get comparisonEnabled => model.comparisonEnabled!;
 
   set comparisonEnabled(bool enabled) {
     model.comparisonEnabled = enabled;
@@ -71,7 +71,7 @@ class ComparisonRangeEditorComponent {
       desc: 'Label for a toggle that turns time comparison on/off.');
 
   /// Gets display message from given option.
-  String comparisonOptionMsg(ComparisonOption option) {
+  String? comparisonOptionMsg(ComparisonOption option) {
     if (_primaryDateRange != model.primaryRange) {
       _updateOptionMsg();
       _primaryDateRange = model.primaryRange;

@@ -5,7 +5,7 @@
 import 'dart:html';
 
 import 'package:angular/angular.dart';
-import 'package:angular/meta.dart';
+import 'package:angular/src/meta.dart';
 import 'package:angular_components/material_ripple/material_ripple.dart';
 
 import 'material_button_base.dart';
@@ -71,11 +71,11 @@ class MaterialFabComponent extends MaterialButtonBase {
 
   @visibleForTemplate
   @HostBinding('attr.disabled')
-  String get hostDisabled => disabled ? '' : null;
+  String? get hostDisabled => disabled! ? '' : null;
 
   @visibleForTemplate
   @HostBinding('attr.raised')
-  String get hostRaised => raised ? '' : null;
+  String? get hostRaised => raised ? '' : null;
 
   @visibleForTemplate
   @HostBinding('class.is-focused')

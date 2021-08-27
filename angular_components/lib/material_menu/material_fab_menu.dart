@@ -6,7 +6,7 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:angular/angular.dart';
-import 'package:angular/meta.dart';
+import 'package:angular/src/meta.dart';
 import 'package:angular_components/content/deferred_content.dart';
 import 'package:angular_components/focus/focus.dart';
 import 'package:angular_components/focus/focus_trap.dart';
@@ -57,11 +57,11 @@ class MaterialFabMenuComponent extends Object
 
   /// Popup positions for the menu popup to show up in.
   @Input()
-  List<RelativePosition> preferredPopupPositions;
+  List<RelativePosition>? preferredPopupPositions;
 
-  StreamSubscription _viewModelStreamSub;
+  StreamSubscription? _viewModelStreamSub;
 
-  MaterialFabMenuModel _viewModel;
+  MaterialFabMenuModel? _viewModel;
 
   MaterialFabMenuComponent(this._changeDetector);
 
@@ -75,7 +75,7 @@ class MaterialFabMenuComponent extends Object
   /// If the item has sub menu with no empty item groups, a menu will be
   /// surfaced via clicking or hovering.
   @Input()
-  set menuItem(MenuItem menuItem) {
+  set menuItem(MenuItem? menuItem) {
     if (menuItem == null) return;
 
     viewModel = MaterialFabMenuModel(menuItem, showPopup: showPopup);
@@ -88,7 +88,7 @@ class MaterialFabMenuComponent extends Object
 
     _viewModel = value;
     _viewModelStreamSub?.cancel();
-    _viewModelStreamSub = _viewModel.onShowPopupChange.listen((_) {
+    _viewModelStreamSub = _viewModel!.onShowPopupChange.listen((_) {
       _changeDetector.markForCheck();
     });
   }
@@ -97,17 +97,17 @@ class MaterialFabMenuComponent extends Object
   // TODO(google): See if we can remove this input now that we are open
   // sourced.
   @Input()
-  String naviId;
+  String? naviId;
 
-  MenuItem get menuItem => _viewModel?.menuItem;
+  MenuItem? get menuItem => _viewModel?.menuItem;
 
   bool get isFabEnabled => _viewModel?.isFabEnabled ?? false;
 
-  String get glyph => _viewModel?.glyph;
+  String? get glyph => _viewModel?.glyph;
 
-  String get ariaLabel => _viewModel?.ariaLabel;
+  String? get ariaLabel => _viewModel?.ariaLabel;
 
-  String get tooltip => _viewModel?.tooltip;
+  String? get tooltip => _viewModel?.tooltip;
 
   bool get hasTooltip => tooltip?.isNotEmpty ?? false;
 
@@ -123,7 +123,7 @@ class MaterialFabMenuComponent extends Object
 
   bool get menuVisible => _menuVisible;
 
-  bool get hasIcons => _viewModel.hasIcons;
+  bool get hasIcons => _viewModel!.hasIcons;
 
   @visibleForTemplate
   bool get activateFirstItemOnInit => _activateFirstItemOnInit;
@@ -156,7 +156,7 @@ class MaterialFabMenuComponent extends Object
   }
 
   void onPopupClosed() {
-    _viewModel.closePopup();
+    _viewModel!.closePopup();
     _hideMenuContent();
   }
 
@@ -169,7 +169,7 @@ class MaterialFabMenuComponent extends Object
   void hideMenu() {
     _hideMenuContent();
     Future.delayed(MaterialPopupComponent.SLIDE_DELAY, () {
-      _viewModel.closePopup();
+      _viewModel!.closePopup();
     });
   }
 
@@ -177,7 +177,7 @@ class MaterialFabMenuComponent extends Object
       {bool activateFirstItem = false, bool activateLastItem = false}) {
     _activateFirstItemOnInit = activateFirstItem;
     _activateLastItemOnInit = activateLastItem;
-    _viewModel.trigger();
+    _viewModel!.trigger();
   }
 
   void _hideMenuContent() {
@@ -216,7 +216,7 @@ class MaterialFabMenuModel {
   MaterialFabMenuModel(this.menuItem, {bool showPopup = false})
       : _showPopup = ObservableReference<bool>(showPopup);
 
-  Stream<Change<bool>> get onShowPopupChange => _showPopup.changes;
+  Stream<Change<bool?>> get onShowPopupChange => _showPopup.changes;
 
   /// True if the [menuItem] exists and has at least one item.
   bool get hasMenu => menuItem.subMenu?.itemGroups?.isNotEmpty ?? false;
@@ -224,23 +224,23 @@ class MaterialFabMenuModel {
   /// True if the FAB has a menu and at least one menu item has an icon.
   bool get hasIcons =>
       hasMenu &&
-      menuItem.subMenu.itemGroups
+      menuItem.subMenu!.itemGroups
           .any((itemGroup) => itemGroup.any((item) => item.hasIcon));
 
   /// True if the FAB menu should be shown.
-  bool get showPopup => _showPopup.value;
+  bool? get showPopup => _showPopup.value;
 
   /// True if FAB is in an enabled state - can be clicked and triggered.
   bool get isFabEnabled => menuItem.enabled ?? false;
 
   /// Name of glyph displayed within FAB circle.
-  String get glyph => menuItem.icon?.name;
+  String? get glyph => menuItem.icon?.name;
 
-  String get ariaLabel => menuItem.label;
+  String? get ariaLabel => menuItem.label;
 
-  String get tooltip => menuItem.tooltip ?? menuItem.label;
+  String? get tooltip => menuItem.tooltip ?? menuItem.label;
 
-  bool get isFabHidden => hasMenu ? _showPopup.value : false;
+  bool? get isFabHidden => hasMenu ? _showPopup.value : false;
 
   /// If the FAB has a sub-menu, then open the sub-menu popup, otherwise only
   /// trigger the action callback on the FAB menu item model.
@@ -248,7 +248,7 @@ class MaterialFabMenuModel {
     if (hasMenu) {
       _showPopup.value = true;
     } else if (menuItem.action != null) {
-      menuItem.action();
+      menuItem.action!();
     }
   }
 

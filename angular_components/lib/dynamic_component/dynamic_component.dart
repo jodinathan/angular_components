@@ -18,11 +18,10 @@ import 'package:angular_components/model/ui/has_renderer.dart';
   changeDetection: ChangeDetectionStrategy.OnPush,
 )
 class DynamicComponent implements OnDestroy, AfterChanges {
-  final SlowComponentLoader _slowComponentLoader;
   final ComponentLoader _componentLoader;
-  final _onLoadController = StreamController<ComponentRef>();
+  final _onLoadController = StreamController<ComponentRef?>();
 
-  ViewContainerRef _viewContainerRef;
+  ViewContainerRef? _viewContainerRef;
   bool _loadDeferred = false;
 
   @ViewChild('marker', read: ViewContainerRef)
@@ -34,23 +33,23 @@ class DynamicComponent implements OnDestroy, AfterChanges {
     }
   }
 
-  ComponentRef _childComponent;
-  Type _componentType;
+  ComponentRef? _childComponent;
+  Type? _componentType;
   bool _typeChanged = false;
-  ComponentFactory _componentFactory;
+  ComponentFactory? _componentFactory;
   bool _factoryChanged = false;
-  Object _value;
+  Object? _value;
   bool _valueChanged = false;
 
   /// Fired when component is loaded allowing clients to get a handle on the
   /// component loaded.
   @Output()
-  Stream<ComponentRef> get onLoad => _onLoadController.stream;
+  Stream<ComponentRef?> get onLoad => _onLoadController.stream;
 
-  DynamicComponent(this._slowComponentLoader, this._componentLoader);
+  DynamicComponent(this._componentLoader);
 
   /// Returns the loaded dynamic component reference.
-  ComponentRef get childComponent => _childComponent;
+  ComponentRef? get childComponent => _childComponent;
 
   @override
   void ngOnDestroy() {
@@ -104,40 +103,19 @@ class DynamicComponent implements OnDestroy, AfterChanges {
   }
 
   void _initialize() {
-    if (_componentFactory != null) {
-      if (_childComponent != null) {
-        throw 'Attempting to overwrite a dynamic component';
-      }
-
-      _childComponent = _componentLoader.loadNextToLocation(
-          _componentFactory, _viewContainerRef);
-      _onLoadController.add(_childComponent);
-      _updateChildComponent();
-    } else if (_componentType != null) {
-      // TODO(google): Remove this code once componentType is no longer used.
-      Type loadType = _componentType;
-      _slowComponentLoader
-          .loadNextToLocation(loadType, _viewContainerRef)
-          .then((ComponentRef componentRef) {
-        if (loadType != _componentType) {
-          // During the load time, the component type has changed,
-          // and the type we just loaded is no longer valid.
-          componentRef.destroy();
-          return;
-        }
-        if (_childComponent != null) {
-          throw 'Attempting to overwrite a dynamic component';
-        }
-        _childComponent = componentRef;
-        _onLoadController.add(componentRef);
-        _updateChildComponent();
-      });
+    if (_childComponent != null) {
+      throw 'Attempting to overwrite a dynamic component';
     }
+
+    _childComponent = _componentLoader.loadNextToLocation(
+        _componentFactory!, _viewContainerRef!);
+    _onLoadController.add(_childComponent);
+    _updateChildComponent();
   }
 
   void _updateChildComponent() {
     if (_childComponent != null) {
-      _childComponent.update((instance) {
+      _childComponent!.update((instance) {
         if (instance is RendersValue) {
           instance.value = _value;
         }

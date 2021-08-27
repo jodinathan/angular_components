@@ -71,10 +71,10 @@ class MaterialTreeDropdownComponent<T>
   bool _expandAll = false;
   String _placeholder = _DEFAULT_PLACEHOLDER;
   bool _visible = false;
-  List<RelativePosition> _customPopupPositions;
+  List<RelativePosition>? _customPopupPositions;
 
   @ViewChild(MaterialTreeFilterComponent)
-  MaterialTreeFilterComponent materialTreeFilterComponent;
+  MaterialTreeFilterComponent? materialTreeFilterComponent;
 
   /// Fired when the dropdown's visibility changes.
   @Output()
@@ -119,13 +119,13 @@ class MaterialTreeDropdownComponent<T>
   /// Function to convert the selected value to a string to be displayed as the
   /// button text.
   @Input()
-  ItemRenderer labelRenderer;
+  ItemRenderer? labelRenderer;
 
   bool get showFilterInsideButton =>
       supportsFiltering && !showFilterInsidePopup;
 
-  Filterable get filterableOptions => options is Filterable
-      ? options as Filterable
+  Filterable? get filterableOptions => options is Filterable
+      ? options as Filterable?
       : throw StateError(
           'The SelectionOptions provided should implement Filterable');
 
@@ -138,9 +138,9 @@ class MaterialTreeDropdownComponent<T>
   /// If a value has been selected for a single-select dropdown, this will
   /// render the selected value with [labelRenderer], [itemRenderer], or
   /// [defaultItemRenderer] in that order of preference.
-  String get placeholder {
+  String? get placeholder {
     if (selection is! MultiSelectionModel && selection.isNotEmpty) {
-      return (labelRenderer ?? (itemRenderer ?? defaultItemRenderer))(
+      return (labelRenderer ?? (itemRenderer as String? Function(dynamic)? ?? defaultItemRenderer))(
           selection.selectedValues.first);
     }
     return _placeholder;
@@ -158,7 +158,7 @@ class MaterialTreeDropdownComponent<T>
   @Deprecated('Use [factoryRenderer] instead')
   @Input()
   @override
-  set componentRenderer(ComponentRenderer value) {
+  set componentRenderer(ComponentRenderer? value) {
     super.componentRenderer = value;
   }
 
@@ -166,21 +166,21 @@ class MaterialTreeDropdownComponent<T>
   /// rendering an item.
   @Input()
   @override
-  set factoryRenderer(FactoryRenderer<RendersValue, T> value) {
+  set factoryRenderer(FactoryRenderer<RendersValue, T>? value) {
     super.factoryRenderer = value;
   }
 
   /// A simple function to render the item to string.
   @Input()
   @override
-  set itemRenderer(ItemRenderer<T> value) {
+  set itemRenderer(ItemRenderer<T>? value) {
     super.itemRenderer = value;
   }
 
   /// The available options for this contianer.
   @Input()
   @override
-  set options(SelectionOptions<T> value) {
+  set options(SelectionOptions<T>? value) {
     super.options = value;
   }
 
@@ -193,7 +193,7 @@ class MaterialTreeDropdownComponent<T>
 
   /// Placeholder to be used for the dropdown text when nothing is selected.
   @Input()
-  set placeholder(String placeholder) {
+  set placeholder(String? placeholder) {
     _placeholder = placeholder ?? _DEFAULT_PLACEHOLDER;
   }
 

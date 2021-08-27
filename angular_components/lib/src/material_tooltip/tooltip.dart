@@ -33,18 +33,18 @@ class MaterialTooltipDirective extends TooltipTarget
   final String _popupClassName;
   final Window _window;
 
-  String _lastText;
+  String? _lastText;
   bool _isInitialized = false;
-  Tooltip _tooltip;
+  Tooltip? _tooltip;
   bool _canShow = true;
   bool _isShown = false;
-  MaterialInkTooltipComponent _inkTooltip;
-  DelayedAction _delayedActivate;
+  MaterialInkTooltipComponent? _inkTooltip;
+  late DelayedAction _delayedActivate;
   HtmlElement element;
-  bool inLongPress;
+  late bool inLongPress;
   bool _hostListenersAttached = false;
 
-  ComponentRef _componentRef;
+  late ComponentRef _componentRef;
 
   MaterialTooltipDirective(
       DomPopupSourceFactory domPopupSourceFactory,
@@ -140,7 +140,7 @@ class MaterialTooltipDirective extends TooltipTarget
       ..text = _lastText
       ..tooltipRef = this;
     if (positions != null) {
-      _inkTooltip.positions = positions;
+      _inkTooltip!.positions = positions;
     }
   }
 
@@ -156,7 +156,7 @@ class MaterialTooltipDirective extends TooltipTarget
 
   void _activate() {
     _changeDetector.markForCheck();
-    _tooltip.activate();
+    _tooltip!.activate();
   }
 
   /// The text to show in the tooltip.
@@ -183,7 +183,7 @@ class MaterialTooltipDirective extends TooltipTarget
 
   /// Positions that the tooltip should try to show.
   @Input('tooltipPositions')
-  List<RelativePosition> positions;
+  List<RelativePosition>? positions;
 
   @override
   void ngOnInit() {
