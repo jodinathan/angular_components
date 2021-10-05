@@ -10,14 +10,8 @@ environment:
   sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
-  angular:
-    git: 
-      url: https://github.com/angulardart-community/angular
-      path: angular
-  angular_forms: 
-    git: 
-      url: https://github.com/angulardart-community/angular
-      path: angular_forms
+  angular: ^7.0.0
+  angular_forms: ^4.0.0
   async: ^2.8.2
   build: ^2.1.0
   build_config: ^1.0.0
@@ -28,7 +22,7 @@ dependencies:
   js: ^0.6.3
   logging: ^1.0.1
   meta: ^1.7.0
-  observable:
+  observable: # Please Google just publish it!!!
     git:
       url: https://github.com/google/observable
   protobuf: ^2.0.0
