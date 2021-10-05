@@ -51,9 +51,9 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
   final StreamController<Null> _onUpdate =
       StreamController.broadcast(sync: true);
 
-  ElementScrollHostBase _scrollHost;
+  late ElementScrollHostBase _scrollHost;
 
-  bool _disableAutoScroll;
+  late bool _disableAutoScroll;
   bool _usePositionSticky = false;
   bool _useTouchGestureListener = true;
   bool _enableSmoothPushing = false;
@@ -67,7 +67,7 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
   }
 
   void _init() {
-    _scrollHost?.dispose();
+    _scrollHost.dispose();
     _scrollHost = ElementScrollHostBase(
         _domService, _ngZone, _gestureListenerFactory, element,
         usePositionSticky: _usePositionSticky,
@@ -109,7 +109,7 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
   @Input()
   set enableSmoothPushing(bool value) {
     _enableSmoothPushing = value;
-    stickyController?.enableSmoothPushing = value;
+    stickyController.enableSmoothPushing = value;
   }
 
   /// Whether to use the position: sticky [StickyController] for improved
@@ -157,7 +157,7 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
 
   @override
   void dispose() {
-    _scrollHost?.dispose();
+    _scrollHost.dispose();
     _onUpdate.close();
   }
 
@@ -166,10 +166,10 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
 
   @override
   void scrollToPosition(int position) =>
-      _scrollHost?.scrollToPosition(position);
+      _scrollHost.scrollToPosition(position);
 
   @override
-  void scrollWithDelta(int delta) => _scrollHost?.scrollWithDelta(delta);
+  void scrollWithDelta(int delta) => _scrollHost.scrollWithDelta(delta);
 
   @override
   void startNativeScrollListener() => _scrollHost.startNativeScrollListener();
@@ -214,7 +214,7 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
   PanController get panController => _scrollHost.panController;
 
   @override
-  StickyController get stickyController => _scrollHost?.stickyController;
+  StickyController get stickyController => _scrollHost.stickyController;
 
   @override
   int get scrollLength => _scrollHost.scrollLength;
@@ -325,9 +325,9 @@ class AcxPanClassDirective extends BasePanClassDirective
 class StickyElementDirective implements AfterViewInit, OnDestroy {
   final Element _stickyElement;
   final ScrollHost _scrollHost;
-  Element _endElement;
-  String _stickyClass;
-  String _stickyKey;
+  late Element _endElement;
+  late String _stickyClass;
+  late String _stickyKey;
   bool _sticky = true;
   StickyPosition _position = StickyPosition.TOP;
 
@@ -386,12 +386,12 @@ class StickyElementDirective implements AfterViewInit, OnDestroy {
   }
 
   void _stick() {
-    _stickyController?.stick(_stickyElement, _position, _endElement,
+    _stickyController.stick(_stickyElement, _position, _endElement,
         stickyClass: _stickyClass, stickyKey: _stickyKey);
   }
 
   void _unstick() {
-    _stickyController?.unstick(_stickyElement);
+    _stickyController.unstick(_stickyElement);
   }
 
   StickyController get _stickyController => _scrollHost.stickyController;

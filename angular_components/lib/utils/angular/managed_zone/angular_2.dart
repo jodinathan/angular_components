@@ -18,10 +18,10 @@ class Angular2ManagedZone extends ManagedZoneBase {
   bool _isDisposed = false;
 
   @override
-  Zone innerZone;
+  late Zone innerZone;
 
   @override
-  Zone outerZone;
+  late Zone outerZone;
 
   Angular2ManagedZone(this._ngZone) {
     _ngZone.runOutsideAngular(() {

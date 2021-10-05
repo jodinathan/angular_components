@@ -21,7 +21,7 @@ class AutoIdDirective {
   final String id;
 
   AutoIdDirective(
-      @Optional() IdGenerator idGenerator, @Attribute('id') String existingId)
+      @Optional() IdGenerator? idGenerator, @Attribute('id') String? existingId)
       : id = existingId ??
             ((idGenerator ?? SequentialIdGenerator.fromUUID()).nextId());
 }
