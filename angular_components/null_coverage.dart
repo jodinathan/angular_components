@@ -31,5 +31,5 @@ Future<void> main(List<String> args) async {
 
   print('${((1 - need_migrate.length / count) * 100).round()}% Done!');
   print(
-      '${need_migrate.length} out of $count files still needs to be migrated!');
+      '${need_migrate.length} out of $count files still need to be migrated!');
 }
