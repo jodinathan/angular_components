@@ -1,4 +1,6 @@
-I attempt to migrate it little by little, perhaps one `dart` file every day. ~~As the saying goes: a commit a day, keeps the doctor away.
+[![AngularDart Chat](https://img.shields.io/gitter/room/angulardart/community?color=blue&label=angulardart%2Fcommunity&logo=matrix)](https://gitter.im/angulardart/community)
+
+> I attempt to migrate it to null-safety little by little, perhaps one `dart` file every day. ~~As the saying goes: a commit a day, keeps the doctor away.~~
 
 [Material design] components for [AngularDart]. Powering some of Google's most
 sophisticated and mission-critical [applications].
