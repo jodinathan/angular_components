@@ -1,3 +1,5 @@
+I attempt to migrate it little by little, perhaps one `dart` file every day. ~~As the saying goes: a commit a day, keeps the doctor away.
+
 [Material design] components for [AngularDart]. Powering some of Google's most
 sophisticated and mission-critical [applications].
 
