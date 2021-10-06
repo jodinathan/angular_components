@@ -1,15 +1,15 @@
-include: package:pedantic/analysis_options.1.8.0.yaml
+include: package:lints/recommended.yaml
 
-analyzer:
-  errors:
-    dead_code: warning
-    todo: ignore
-    unused_element: warning
-    unused_import: warning
-    unused_local_variable: warning
-    uri_has_not_been_generated: ignore
-    deprecated_member_use_from_same_package: ignore
-
-linter:
-  rules:
-  - prefer_generic_function_type_aliases
+#include: package:pedantic/analysis_options.1.8.0.yaml
+#analyzer:
+#  errors:
+#    dead_code: warning
+#    todo: ignore
+#    unused_element: warning
+#    unused_import: warning
+#    unused_local_variable: warning
+#    uri_has_not_been_generated: ignore
+#    deprecated_member_use_from_same_package: ignore
+#linter:
+#  rules:
+#  - prefer_generic_function_type_aliases
