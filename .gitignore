@@ -25,3 +25,10 @@ doc/api/
 # Vim
 *.yaml~
 *.dart~
+
+## VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+
+## Misc ##
+.metals/
