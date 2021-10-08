@@ -21,7 +21,7 @@ class PositiveNumValidator implements Validator {
   bool enabled = true;
 
   @override
-  Map<String, dynamic> validate(AbstractControl control) {
+  Map<String, dynamic>? validate(AbstractControl control) {
     if (!enabled || control.value == null) {
       return null; // Handled by accessor validator
     }
@@ -52,7 +52,7 @@ class CheckNonNegativeValidator implements Validator {
   bool enabled = true;
 
   @override
-  Map<String, dynamic> validate(AbstractControl control) {
+  Map<String, dynamic>? validate(AbstractControl control) {
     if (!enabled || control.value == null) return null;
     assert(control.value is Comparable, 'Value needs to be comparable');
     if (control.value < 0) {
@@ -82,10 +82,10 @@ class LowerBoundValidator implements Validator {
 
   /// Smallest allowed value.
   @Input()
-  num lowerBound;
+  num? lowerBound;
 
   @override
-  Map<String, dynamic> validate(AbstractControl control) {
+  Map<String, dynamic>? validate(AbstractControl control) {
     if (control.value == null || lowerBound == null) return null;
     assert(control.value is Comparable, 'Value needs to be Comparable');
     if (control.value < lowerBound) {
@@ -119,10 +119,10 @@ class UpperBoundValidator implements Validator {
 
   /// Largest allowed value.
   @Input()
-  num upperBound;
+  num? upperBound;
 
   @override
-  Map<String, dynamic> validate(AbstractControl control) {
+  Map<String, dynamic>? validate(AbstractControl control) {
     if (control.value == null) return null; // Handled by accessor validator
     assert(control.value is Comparable, 'Value needs to be Comparable');
     if (control.value > upperBound) {

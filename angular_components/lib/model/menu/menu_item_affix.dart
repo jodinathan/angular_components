@@ -27,7 +27,7 @@ abstract class MenuItemAffix<FactoryType /* =ComponentFactory */ > {
   bool hasShortcutKeyCode(int keyCode);
   void triggerShortcutAction();
 
-  String get cssClass;
+  String? get cssClass;
 }
 
 typedef IconAction = void Function();

@@ -36,7 +36,7 @@ class MaterialStackableDrawerComponent
   set visible(bool newVisible) {
     super.visible = newVisible;
 
-    parent?.isExpanded = newVisible;
+    parent.isExpanded = newVisible;
   }
 
   @HostBinding('class.mat-drawer-collapsed')

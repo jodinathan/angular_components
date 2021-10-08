@@ -13,7 +13,7 @@ import 'package:angular_components/utils/id_generator/id_generator.dart';
 /// Basic interface for a Tab.
 abstract class Tab extends Focusable {
   /// The label to be shown on the tab button.
-  String get label;
+  String? get label;
 
   /// The unique id for the tab button.
   String get tabId;
@@ -59,7 +59,7 @@ class MaterialTabComponent extends RootFocusable
   /// The label for this tab.
   @override
   @Input()
-  String label;
+  String? label;
 
   @override
   void deactivate() {

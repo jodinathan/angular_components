@@ -25,26 +25,26 @@ class PopupPositionMixin implements PopupSizeProvider {
   PopupSizeProvider delegatePopupSizeProvider = PercentagePopupSizeProvider();
 
   @override
-  num getMinWidth(num positionX, num viewportWidth) =>
+  num? getMinWidth(num positionX, num viewportWidth) =>
       delegatePopupSizeProvider.getMinWidth(positionX, viewportWidth);
 
   @override
-  num getMinHeight(num positionY, num viewportHeight) =>
+  num? getMinHeight(num positionY, num viewportHeight) =>
       delegatePopupSizeProvider.getMinHeight(positionY, viewportHeight);
 
   @override
-  num getMaxWidth(num positionX, num viewportWidth) =>
+  num? getMaxWidth(num positionX, num viewportWidth) =>
       delegatePopupSizeProvider.getMaxHeight(positionX, viewportWidth);
 
   @override
-  num getMaxHeight(num positionY, num viewportHeight) {
+  num? getMaxHeight(num positionY, num viewportHeight) {
     var maxHeight =
         delegatePopupSizeProvider.getMaxHeight(positionY, viewportHeight);
     if (_popupPosition == PopupPosition.BELOW) {
       // Prevent popup content from going off the bottom of the visible
       // viewport.
       return max(_MIN_HEIGHT_PX,
-          min(viewportHeight - positionY - _EDGE_SPACE_PX, maxHeight));
+          min(viewportHeight - positionY - _EDGE_SPACE_PX, maxHeight!));
     } else {
       return maxHeight;
     }

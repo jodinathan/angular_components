@@ -15,7 +15,7 @@ import 'package:angular_components/model/selection/tree_selection_options.dart';
 /// Used in [TreeDropdownSelectComponent] when 'auto-select-children'
 /// option in ess is turned true.
 class TreePropagationSelectionModel<T>
-    extends DelegatingMultiSelectionModel<T> {
+    extends DelegatingMultiSelectionModel<T?> {
   /// The available options for this for the tree selection.
   final TreeSelectionOptions<T> _treeOptions;
 
@@ -26,7 +26,7 @@ class TreePropagationSelectionModel<T>
   /// When given a selected entity, this will check the
   /// treeoptions for children and select them all.
   @override
-  bool select(T value) {
+  bool select(T? value) {
     bool wasNewSelection = super.select(value);
     if (wasNewSelection) {
       super.selectAll(_treeOptions.allChildrenOf(value));
@@ -37,7 +37,7 @@ class TreePropagationSelectionModel<T>
   /// When given a un-selected entity, this will check the
   /// treeoptions for children and deselect them.
   @override
-  bool deselect(T value) {
+  bool deselect(T? value) {
     bool wasNewSelection = super.deselect(value);
     if (wasNewSelection) {
       _treeOptions

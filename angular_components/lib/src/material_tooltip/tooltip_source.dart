@@ -43,7 +43,7 @@ class MaterialTooltipSourceDirective extends PopupSourceDirective
       desc: 'Label for help icon which opens a help center tooltip.');
 
   final HtmlElement element;
-  DelayedAction _show;
+  late DelayedAction _show;
 
   // Whether the mouse is currently inside the component.
   bool _isMouseInside = false;
@@ -111,5 +111,5 @@ class MaterialTooltipSourceDirective extends PopupSourceDirective
     _popupRef = popupRef;
   }
 
-  Toggleable _popupRef;
+  late Toggleable _popupRef;
 }

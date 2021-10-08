@@ -47,14 +47,14 @@ class ScoreboardComponent implements OnInit, OnDestroy {
   final _cardSelectionDisposer = Disposer.multi();
   final ChangeDetectorRef _changeDetector;
   final DomService _domService;
-  SelectionModel _selectionModel;
-  List<ScorecardComponent> _scorecards;
-  ScorecardBarDirective _scorecardBar;
+  late SelectionModel _selectionModel;
+  late List<ScorecardComponent> _scorecards;
+  ScorecardBarDirective? _scorecardBar;
   String chevronBack = chevronLeft;
   String chevronForward = chevronRight;
 
   /// Whether to allow for uniform widths on scorecards.
-  bool _enableUniformWidths;
+  late bool _enableUniformWidths;
   bool _initialized = false;
 
   bool get isScrollable => scrollable && (_scorecardBar?.isScrollable ?? false);
@@ -111,7 +111,7 @@ class ScoreboardComponent implements OnInit, OnDestroy {
   set scorecardBar(ScorecardBarDirective value) {
     _scorecardBar = value;
     _disposer.addDisposable(
-        _scorecardBar.refreshStream.listen((_) => _refreshArrows()));
+        _scorecardBar!.refreshStream.listen((_) => _refreshArrows()));
   }
 
   /// Type of scoreboard, e.g., standard, selectable, radio, toggle.
@@ -138,12 +138,12 @@ class ScoreboardComponent implements OnInit, OnDestroy {
   bool isVertical = false;
 
   void scrollBack() {
-    _scorecardBar.scrollBack();
+    _scorecardBar!.scrollBack();
     _resetTabIndex();
   }
 
   void scrollForward() {
-    _scorecardBar.scrollForward();
+    _scorecardBar!.scrollForward();
     _resetTabIndex();
   }
 
@@ -179,11 +179,11 @@ class ScoreboardComponent implements OnInit, OnDestroy {
   void _resetTabIndex() {
     for (ScorecardComponent component in _scorecards) {
       var offset = _scorecardOffset(component.element);
-      var scorecardBarEndPosition = _scorecardBar.currentTransformSize +
-          _scorecardBar.currentClientSize -
-          _scorecardBar.currentButtonSize;
+      var scorecardBarEndPosition = _scorecardBar!.currentTransformSize +
+          _scorecardBar!.currentClientSize -
+          _scorecardBar!.currentButtonSize;
       if (offset < scorecardBarEndPosition &&
-          offset > _scorecardBar.currentTransformSize &&
+          offset > _scorecardBar!.currentTransformSize &&
           component.selectable) {
         component.element.tabIndex = 0;
       } else {

@@ -89,7 +89,7 @@ class SimpleHtmlComponent extends _SimpleHtmlBase {
                 attributeToBool(externalUrisAllowed)));
 
   @override
-  Element get targetElement =>
+  Element? get targetElement =>
       _element.children.isEmpty ? null : _element.children.single;
 }
 
@@ -113,7 +113,7 @@ class SimpleHtmlBlockComponent extends _SimpleHtmlBase {
                 attributeToBool(externalUrisAllowed)));
 
   @override
-  Element get targetElement =>
+  Element? get targetElement =>
       _element.children.isEmpty ? null : _element.children.single;
 }
 
@@ -127,7 +127,7 @@ abstract class _SimpleHtmlBase implements OnDestroy {
   static final Logger _logger = Logger('_SimpleHtmlBase');
 
   final DomService _domService;
-  Element _cachedTargetElement;
+  Element? _cachedTargetElement;
   final _triggerStreamController =
       StreamController<UIEvent>.broadcast(sync: true);
   final _subscriptionDisposer = Disposer.multi();
@@ -143,7 +143,7 @@ abstract class _SimpleHtmlBase implements OnDestroy {
   ///
   /// If there is no such element (e.g. because the component has been removed
   /// from the DOM already), it will return null.
-  Element get targetElement;
+  Element? get targetElement;
 
   @override
   void ngOnDestroy() {
@@ -164,7 +164,7 @@ abstract class _SimpleHtmlBase implements OnDestroy {
 
         // Update the DOM.
         try {
-          _cachedTargetElement.setInnerHtml(value, validator: _nodeValidator);
+          _cachedTargetElement!.setInnerHtml(value, validator: _nodeValidator);
         } catch (e) {
           if (e is _UnsafeUriError) {
             _logger.shout('simple-html used untrusted URI: $e', e);
@@ -182,7 +182,7 @@ abstract class _SimpleHtmlBase implements OnDestroy {
           // Instruct each trigger element to send its events to
           // _triggerStreamController and register that subscription for later
           // clean-up (e.g. when this component is destroyed).
-          _cachedTargetElement
+          _cachedTargetElement!
               .querySelectorAll(_triggerSelector)
               .map((link) => link.onClick.listen(_triggerStreamController.add))
               .forEach(_subscriptionDisposer.addStreamSubscription);
@@ -233,7 +233,7 @@ class _SimpleHtmlNodeValidator implements NodeValidator {
       if (!element.attributes.containsKey('rel')) {
         throw _MalformedElementError(element, 'did not set rel attribute');
       }
-      final rel = element.attributes['rel'];
+      final rel = element.attributes['rel']!;
       if (!rel.split(' ').contains('noopener')) {
         throw _MalformedElementError(
             element, 'did not set link type noopener (only $rel)');

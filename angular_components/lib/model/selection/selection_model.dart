@@ -22,13 +22,13 @@ part 'package:angular_components/src/model/selection/single_selection_model_impl
 /// Returns a key-able object from [o].
 ///
 /// Must not return null, which is reserved to mean "no selection".
-typedef KeyProvider<T> = Object Function(T o);
+typedef KeyProvider<T> = Object? Function(T o);
 
 /// Matching function provider, for example used in SelectSuggestInput.
 typedef MatchCallback = Future<List> Function(String string);
 
 /// A simple pass-through implementation of [KeyProvider].
-Object _defaultKeyProvider(Object o) => o;
+Object? _defaultKeyProvider(Object? o) => o;
 
 /// A mixin that provides the implementation of [castIterable].
 class CastIterable<T> {
@@ -46,14 +46,14 @@ abstract class SelectionModel<T> extends Object
   const factory SelectionModel.empty() = NullSelectionModel<T>;
 
   /// Whether or not the selection model is single select.
-  bool get isSingleSelect;
+  bool? get isSingleSelect;
 
   /// Creates a single-selection model.
   ///
   /// [keyProvider] is used for equality checking. For example, [select] will
   /// only alter the selected value if the key of the new value does not equal
   /// the key of the already selected value.
-  factory SelectionModel.single({T selected, KeyProvider<T> keyProvider}) =
+  factory SelectionModel.single({T selected, KeyProvider<T?>? keyProvider}) =
       SingleSelectionModel<T>;
 
   /// Creates a single-selection model that always has a value selected.
@@ -66,23 +66,23 @@ abstract class SelectionModel<T> extends Object
   /// only alter the set of selected values if the key of the new value is not
   /// among the keys of the already selected values.
   factory SelectionModel.multi(
-      {List<T> selectedValues,
-      KeyProvider<T> keyProvider}) = MultiSelectionModel<T>;
+      {List<T>? selectedValues,
+      KeyProvider<T>? keyProvider}) = MultiSelectionModel<T>;
 
   @Deprecated('Use SelectionModel.single or SelectionModel.multi instead.')
   factory SelectionModel.withList(
-      {List<T> selectedValues,
-      KeyProvider<T> keyProvider,
+      {List<T>? selectedValues,
+      KeyProvider<T?>? keyProvider,
       bool allowMulti = false}) {
     if (allowMulti) {
       return SelectionModel<T>.multi(
           selectedValues: selectedValues, keyProvider: keyProvider);
     } else {
-      return SelectionModel<T>.single(
+      return SelectionModel<T?>.single(
           selected: (selectedValues?.isNotEmpty ?? false)
-              ? selectedValues.last
+              ? selectedValues!.last
               : null,
-          keyProvider: keyProvider);
+          keyProvider: keyProvider) as SelectionModel<T>;
     }
   }
 
@@ -123,9 +123,9 @@ abstract class NullSelectionModel<T> extends SingleSelectionModel<T> {
 }
 
 abstract class SingleSelectionModel<T> extends SelectionModel<T> {
-  factory SingleSelectionModel({T selected, KeyProvider<T> keyProvider}) =>
-      _SingleSelectionModelImpl<T>(
-          selected, keyProvider ?? _defaultKeyProvider);
+  factory SingleSelectionModel({T? selected, KeyProvider<T?>? keyProvider}) =>
+      _SingleSelectionModelImpl<T?>(
+          selected, keyProvider ?? _defaultKeyProvider) as SingleSelectionModel<T>;
 
   /// The selected value, or `null` if no value has been selected.
   T get selectedValue;
@@ -133,7 +133,7 @@ abstract class SingleSelectionModel<T> extends SelectionModel<T> {
 
 abstract class MultiSelectionModel<T> extends SelectionModel<T> {
   factory MultiSelectionModel(
-          {List<T> selectedValues, KeyProvider<T> keyProvider}) =>
+          {List<T>? selectedValues, KeyProvider<T>? keyProvider}) =>
       _MultiSelectionModelImpl<T>(
           selectedValues ?? const [], keyProvider ?? _defaultKeyProvider);
 
@@ -150,12 +150,12 @@ abstract class MultiSelectionModel<T> extends SelectionModel<T> {
 
 /// A change record for [SelectionModel.selectionChanges].
 abstract class SelectionChangeRecord<T> extends ChangeRecord {
-  factory SelectionChangeRecord({Iterable<T> added, Iterable<T> removed}) =
+  factory SelectionChangeRecord({Iterable<T>? added, Iterable<T>? removed}) =
       _SelectionChangeRecordImpl<T>;
 
   /// Returns an iterable of values added to selection.
-  Iterable<T> get added;
+  Iterable<T>? get added;
 
   /// Returns an iterable of values removed from selection.
-  Iterable<T> get removed;
+  Iterable<T>? get removed;
 }

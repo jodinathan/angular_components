@@ -39,7 +39,7 @@ import 'package:angular_components/model/ui/icon.dart';
           (trigger)="handleActionIconTrigger($event)">
       </material-icon>
     ''')
-class IconAffixComponent implements BaseAffixComponent<IconAffix> {
+class IconAffixComponent implements BaseAffixComponent<IconAffix?> {
   /// The top most menu node.
   ///
   /// Used in order to close the whole hierarchy.
@@ -47,35 +47,35 @@ class IconAffixComponent implements BaseAffixComponent<IconAffix> {
 
   final ChangeDetectorRef _cdRef;
 
-  IconAffix _viewModel;
+  IconAffix? _viewModel;
 
-  var _disabled = false;
+  bool? _disabled = false;
 
   IconAffixComponent(this._cdRef, @Optional() this._menuRoot);
 
   @visibleForTemplate
-  Icon get icon => _viewModel.icon;
+  Icon get icon => _viewModel!.icon;
 
   @visibleForTemplate
-  bool get isActionIconAffix => affix.hasAction;
+  bool get isActionIconAffix => affix!.hasAction;
 
   @visibleForTemplate
-  String get actionIconAriaLabel => _viewModel.ariaLabel;
+  String? get actionIconAriaLabel => _viewModel!.ariaLabel;
 
   @visibleForTemplate
-  IconAffix get affix => _viewModel;
+  IconAffix? get affix => _viewModel;
 
   @override
-  IconAffix get value => _viewModel;
+  IconAffix? get value => _viewModel;
 
   @override
-  set value(IconAffix newValue) {
+  set value(IconAffix? newValue) {
     _viewModel = newValue;
     _cdRef.markForCheck();
   }
 
   @override
-  bool get disabled => _disabled;
+  bool? get disabled => _disabled;
 
   @override
   set disabled(value) {
@@ -85,13 +85,13 @@ class IconAffixComponent implements BaseAffixComponent<IconAffix> {
 
   @visibleForTemplate
   void handleActionIconTrigger(Event event) {
-    if (disabled) return;
+    if (disabled!) return;
 
-    if (_viewModel.hasAction) {
-      _viewModel.triggerShortcutAction();
+    if (_viewModel!.hasAction) {
+      _viewModel!.triggerShortcutAction();
       event.stopPropagation();
 
-      if (_viewModel.shouldCloseMenuOnTrigger) _menuRoot?.closeHierarchy();
+      if (_viewModel!.shouldCloseMenuOnTrigger) _menuRoot?.closeHierarchy();
     }
   }
 }

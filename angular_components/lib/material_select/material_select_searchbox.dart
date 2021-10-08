@@ -24,11 +24,11 @@ import 'package:angular_components/utils/browser/events/events.dart';
 )
 class MaterialSelectSearchboxComponent extends FocusableMixin
     implements OnDestroy {
-  Filterable _filterable;
+  Filterable? _filterable;
   String _inputText = '';
 
   /// The last future of filtering the options.
-  DisposableFuture _lastFilterFuture;
+  DisposableFuture? _lastFilterFuture;
 
   /// Query text to filter on.
   String get inputText => _inputText;
@@ -49,7 +49,7 @@ class MaterialSelectSearchboxComponent extends FocusableMixin
   }
 
   @Input()
-  String label;
+  String? label;
 
   void _filter() {
     _lastFilterFuture?.dispose();

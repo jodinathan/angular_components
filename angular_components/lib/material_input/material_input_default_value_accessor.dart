@@ -108,7 +108,7 @@ abstract class BaseMaterialInputValueAccessor<T>
 
   @override
   void registerOnTouched(callback) {
-    StreamSubscription sub;
+    late StreamSubscription sub;
     sub = input.onBlur.listen((_) {
       sub.cancel(); // We only need the first event. Cancel the subscription.
       callback();

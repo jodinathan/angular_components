@@ -828,7 +828,7 @@ final materialColors = Map<String, Color>.unmodifiable({}
 /// Find the name of the closest Material Color given the [searchColor] color.
 String closestMaterialColorName(Color searchColor) {
   var closestColorName = materialColors.keys.first;
-  var minDistance = searchColor.distanceFrom(materialColors[closestColorName]);
+  var minDistance = searchColor.distanceFrom(materialColors[closestColorName]!);
   materialColors.forEach((String name, Color color) {
     var distance = searchColor.distanceFrom(color);
     if (distance < minDistance) {

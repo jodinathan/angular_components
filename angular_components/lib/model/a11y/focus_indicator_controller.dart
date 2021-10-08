@@ -21,11 +21,11 @@ FocusIndicatorController createFocusIndicatorControllerIfNotAvailable(
 ///
 /// Only used to improve a11y debugging experience. DO NOT USE IN PRODUCTION!
 class FocusIndicatorController {
-  Element _focusIndicator;
-  int _repositionLoopId;
+  Element? _focusIndicator;
+  int? _repositionLoopId;
 
-  Element _activeElement;
-  Element get activeElement => _activeElement;
+  Element? _activeElement;
+  Element? get activeElement => _activeElement;
 
   bool _enabled = false;
   bool get enabled => _enabled;
@@ -47,12 +47,12 @@ class FocusIndicatorController {
     _activeElement = document.activeElement;
 
     _focusIndicator = document.createElement('div');
-    _focusIndicator.id = 'acx-focus-indicator';
-    _focusIndicator.style.position = 'fixed';
-    _focusIndicator.style.zIndex = '9999';
-    _focusIndicator.style.outline = '2px solid #ff9800';
-    _focusIndicator.style.pointerEvents = 'none';
-    document.body.append(_focusIndicator);
+    _focusIndicator!.id = 'acx-focus-indicator';
+    _focusIndicator!.style.position = 'fixed';
+    _focusIndicator!.style.zIndex = '9999';
+    _focusIndicator!.style.outline = '2px solid #ff9800';
+    _focusIndicator!.style.pointerEvents = 'none';
+    document.body!.append(_focusIndicator!);
 
     _startRepositionLoop();
   }
@@ -64,7 +64,7 @@ class FocusIndicatorController {
     _activeElement = null;
 
     if (_focusIndicator != null) {
-      _focusIndicator.remove();
+      _focusIndicator!.remove();
       _focusIndicator = null;
     }
 
@@ -85,22 +85,22 @@ class FocusIndicatorController {
     if (!_enabled || _activeElement == document.activeElement) return;
 
     if (_activeElement != null) {
-      _activeElement.style.outline = '';
-      if (_activeElement.getAttribute('style')?.isEmpty == true) {
-        _activeElement.attributes.remove('style');
+      _activeElement!.style.outline = '';
+      if (_activeElement!.getAttribute('style')?.isEmpty == true) {
+        _activeElement!.attributes.remove('style');
       }
     }
 
     _activeElement = document.activeElement;
 
     window.console.groupCollapsed('Active element '
-        '[${_activeElement.tagName.toLowerCase()}] '
+        '[${_activeElement!.tagName.toLowerCase()}] '
         'after "${event.type}"');
     window.console.log(_activeElement);
     window.console.log(event);
     window.console.groupEnd();
 
-    _activeElement.style.outline = 'none';
+    _activeElement!.style.outline = 'none';
   }
 
   void _startRepositionLoop() {
@@ -109,17 +109,17 @@ class FocusIndicatorController {
 
   void _cancelRepositionLoop() {
     if (_repositionLoopId != null) {
-      window.cancelAnimationFrame(_repositionLoopId);
+      window.cancelAnimationFrame(_repositionLoopId!);
       _repositionLoopId = null;
     }
   }
 
   void _reposition(_) {
-    var rect = _activeElement.getBoundingClientRect();
-    _focusIndicator.style.top = '${rect.top}px';
-    _focusIndicator.style.left = '${rect.left}px';
-    _focusIndicator.style.width = '${rect.width}px';
-    _focusIndicator.style.height = '${rect.height}px';
+    var rect = _activeElement!.getBoundingClientRect();
+    _focusIndicator!.style.top = '${rect.top}px';
+    _focusIndicator!.style.left = '${rect.left}px';
+    _focusIndicator!.style.width = '${rect.width}px';
+    _focusIndicator!.style.height = '${rect.height}px';
 
     _startRepositionLoop();
   }

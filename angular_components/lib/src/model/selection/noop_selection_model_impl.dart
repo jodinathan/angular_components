@@ -5,11 +5,11 @@
 part of angular_components.model.selection.selection_model;
 
 /// Returned internally as a blank selection model.
-class _NoopSelectionModelImpl<T> implements NullSelectionModel<T> {
+class _NoopSelectionModelImpl<T> implements NullSelectionModel<T?> {
   const _NoopSelectionModelImpl();
 
   @override
-  final bool isSingleSelect = null;
+  final bool? isSingleSelect = null;
 
   // Selection observable.
 
@@ -70,7 +70,7 @@ class _NoopSelectionModelImpl<T> implements NullSelectionModel<T> {
       Stream.fromIterable(const []);
 
   @override
-  final T selectedValue = null;
+  final T? selectedValue = null;
 
   @override
   final List<T> selectedValues = const [];

@@ -25,12 +25,12 @@ abstract class Filterable {
   /// The query passed in on the last call to filter.
   ///
   /// It is null if filter has never been called.
-  Object get currentQuery;
+  Object? get currentQuery;
 
   /// Max number of items requested on the last call to filter.
   ///
   /// It is -1 if filter has never been called.
-  int get currentLimit;
+  int? get currentLimit;
 
   /// Takes in a query and a limit and applies the query to the entire list
   /// of options.
@@ -42,7 +42,7 @@ abstract class Filterable {
   /// filter('re', limit: 5) for return colors whose names start with 're'
   /// filter(new DateTime.now(), limit: 10) for showing only meeting that are in
   /// the future.
-  DisposableFuture<bool> filter(Object filterQuery, {int limit});
+  DisposableFuture<bool> filter(Object filterQuery, {int? limit});
 }
 
 /// Interface implemented by classes that support children.
@@ -51,6 +51,6 @@ abstract class Parent<P, C> {
 
   /// Returns the children of the parent and filter the results based of the
   /// query if supported.
-  DisposableFuture<C> childrenOf(P parent, [Object filterQuery]) =>
+  DisposableFuture<C> childrenOf(P parent, [Object? filterQuery]) =>
       DisposableFuture.fromValue(const [] as C);
 }
