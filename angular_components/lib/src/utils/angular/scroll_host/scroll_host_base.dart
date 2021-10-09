@@ -188,9 +188,7 @@ abstract class ScrollHostBase implements ScrollHost {
         // This is consistent with other Google sites and ensures compatibility
         // with embedded APIs (e.g. Maps zooms the map when
         // CTRL/CMD is pressed).
-        if ((event?.ctrlKey ?? false) ||
-            (event?.metaKey ?? false) ||
-            (event?.shiftKey ?? false)) return;
+        if ((event.ctrlKey) || (event.metaKey) || (event.shiftKey)) return;
 
         // Use default values from WheelEvent if deltaX/deltaY not supported by
         // the browser (currently occurred in Firefox). Vertical scrolling still
@@ -203,9 +201,9 @@ abstract class ScrollHostBase implements ScrollHost {
         // Catch the error here and also handle 'null' value.
         try {
           deltaX = event.deltaX;
-          if (deltaX == null) {
-            _logger.severe('deltaX is null in event: $event');
-          }
+          //if (deltaX == null) {
+          //  _logger.severe('deltaX is null in event: $event');
+          //}
         } on UnsupportedError catch (error) {
           _logger.severe('deltaX is not supported in event: $event', error);
         }
@@ -213,9 +211,9 @@ abstract class ScrollHostBase implements ScrollHost {
 
         try {
           deltaY = event.deltaY;
-          if (deltaY == null) {
-            _logger.severe('deltaY is null in event: $event');
-          }
+          //f (deltaY == null) {
+          //  _logger.severe('deltaY is null in event: $event');
+          //}
         } on UnsupportedError catch (error) {
           _logger.severe('deltaY is not supported in event: $event', error);
         }
@@ -262,7 +260,8 @@ abstract class ScrollHostBase implements ScrollHost {
   int _scrollFrameDelta = 0;
 
   void _onNativeScroll(ScrollHostEvent event) {
-    _scrollFrameDelta += event.deltaY ?? 0;
+    //_scrollFrameDelta += event.deltaY ?? 0;
+    _scrollFrameDelta += event.deltaY;
     if (_scrollFrameScheduled && throttleScrollEvents) return;
     _scrollFrameScheduled = true;
     window.requestAnimationFrame((_) {
@@ -285,7 +284,8 @@ abstract class ScrollHostBase implements ScrollHost {
   }
 
   void _onIntersection(Iterable entries, IntersectionObserver _observer) {
-    for (IntersectionObserverEntry? entry in entries as Iterable<IntersectionObserverEntry?>) {
+    for (IntersectionObserverEntry? entry
+        in entries as Iterable<IntersectionObserverEntry?>) {
       _intersectionStreams[entry!.target]?.add(entry);
     }
   }
@@ -329,7 +329,8 @@ class WindowScrollHostBase extends ScrollHostBase {
       var htmlDoc = _window.document as HtmlDocument;
       bodyScrollHeight = htmlDoc.body!.scrollHeight;
     }
-    return max(bodyScrollHeight, _window.document.documentElement!.scrollHeight);
+    return max(
+        bodyScrollHeight, _window.document.documentElement!.scrollHeight);
   }
 
   @override

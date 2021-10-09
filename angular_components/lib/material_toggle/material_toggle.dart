@@ -96,7 +96,7 @@ class MaterialToggleComponent
   }
 
   MaterialToggleComponent(
-      this._changeDetector, @Self() @Optional() NgControl cd) {
+      this._changeDetector, @Self() @Optional() NgControl? cd) {
     cd?.valueAccessor = this;
   }
 
@@ -144,7 +144,7 @@ class MaterialToggleComponent
   @override
   void writeValue(bool isChecked) {
     checked = isChecked;
-    _changeDetector?.markForCheck();
+    _changeDetector.markForCheck();
   }
 
   @override
@@ -160,7 +160,7 @@ class MaterialToggleComponent
   @override
   void onDisabledChanged(bool isDisabled) {
     disabled = isDisabled;
-    _changeDetector?.markForCheck();
+    _changeDetector.markForCheck();
   }
 
   // M2 interfaces that are unneeded for M1.

@@ -53,7 +53,7 @@ abstract class SelectionModel<T> extends Object
   /// [keyProvider] is used for equality checking. For example, [select] will
   /// only alter the selected value if the key of the new value does not equal
   /// the key of the already selected value.
-  factory SelectionModel.single({T selected, KeyProvider<T?>? keyProvider}) =
+  factory SelectionModel.single({T? selected, KeyProvider<T>? keyProvider}) =
       SingleSelectionModel<T>;
 
   /// Creates a single-selection model that always has a value selected.
@@ -66,12 +66,12 @@ abstract class SelectionModel<T> extends Object
   /// only alter the set of selected values if the key of the new value is not
   /// among the keys of the already selected values.
   factory SelectionModel.multi(
-      {List<T>? selectedValues,
+      {List<T> selectedValues,
       KeyProvider<T>? keyProvider}) = MultiSelectionModel<T>;
 
   @Deprecated('Use SelectionModel.single or SelectionModel.multi instead.')
   factory SelectionModel.withList(
-      {List<T>? selectedValues,
+      {List<T> selectedValues = const [],
       KeyProvider<T?>? keyProvider,
       bool allowMulti = false}) {
     if (allowMulti) {
@@ -79,9 +79,7 @@ abstract class SelectionModel<T> extends Object
           selectedValues: selectedValues, keyProvider: keyProvider);
     } else {
       return SelectionModel<T?>.single(
-          selected: (selectedValues?.isNotEmpty ?? false)
-              ? selectedValues!.last
-              : null,
+          selected: (selectedValues.isNotEmpty) ? selectedValues.last : null,
           keyProvider: keyProvider) as SelectionModel<T>;
     }
   }
@@ -123,19 +121,21 @@ abstract class NullSelectionModel<T> extends SingleSelectionModel<T> {
 }
 
 abstract class SingleSelectionModel<T> extends SelectionModel<T> {
-  factory SingleSelectionModel({T? selected, KeyProvider<T?>? keyProvider}) =>
-      _SingleSelectionModelImpl<T?>(
-          selected, keyProvider ?? _defaultKeyProvider) as SingleSelectionModel<T>;
+  factory SingleSelectionModel({T? selected, KeyProvider<T>? keyProvider}) =>
+//      _SingleSelectionModelImpl<T?>(
+//          selected, keyProvider ?? _defaultKeyProvider) as SingleSelectionModel<T>;
+      _SingleSelectionModelImpl<T>(
+          selected, keyProvider ?? _defaultKeyProvider);
 
   /// The selected value, or `null` if no value has been selected.
-  T get selectedValue;
+  T? get selectedValue;
 }
 
 abstract class MultiSelectionModel<T> extends SelectionModel<T> {
   factory MultiSelectionModel(
-          {List<T>? selectedValues, KeyProvider<T>? keyProvider}) =>
+          {List<T> selectedValues = const [], KeyProvider<T>? keyProvider}) =>
       _MultiSelectionModelImpl<T>(
-          selectedValues ?? const [], keyProvider ?? _defaultKeyProvider);
+          selectedValues, keyProvider ?? _defaultKeyProvider);
 
   /// Adds all [values] to the list of selected items that were not previously
   /// selected. Will only emit a [changes] event for values that were actually
@@ -150,12 +150,12 @@ abstract class MultiSelectionModel<T> extends SelectionModel<T> {
 
 /// A change record for [SelectionModel.selectionChanges].
 abstract class SelectionChangeRecord<T> extends ChangeRecord {
-  factory SelectionChangeRecord({Iterable<T>? added, Iterable<T>? removed}) =
+  factory SelectionChangeRecord({Iterable<T> added, Iterable<T> removed}) =
       _SelectionChangeRecordImpl<T>;
 
   /// Returns an iterable of values added to selection.
-  Iterable<T>? get added;
+  Iterable<T> get added;
 
   /// Returns an iterable of values removed from selection.
-  Iterable<T>? get removed;
+  Iterable<T> get removed;
 }

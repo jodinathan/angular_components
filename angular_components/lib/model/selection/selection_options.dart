@@ -27,7 +27,8 @@ class OptionGroup<T> extends LabeledList<T> {
 
   bool get hasEmptyLabel => _emptyLabelFcn != null;
 
-  OptionGroup(List<T> items, [LabelFunction? labelFcn]) : super(items, labelFcn);
+  OptionGroup(List<T> items, [LabelFunction? labelFcn])
+      : super(items, labelFcn);
 
   OptionGroup.withLabelFunction(List<T> items,
       [LabelFunction? labelFcn, this._emptyLabelFcn])
@@ -59,8 +60,8 @@ abstract class GroupedOptions<T> implements Disposable {
   /// [SelectionOptions] from a stream.  This list may be replaced by the data
   /// provider, so consider this list reference to be ephemeral, with the
   /// [SelectionOptions] object's property as the source of truth.
-  List<OptionGroup<T>>? get optionGroups;
-  set optionGroups(List<OptionGroup<T>>? value);
+  List<OptionGroup<T>> get optionGroups;
+  set optionGroups(List<OptionGroup<T>> value);
 
   /// All options flattened in one list.
   List<T>? get optionsList;
@@ -80,12 +81,12 @@ abstract class GroupedOptions<T> implements Disposable {
 /// it will not detect if the contents of the List or the individual
 /// [OptionGroup]s changed.
 class SelectionOptions<T> extends GroupedOptions<T>
-    implements ObserveAware<List<OptionGroup<T>>?> {
+    implements ObserveAware<List<OptionGroup<T>>> {
   final _controller =
-      StreamController<List<OptionGroup<T>>?>.broadcast(sync: true);
+      StreamController<List<OptionGroup<T>>>.broadcast(sync: true);
 
-  List<T>? _flattenedList;
-  List<OptionGroup<T>>? _optionGroups;
+  List<T> _flattenedList = [];
+  List<OptionGroup<T>> _optionGroups = [];
 
   /// Creates an instance with the given option groups.
   SelectionOptions(List<OptionGroup<T>> optionGroups) {
@@ -117,29 +118,30 @@ class SelectionOptions<T> extends GroupedOptions<T>
 
   /// Provides the stream of options group changes.
   @override
-  Stream<List<OptionGroup<T>>?> get stream => _controller.stream;
+  Stream<List<OptionGroup<T>>> get stream => _controller.stream;
 
   @override
-  List<OptionGroup<T>>? get optionGroups => _optionGroups;
+  List<OptionGroup<T>> get optionGroups => _optionGroups;
 
   @override
-  set optionGroups(List<OptionGroup<T>>? value) {
+  set optionGroups(List<OptionGroup<T>> value) {
     var oldValue = _optionGroups;
     if (oldValue != value) {
       _optionGroups = value;
-      _flattenedList = _optionGroups != null
-          ? _optionGroups!.expand((i) => i).toList()
-          : <T>[];
+      //_flattenedList = _optionGroups != null
+      //    ? _optionGroups.expand((i) => i).toList()
+      //    : <T>[];
+      _flattenedList = _optionGroups.expand((i) => i).toList();
       _controller.add(_optionGroups);
     }
   }
 
   /// All options flattened in one list.
   @override
-  List<T>? get optionsList => _flattenedList;
+  List<T> get optionsList => _flattenedList;
 
   /// TODO(google): Remove method after b/26784290 is resolved.
-  bool get isNotEmpty => optionGroups!.any((group) => group.isNotEmpty);
+  bool get isNotEmpty => optionGroups.any((group) => group.isNotEmpty);
 
   void _setOptions(List<OptionGroup<T>> newOptions) {
     optionGroups = newOptions;

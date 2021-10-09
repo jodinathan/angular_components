@@ -6,7 +6,7 @@ part of angular_components.model.selection.selection_model;
 
 class _SingleSelectionModelImpl<T> extends Observable<ChangeRecord>
     with SelectionChangeNotifier<T>, CastIterable<T>
-    implements SingleSelectionModel<T?> {
+    implements SingleSelectionModel<T> {
   final KeyProvider<T> _keyOf;
   final List<T> _selectedValues = [];
   @override
@@ -14,7 +14,7 @@ class _SingleSelectionModelImpl<T> extends Observable<ChangeRecord>
 
   Object? _selectedKey;
 
-  _SingleSelectionModelImpl(T selectedValue, this._keyOf) {
+  _SingleSelectionModelImpl(T? selectedValue, this._keyOf) {
     if (selectedValue != null) {
       _selectedKey = _keyOf(selectedValue);
       _selectedValues.add(selectedValue);

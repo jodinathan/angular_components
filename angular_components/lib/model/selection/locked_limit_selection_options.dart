@@ -61,10 +61,10 @@ class LockedLimitSelectionOptions<T> extends DelegatingSelectionOptions<T>
   int? get currentLimit => _currentLimit;
 
   @override
-  List<OptionGroup<T>>? get optionGroups => _filteredGroups;
+  List<OptionGroup<T>> get optionGroups => _filteredGroups ?? [];
 
   @override
-  List<T>? get optionsList => _flattenedOptions;
+  List<T> get optionsList => _flattenedOptions ?? [];
 
   /// Filter up to [limit] results using [filterQuery]. [limit] is used instead
   /// of [lockedLimit] iff [unlockLimit] is true.
@@ -73,8 +73,10 @@ class LockedLimitSelectionOptions<T> extends DelegatingSelectionOptions<T>
     _currentLimit = _unlockLimit ? limit : lockedLimit;
     // If the limit is locked and finite, only filter one extra item to
     // determine if results will be truncated to meet the lockedLimit.
-    if (!(_unlockLimit || limit == UNLIMITED)) {
-      limit++;
+    if (limit != null) {
+      if (!(_unlockLimit || limit == UNLIMITED)) {
+        limit++;
+      }
     }
 
     DisposableFuture<bool> filtered =
@@ -94,12 +96,12 @@ class LockedLimitSelectionOptions<T> extends DelegatingSelectionOptions<T>
   void _updateFilteredOptions() {
     if (_unlockLimit) {
       // clone the optionGroups
-      _filteredGroups = _options.optionGroups!.toList();
-      _flattenedOptions = _options.optionsList!.toList();
+      _filteredGroups = _options.optionGroups.toList();
+      _flattenedOptions = _options.optionsList.toList();
     } else {
-      _setLimitedOptions(_options.optionGroups!, _currentLimit);
+      _setLimitedOptions(_options.optionGroups, _currentLimit);
     }
-    _hasMoreOptions = _flattenedOptions!.length < _options.optionsList!.length;
+    _hasMoreOptions = _flattenedOptions!.length < _options.optionsList.length;
   }
 
   void _setLimitedOptions(List<OptionGroup<T>> groups, int? maxItems) {

@@ -179,10 +179,10 @@ class StringSelectionOptions<T> extends SelectionOptions<T>
   List<OptionGroup<T>>? get unfilteredOptionGroups => _optionGroups;
 
   @override
-  set optionGroups(List<OptionGroup<T>>? value) {
+  set optionGroups(List<OptionGroup<T>> value) {
     // This mutates value...
     if (_shouldSort) {
-      value!.forEach((optionGroup) {
+      value.forEach((optionGroup) {
         optionGroup.sort(_sortFn);
       });
     }

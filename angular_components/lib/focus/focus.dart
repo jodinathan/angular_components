@@ -91,6 +91,10 @@ class FocusMoveEvent {
   /// Up or down arrow key was pressed.
   final bool upDown;
 
+  final bool _none;
+
+  bool get valid => !_none;
+
   /// Prevent Default action for occuring. When the `FocusMoveEvent` is created
   /// from a KeyboardEvent, this method delegates to the `preventDefault` method
   /// of the `KeyboardEvent`, allowing consumers of this event to control the
@@ -105,28 +109,40 @@ class FocusMoveEvent {
   FocusMoveEvent(this.focusItem, this.offset, [this._preventDefaultDelegate])
       : home = false,
         end = false,
-        upDown = false;
+        upDown = false,
+        _none = false;
 
   @visibleForTesting
   FocusMoveEvent.homeKey(this.focusItem, [this._preventDefaultDelegate])
       : offset = 0,
         home = true,
         end = false,
-        upDown = false;
+        upDown = false,
+        _none = false;
 
   @visibleForTesting
   FocusMoveEvent.endKey(this.focusItem, [this._preventDefaultDelegate])
       : offset = 0,
         home = false,
         end = true,
-        upDown = false;
+        upDown = false,
+        _none = false;
 
   @visibleForTesting
   FocusMoveEvent.upDownKey(this.focusItem, this.offset,
       [this._preventDefaultDelegate])
       : home = false,
         end = false,
-        upDown = true;
+        upDown = true,
+        _none = false;
+
+  @visibleForTesting
+  FocusMoveEvent.none(this.focusItem, this.offset,
+      [this._preventDefaultDelegate])
+      : home = false,
+        end = false,
+        upDown = false,
+        _none = true;
 
   /// Builds a `FocusMoveEvent` instance from a keyboard event, iff the keycode
   /// is a next, previous, home or end key (i.e. up/down/left/right/home/end).
@@ -142,7 +158,10 @@ class FocusMoveEvent {
     if (_isEndKey(keyCode)) {
       return FocusMoveEvent.endKey(item, preventDefaultFn);
     }
-    if (!_isNextKey(keyCode) && !_isPrevKey(keyCode)) return null;
+    if (!_isNextKey(keyCode) && !_isPrevKey(keyCode)) {
+      //return null;
+      return FocusMoveEvent.none(item, 0);
+    }
 
     int offset = _isNextKey(keyCode) ? 1 : -1;
     if (keyCode == KeyCode.UP || keyCode == KeyCode.DOWN) {

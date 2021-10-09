@@ -91,7 +91,7 @@ class IconAffixComponent implements BaseAffixComponent<IconAffix?> {
       _viewModel!.triggerShortcutAction();
       event.stopPropagation();
 
-      if (_viewModel!.shouldCloseMenuOnTrigger) _menuRoot?.closeHierarchy();
+      if (_viewModel!.shouldCloseMenuOnTrigger) _menuRoot.closeHierarchy();
     }
   }
 }

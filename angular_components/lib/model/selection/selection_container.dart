@@ -14,7 +14,7 @@ abstract class SelectionContainer<T>
         HasComponentRenderer<RendersValue, Object>,
         HasFactoryRenderer<RendersValue, T> {
   /// The selection model this container represents.
-  SelectionModel<T> selection;
+  SelectionModel<T>? selection;
 
   /// The available options for this container.
   SelectionOptions<T>? options;

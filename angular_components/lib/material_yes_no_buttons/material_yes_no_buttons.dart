@@ -223,14 +223,14 @@ abstract class BoundaryAwareKeyDirective implements OnDestroy {
   StreamSubscription? _subscription;
 
   BoundaryAwareKeyDirective.keypress(
-      Element element, @Optional() KeyUpBoundaryDirective boundary) {
+      Element element, @Optional() KeyUpBoundaryDirective? boundary) {
     final stream =
         boundary?.keyPressStream ?? Element.keyPressEvent.forElement(element);
     _subscription = stream.where(_isKeyMatching).listen(_onMatchingKey);
   }
 
   BoundaryAwareKeyDirective.keyup(
-      Element element, @Optional() KeyUpBoundaryDirective boundary) {
+      Element element, @Optional() KeyUpBoundaryDirective? boundary) {
     final stream =
         boundary?.keyUpStream ?? Element.keyUpEvent.forElement(element);
     _subscription = stream.where(_isKeyMatching).listen(_onMatchingKey);

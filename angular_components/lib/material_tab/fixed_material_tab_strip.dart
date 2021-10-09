@@ -92,7 +92,7 @@ class FixedMaterialTabStripComponent implements AfterViewInit {
   List<String>? tabIds;
 
   FixedMaterialTabStripComponent(this._changeDetector,
-      @Optional() @Inject(rtlToken) bool isRtl, this._ngZone)
+      @Optional() @Inject(rtlToken) bool? isRtl, this._ngZone)
       : _transitionAmount = _calculateTransitionAmount(isRtl ?? false) {
     _updateTabIndicatorTransform();
   }

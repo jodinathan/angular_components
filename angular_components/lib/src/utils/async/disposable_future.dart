@@ -76,7 +76,7 @@ class DisposableFuture<T> implements Future<T>, Disposable {
           if (!_wasDisposed) {
             return onValue(v);
           }
-          return null;
+          //return null;
         }, onError: onError),
         _disposeFn);
   }
@@ -100,6 +100,7 @@ class DisposableFuture<T> implements Future<T>, Disposable {
 
   @override
   Future<T> timeout(Duration timeLimit, {onTimeout()?}) {
-    return _delegateFuture.timeout(timeLimit, onTimeout: onTimeout as FutureOr<T> Function()?);
+    return _delegateFuture.timeout(timeLimit,
+        onTimeout: onTimeout as FutureOr<T> Function()?);
   }
 }

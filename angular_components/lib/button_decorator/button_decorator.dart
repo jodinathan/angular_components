@@ -43,7 +43,7 @@ class ButtonDirective extends RootFocusable
         // Allow the subclass to define how the element should be made
         // untabbable.
         _nonTabbableIndex = addTabIndexWhenNonTabbable ? '-1' : null,
-        _shouldHandleSpaceKey = handleSpacePresses ?? true,
+        _shouldHandleSpaceKey = handleSpacePresses,
         super(element);
 
   /// Role of this component used for a11y.

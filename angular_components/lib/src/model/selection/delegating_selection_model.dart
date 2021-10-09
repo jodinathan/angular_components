@@ -79,7 +79,7 @@ class DelegatingSelectionModel<T> extends Object
 
   @override
   void notifySelectionChange(
-      {Iterable<T>? added = const [], Iterable<T>? removed = const []}) {
+      {Iterable<T> added = const [], Iterable<T> removed = const []}) {
     _delegateModel.notifySelectionChange(added: added, removed: removed);
   }
 
@@ -99,7 +99,7 @@ class DelegatingSingleSelectionModel<T> extends DelegatingSelectionModel<T>
       : super(delegateModel);
 
   @override
-  T get selectedValue =>
+  T? get selectedValue =>
       (_delegateModel as SingleSelectionModel<T>).selectedValue;
 }
 

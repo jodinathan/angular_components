@@ -80,7 +80,7 @@ class DeferredContentDirective implements OnDestroy {
 
       if (preserveDimensions) {
         // Add the placeholder so the parent's size doesn't change.
-        var container = _viewContainer!.element?.nativeElement;
+        var container = _viewContainer!.element.nativeElement;
         if (container?.parentNode != null) {
           container.parentNode.insertBefore(_placeholder, container);
         }

@@ -87,7 +87,9 @@ class _StablePriorityQueue<T extends Comparable<Object>>
   _StablePriorityQueue([Comparator<T>? comparison])
       : this._(_OrderedComparator(comparison ?? _defaultComparator<T>()));
 
-  _StablePriorityQueue._(this.comparator) : super(comparator as int Function(T*, T*)?);
+  //_StablePriorityQueue._(this.comparator) : super(comparator as int Function(T*, T*)?);
+  _StablePriorityQueue._(this.comparator)
+      : super(comparator as int Function(T, T)?);
 
   final _OrderedComparator<T> comparator;
 
@@ -136,7 +138,8 @@ Comparator<T> _defaultComparator<T extends Comparable<Object>>() =>
 
 /// A [Comparator] that allows registering elements and uses the order of
 /// registration to resolve the cases when elements compare as equal.
-class _OrderedComparator<T extends Comparable<Object>> implements Function {
+//class _OrderedComparator<T extends Comparable<Object>> implements Function {
+class _OrderedComparator<T extends Comparable<Object>> {
   static const RENUMERATE_THRESHOLD = 1000000;
 
   final Comparator<T> _comparison;

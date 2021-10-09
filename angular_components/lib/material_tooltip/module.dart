@@ -34,8 +34,8 @@ TooltipController? _singletonController;
 
 @Injectable()
 TooltipController? createTooltipController(
-    @Optional() @SkipSelf() TooltipController controller,
-    @Optional() Disposer disposer) {
+    @Optional() @SkipSelf() TooltipController? controller,
+    @Optional() Disposer? disposer) {
   // If TooltipController was bound higher up the tree use that instance. This
   // allows an application to override the service at root.
   if (controller != null) return controller;

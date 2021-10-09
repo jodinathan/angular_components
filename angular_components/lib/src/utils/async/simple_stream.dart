@@ -295,7 +295,9 @@ class LastStateStream<T> extends SimpleStream<T?> {
   StreamSubscription<T?> listen(void onData(T? event)?,
       {Function? onError, void onDone()?, bool? cancelOnError}) {
     SimpleStreamSubscription<T?> sub = super.listen(onData,
-        onError: onError, onDone: onDone, cancelOnError: cancelOnError) as SimpleStreamSubscription<T?>;
+        onError: onError,
+        onDone: onDone,
+        cancelOnError: cancelOnError) as SimpleStreamSubscription<T?>;
     if (_lastItem != null) {
       /// If the stream is synchronous, send the item immediately, if it is
       /// asynchronous then make sure that items are not pending by checking
@@ -356,7 +358,8 @@ class SimpleStreamSubscription<T> implements StreamSubscription<T> {
       _closeSubscription();
       stream._scheduleCleanup();
     }
-    return null;
+    //return null;
+    return Future.value();
   }
 
   void _closeSubscription() {

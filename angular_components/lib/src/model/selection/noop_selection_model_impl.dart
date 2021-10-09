@@ -5,7 +5,7 @@
 part of angular_components.model.selection.selection_model;
 
 /// Returned internally as a blank selection model.
-class _NoopSelectionModelImpl<T> implements NullSelectionModel<T?> {
+class _NoopSelectionModelImpl<T> implements NullSelectionModel<T> {
   const _NoopSelectionModelImpl();
 
   @override
@@ -20,7 +20,7 @@ class _NoopSelectionModelImpl<T> implements NullSelectionModel<T?> {
   final bool hasSelectionObservers = false;
 
   @override
-  void notifySelectionChange({added, removed}) {}
+  void notifySelectionChange({added = const [], removed = const []}) {}
 
   // Observable.
 
@@ -37,7 +37,8 @@ class _NoopSelectionModelImpl<T> implements NullSelectionModel<T?> {
   void notifyChange([_]) {}
 
   @override
-  S notifyPropertyChange<S>(Symbol field, S oldValue, S newValue) => null;
+  //S notifyPropertyChange<S>(Symbol field, S oldValue, S newValue) => null;
+  S notifyPropertyChange<S>(Symbol field, S oldValue, S newValue) => newValue;
 
   @override
   void observed() {}
