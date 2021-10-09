@@ -42,6 +42,7 @@ String underscore(String s) => _split(s).join('_').toLowerCase();
 ///  * "1337" => "1337"
 ///  * "foo3bar" => "Foo3bar"
 ///  * "3bar" => "3bar"
+/// WRITE UNIT TEST!
 String camelCase(String s) =>
     s.replaceAllMapped(_wordBreak, (m) => m[2]!.toUpperCase());
 
