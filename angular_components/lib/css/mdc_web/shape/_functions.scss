@@ -19,6 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
+@use "sass:math";
 
 @import "./variables";
 
@@ -171,9 +172,9 @@
 @function mdc-shape-resolve-percentage-for-corner_($component-height, $radius) {
   @if type-of($radius) == "number" and unit($radius) == "%" {
     // Converts the percentage to number without unit. Example: 50% => 50.
-    $percentage: $radius / ($radius * 0 + 1);
+    $percentage: math.div($radius , ($radius * 0 + 1));
 
-    @return $component-height * ($percentage / 100);
+    @return $component-height * (math.div($percentage , 100));
   } @else {
     @return $radius;
   }

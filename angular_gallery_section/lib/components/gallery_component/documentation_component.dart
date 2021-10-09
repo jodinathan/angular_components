@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:angular/angular.dart';
-import 'package:angular/security.dart';
+import 'package:ngsecurity/security.dart';
 import 'package:angular_gallery_section/components/gallery_component/gallery_info.dart';
 
 /// A list of all documentation directives.

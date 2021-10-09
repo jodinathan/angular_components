@@ -1,6 +1,7 @@
 // Copyright (c) 2016, the Dart project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+@use "sass:math";
 
 /// Changes the `$indeterminate-, @active- and $seconday-color` of <material-progress>s.
 ///
@@ -44,7 +45,7 @@
     .progress-container,
     .active-progress,
     .secondary-progress {
-      border-radius: $height / 2;
+      border-radius: math.div($height , 2);
     }
   }
 }

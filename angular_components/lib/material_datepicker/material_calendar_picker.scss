@@ -1,6 +1,7 @@
 // Copyright (c) 2016, the Dart project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+@use "sass:math";
 
 @import 'constants';
 @import 'package:angular_components/material_datepicker/mixins';
@@ -31,7 +32,7 @@
   .month-title {
     width: 3 * $slot-size;
     height: $slot-size;
-    padding-left: $slot-size / 3;
+    padding-left: math.div($slot-size , 3);
   }
 
   .day-slot {
@@ -39,11 +40,11 @@
     height: $slot-size;
 
     &.left::before {
-      border-left-width: $slot-size / 2;
+      border-left-width: math.div($slot-size , 2);
     }
 
     &.right::before {
-      border-right-width: $slot-size / 2;
+      border-right-width: math.div($slot-size , 2);
     }
 
     &.today::after,
@@ -54,12 +55,12 @@
 
     &.left.left-preview::before {
       border-left-width: 0;
-      box-shadow: inset ($slot-size / 2) 0 0 $mat-white;
+      box-shadow: inset (math.div($slot-size , 2)) 0 0 $mat-white;
     }
 
     &.right.right-preview::before {
       border-right-width: 0;
-      box-shadow: inset (-$slot-size / 2) 0 0 $mat-white;
+      box-shadow: inset (math.div(-$slot-size , 2)) 0 0 $mat-white;
     }
   }
 }

@@ -1,6 +1,7 @@
 // Copyright (c) 2016, the Dart project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+@use "sass:math";
 
 @import 'package:angular_components/css/material/material';
 @import 'package:angular_components/material_slider/mixins';
@@ -89,7 +90,7 @@ $track-height: 2px;
 .knob-drag-shadow {
   border-radius: 50%;
   height: 2.5 * $knob-radius;
-  margin: -$knob-radius / 4;
+  margin: math.div(-$knob-radius , 4);
   position: absolute;
   width: 2.5 * $knob-radius;
 }

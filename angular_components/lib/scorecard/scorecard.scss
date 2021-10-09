@@ -1,6 +1,7 @@
 // Copyright (c) 2016, the Dart project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+@use "sass:math";
 
 @import 'package:angular_components/scorecard/mixins';
 @import 'package:angular_components/css/material/material';
@@ -66,7 +67,7 @@ $font-size-heading-big: $mat-font-size-display-1;
 
     .label-name {
       font-size: $font-size-app-big;
-      padding-bottom: $mat-grid / 2;
+      padding-bottom: math.div($mat-grid , 2);
     }
 
     .label-value {
@@ -74,7 +75,7 @@ $font-size-heading-big: $mat-font-size-display-1;
     }
 
     .description {
-      padding-top: $mat-grid / 2;
+      padding-top: math.div($mat-grid , 2);
       font-size: $font-size-app-big;
       display: block;
     }
