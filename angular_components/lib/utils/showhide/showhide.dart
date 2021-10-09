@@ -160,7 +160,7 @@ class ShowHideDirective implements OnInit, OnDestroy {
 
   static int _transitionDurationMs(Element element) {
     String duration = element.getComputedStyle().transitionDuration;
-    if (duration == null || duration.isEmpty) return 0;
+    if (duration.isEmpty) return 0;
 
     // TODO(google): remove this when
     // https://code.google.com/p/dart/issues/detail?id=16059 is fixed

@@ -4,8 +4,6 @@
 
 import 'dart:async';
 
-import 'package:meta/meta.dart';
-
 /// A function that can be throttled or debounced.
 typedef UnaryFunction<T> = Function(T argument);
 typedef DebouncedFunction<T> = Future Function(T argument);

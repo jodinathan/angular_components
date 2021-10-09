@@ -68,7 +68,7 @@ class AcxImperativeViewUtils {
 
   /// Returns a future that completes with a new instance created by
   /// [componentFactory], once it is inserted [intoDomElement].
-  Future<ComponentRef<T>> insertComponent<T>(
+  Future<ComponentRef<T>> insertComponent<T extends Object>(
       ComponentFactory<T> componentFactory,
       ViewContainerRef viewContainer,
       HtmlElement intoDomElement,

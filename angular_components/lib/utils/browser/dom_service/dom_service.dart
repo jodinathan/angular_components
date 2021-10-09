@@ -316,7 +316,7 @@ class DomService {
     final int previousLength = queue.length;
     for (int i = 0; i < queue.length; i++) {
       DomReadWriteFn fn = queue[i];
-      if (fn == null) continue;
+      //if (fn == null) continue;
       fn();
     }
     // Because we execute any other dom reads or writes synchronously, we
@@ -379,7 +379,7 @@ class DomService {
     return _onLayoutChangedStream;
   }
 
-  void _listenOnLayoutEvents(Stream<Object> events) {
+  void _listenOnLayoutEvents(Stream<Object>? events) {
     if (events == null) return; // happens only in tests with mocked window
     events.listen((_) => _scheduleOnLayoutChanged());
   }
@@ -543,7 +543,7 @@ enum DomServiceState {
 class _ChangeTracker<T> {
   final DomService _domService;
   final T Function() _fn;
-  final void Function(T?) _callback;
+  final void Function(T) _callback;
   final int _framesToStabilize;
 
   T? _lastValue;
@@ -566,7 +566,9 @@ class _ChangeTracker<T> {
     if (_stableFrameCounter == 0) {
       // just got down to zero, need to invoke callback
       _domService.scheduleRead(() {
-        _callback(_lastValue);
+        if (_lastValue != null) {
+          _callback(_lastValue!);
+        }
       });
     } else {
       // we need more frames to stabilize the value

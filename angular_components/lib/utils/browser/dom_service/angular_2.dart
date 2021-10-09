@@ -39,8 +39,8 @@ const domServiceModule = Module(provide: [domServiceBinding]);
 DomService? _singletonService;
 
 @Injectable()
-DomService? createDomService(@Optional() @SkipSelf() DomService service,
-    @Optional() Disposer disposer, NgZone zone, Window window) {
+DomService? createDomService(@Optional() @SkipSelf() DomService? service,
+    @Optional() Disposer? disposer, NgZone zone, Window window) {
   // If DomService was bound higher up the tree use that instance. This allows
   // an application to override the service at root.
   if (service != null) return service;

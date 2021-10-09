@@ -33,7 +33,9 @@ class Denomination {
     } else if (Trillions.suffix == suffix) {
       return Trillions;
     } else {
-      return null;
+      // TODO: This logic need to reevaluated
+      //return null;
+      throw ArgumentError("Unrecognized suffix [$suffix]");
     }
   }
 

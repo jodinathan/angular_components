@@ -80,7 +80,7 @@ class SimpleHtmlComponent extends _SimpleHtmlBase {
   SimpleHtmlComponent(
       DomService domService,
       this._element,
-      @Optional() @Inject(simpleHtmlUriWhitelist) List<Uri> domainWhitelist,
+      @Optional() @Inject(simpleHtmlUriWhitelist) List<Uri>? domainWhitelist,
       @Attribute('doNotVerifyUrlDestinations') String externalUrisAllowed)
       : super(
             domService,
@@ -105,7 +105,7 @@ class SimpleHtmlBlockComponent extends _SimpleHtmlBase {
   SimpleHtmlBlockComponent(
       DomService domService,
       this._element,
-      @Optional() @Inject(simpleHtmlUriWhitelist) List<Uri> domainWhitelist,
+      @Optional() @Inject(simpleHtmlUriWhitelist) List<Uri>? domainWhitelist,
       @Attribute('doNotVerifyUrlDestinations') String externalUrisAllowed)
       : super(
             domService,
