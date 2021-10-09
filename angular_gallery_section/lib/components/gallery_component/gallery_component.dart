@@ -40,15 +40,9 @@ class GalleryComponent {
   /// The beginning of the link to the source code for all components.
   final String _sourcecodeUrl;
 
-  /// Used to disable latency charts in testing environments where they can't
-  /// load successfully.
-  final latencyChartsEnabled =
-      !window.location.href.contains('enableLatencyCharts=false');
-
   GalleryComponent(@sourcecodeUrl this._sourcecodeUrl);
 
-  bool get showToc =>
-      (model.docs.length + model.demos.length + model.benchmarks.length) > 1;
+  bool get showToc => (model.docs.length + model.demos.length) > 1;
 
   String getDocId(DocInfo doc) => '${doc.name.replaceAll(' ', '_')}Doc';
 
