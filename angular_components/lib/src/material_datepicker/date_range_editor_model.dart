@@ -28,16 +28,16 @@ enum Action {
 /// Info needed to edit comparison ranges.
 abstract class HasComparisonRange {
   /// The current date range.
-  DatepickerDateRange get primaryRange;
+  DatepickerDateRange? get primaryRange;
 
   /// `true` if time comparison is turned on.
-  bool comparisonEnabled;
+  bool? comparisonEnabled;
 
   /// List of [ComparisonOption]s which fall within minDate/maxDate.
   List<ComparisonOption> get validComparisonOptions;
 
   /// Which time comparison option is selected.
-  ComparisonOption comparisonOption;
+  ComparisonOption? comparisonOption;
 
   /// `true` if this date range type supports comparison
   bool get comparisonSupported;
@@ -46,10 +46,10 @@ abstract class HasComparisonRange {
   ObservableReference<DateRange> get comparison;
 
   /// The earliest date that can be chosen for comparison.
-  Date get minDate;
+  Date? get minDate;
 
   /// The latest date that can be chosen for comparison.
-  Date get maxDate;
+  Date? get maxDate;
 }
 
 /// Bundles up the currently-selected date range, along with the kind of user
@@ -57,7 +57,7 @@ abstract class HasComparisonRange {
 /// all dates selected via drag.
 class DateRangeChange {
   final DatepickerComparison date;
-  final Action cause;
+  final Action? cause;
   DateRangeChange(this.date, this.cause);
 
   String toString() => '[$date] with cause $cause';
@@ -65,10 +65,10 @@ class DateRangeChange {
 
 /// A snapshot of the state of the [_Model].
 class ModelState {
-  final DatepickerComparison value;
-  final CalendarState calendarState;
-  final bool comparisonEnabled;
-  final ComparisonOption comparisonOption;
+  final DatepickerComparison? value;
+  final CalendarState? calendarState;
+  final bool? comparisonEnabled;
+  final ComparisonOption? comparisonOption;
   ModelState(this.value, this.calendarState, this.comparisonEnabled,
       this.comparisonOption);
 }
@@ -80,19 +80,19 @@ const _comparisonId = 'comparison';
 // TODO(google): Might make sense to have some vm tests that test this
 // outside of the datepicker component
 class DateRangeEditorModel
-    implements Sequential<DatepickerDateRange>, HasComparisonRange {
+    implements Sequential<DatepickerDateRange?>, HasComparisonRange {
   final rangeId = _rangeId;
   final comparisonId = _comparisonId;
 
   /// The actual datepicker value.
-  final ObservableReference<DatepickerComparison> _ref;
+  final ObservableReference<DatepickerComparison?> _ref;
 
   final calendar = ObservableReference<CalendarState>(
       CalendarState.empty(currentSelection: _rangeId),
       coalesce: true);
 
   final range =
-      ObservableReference<DateRange>(DateRange(null, null), coalesce: true);
+      ObservableReference<DateRange?>(DateRange(null, null), coalesce: true);
 
   @override
   final comparison =
@@ -101,26 +101,26 @@ class DateRangeEditorModel
   final _changes = StreamController<DateRangeChange>.broadcast(sync: true);
   final Disposer _disposer = Disposer.oneShot();
 
-  Date minDate;
-  Date maxDate;
+  Date? minDate;
+  Date? maxDate;
   bool requireFullPeriods;
-  bool _comparisonEnabled = false;
+  bool? _comparisonEnabled = false;
   bool basic;
   bool shouldShowPredefinedList = true;
   bool shouldShowCustomDateRangeColumn = true;
-  ComparisonOption _comparisonOption = ComparisonOption.previousPeriod;
-  List<ComparisonOption> _supportedComparisonOptions = defaultComparisonOptions;
-  DatepickerDateRange _customComparisonRange;
+  ComparisonOption? _comparisonOption = ComparisonOption.previousPeriod;
+  List<ComparisonOption>? _supportedComparisonOptions = defaultComparisonOptions;
+  DatepickerDateRange? _customComparisonRange;
   String _comparisonTitle = '';
-  Action _lastCause;
+  Action? _lastCause;
 
   DateRangeEditorModel(
-      {DatepickerComparison initialValue,
+      {DatepickerComparison? initialValue,
       this.minDate,
       this.maxDate,
       this.requireFullPeriods = false,
       this.basic = false,
-      List<ComparisonOption> supportedComparisonOptions})
+      List<ComparisonOption>? supportedComparisonOptions})
       : _ref = ObservableReference(initialValue) {
     this.supportedComparisonOptions =
         (supportedComparisonOptions?.isNotEmpty ?? false)
@@ -138,10 +138,10 @@ class DateRangeEditorModel
   }
 
   /// The currently-selected datepicker value.
-  DatepickerComparison get value => _ref.value;
-  set value(DatepickerComparison val) {
+  DatepickerComparison? get value => _ref.value;
+  set value(DatepickerComparison? val) {
     _ref.value = val;
-    if (_comparisonEnabled) {
+    if (_comparisonEnabled!) {
       _updateValidComparisonOptions();
     }
   }
@@ -153,11 +153,11 @@ class DateRangeEditorModel
   List<ComparisonOption> _validComparisonOptions = [];
 
   /// List of [ComparisonOption]s which client want to support.
-  set supportedComparisonOptions(List<ComparisonOption> options) {
+  set supportedComparisonOptions(List<ComparisonOption>? options) {
     if (options != _supportedComparisonOptions) {
       assert(options != null && options.isNotEmpty);
       _supportedComparisonOptions = options;
-      _comparisonOption = _supportedComparisonOptions.first;
+      _comparisonOption = _supportedComparisonOptions!.first;
       _updateValidComparisonOptions();
     }
   }
@@ -171,24 +171,24 @@ class DateRangeEditorModel
   Stream<DateRangeChange> get changes => _changes.stream;
 
   @override
-  DatepickerDateRange get primaryRange => value?.range;
+  DatepickerDateRange? get primaryRange => value?.range;
 
   /// Whether or not time comparison is enabled.
   @override
-  bool get comparisonEnabled => _comparisonEnabled;
-  set comparisonEnabled(bool enabled) {
+  bool? get comparisonEnabled => _comparisonEnabled;
+  set comparisonEnabled(bool? enabled) {
     _comparisonEnabled = enabled;
-    calendar.value = calendar.value.select(rangeId,
-        previewAnchoredAtStart: calendar.value.previewAnchoredAtStart);
+    calendar.value = calendar.value!.select(rangeId,
+        previewAnchoredAtStart: calendar.value!.previewAnchoredAtStart);
     if (value?.range != null) {
-      _changeValue(_withComparison(value.range), Action.button);
+      _changeValue(_withComparison(value!.range), Action.button);
     }
   }
 
   /// What time comparison setting is chosen.
   @override
-  ComparisonOption get comparisonOption => _comparisonOption;
-  set comparisonOption(ComparisonOption option) {
+  ComparisonOption? get comparisonOption => _comparisonOption;
+  set comparisonOption(ComparisonOption? option) {
     // Under "basic" mode, if user selects "custom" comparisonOption, show
     // calendar view and hide pre-defined view.
     if (basic && option == ComparisonOption.custom) {
@@ -196,8 +196,8 @@ class DateRangeEditorModel
       shouldShowPredefinedList = false;
     }
     _setComparisonOption(option);
-    calendar.value = calendar.value.select(rangeId,
-        previewAnchoredAtStart: calendar.value.previewAnchoredAtStart);
+    calendar.value = calendar.value!.select(rangeId,
+        previewAnchoredAtStart: calendar.value!.previewAnchoredAtStart);
   }
 
   /// Whether the currently selected range supports comparison
@@ -215,7 +215,7 @@ class DateRangeEditorModel
       ModelState(value, calendar.value, comparisonEnabled, comparisonOption);
 
   /// Sets the model's state to a value from an earlier call to `save`.
-  void restore(ModelState state) {
+  void restore(ModelState? state) {
     if (state == null) return;
     // Reset value first to prevent setting calendar state from triggering a
     // change event.
@@ -226,21 +226,21 @@ class DateRangeEditorModel
   }
 
   /// Selects the given preset date range.
-  void selectRange(DatepickerDateRange range) =>
+  void selectRange(DatepickerDateRange? range) =>
       _changeValue(_withComparison(range), Action.button);
 
   @override
   ObservableReference<bool> hasNext = ObservableReference<bool>(false);
 
   @override
-  DatepickerDateRange next() {
+  DatepickerDateRange? next() {
     final next = value?.range?.next;
     if (next == null) return null;
-    final amt = daysSpanned(value.range.start, next.start, inclusive: false);
+    final amt = daysSpanned(value!.range!.start!, next.start!, inclusive: false);
     if (_customComparisonRange != null) {
       _customComparisonRange = DatepickerDateRange.custom(
-          _customComparisonRange.start.add(days: amt),
-          _customComparisonRange.end.add(days: amt));
+          _customComparisonRange!.start!.add(days: amt),
+          _customComparisonRange!.end!.add(days: amt));
     }
     _changeValue(_withComparison(next), Action.button);
     return next;
@@ -250,14 +250,14 @@ class DateRangeEditorModel
   ObservableReference<bool> hasPrev = ObservableReference<bool>(false);
 
   @override
-  DatepickerDateRange prev() {
+  DatepickerDateRange? prev() {
     final prev = value?.range?.prev;
     if (prev == null) return null;
-    final amt = daysSpanned(prev.start, value.range.start, inclusive: false);
+    final amt = daysSpanned(prev.start!, value!.range!.start!, inclusive: false);
     if (_customComparisonRange != null) {
       _customComparisonRange = DatepickerDateRange.custom(
-          _customComparisonRange.start.add(days: -amt),
-          _customComparisonRange.end.add(days: -amt));
+          _customComparisonRange!.start!.add(days: -amt),
+          _customComparisonRange!.end!.add(days: -amt));
     }
     _changeValue(_withComparison(prev), Action.button);
     return prev;
@@ -281,7 +281,7 @@ class DateRangeEditorModel
   /// instance, the datepicker component wants to avoid publishing all `drag`
   /// changes, but does want to publish the value at `dragEnd`, even if it's the
   /// same value as the last `drag` change.
-  void _changeValue(DatepickerComparison val, Action cause) {
+  void _changeValue(DatepickerComparison? val, Action? cause) {
     val = DatepickerComparison.reclamp(val, minDate, maxDate);
     if (value == val && (cause == null || cause == _lastCause)) return;
     value = val;
@@ -290,7 +290,7 @@ class DateRangeEditorModel
   }
 
   /// Update the next/prev buttons to reflect the main value changing.
-  void _updateHasNextPrev(DatepickerComparison newValue) {
+  void _updateHasNextPrev(DatepickerComparison? newValue) {
     final prevRange = newValue?.range?.prev;
     final nextRange = newValue?.range?.next;
 
@@ -308,7 +308,7 @@ class DateRangeEditorModel
   }
 
   /// When the main value changes, update everything else.
-  void _setEverything(DatepickerComparison newValue) {
+  void _setEverything(DatepickerComparison? newValue) {
     // Always update the next/prev buttons, even if newValue is null.
     _updateHasNextPrev(newValue);
 
@@ -319,45 +319,45 @@ class DateRangeEditorModel
     if (range == null) {
       // Clears the main range's text input fields and calendar selection.
       this.range.value = null;
-      calendar.value = calendar.value.clearCurrentSelection();
+      calendar.value = calendar.value!.clearCurrentSelection();
     } else {
       // Update the main range's text input fields
       this.range.value = range.asPlainRange();
 
       // Update the [CalendarState] (selection highlights)
-      if (_selectionDifferent(calendar.value, rangeId, range) ||
-          !calendar.value.has(rangeId)) {
-        calendar.value = calendar.value.setSelection(
+      if (_selectionDifferent(calendar.value!, rangeId, range) ||
+          !calendar.value!.has(rangeId)) {
+        calendar.value = calendar.value!.setSelection(
             CalendarSelection(rangeId, range.start, range.end),
-            previewAnchoredAtStart: calendar.value.previewAnchoredAtStart,
+            previewAnchoredAtStart: calendar.value!.previewAnchoredAtStart,
             cause: CausedBy.external);
       }
     }
 
     final comparison = newValue.comparison;
     if (comparison != null) {
-      if (_selectionDifferent(calendar.value, comparisonId, comparison) ||
-          !calendar.value.has(comparisonId)) {
-        calendar.value = calendar.value.setSelection(
+      if (_selectionDifferent(calendar.value!, comparisonId, comparison) ||
+          !calendar.value!.has(comparisonId)) {
+        calendar.value = calendar.value!.setSelection(
             CalendarSelection(comparisonId, comparison.start, comparison.end),
             cause: CausedBy.external);
       }
     } else {
-      calendar.value = calendar.value.clearSelection(comparisonId);
+      calendar.value = calendar.value!.clearSelection(comparisonId);
     }
 
     // Update the comparison UI (the toggle and the option dropdown)
     _comparisonEnabled = newValue.isComparisonEnabled;
-    if (_comparisonEnabled) {
+    if (_comparisonEnabled!) {
       _comparisonOption = null;
-      for (final option in _supportedComparisonOptions) {
+      for (final option in _supportedComparisonOptions!) {
         if (newValue.comparesTo(option)) {
           _comparisonOption = option;
           break;
         }
       }
       if (_comparisonOption == null &&
-          _supportedComparisonOptions.contains(ComparisonOption.custom)) {
+          _supportedComparisonOptions!.contains(ComparisonOption.custom)) {
         _comparisonOption = ComparisonOption.custom;
       }
       _updateValidComparisonOptions();
@@ -374,15 +374,15 @@ class DateRangeEditorModel
   }
 
   /// When the date range changes (usually via text entry), handle that.
-  void _setPrimaryRange(DateRange range) {
+  void _setPrimaryRange(DateRange? range) {
     if (value?.range?.asPlainRange() == range) return;
     _changeValue(
-        _withComparison(DatepickerDateRange.custom(range.start, range.end)),
+        _withComparison(DatepickerDateRange.custom(range!.start, range.end)),
         Action.textEntry);
   }
 
   /// When the comparison range changes (usually via text entry), handle that.
-  void _setComparisonRange(DateRange range) {
+  void _setComparisonRange(DateRange? range) {
     if (_customComparisonRange?.asPlainRange() == range) return;
     comparisonOption = ComparisonOption.custom;
     _customComparisonRange =
@@ -391,9 +391,9 @@ class DateRangeEditorModel
   }
 
   /// Handle drag events on the calendar.
-  void _onCalendarChange(Change<CalendarState> change) {
-    final action = _selectionAction(change.previous.cause, change.next.cause);
-    final newState = change.next;
+  void _onCalendarChange(Change<CalendarState?> change) {
+    final action = _selectionAction(change.previous!.cause, change.next!.cause);
+    final newState = change.next!;
 
     var selectedRange = value?.range;
     if (newState.currentSelection == rangeId &&
@@ -419,27 +419,27 @@ class DateRangeEditorModel
     }
 
     // Select the other range when user is finished modifying the current range
-    if (change.next.cause == CausedBy.rangeConfirm) {
-      var selectId = _comparisonEnabled &&
+    if (change.next!.cause == CausedBy.rangeConfirm) {
+      var selectId = _comparisonEnabled! &&
               _comparisonOption == ComparisonOption.custom &&
-              calendar.value.currentSelection == rangeId
+              calendar.value!.currentSelection == rangeId
           ? comparisonId
           : rangeId;
-      calendar.value = calendar.value.select(selectId,
-          previewAnchoredAtStart: calendar.value.previewAnchoredAtStart);
+      calendar.value = calendar.value!.select(selectId,
+          previewAnchoredAtStart: calendar.value!.previewAnchoredAtStart);
     }
   }
 
   /// Sets the comparison option, but doesn't reset the calendar's active
   /// selection.
-  void _setComparisonOption(ComparisonOption option) {
+  void _setComparisonOption(ComparisonOption? option) {
     if (_comparisonOption == option) return;
 
     _comparisonOption = option;
     if (value?.range != null) {
-      _changeValue(_withComparison(value.range), Action.button);
+      _changeValue(_withComparison(value!.range), Action.button);
 
-      if (!_comparisonEnabled) {
+      if (!_comparisonEnabled!) {
         // A bit dirty: If comparison is off, then the value of `value` didn't
         // actually change, so the listener didn't get triggered and the
         // comparison text boxes will be out of date. Trigger it manually.
@@ -450,7 +450,7 @@ class DateRangeEditorModel
 
   /// Gets which action a selection change represents, given the change in
   /// cause.
-  Action _selectionAction(CausedBy oldCause, CausedBy newCause) {
+  Action? _selectionAction(CausedBy? oldCause, CausedBy? newCause) {
     if (newCause == CausedBy.preview) {
       return Action.preview;
     } else if (oldCause == CausedBy.drag && newCause == CausedBy.drag) {
@@ -468,7 +468,7 @@ class DateRangeEditorModel
 
   /// Returns `true` if the calendar has the given selection ID and that
   /// selection spans a different set of days than the given date range.
-  bool _selectionDifferent(CalendarState state, String id, DateRange range) {
+  bool _selectionDifferent(CalendarState state, String id, DateRange? range) {
     if (!state.has(id)) return false;
     if (range == null) return true;
     return range.start != state.selection(id).start ||
@@ -477,13 +477,13 @@ class DateRangeEditorModel
 
   /// Builds a [DatepickerComparison] from the given [range], respecting whether
   /// or not time comparison is enabled.
-  DatepickerComparison _withComparison(DatepickerDateRange range) =>
-      _comparisonEnabled
+  DatepickerComparison _withComparison(DatepickerDateRange? range) =>
+      _comparisonEnabled!
           ? _buildComparison(range)
           : DatepickerComparison.noComparison(range);
 
   /// Supports comparison only when [range] is not null and is not all time.
-  static bool _rangeSupportsComparison(DatepickerDateRange range) =>
+  static bool _rangeSupportsComparison(DatepickerDateRange? range) =>
       range != null && !range.isAllTime;
 
   /// Builds a [DatepickerComparison] from the given [range], using the current
@@ -494,7 +494,7 @@ class DateRangeEditorModel
   /// If the current comparison option is not valid for the given [range],
   /// [ComparisonOption.custom] is used if supported. If not, returns "no
   /// comparison".
-  DatepickerComparison _buildComparison(DatepickerDateRange range) {
+  DatepickerComparison _buildComparison(DatepickerDateRange? range) {
     if (!_rangeSupportsComparison(range)) {
       return DatepickerComparison.noComparison(range);
     }
@@ -505,7 +505,7 @@ class DateRangeEditorModel
     // comparison mode, if other comparison options aren't valid for
     // their chosen range.
     final defaultCustomComparisonRange =
-        DatepickerDateRange.custom(range.start, range.start);
+        DatepickerDateRange.custom(range!.start, range.start);
     var validComparisonOptions = _getValidComparisonOptions(range);
 
     if (_comparisonOption == ComparisonOption.custom) {
@@ -514,7 +514,7 @@ class DateRangeEditorModel
     }
 
     if (validComparisonOptions.contains(_comparisonOption)) {
-      return DatepickerComparison(range, _comparisonOption);
+      return DatepickerComparison(range, _comparisonOption!);
     }
 
     // Try to fall back to custom if the comparison option is no longer valid.
@@ -542,7 +542,7 @@ class DateRangeEditorModel
 
   /// Returns the list of [ComparisonOption]s that have any overlap with the
   /// [minDate] to [maxDate] for the given [range].
-  List<ComparisonOption> _getValidComparisonOptions(DatepickerDateRange range) {
+  List<ComparisonOption> _getValidComparisonOptions(DatepickerDateRange? range) {
     final validOptions = <ComparisonOption>[];
 
     // Return empty list if range doesn't support comparison.
@@ -550,7 +550,7 @@ class DateRangeEditorModel
       return validOptions;
     }
 
-    for (ComparisonOption option in _supportedComparisonOptions) {
+    for (ComparisonOption option in _supportedComparisonOptions!) {
       if (option == ComparisonOption.custom) {
         validOptions.add(option);
       } else {

@@ -34,7 +34,7 @@ class ActiveItemDirective implements AfterViewInit, OnDestroy {
 
   bool _initialized = false;
 
-  StreamSubscription _visibilitySubscription;
+  StreamSubscription? _visibilitySubscription;
 
   /// Whether the element is active.
   @HostBinding('class.active')

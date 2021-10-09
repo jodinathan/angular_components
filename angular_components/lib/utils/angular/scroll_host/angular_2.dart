@@ -72,10 +72,13 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
         _domService, _ngZone, _gestureListenerFactory, element,
         usePositionSticky: _usePositionSticky,
         useTouchGestureListener: _useTouchGestureListener);
-    stickyController.enableSmoothPushing = _enableSmoothPushing;
+    stickyController?.enableSmoothPushing = _enableSmoothPushing;
 
     if (!_usePositionSticky) {
-      _onUpdate.addStream(stickyController.onUpdate);
+      var onUpdate = stickyController?.onUpdate;
+      if (onUpdate != null) {
+        _onUpdate.addStream(onUpdate);
+      }
     }
   }
 
@@ -109,7 +112,7 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
   @Input()
   set enableSmoothPushing(bool value) {
     _enableSmoothPushing = value;
-    stickyController.enableSmoothPushing = value;
+    stickyController?.enableSmoothPushing = value;
   }
 
   /// Whether to use the position: sticky [StickyController] for improved
@@ -165,8 +168,7 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
   Rectangle calcViewportRect() => _scrollHost.calcViewportRect();
 
   @override
-  void scrollToPosition(int position) =>
-      _scrollHost.scrollToPosition(position);
+  void scrollToPosition(int position) => _scrollHost.scrollToPosition(position);
 
   @override
   void scrollWithDelta(int delta) => _scrollHost.scrollWithDelta(delta);
@@ -208,13 +210,13 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
   Element get anchorElement => _scrollHost.anchorElement;
 
   @override
-  Stream<ScrollHostEvent> get onScroll => _scrollHost.onScroll;
+  Stream<ScrollHostEvent>? get onScroll => _scrollHost.onScroll;
 
   @override
-  PanController get panController => _scrollHost.panController;
+  PanController? get panController => _scrollHost.panController;
 
   @override
-  StickyController get stickyController => _scrollHost.stickyController;
+  StickyController? get stickyController => _scrollHost.stickyController;
 
   @override
   int get scrollLength => _scrollHost.scrollLength;
@@ -223,7 +225,7 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
   int get scrollPosition => _scrollHost.scrollPosition;
 
   @override
-  Stream<IntersectionObserverEntry> onIntersection(Element element) =>
+  Stream<IntersectionObserverEntry?> onIntersection(Element? element) =>
       _scrollHost.onIntersection(element);
 
   @override
@@ -264,12 +266,12 @@ class StickyFloatingTracker implements OnInit, OnDestroy {
 
   @override
   void ngOnInit() {
-    _scrollHost.stickyController.trackFloating(_element);
+    _scrollHost.stickyController!.trackFloating(_element);
   }
 
   @override
   void ngOnDestroy() {
-    _scrollHost.stickyController.untrackFloating(_element);
+    _scrollHost.stickyController!.untrackFloating(_element);
   }
 }
 
@@ -386,13 +388,13 @@ class StickyElementDirective implements AfterViewInit, OnDestroy {
   }
 
   void _stick() {
-    _stickyController.stick(_stickyElement, _position, _endElement,
+    _stickyController?.stick(_stickyElement, _position, _endElement,
         stickyClass: _stickyClass, stickyKey: _stickyKey);
   }
 
   void _unstick() {
-    _stickyController.unstick(_stickyElement);
+    _stickyController?.unstick(_stickyElement);
   }
 
-  StickyController get _stickyController => _scrollHost.stickyController;
+  StickyController? get _stickyController => _scrollHost.stickyController;
 }

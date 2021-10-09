@@ -86,17 +86,17 @@ class OverlayStyleConfig {
   }
 ''';
 
-  final HeadElement _styleHost;
+  final HeadElement? _styleHost;
   bool _stylesRegistered = false;
   Document _document;
 
   OverlayStyleConfig(Document document)
-      : _styleHost = document.querySelector('head'),
+      : _styleHost = document.querySelector('head') as HeadElement?,
         _document = document;
 
   void registerStyles() {
     if (stylesRegistered) return;
-    _styleHost.append(StyleElement()
+    _styleHost!.append(StyleElement()
       ..id = _styleId
       ..text = inlinedStyles);
     _stylesRegistered = true;

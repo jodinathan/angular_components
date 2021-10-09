@@ -42,7 +42,7 @@ class MaterialDialogComponent
   static const ariaModel = 'true';
 
   @HostBinding('attr.aria-labelledby')
-  String get headerId => shouldShowHeader ? _uid : null;
+  String? get headerId => shouldShowHeader ? _uid : null;
 
   final HtmlElement _rootElement;
   final DomService _domService;
@@ -52,14 +52,14 @@ class MaterialDialogComponent
   final _disposer = Disposer.oneShot();
   final _uid = SequentialIdGenerator.fromUUID().nextId();
 
-  HtmlElement _mainElement;
+  late HtmlElement _mainElement;
   bool _shouldShowHeader = true;
   bool _shouldShowFooter = true;
   bool shouldShowTopScrollStroke = false;
   bool shouldShowBottomScrollStroke = false;
 
   final _isInFullscreenModeStreamController = StreamController<bool>();
-  bool _isInFullscreenMode;
+  bool? _isInFullscreenMode;
   bool _shouldListenForFullscreenChanges = false;
 
   MaterialDialogComponent(
@@ -87,11 +87,11 @@ class MaterialDialogComponent
   /// Function to handle escape key events from the dialog. By default it tries
   /// to close the parent modal, if any.
   @Input()
-  KeyboardEventHandler escapeHandler;
+  KeyboardEventHandler? escapeHandler;
 
   /// Error to show up in the error section of the dialog.
   @Input()
-  String error;
+  String? error;
 
   /// Whether to hide the dialog header.
   @Input()
@@ -164,8 +164,8 @@ class MaterialDialogComponent
 
   void _updateForFullscreenChangesInsideDomReadLoop() {
     final isInFullscreenMode =
-        document.body.clientWidth <= _rootElement.clientWidth &&
-            document.body.clientHeight <= _rootElement.clientHeight;
+        document.body!.clientWidth <= _rootElement.clientWidth &&
+            document.body!.clientHeight <= _rootElement.clientHeight;
     if (_isInFullscreenMode != isInFullscreenMode) {
       _isInFullscreenMode = isInFullscreenMode;
       _isInFullscreenModeStreamController.add(isInFullscreenMode);
@@ -175,7 +175,7 @@ class MaterialDialogComponent
   @override
   void handleEscapeKey(KeyboardEvent event) {
     if (escapeHandler != null) {
-      escapeHandler(event);
+      escapeHandler!(event);
     }
   }
 

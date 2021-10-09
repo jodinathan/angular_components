@@ -32,5 +32,5 @@ abstract class MenuRoot {
   void closeHierarchy();
 
   /// Is this menu closed or closing.
-  bool visible;
+  late bool visible;
 }

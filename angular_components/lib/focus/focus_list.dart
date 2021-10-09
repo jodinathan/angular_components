@@ -36,7 +36,7 @@ class FocusListDirective implements OnDestroy {
   final _children = <FocusableItem>[];
   int get _length => _children.length;
 
-  FocusListDirective(this._ngZone, @Attribute('role') String role,
+  FocusListDirective(this._ngZone, @Attribute('role') String? role,
       @Attribute('ignoreUpAndDown') String ignoreUpAndDown)
       : this.role = role ?? 'list',
         this.ignoreUpAndDown = attributeToBool(ignoreUpAndDown);
@@ -50,7 +50,7 @@ class FocusListDirective implements OnDestroy {
   ///
   /// If null, focus will not be changed automatically.
   @Input()
-  int autoFocusIndex;
+  int? autoFocusIndex;
 
   @ContentChildren(FocusableItem)
   set listItems(List<FocusableItem> listItems) {
@@ -90,13 +90,13 @@ class FocusListDirective implements OnDestroy {
     event.preventDefault();
   }
 
-  void focus(int index) {
+  void focus(int? index) {
     if (_length == 0) return;
     int newIndex;
     if (loop) {
-      newIndex = index % _length;
+      newIndex = index! % _length;
     } else {
-      newIndex = index.clamp(0, _length - 1);
+      newIndex = index!.clamp(0, _length - 1);
     }
     _children[newIndex].focus();
     setTabbable(newIndex);

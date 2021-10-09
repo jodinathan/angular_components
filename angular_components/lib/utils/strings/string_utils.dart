@@ -43,7 +43,7 @@ String underscore(String s) => _split(s).join('_').toLowerCase();
 ///  * "foo3bar" => "Foo3bar"
 ///  * "3bar" => "3bar"
 String camelCase(String s) =>
-    s.replaceAllMapped(_wordBreak, (m) => m[2].toUpperCase());
+    s.replaceAllMapped(_wordBreak, (m) => m[2]!.toUpperCase());
 
 /// Returns the lower-camel-cased form of [s].
 String lowerCamelCase(String s) {
@@ -58,7 +58,7 @@ String titleCase(String s) =>
     s.substring(1).replaceAllMapped(_capitalLetter, (m) => ' ${m[0]}');
 
 /// Returns the String [s], with the first letter capitalized.
-String capitalizeFirstLetter(s) => s[0].toUpperCase() + s.substring(1);
+String? capitalizeFirstLetter(s) => s[0].toUpperCase() + s.substring(1);
 
 // Splits [s] into tokens.
 //

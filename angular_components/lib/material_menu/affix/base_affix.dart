@@ -8,7 +8,7 @@ import 'package:angular_components/model/menu/menu_item_affix.dart';
 import 'package:angular_components/model/ui/has_renderer.dart';
 
 /// Base interface for any components that renders a [MenuItemAffix].
-abstract class BaseAffixComponent<ModelType extends MenuItemAffix>
+abstract class BaseAffixComponent<ModelType extends MenuItemAffix?>
     implements RendersValue<ModelType>, HasDisabled {
   ModelType get value;
 }
@@ -17,9 +17,9 @@ abstract class BaseAffixComponent<ModelType extends MenuItemAffix>
 ///
 /// Please extend this class instead of [MenuItemAffix] directly.
 abstract class BaseMenuItemAffixModel
-    extends MenuItemAffix<ComponentFactory<BaseAffixComponent>> {
+    extends MenuItemAffix<ComponentFactory<BaseAffixComponent>?> {
   const BaseMenuItemAffixModel();
 
   @override
-  ComponentFactory<BaseAffixComponent> get componentFactory;
+  ComponentFactory<BaseAffixComponent>? get componentFactory;
 }
