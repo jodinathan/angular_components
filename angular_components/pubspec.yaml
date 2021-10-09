@@ -33,5 +33,5 @@ dev_dependencies:
   test: ^1.0.0
 dependency_overrides:
   observable:
-    git: https://github.com/dukefirehawk/observable
+    git: https://github.com/google/observable
   
