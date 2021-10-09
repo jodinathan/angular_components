@@ -79,7 +79,6 @@ class ComponentApiBuilder extends Builder {
               return jsonMap;
             })?.toList() ??
             [],
-        'benchmarks': config.benchmarks ?? [],
         'owners': config.owners,
         'uxOwners': config.uxOwners,
         'relatedUrls': config.relatedUrls?.entries
