@@ -59,7 +59,7 @@
     // to add a margin to compensate.
     height: $today-circle-size;
     // Today's .cell div is smaller than usual - calculate compensating margin
-    margin: ($cell-size - $circle-size) / 2;
+    margin: math.div(($cell-size - $circle-size) , 2);
     width: $today-circle-size;
   }
 
@@ -95,16 +95,16 @@
   @for $i from 1 through $cells-per-row {
     $date-position: $horizontal-padding
       + ($i * $cell-size)
-      - ($cell-size / 2);
+      - (math.div($cell-size , 2));
 
     .start-#{$i} {
       // subtract circle radius to make room for the highlight's border-radius
-      left: $date-position - $circle-size / 2;
+      left: $date-position - math.div($circle-size , 2);
     }
 
     .end-#{$i} {
       // add circle radius to make room for the highlight's border-radius
-      right: calc(100% - #{$date-position + $circle-size / 2});
+      right: calc(100% - #{$date-position + math.div($circle-size , 2)});
     }
   }
 
@@ -113,9 +113,9 @@
   }
 
   .highlight {
-    border-radius: $circle-size / 2;
-    bottom: ($cell-size - $circle-size) / 2;
-    top: ($cell-size - $circle-size) / 2;
+    border-radius: math.div($circle-size , 2);
+    bottom: math.div(($cell-size - $circle-size) , 2);
+    top: math.div(($cell-size - $circle-size) , 2);
   }
 
   // Highlight ends are rounded when they fall on cells in a row

@@ -1,6 +1,7 @@
 // Copyright (c) 2016, the Dart project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+@use "sass:math";
 
 @import 'package:angular_components/css/material/material';
 
@@ -46,7 +47,7 @@ material-ripple {
 @keyframes __acx-ripple {
   from {
     opacity: $min-ripple-opacity;
-    transform: translateZ(0) scale($min-ripple-size / $ripple-size);
+    transform: translateZ(0) scale(math.div($min-ripple-size , $ripple-size));
   }
 
   25%, 50% {
@@ -55,6 +56,6 @@ material-ripple {
 
   to {
     opacity: $min-ripple-opacity;
-    transform: translateZ(0) scale($max-ripple-size / $ripple-size);
+    transform: translateZ(0) scale(math.div($max-ripple-size , $ripple-size));
   }
 }
