@@ -44,18 +44,18 @@ abstract class MaterialDateGridBase
 
   int paddingTop;
   int paddingBottom;
-  int? startingWeekday;
+  int startingWeekday;
 
   /// The scroller div's `scroll-top` property, for setting during
   /// initialization.
-  int? _scrollTop;
-  int? get scrollTop => _scrollTop;
-  set scrollTop(int? scrollTop) {
+  int _scrollTop;
+  int get scrollTop => _scrollTop;
+  set scrollTop(int scrollTop) {
     if (_scrollTop != scrollTop) forceScrollTop(scrollTop);
   }
 
   /// Sets scrollTop and forces the change on the scroller div.
-  void forceScrollTop(int? scrollTop) {
+  void forceScrollTop(int scrollTop) {
     _scrollTop = scrollTop;
     scroller?.forceScroll(scrollTop);
   }
@@ -68,7 +68,7 @@ abstract class MaterialDateGridBase
   /// Where the top of the div lives, relative to the 'anchor' row. The idea is
   /// that `scrollTop + _startTop` gives you the position in pixels relative to
   /// a known point in the data set (in this case, `0`).
-  late int startTop;
+  int startTop;
 
   CalendarSelectionMode _mode = CalendarSelectionMode.NONE;
   CalendarSelectionMode get mode => _mode;
@@ -112,7 +112,7 @@ abstract class MaterialDateGridBase
 
   CalendarListener _inputListener = CalendarListener.noop();
 
-  ForcedScrollDirective? scroller;
+  ForcedScrollDirective scroller;
 
   @override
   void attachScroller(ForcedScrollDirective scroller) {
@@ -122,7 +122,7 @@ abstract class MaterialDateGridBase
   // Needed so we can circle the current date
   Date today;
 
-  StreamSubscription? _calendarStream;
+  StreamSubscription _calendarStream;
   final _disposer = Disposer.oneShot();
   final ChangeDetectorRef changeDetector;
   final DomService _domService;
@@ -169,23 +169,23 @@ abstract class MaterialDateGridBase
   /// Fired when the calendar state changes -- e.g. when the user starts
   /// dragging the selected date range.
   @Output()
-  Stream<CalendarState?> get stateChange => model.stream;
+  Stream<CalendarState> get stateChange => model.stream;
 
   /// An object describing the entire state of the calendar -- what's selected
   /// on the calendar, and whether or not the selection is currently "active".
   @Input()
-  set state(CalendarState? state) {
+  set state(CalendarState state) {
     model.value = state;
     if (_calendarStream == null) onCalendarChange(state);
   }
 
-  CalendarState? get state => model.value;
+  CalendarState get state => model.value;
 
   /// Whether to enable compact calendar styles.
   @Input()
   bool compact = false;
 
-  void onCalendarChange(CalendarState? state);
+  void onCalendarChange(CalendarState state);
 
   void createRender();
 
@@ -269,7 +269,7 @@ abstract class MaterialDateGridBase
   int _totalHeight(int paddingTop, int paddingBottom) =>
       paddingTop + paddingBottom + (rowsToRender * rowHeightPx);
 
-  int? rowFromPos(heightPx) => (heightPx / rowHeightPx).floor();
+  int rowFromPos(heightPx) => (heightPx / rowHeightPx).floor();
 }
 
 abstract class ForcedScrollDirectiveHost {
@@ -302,9 +302,9 @@ class ForcedScrollDirective {
 
   int get height => _element.clientHeight;
 
-  void forceScroll(int? scrollTop) {
+  void forceScroll(int scrollTop) {
     _domService.scheduleWrite(() {
-      _element.scrollTop = scrollTop!;
+      _element.scrollTop = scrollTop;
     });
   }
 }

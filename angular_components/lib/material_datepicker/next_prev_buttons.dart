@@ -52,9 +52,9 @@ export 'package:angular_components/src/material_datepicker/sequential.dart';
 class NextPrevComponent implements OnDestroy {
   final ChangeDetectorRef _changeDetector;
   final Disposer _modelListeners = Disposer.multi();
-  late Sequential _model;
-  bool? _hasNext = false;
-  bool? _hasPrev = false;
+  Sequential _model;
+  bool _hasNext = false;
+  bool _hasPrev = false;
 
   NextPrevComponent(this._changeDetector);
 
@@ -93,8 +93,8 @@ class NextPrevComponent implements OnDestroy {
   @Input()
   String prevLabel = _genericPrevMsg;
 
-  bool? get hasNext => _hasNext;
-  bool? get hasPrev => _hasPrev;
+  bool get hasNext => _hasNext;
+  bool get hasPrev => _hasPrev;
 
   void next() {
     if (!isNextDisabled) _model.next();
@@ -109,10 +109,10 @@ class NextPrevComponent implements OnDestroy {
   bool disabled = false;
 
   /// Whether the prev button is disabled.
-  bool get isPrevDisabled => disabled || !hasPrev!;
+  bool get isPrevDisabled => disabled || !hasPrev;
 
   /// Whether the next button is disabled.
-  bool get isNextDisabled => disabled || !hasNext!;
+  bool get isNextDisabled => disabled || !hasNext;
 
   static final _genericNextMsg = Intl.message('Next',
       name: '_genericNextMsg',

@@ -76,7 +76,7 @@ class AsyncAction<V> {
   final Function _doneGetter;
 
   bool _syncCancelled = false;
-  bool? get _waitingForDone => _lockedGetter();
+  bool get _waitingForDone => _lockedGetter();
 
   AsyncAction(
       this._onDone,
@@ -91,7 +91,7 @@ class AsyncAction<V> {
   bool get cancelled => _syncCancelled || _cancelledGetter();
 
   /// Indicates that the action has either completed or was cancelled.
-  bool? get isDone => _doneGetter();
+  bool get isDone => _doneGetter();
 
   /// Future which resolves to null if the action is cancelled. If the execution
   /// is not cancelled, the future resolves to whatever the execution returns.
@@ -117,12 +117,12 @@ class AsyncAction<V> {
     // Do nothing, it will be cancelled anyway.
     if (cancelled) return;
 
-    if (isDone!) {
+    if (isDone) {
       throw StateError('Cannot register. Action is complete.');
     }
 
     // Don't allow more registrations.
-    if (_waitingForDone!) {
+    if (_waitingForDone) {
       throw StateError('Cannot register. Already waiting.');
     }
 
@@ -138,11 +138,11 @@ class AsyncAction<V> {
     if (cancelled) return;
 
     // Don't allow more registrations.
-    if (isDone!) {
+    if (isDone) {
       throw StateError('Cannot register. Action is complete.');
     }
 
-    if (_waitingForDone!) {
+    if (_waitingForDone) {
       throw StateError('Cannot register. Already waiting.');
     }
 
@@ -165,11 +165,11 @@ class AsyncAction<V> {
     if (cancelled) return;
 
     // Don't allow more registrations.
-    if (isDone!) {
+    if (isDone) {
       throw StateError('Cannot register. Action is complete.');
     }
 
-    if (_waitingForDone!) {
+    if (_waitingForDone) {
       throw StateError('Cannot register. Already waiting.');
     }
 

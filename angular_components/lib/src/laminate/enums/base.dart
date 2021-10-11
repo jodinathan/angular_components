@@ -4,7 +4,7 @@
 
 /// A function that sets [propertyName] to [propertyValue].
 typedef SetPropertyFn = void Function(
-    String? propertyName, dynamic propertyValue);
+    String propertyName, dynamic propertyValue);
 
 abstract class ElementStyleEnum {
   /// Applies this enum using [setProperty].

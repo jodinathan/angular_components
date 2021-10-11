@@ -24,7 +24,7 @@ class MaterialInputAutoSelectDirective implements OnDestroy {
   final _disposer = Disposer.oneShot();
 
   /// Timer to select the input text.
-  Timer? _selectionTimer;
+  Timer _selectionTimer;
 
   @Input()
   bool autoSelect = true;

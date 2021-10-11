@@ -14,7 +14,7 @@ import 'package:angular_components/model/selection/string_selection_options.dart
 /// A mixin to provide a simplier API for accepting [SelectionModel] and
 /// [SelectionOptions] for [SelectionContainer] components.
 abstract class SelectionInputAdapter<T> implements SelectionContainer<T> {
-  StreamController? _selectionChangeController;
+  StreamController _selectionChangeController;
 
   void _initSelectionModel() {
     selection ??= SelectionModel.single();
@@ -30,18 +30,18 @@ abstract class SelectionInputAdapter<T> implements SelectionContainer<T> {
       _selectionChangeController = StreamController();
     }
     _initSelectionModel();
-    return _selectionChangeController!.stream;
+    return _selectionChangeController.stream;
   }
 
   @protected
   void emitSelectionChange() {
     if (_selectionChangeController == null) return;
     if (selection is SingleSelectionModel<T>) {
-      _selectionChangeController!.add(selection.selectedValues.isNotEmpty
+      _selectionChangeController.add(selection.selectedValues.isNotEmpty
           ? selection.selectedValues.first
           : null);
     } else {
-      _selectionChangeController!.add(selection.selectedValues);
+      _selectionChangeController.add(selection.selectedValues);
     }
   }
 

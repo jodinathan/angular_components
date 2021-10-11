@@ -11,7 +11,7 @@ import 'package:angular_components/utils/browser/dom_service/dom_service.dart';
 
 /// Measures and tracks size changes for HTML elements in Dart web applications.
 @Injectable()
-abstract class DomRuler implements Ruler<Element?> {
+abstract class DomRuler implements Ruler<Element> {
   factory DomRuler(Document document, DomService domService) = DomRulerImpl;
 }
 
@@ -26,13 +26,13 @@ class DomRulerImpl extends RulerBase<Element> implements DomRuler {
   @override
   bool canSyncWrite(Element element) {
     if (_document is HtmlDocument) {
-      return !(_document as HtmlDocument).body!.contains(element);
+      return !(_document as HtmlDocument).body.contains(element);
     }
     return !_document.contains(element);
   }
 
   @override
-  Stream<DomService>? get onLayoutChanged => _domService.onLayoutChanged;
+  Stream<DomService> get onLayoutChanged => _domService.onLayoutChanged;
 
   @override
   Future<void> onRead() => _domService.onRead();
@@ -87,7 +87,7 @@ class DomRulerImpl extends RulerBase<Element> implements DomRuler {
 
   @override
   void setCssPropertySync(
-      Element element, String? propertyName, String? propertyValue) {
-    element.style.setProperty(propertyName!, propertyValue);
+      Element element, String propertyName, String propertyValue) {
+    element.style.setProperty(propertyName, propertyValue);
   }
 }

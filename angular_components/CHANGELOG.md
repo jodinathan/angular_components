@@ -1,10 +1,3 @@
-# Change Log
-
-## 2.0.0
-
-* Migrated using `dart migrate`
-* `Denomination` class throws ArguementError for incorrect suffix
-
 ## 1.0.3
 
 * Roll observable dependency.

@@ -61,7 +61,7 @@ class MaterialCheckboxComponent
 
   @HostBinding('attr.role')
   final String role;
-  Function? _onTouched;
+  Function _onTouched;
 
   MaterialCheckboxComponent(
       this._root,
@@ -127,12 +127,12 @@ class MaterialCheckboxComponent
   @HostBinding('class.disabled')
   @HostBinding('attr.aria-disabled')
   @Input()
-  bool? disabled = false;
+  bool disabled = false;
 
   // Current tab index.
   @HostBinding('attr.tabindex')
   @visibleForTemplate
-  String get tabIndex => disabled! ? "-1" : _defaultTabIndex;
+  String get tabIndex => disabled ? "-1" : _defaultTabIndex;
 
   /// Current state of the checkbox. This is user set-able state, via
   /// [toggleChecked()], so when checked, the [indeterminate] state gets
@@ -243,18 +243,18 @@ class MaterialCheckboxComponent
   /// themeColor unless you want this behavior.
   @visibleForTemplate
   @Input()
-  String? themeColor;
+  String themeColor;
 
   /// Color of the ripple.
   ///
   /// When the checkbox is unchecked, the ripple color does not follow theme
   /// color.
   @visibleForTemplate
-  String? get rippleColor => checked ? themeColor : '';
+  String get rippleColor => checked ? themeColor : '';
 
   /// Label for the checkbox, alternatively use content.
   @Input()
-  String? label;
+  String label;
 
   /// Id for the checkbox label and content.
   @visibleForTemplate
@@ -267,7 +267,7 @@ class MaterialCheckboxComponent
   /// on state [indeterminateToChecked].
   @visibleForTesting
   void toggleChecked() {
-    if (disabled! || readOnly) return;
+    if (disabled || readOnly) return;
     if (!indeterminate && !checked) {
       _setStates(checked: true);
     } else if (checked) {
@@ -280,7 +280,7 @@ class MaterialCheckboxComponent
 
   @override
   void focus() {
-    if (disabled!) return;
+    if (disabled) return;
 
     // Set to true so that the focus indicator is rendered.
     _isKeyboardEvent = true;
@@ -299,7 +299,7 @@ class MaterialCheckboxComponent
   @HostListener('click')
   @visibleForTemplate
   void handleClick(MouseEvent mouseEvent) {
-    if (disabled!) return;
+    if (disabled) return;
     _isKeyboardEvent = false;
     toggleChecked();
   }
@@ -316,7 +316,7 @@ class MaterialCheckboxComponent
   @HostListener('keypress')
   @visibleForTemplate
   void handleKeyPress(KeyboardEvent event) {
-    if (disabled!) return;
+    if (disabled) return;
     if (event.target != _root) return;
     if (isSpaceKey(event)) {
       // Required to prevent window from scrolling.
@@ -348,6 +348,6 @@ class MaterialCheckboxComponent
   }
 
   /// Unimplemented for M1.
-  Future? focusDelegate;
+  Future focusDelegate;
   void ngOnDestroy() {}
 }

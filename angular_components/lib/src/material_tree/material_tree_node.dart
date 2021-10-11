@@ -24,15 +24,15 @@ class MaterialTreeNode<T> {
   final OptionGroup<T> _EMPTY_OPTION_GROUP = OptionGroup<T>(const []);
 
   final _expandedNodes = Map<T, Iterable<OptionGroup<T>>>.identity();
-  Disposer? _disposer = Disposer.multi();
+  var _disposer = Disposer.multi();
   final MaterialTreeRoot<T> _root;
   final ChangeDetectorRef _changeDetector;
 
   bool _expandAll = false;
-  late OptionGroup<T> _group;
-  Parent<T, Iterable<OptionGroup<T>>>? _parent;
-  late IsExpandable<T> _isExpandable;
-  late Selectable<T> _selectable;
+  OptionGroup<T> _group;
+  Parent<T, Iterable<OptionGroup<T>>> _parent;
+  IsExpandable<T> _isExpandable;
+  Selectable<T> _selectable;
 
   /// Create a new tree node.
   ///
@@ -40,17 +40,17 @@ class MaterialTreeNode<T> {
   ///
   /// May specify a custom [isExpandable].
   MaterialTreeNode(this._root, this._changeDetector,
-      {IsExpandable<T>? isExpandable}) {
+      {IsExpandable<T> isExpandable}) {
     _group = _EMPTY_OPTION_GROUP;
     if (!_root.supportsHierarchy) {
       _isExpandable = (_) => false;
       _parent = _NotAParent();
     } else {
       _isExpandable = isExpandable ?? hasChildren;
-      _parent = _root.options as Parent<T, Iterable<OptionGroup<T>>>?;
+      _parent = _root.options as Parent<T, Iterable<OptionGroup<T>>>;
     }
     // TODO(google).
-    final Object? options = _root.options;
+    final Object options = _root.options;
     if (options is Selectable<T>) {
       _selectable = options;
     } else {
@@ -78,7 +78,7 @@ class MaterialTreeNode<T> {
   OptionGroup<T> get group => _group;
   @Input()
   set group(OptionGroup<T> group) {
-    _disposer!.dispose();
+    _disposer.dispose();
     _group = group;
     if (!expandAll) {
       _expandedNodes.clear();
@@ -88,7 +88,7 @@ class MaterialTreeNode<T> {
       if (key is MaterialTreeExpandState) {
         manualExpand = key.expanded;
         // When we receive an expansion state change event, update the option
-        _disposer!.addStreamSubscription(key.expandEvents.listen((bool newVal) {
+        _disposer.addStreamSubscription(key.expandEvents.listen((bool newVal) {
           if (newVal == _expandedNodes.containsKey(key)) return;
           if (newVal) {
             expandOption(key);
@@ -121,7 +121,7 @@ class MaterialTreeNode<T> {
   }
 
   /// Returns whether [option] has one or more child nodes when expanded.
-  bool hasChildren(T option) => _parent!.hasChildren(option);
+  bool hasChildren(T option) => _parent.hasChildren(option);
 
   /// Returns whether [option] has the *capability* of having child nodes.
   ///
@@ -165,14 +165,14 @@ class MaterialTreeNode<T> {
   bool isSelected(T option) => _root.selection.isSelected(option);
 
   /// Returns any child groups of [option] that are loaded.
-  Iterable<OptionGroup>? getChildGroups(option) => _expandedNodes[option];
+  Iterable<OptionGroup> getChildGroups(option) => _expandedNodes[option];
 
   /// Expands the given [option].
   ///
   /// Returns a [Future] that completes when the children are available when
   /// expansion is triggered, otherwise immediately returns [Future<Null>].
   Future<Iterable<OptionGroup<T>>> expandOption(T option) async {
-    Iterable<OptionGroup<T>> childGroups = await _parent!.childrenOf(option);
+    Iterable<OptionGroup<T>> childGroups = await _parent.childrenOf(option);
 
     setExpandedState(option, true);
     if (expandAll && childGroups != null) {
@@ -271,16 +271,16 @@ class MaterialTreeNode<T> {
   bool get showSelectionState => isMultiSelect || !_root.optimizeForDropdown;
 
   /// Converts [T] into a component type (requires [useComponentRenderer]).
-  Type? getComponentType(option) =>
-      _root.componentRenderer != null ? _root.componentRenderer!(option) : null;
+  Type getComponentType(option) =>
+      _root.componentRenderer != null ? _root.componentRenderer(option) : null;
 
   /// Converts [T] into a component factory (requires [factoryRenderer]).
-  ComponentFactory? getComponentFactory(option) =>
-      _root.factoryRenderer != null ? _root.factoryRenderer!(option) : null;
+  ComponentFactory getComponentFactory(option) =>
+      _root.factoryRenderer != null ? _root.factoryRenderer(option) : null;
 
   /// Converts [T] into a text equivalent (requires [useItemRenderer]).
-  String? getOptionAsText(T option) {
-    String? Function(T) itemRenderer = _root.itemRenderer ?? defaultItemRenderer;
+  String getOptionAsText(T option) {
+    var itemRenderer = _root.itemRenderer ?? defaultItemRenderer;
     return itemRenderer(option);
   }
 
@@ -288,7 +288,7 @@ class MaterialTreeNode<T> {
   ///
   /// Currently a no-op if T doesn't implement [MaterialTreeExpandState].
   void onDestroy() {
-    _disposer!.dispose();
+    _disposer.dispose();
     // Cause a NPE if we attempt to use the disposer after being destroyed
     _disposer = null;
   }
@@ -307,7 +307,7 @@ class _NotAParent<P, C> implements Parent<P, C> {
   bool hasChildren(P item) => false;
 
   @override
-  DisposableFuture<C> childrenOf(P parent, [Object? filterQuery]) {
+  DisposableFuture<C> childrenOf(P parent, [Object filterQuery]) {
     throw UnsupportedError('Does not support hierarchy');
   }
 }

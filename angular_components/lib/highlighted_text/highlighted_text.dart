@@ -28,5 +28,5 @@ import 'package:angular_components/model/ui/highlighted_text_model.dart';
 class HighlightedTextComponent {
   /// List of [HighlightedTextSegment]s to present.
   @Input()
-  List<HighlightedTextSegment>? segments;
+  List<HighlightedTextSegment> segments;
 }

@@ -49,7 +49,7 @@ class MaterialSliderComponent implements AfterChanges, HasDisabled {
   @HostBinding('class.is-disabled')
   @HostBinding('attr.aria-disabled')
   @Input()
-  bool? disabled = false;
+  bool disabled = false;
 
   bool _isTwoSided = false;
 
@@ -159,7 +159,7 @@ class MaterialSliderComponent implements AfterChanges, HasDisabled {
       return value % step == 0;
     } else {
       final epsilon = 1e-10;
-      double remainder = value % (step as double);
+      double remainder = value % step;
       if (remainder < epsilon) return true;
       if (step - remainder < epsilon) return true;
       return false;
@@ -167,7 +167,7 @@ class MaterialSliderComponent implements AfterChanges, HasDisabled {
   }
 
   @ViewChild('container')
-  late Element container;
+  Element container;
 
   /// Whether the current user locale is RTL.
   bool get isRtl => Bidi.isRtlLanguage(Intl.defaultLocale ?? '');
@@ -200,14 +200,14 @@ class MaterialSliderComponent implements AfterChanges, HasDisabled {
           (newValue < leftValue && !isRightKnobSelected)) {
         if (newValue != leftValue) {
           // Prevent left knob value from being greater than right knob value
-          leftValue = _getValidLeftValue(value as double, newValue as double) as int;
+          leftValue = _getValidLeftValue(value, newValue);
           _leftChangeController.add(leftValue);
         }
       } else {
         // Adjust right knob in 1 or 2 sided slider.
         if (newValue != value) {
           // Prevent right knob value from being less than left knob value
-          value = _getValidRightValue(leftValue as double, newValue as double);
+          value = _getValidRightValue(leftValue, newValue);
           _changeController.add(value);
         }
       }
@@ -219,15 +219,15 @@ class MaterialSliderComponent implements AfterChanges, HasDisabled {
 
   /// Handles mouse down events on either slider knob or the slider track.
   void mouseDown(MouseEvent event) {
-    if (disabled!) return;
+    if (disabled) return;
     if (event.button != 0) return;
     event.preventDefault();
-    _setValueToMousePosition(event.page.x as int);
+    _setValueToMousePosition(event.page.x);
     isDragging = true;
     _changeDetector.markForCheck();
     final mouseMoveSubscription = document.onMouseMove.listen((event) {
       event.preventDefault();
-      _setValueToMousePosition(event.page.x as int);
+      _setValueToMousePosition(event.page.x);
     });
     document.onMouseUp.take(1).listen((event) {
       event.preventDefault();
@@ -241,16 +241,16 @@ class MaterialSliderComponent implements AfterChanges, HasDisabled {
 
   /// Handles touch start events on either slider knob.
   void touchStart(TouchEvent event) {
-    if (disabled!) return;
+    if (disabled) return;
     event.preventDefault();
-    final touch = event.targetTouches!.first;
-    _setValueToMousePosition(touch.page.x as int);
+    final touch = event.targetTouches.first;
+    _setValueToMousePosition(touch.page.x);
     isDragging = true;
     _changeDetector.markForCheck();
     final touchMoveSubscription = document.onTouchMove.listen((event) {
       event.preventDefault();
-      final touch = event.targetTouches!.first;
-      _setValueToMousePosition(touch.page.x as int);
+      final touch = event.targetTouches.first;
+      _setValueToMousePosition(touch.page.x);
     });
     document.onTouchEnd.take(1).listen((event) {
       event.preventDefault();
@@ -266,7 +266,7 @@ class MaterialSliderComponent implements AfterChanges, HasDisabled {
   ///
   /// [isLeftKnob] true indicates that the event ocurred on the left knob.
   void knobKeyDown(KeyboardEvent event, {bool isLeftKnobPressed = false}) {
-    if (disabled!) return;
+    if (disabled) return;
     var currValue = isLeftKnobPressed ? leftValue : value;
     var newValue = currValue;
     final bigStepSize = ((max - min) / 10.0).ceil();
@@ -289,11 +289,11 @@ class MaterialSliderComponent implements AfterChanges, HasDisabled {
     }
     if (isLeftKnobPressed) {
       if (newValue != leftValue) {
-        leftValue = _getValidLeftValue(value as double, newValue as double) as int;
+        leftValue = _getValidLeftValue(value, newValue);
         _leftChangeController.add(leftValue);
       }
     } else if (newValue != value) {
-      value = _getValidRightValue(leftValue as double, newValue as double);
+      value = _getValidRightValue(leftValue, newValue);
       _changeController.add(value);
     }
   }

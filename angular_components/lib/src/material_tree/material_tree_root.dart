@@ -46,5 +46,5 @@ abstract class MaterialTreeRoot<T>
   bool get allowParentMultiSelection => true;
 
   /// The previously toggled node.
-  T? previouslyToggledNode;
+  T previouslyToggledNode;
 }

@@ -16,10 +16,10 @@ import 'package:angular_components/model/selection/selection_options.dart';
 // so it cannot implement [ActivationHandler<T>].
 abstract class ShiftClickSelectionMixin<T>
     implements ActivationHandler<dynamic /* T | String */ > {
-  T? _pivot;
+  T _pivot;
 
-  SelectionModel<T?> get selection;
-  SelectionOptions<T?> get options;
+  SelectionModel<T> get selection;
+  SelectionOptions<T> get options;
 
   /// Toggles the clicked value within [model].
   ///
@@ -33,7 +33,7 @@ abstract class ShiftClickSelectionMixin<T>
     if (_pivot == null || !e.shiftKey) {
       toggleSelection(value);
     } else {
-      final optionValues = options.optionsList!;
+      final optionValues = options.optionsList;
       final clickedIndex = optionValues.indexOf(value);
       final pivotIndex = optionValues.indexOf(_pivot);
       if (pivotIndex == -1) {

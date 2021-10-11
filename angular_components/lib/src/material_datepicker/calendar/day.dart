@@ -8,19 +8,19 @@ part of '../../../material_datepicker/calendar.dart';
 class CalendarDay {
   final Date date;
 
-  List<String>? _classes;
+  List<String> _classes;
 
-  CalendarDay(this.date, CalendarState? state) {
+  CalendarDay(this.date, CalendarState state) {
     updateClasses(state);
   }
 
-  void updateClasses(CalendarState? state) {
+  void updateClasses(CalendarState state) {
     _classes = state != null ? _boundaryClasses(state).toList() : [];
   }
 
   int get day => date.day;
 
-  List<String>? get classes => _classes;
+  List<String> get classes => _classes;
 
   Iterable<String> _boundaryClasses(CalendarState state) => state.selections
       .where((r) => r.start == date || r.end == date)
