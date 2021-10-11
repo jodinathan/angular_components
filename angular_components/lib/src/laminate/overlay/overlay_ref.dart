@@ -26,7 +26,7 @@ typedef AsyncApplyState<E> = Future<Object> Function(
 /// This exists to separate the ruler API from tight coupling on overlays; see
 /// [Ruler.measure] and [Ruler.track] for the default implementations.
 typedef AsyncMeasureSize<E> = Stream<Rectangle> Function(E element,
-    {bool track});
+    {bool? track});
 
 /// A handle to manipulate an existing overlay pane.
 class OverlayRef implements PortalHost {
@@ -52,16 +52,16 @@ class OverlayRef implements PortalHost {
       state.visibility = Visibility.Hidden;
     }
     await _applyChanges();
-    yield* _runOutsideAngular(() {
+    yield* (_runOutsideAngular(() {
       return _asyncMeasureSize(overlayElement, track: true)
           .distinct(_isEqualSize);
-    }) as Stream<Rectangle>;
+    }) as Stream<Rectangle>?)!;
   }
 
   /// An event stream that fires when the overlay's visibility changes.
   Stream<bool> get onVisibleChanged {
     _onVisibleController ??= StreamController.broadcast(sync: true);
-    return _onVisibleController.stream;
+    return _onVisibleController!.stream;
   }
 
   /// The current state of the overlay.
@@ -77,21 +77,21 @@ class OverlayRef implements PortalHost {
 
   /// Sets whether the overlay should capture events and prevent interaction
   /// with the underlying application.
-  void setPreventInteraction([bool preventInteraction]) {
+  void setPreventInteraction([bool? preventInteraction]) {
     state.captureEvents = preventInteraction ?? true;
   }
 
   /// Sets whether the overlay should be visible.
-  void setVisible([bool visible]) {
+  void setVisible([bool? visible]) {
     state.visibility = Visibility.fromBoolean(visible ?? true);
   }
 
   /// A unique ID that represents the overlay pane.
-  String get uniqueId => overlayElement.attributes['pane-id'];
+  String? get uniqueId => overlayElement.attributes['pane-id'];
 
   @override
-  Future<Object> attach(Portal<Object> portal) =>
-      _delegatePortalHost.attach(portal);
+  Future<Object> attach(Portal<Object?> portal) =>
+      _delegatePortalHost.attach(portal).then((value) => value as Object);
 
   @override
   Future<void> detach() => _delegatePortalHost.detach();
@@ -103,7 +103,7 @@ class OverlayRef implements PortalHost {
   void dispose() {
     overlayElement.remove();
     if (_onVisibleController != null) {
-      _onVisibleController.close();
+      _onVisibleController!.close();
     }
     if (_delegatePortalHost.hasAttached == true) {
       _delegatePortalHost.dispose();
@@ -122,16 +122,16 @@ class OverlayRef implements PortalHost {
 
   bool _lastVisible = false;
 
-  StreamController<bool> _onVisibleController;
+  StreamController<bool>? _onVisibleController;
 
   // Tracks whenever [OverlayRef.onUpdate] changes.
-  StreamSubscription<Null> _stateUpdateListener;
+  late StreamSubscription<Null> _stateUpdateListener;
 
   Future<Object> _applyChanges() {
     if (_lastVisible != isVisible) {
       _lastVisible = isVisible;
       if (_onVisibleController != null) {
-        _onVisibleController.add(isVisible);
+        _onVisibleController!.add(isVisible);
       }
     }
     return _asyncApplyState(state, overlayElement);
@@ -144,7 +144,7 @@ class OverlayRef implements PortalHost {
       this.containerElement,
       this.overlayElement,
       this._runOutsideAngular,
-      {OverlayState state})
+      {OverlayState? state})
       : this.state = MutableOverlayState.from(state) {
     _stateUpdateListener = this.state.onUpdate.listen((_) => _applyChanges());
   }

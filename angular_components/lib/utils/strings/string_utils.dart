@@ -59,7 +59,7 @@ String titleCase(String s) =>
     s.substring(1).replaceAllMapped(_capitalLetter, (m) => ' ${m[0]}');
 
 /// Returns the String [s], with the first letter capitalized.
-String capitalizeFirstLetter(s) => s[0].toUpperCase() + s.substring(1);
+String? capitalizeFirstLetter(s) => s[0].toUpperCase() + s.substring(1);
 
 // Splits [s] into tokens.
 //

@@ -22,18 +22,18 @@ import 'package:angular_components/utils/disposer/disposer.dart';
 class FocusTrapComponent implements OnDestroy {
   final _disposer = Disposer.oneShot();
 
-  AutoFocusDirective _autoFocusDirective;
+  AutoFocusDirective? _autoFocusDirective;
   @ContentChild(AutoFocusDirective)
   set autoFocus(AutoFocusDirective value) {
     _autoFocusDirective = value;
   }
 
-  FocusContentWrapper _content;
+  FocusContentWrapper? _content;
   @ViewChild(FocusContentWrapper)
   set content(FocusContentWrapper value) {
     _content = value;
     if (_content != null && _autoFocusDirective == null) {
-      _content._element.focus();
+      _content!._element.focus();
     }
   }
 
@@ -44,18 +44,18 @@ class FocusTrapComponent implements OnDestroy {
 
   void focusFirst() {
     _focusFirstInOrder(
-        DomTreeIterator(_content.element, scope: _content.element));
+        DomTreeIterator(_content!.element, scope: _content!.element));
   }
 
   void focusLast() {
-    _focusFirstInOrder(DomTreeIterator(_content.element,
-        scope: _content.element, reverse: true, wraps: true));
+    _focusFirstInOrder(DomTreeIterator(_content!.element,
+        scope: _content!.element, reverse: true, wraps: true));
   }
 
-  void _focusFirstInOrder(Iterator<Element> iterator) {
+  void _focusFirstInOrder(Iterator<Element?> iterator) {
     while (iterator.moveNext()) {
-      if (iterator.current.tabIndex == 0 && _visible(iterator.current)) {
-        iterator.current.focus();
+      if (iterator.current!.tabIndex == 0 && _visible(iterator.current!)) {
+        iterator.current!.focus();
         return;
       }
     }
@@ -68,9 +68,9 @@ class FocusTrapComponent implements OnDestroy {
 
   void _focusDefault() {
     if (_autoFocusDirective != null) {
-      _autoFocusDirective.focus();
+      _autoFocusDirective!.focus();
     } else if (_content != null) {
-      _content.element.focus();
+      _content!.element.focus();
     }
   }
 }

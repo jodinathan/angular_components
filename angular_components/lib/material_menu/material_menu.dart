@@ -50,25 +50,25 @@ class MaterialMenuComponent extends Object
 
   MaterialMenuComponent(this._root);
 
-  String _popupClass;
-  String get popupClass => _popupClass;
+  String? _popupClass;
+  String? get popupClass => _popupClass;
 
   /// CSS classes to append onto the menu popup.
   ///
   /// These CSS classes will be copied into the popup overlay. The classes can
   /// be used to select DOM elements within the overlay when the popup is open.
   @Input()
-  set popupClass(String className) {
+  set popupClass(String? className) {
     _popupClass = constructEncapsulatedCss(className, _root.classes);
   }
 
   /// Trigger button text. Ignored if the [MenuModel] has an icon.
   @Input()
-  String buttonText;
+  String? buttonText;
 
   /// Whether the menu is disabled or not.
   @Input()
-  bool disabled = false;
+  bool? disabled = false;
 
   /// Whether the menu is tabbable or not.
   @Input()
@@ -76,32 +76,32 @@ class MaterialMenuComponent extends Object
 
   /// Aria label for button trigger.
   @Input()
-  String ariaLabel;
+  String? ariaLabel;
 
-  String get tooltipText => menu?.tooltipText;
+  String? get tooltipText => menu?.tooltipText;
 
   bool get hasTooltip => menu?.hasTooltip ?? false;
 
-  bool get hasSubmenu => menu?.itemGroups?.isNotEmpty ?? false;
+  bool get hasSubmenu => menu?.itemGroups.isNotEmpty ?? false;
 
   bool get hasIcon => menu?.uiIcon != null;
 
-  MaterialButtonComponent _button;
+  MaterialButtonComponent? _button;
 
   @ViewChild(MaterialButtonComponent)
   set button(MaterialButtonComponent b) {
     _button = b;
   }
 
-  MenuPopupComponent _menuPopup;
+  MenuPopupComponent? _menuPopup;
 
   @ViewChild(MenuPopupComponent)
   set menuPopup(MenuPopupComponent m) {
     _menuPopup = m;
   }
 
-  Focusable get _focusTarget =>
-      disabled ? null : (isExpanded ? _menuPopup : _button);
+  Focusable? get _focusTarget =>
+      disabled! ? null : (isExpanded ? _menuPopup : _button);
 
   @override
   void ngAfterViewInit() {

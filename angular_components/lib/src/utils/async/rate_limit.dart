@@ -19,7 +19,7 @@ class _RateLimitSink implements EventSink<dynamic> {
   final EventSink<dynamic> _outputSink;
   final Duration _duration;
   final RateLimitStrategy<dynamic> _rateLimitStrategy;
-  _AddEventFn _addEvent;
+  late _AddEventFn _addEvent;
 
   _RateLimitSink(this._outputSink, this._duration, this._rateLimitStrategy) {
     _addEvent = _rateLimitStrategy(_outputSink.add, _duration);
@@ -31,7 +31,7 @@ class _RateLimitSink implements EventSink<dynamic> {
   }
 
   @override
-  void addError(error, [StackTrace stackTrace]) {
+  void addError(error, [StackTrace? stackTrace]) {
     _outputSink.addError(error, stackTrace);
   }
 

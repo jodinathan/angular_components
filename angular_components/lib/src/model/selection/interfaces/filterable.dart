@@ -76,24 +76,24 @@ abstract class Filterable<Q> {
 ///         });
 ///       }
 ///     }
-abstract class AbstractFilterable<Q> implements Filterable<Q> {
-  StreamController _currentDoFilterController;
-  StreamSubscription _currentDoFilterSubscription;
+abstract class AbstractFilterable<Q> implements Filterable<Q?> {
+  StreamController? _currentDoFilterController;
+  StreamSubscription? _currentDoFilterSubscription;
 
   int _currentLimit = Filterable.UNLIMITED;
-  Q _currentQuery;
+  Q? _currentQuery;
 
   @override
   int get currentLimit => _currentLimit;
 
   @override
-  Q get currentQuery => _currentQuery;
+  Q? get currentQuery => _currentQuery;
 
   /// Implement the actual logic for [filter] here.
   ///
   /// The stream returned should immediately emit an event once the underlying
   /// data structure has been modified based on the returned data.
-  Stream doFilter(Q query, {int limit = Filterable.UNLIMITED});
+  Stream doFilter(Q? query, {int limit = Filterable.UNLIMITED});
 
   /// Automatically called when [isFiltered] flips to `false` from `true`.
   ///
@@ -101,22 +101,22 @@ abstract class AbstractFilterable<Q> implements Filterable<Q> {
   void onFilterCancelled();
 
   @override
-  Stream filter(Q query, {int limit = Filterable.UNLIMITED}) {
-    StreamController streamController;
-    StreamSubscription streamSubscription;
+  Stream filter(Q? query, {int limit = Filterable.UNLIMITED}) {
+    StreamController? streamController;
+    StreamSubscription? streamSubscription;
     streamController = StreamController.broadcast(onListen: () {
       if (isFiltered) {
-        _currentDoFilterSubscription.cancel();
-        _currentDoFilterController.close();
+        _currentDoFilterSubscription!.cancel();
+        _currentDoFilterController!.close();
       }
       streamSubscription =
-          doFilter(query, limit: limit).listen(streamController.add);
+          doFilter(query, limit: limit).listen(streamController!.add);
       _currentDoFilterSubscription = streamSubscription;
       _currentDoFilterController = streamController;
       _currentQuery = query;
       _currentLimit = limit;
     }, onCancel: () {
-      streamSubscription.cancel();
+      streamSubscription!.cancel();
       if (_currentDoFilterController == streamController) {
         _currentDoFilterController = null;
         _currentQuery = null;

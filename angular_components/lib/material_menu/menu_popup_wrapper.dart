@@ -16,7 +16,7 @@ import 'package:angular_components/utils/angular/properties/properties.dart';
 /// This data struct is used to pass parameters along with the intent, such as
 /// which menu item to focus when the item is first opened.
 class ExpandAction {
-  final int _focusIndexOnExpand;
+  final int? _focusIndexOnExpand;
 
   const ExpandAction.withFirstItemFocused() : _focusIndexOnExpand = 0;
 
@@ -30,11 +30,11 @@ class ExpandAction {
 
 /// A mixin for classes that wrap a [MenuPopupComponent].
 class MenuPopupWrapper implements AcceptsWidth {
-  final _expandAction = ObservableReference<ExpandAction>(null);
+  final _expandAction = ObservableReference<ExpandAction?>(null);
 
   /// The displayed menu.
   @Input()
-  MenuModel menu;
+  MenuModel? menu;
 
   /// Whether the menu is open.
   ///
@@ -58,7 +58,7 @@ class MenuPopupWrapper implements AcceptsWidth {
   /// This input is used to pass parameters with the open action. E.g. which
   /// element is selected when the popup is focused.
   @Input()
-  set expandAction(ExpandAction value) {
+  set expandAction(ExpandAction? value) {
     if (_expandAction.value == value) return;
 
     _expandAction.value = value;
@@ -67,7 +67,7 @@ class MenuPopupWrapper implements AcceptsWidth {
   /// True if the menu popup is expanded/open.
   bool get isExpanded => expandAction != null;
 
-  ExpandAction get expandAction => _expandAction.value;
+  ExpandAction? get expandAction => _expandAction.value;
 
   /// True if the menu item group should select the first item when the popup
   /// is opened.
@@ -88,7 +88,7 @@ class MenuPopupWrapper implements AcceptsWidth {
   ///
   ///
   @Output()
-  Stream<ExpandAction> get expandActionChange => _expandAction.stream;
+  Stream<ExpandAction?> get expandActionChange => _expandAction.stream;
 
   /// Selects 1 of 5 predefined width values for the menu.
   ///
@@ -110,7 +110,7 @@ class MenuPopupWrapper implements AcceptsWidth {
   ///
   /// For the meaning of this parameter, see the PopupInterface documentation.
   @Input()
-  Iterable preferredPositions;
+  Iterable? preferredPositions;
 }
 
 /// Provides basic accessibility-friendly methods for showing and hiding the
@@ -143,7 +143,7 @@ abstract class MenuPopupTrigger {
 
   bool get isExpanded;
 
-  set expandAction(ExpandAction value);
+  set expandAction(ExpandAction? value);
 
   // The following methods are for accessibility-friendly trigger actions.
   // See the 'Keyboard Interaction' section on this page:

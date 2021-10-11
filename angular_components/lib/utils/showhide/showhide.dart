@@ -26,7 +26,7 @@ class ShowHideDirective implements OnInit, OnDestroy {
 
   final Element _element;
   final DomService _domService;
-  StreamQueue<TransitionEvent> _transitionEndQueue;
+  late StreamQueue<TransitionEvent> _transitionEndQueue;
 
   bool _initialized = false;
   bool _initialWritePending = false;
@@ -90,7 +90,7 @@ class ShowHideDirective implements OnInit, OnDestroy {
         // remove the ng-hide class in the next event loop, so that effects of
         // removing acx-showhide-hidden can settle (like changing display from
         // none to block)
-        _domService.nextFrame.then((_) {
+        _domService.nextFrame!.then((_) {
           _removeNgHide();
         });
       } else {
@@ -160,15 +160,15 @@ class ShowHideDirective implements OnInit, OnDestroy {
 
   static int _transitionDurationMs(Element element) {
     String duration = element.getComputedStyle().transitionDuration;
-    if (duration == null || duration.isEmpty) return 0;
+    if (duration.isEmpty) return 0;
 
     // TODO(google): remove this when
     // https://code.google.com/p/dart/issues/detail?id=16059 is fixed
-    Match matches = RegExp(r"([0-9.]+)([ms]+)").matchAsPrefix(duration);
+    Match? matches = RegExp(r"([0-9.]+)([ms]+)").matchAsPrefix(duration);
     if (matches == null || matches.groupCount < 2) return 0;
 
-    double value = double.parse(matches[1]);
-    String unit = matches[2];
+    double value = double.parse(matches[1]!);
+    String? unit = matches[2];
     if (unit == "s") return (value * 1000).floor();
     if (unit == "ms") return value.floor();
     return 0;

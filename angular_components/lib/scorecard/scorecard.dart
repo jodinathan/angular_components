@@ -55,15 +55,15 @@ class ScorecardComponent extends KeyboardOnlyFocusIndicatorDirective {
 
   /// The title of the scorecard.
   @Input()
-  String label;
+  String? label;
 
   /// The value displayed to the user.
   @Input()
-  String value;
+  String? value;
 
   /// The value displayed in a tooltip when the users hovers over the value.
   @Input()
-  String tooltip;
+  String? tooltip;
 
   /// Whether to display a small change arrow glyph in the description;
   /// optional.
@@ -72,15 +72,15 @@ class ScorecardComponent extends KeyboardOnlyFocusIndicatorDirective {
 
   /// A piece of suggestion text before the description; optional.
   @Input()
-  String suggestionBefore;
+  String? suggestionBefore;
 
   /// Short description on the scorecard; optional.
   @Input()
-  String description;
+  String? description;
 
   /// A piece of suggestion text after the description; optional.
   @Input()
-  String suggestionAfter;
+  String? suggestionAfter;
 
   /// Whether to use the "big" class style for scorecards; optional.
   @HostBinding('class.extra-big')
@@ -150,14 +150,14 @@ class ScorecardComponent extends KeyboardOnlyFocusIndicatorDirective {
   }
 
   @HostBinding('attr.tabindex')
-  int get hostTabIndex => selectable ? 0 : null;
+  int? get hostTabIndex => selectable ? 0 : null;
 
   @HostBinding('attr.role')
-  String get hostRole => selectable ? "button" : null;
+  String? get hostRole => selectable ? "button" : null;
 
   /// The [Color] to apply to the scorecard background when it is selected.
   @Input()
-  Color selectedColor;
+  Color? selectedColor;
 
   /// Fired when the selection state changes.
   @Output()

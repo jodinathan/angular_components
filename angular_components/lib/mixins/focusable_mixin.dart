@@ -16,14 +16,14 @@ class FocusableMixin implements Focusable {
   final StreamController<FocusEvent> _onFocus =
       StreamController<FocusEvent>.broadcast(sync: true);
 
-  Focusable _focusable;
+  Focusable? _focusable;
   bool _focusPending = false;
 
-  set focusable(Focusable component) {
+  set focusable(Focusable? component) {
     _focusable = component;
     if (_focusPending && component != null) {
       _focusPending = false;
-      _focusable.focus();
+      _focusable!.focus();
     }
   }
 
@@ -32,7 +32,7 @@ class FocusableMixin implements Focusable {
     if (_focusable == null) {
       _focusPending = true;
     } else {
-      _focusable.focus();
+      _focusable!.focus();
     }
   }
 

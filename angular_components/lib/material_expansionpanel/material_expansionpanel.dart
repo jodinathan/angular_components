@@ -7,7 +7,7 @@ import 'dart:html';
 import 'dart:math';
 
 import 'package:angular/angular.dart';
-import 'package:angular/meta.dart';
+import 'package:angular/src/meta.dart';
 import 'package:angular_components/button_decorator/button_decorator.dart';
 import 'package:angular_components/content/deferred_content.dart';
 import 'package:angular_components/content/deferred_content_aware.dart';
@@ -112,9 +112,9 @@ class MaterialExpansionPanel
   /// will get focused instead of the [AutoFocusDirective] inside the .content.
   @visibleForTemplate
   @ContentChild(AutoFocusDirective)
-  AutoFocusDirective autoFocusChild;
+  AutoFocusDirective? autoFocusChild;
 
-  Focusable _focusOnOpenChild;
+  Focusable? _focusOnOpenChild;
 
   /// Sets the focus child so that we can focus on it when the panel opens.
   @ContentChild('focusOnOpen')
@@ -132,7 +132,7 @@ class MaterialExpansionPanel
     }
   }
 
-  HtmlElement _mainPanel;
+  late HtmlElement _mainPanel;
   @ViewChild('mainPanel')
   set mainPanel(HtmlElement mainPanel) {
     _mainPanel = mainPanel;
@@ -144,7 +144,7 @@ class MaterialExpansionPanel
         _mainPanel.style.height = '';
         // If we just finished closing, let deferred content stop rendering
         // the panel body.
-        if (!isExpanded) {
+        if (!isExpanded!) {
           _ngZone.run(() => _contentVisible.add(false));
         }
       }));
@@ -157,15 +157,15 @@ class MaterialExpansionPanel
       if (!_mainPanelHasHeightTransition) {
         _disposer.addStreamSubscription(isExpandedChange.listen((expanded) {
           // Just check for false (closed). Open (true) is always done first.
-          if (!expanded) _contentVisible.add(false);
+          if (!expanded!) _contentVisible.add(false);
         }));
       }
     });
-    _domService.scheduleRead(transitionCheck);
+    _domService.scheduleRead(transitionCheck as void Function());
     _disposer.addDisposable(transitionCheck);
   }
 
-  HtmlElement _headerPanel;
+  late HtmlElement _headerPanel;
   @ViewChild('headerPanel')
   set headerPanel(HtmlElement headerPanel) {
     _headerPanel = headerPanel;
@@ -179,7 +179,7 @@ class MaterialExpansionPanel
     });
   }
 
-  HtmlElement _mainContent;
+  HtmlElement? _mainContent;
   @ViewChild('mainContent')
   set mainContent(HtmlElement mainContent) {
     _mainContent = mainContent;
@@ -198,17 +198,17 @@ class MaterialExpansionPanel
     }
   }
 
-  HtmlElement _headerContent;
+  late HtmlElement _headerContent;
   @ViewChild('headerContent')
   set headerContent(HtmlElement headerContent) =>
       _headerContent = headerContent;
 
-  HtmlElement _actionContent;
+  HtmlElement? _actionContent;
   @ViewChild('action')
   set actionContent(HtmlElement headerContent) =>
       _actionContent = headerContent;
 
-  HtmlElement _contentWrapper;
+  HtmlElement? _contentWrapper;
   @ViewChild('contentWrapper')
   set contentWrapper(HtmlElement contentWrapper) {
     _contentWrapper = contentWrapper;
@@ -220,13 +220,13 @@ class MaterialExpansionPanel
   bool closeOnSave = true;
 
   final ObservableReference<bool> _isExpanded = ObservableReference(false);
-  bool get isExpanded => _isExpanded.value;
+  bool? get isExpanded => _isExpanded.value;
 
   /// If true, the panel is expanded by default, if false, the panel is closed.
   @Input('expanded')
-  set isExpanded(bool value) {
+  set isExpanded(bool? value) {
     if (value == isExpanded) return;
-    if (value) {
+    if (value!) {
       expand(byUserAction: false);
     } else {
       collapse(byUserAction: false);
@@ -235,7 +235,7 @@ class MaterialExpansionPanel
 
   /// Event fired when the panel is either collapsed or expanded.
   @Output('expandedChange')
-  Stream<bool> get isExpandedChange => _isExpanded.stream;
+  Stream<bool?> get isExpandedChange => _isExpanded.stream;
 
   /// Event fired when the panel is collapsed or expanded by the user.
   @Output('expandedChangeByUser')
@@ -258,13 +258,13 @@ class MaterialExpansionPanel
     _changeDetector.markForCheck();
   }
 
-  bool _disabled = false;
-  bool get disabled => _disabled;
+  bool? _disabled = false;
+  bool? get disabled => _disabled;
 
   /// If true, the panel will remain in the collapsed state with no way to
   /// expand it, or if expanded by default, it will stay in expanded state.
   @Input()
-  set disabled(bool value) {
+  set disabled(bool? value) {
     _disabled = value;
     _changeDetector.markForCheck();
   }
@@ -288,28 +288,28 @@ class MaterialExpansionPanel
 
   /// A short name label for the expansion panel.
   @Input()
-  String name;
+  String? name;
 
   /// Some optional secondary summary text that describes the state of the
   /// widget hosted inside the panel.
   @Input()
-  String secondaryText;
+  String? secondaryText;
 
-  String _groupAriaLabel;
+  String? _groupAriaLabel;
 
   /// Aria label used to describe the header.
   @Input()
-  set groupAriaLabel(String groupAriaLabel) {
+  set groupAriaLabel(String? groupAriaLabel) {
     _groupAriaLabel = groupAriaLabel;
   }
 
-  String get groupAriaLabel => _groupAriaLabel == null ? name : _groupAriaLabel;
+  String? get groupAriaLabel => _groupAriaLabel == null ? name : _groupAriaLabel;
 
   /// Level of the heading.
   ///
   /// If null, the heading will not have role="heading".
   @Input()
-  int headerAriaLevel;
+  int? headerAriaLevel;
 
   @visibleForTemplate
   String get headerRole => headerAriaLevel == null ? 'none' : 'heading';
@@ -318,7 +318,7 @@ class MaterialExpansionPanel
   @Input()
   set expandIcon(String expandIcon) => _expandIcon = expandIcon;
 
-  String _expandIcon;
+  String? _expandIcon;
 
   /// If a custom icon is used, then the icon disappears when the panel is
   /// expanded.
@@ -339,17 +339,17 @@ class MaterialExpansionPanel
 
   bool get shouldShowExpandIcon {
     if (alwaysHideExpandIcon) return false;
-    return (hasCustomExpandIcon && isExpanded)
+    return (hasCustomExpandIcon && isExpanded!)
         ? alwaysShowExpandIcon
-        : !disabled;
+        : !disabled!;
   }
 
-  bool get shouldFlipExpandIcon => hasCustomExpandIcon ? false : !isExpanded;
+  bool get shouldFlipExpandIcon => hasCustomExpandIcon ? false : !isExpanded!;
 
   bool get shouldShowHiddenHeaderExpandIcon =>
       hasCustomExpandIcon || alwaysHideExpandIcon
           ? false
-          : (hideExpandedHeader && !disabled);
+          : (hideExpandedHeader && !disabled!);
 
   /// Option to set if widget should show save/cancel buttons `true` by default.
   @Input()
@@ -378,17 +378,17 @@ class MaterialExpansionPanel
 
   String get closePanelMsg => groupAriaLabel == null && name == null
       ? _closePanelMsg
-      : _namedPanelMsg(groupAriaLabel);
+      : _namedPanelMsg(groupAriaLabel!);
 
   String get openPanelMsg => groupAriaLabel == null && name == null
       ? _openPanelMsg
-      : _namedPanelMsg(groupAriaLabel);
+      : _namedPanelMsg(groupAriaLabel!);
 
-  String get headerMsg {
-    if (disabled || _groupAriaLabel != null) {
+  String? get headerMsg {
+    if (disabled! || _groupAriaLabel != null) {
       return groupAriaLabel;
     } else {
-      return isExpanded ? closePanelMsg : openPanelMsg;
+      return isExpanded! ? closePanelMsg : openPanelMsg;
     }
   }
 
@@ -410,40 +410,40 @@ class MaterialExpansionPanel
       desc: 'Aria label used for the button used to expand the panel.');
 
   final _openController =
-      StreamController<AsyncAction<bool>>.broadcast(sync: true);
+      StreamController<AsyncAction<bool>?>.broadcast(sync: true);
   final _closeController =
-      StreamController<AsyncAction<bool>>.broadcast(sync: true);
+      StreamController<AsyncAction<bool>?>.broadcast(sync: true);
   final _saveController =
-      StreamController<AsyncAction<bool>>.broadcast(sync: true);
+      StreamController<AsyncAction<bool>?>.broadcast(sync: true);
   final _cancelController =
-      StreamController<AsyncAction<bool>>.broadcast(sync: true);
+      StreamController<AsyncAction<bool>?>.broadcast(sync: true);
 
   /// Event fired when panel is trying to close.
   ///
   /// This action may be cancelled.
   @Output()
-  Stream<AsyncAction<bool>> get close => _closeController.stream;
+  Stream<AsyncAction<bool>?> get close => _closeController.stream;
 
   /// Event fired when panel is trying to open.
   ///
   /// This action may be cancelled.
   @Output()
-  Stream<AsyncAction<bool>> get open => _openController.stream;
+  Stream<AsyncAction<bool>?> get open => _openController.stream;
 
   /// Event fired when panel is saved.
   @Output()
-  Stream<AsyncAction<bool>> get save => _saveController.stream;
+  Stream<AsyncAction<bool>?> get save => _saveController.stream;
 
   /// Event fired when panel is cancelled.
   @Output()
-  Stream<AsyncAction<bool>> get cancel => _cancelController.stream;
+  Stream<AsyncAction<bool>?> get cancel => _cancelController.stream;
 
   void handleHeaderClick() {
-    if (!disableHeaderExpansion) isExpanded ? collapse() : expand();
+    if (!disableHeaderExpansion) isExpanded! ? collapse() : expand();
   }
 
   void handleExpandIconClick() {
-    if (disableHeaderExpansion) isExpanded ? collapse() : expand();
+    if (disableHeaderExpansion) isExpanded! ? collapse() : expand();
   }
 
   @override
@@ -464,7 +464,7 @@ class MaterialExpansionPanel
   ///
   /// It's either the header or the icon in the content if
   /// [hideExpandedHeader] is set to `true`.
-  ButtonDirective _expandCollapseButton;
+  ButtonDirective? _expandCollapseButton;
   @ViewChild('expandCollapseButton', read: ButtonDirective)
   set expandCollapse(ButtonDirective button) {
     _expandCollapseButton = button;
@@ -494,12 +494,12 @@ class MaterialExpansionPanel
   }
 
   Future<bool> expand({bool byUserAction = true}) {
-    if (disabled && byUserAction) return Future.value(false);
+    if (disabled! && byUserAction) return Future.value(false);
     return changeState(true, byUserAction, _openController);
   }
 
   Future<bool> collapse({bool byUserAction = true}) {
-    if (disabled && byUserAction) return Future.value(false);
+    if (disabled! && byUserAction) return Future.value(false);
     return changeState(false, byUserAction, _closeController);
   }
 
@@ -518,7 +518,7 @@ class MaterialExpansionPanel
       }
       return true;
     }, valueOnCancel: false);
-    return actionCtrl.action.onDone.then((result) {
+    return actionCtrl.action!.onDone.then((result) {
       _activeSaveCancelAction = false;
       _changeDetector.markForCheck();
       return result;
@@ -538,7 +538,7 @@ class MaterialExpansionPanel
       if (stateWasInitialized) _transitionHeightChange(false);
       return true;
     }, valueOnCancel: false);
-    return actionCtrl.action.onDone.then((result) {
+    return actionCtrl.action!.onDone.then((result) {
       _activeSaveCancelAction = false;
       _changeDetector.markForCheck();
       return result;
@@ -568,19 +568,19 @@ class MaterialExpansionPanel
       if (expand) {
         _domService.scheduleWrite(() {
           if (autoFocusChild != null) {
-            autoFocusChild.focus();
+            autoFocusChild!.focus();
           } else if (byUserAction && _focusOnOpenChild != null) {
-            _focusOnOpenChild.focus();
+            _focusOnOpenChild!.focus();
           }
         });
       }
       if (stateWasInitialized) _transitionHeightChange(expand);
       return true;
     }, valueOnCancel: false);
-    return actionCtrl.action.onDone;
+    return actionCtrl.action!.onDone;
   }
 
-  bool get headerHidden => isExpanded && hideExpandedHeader;
+  bool get headerHidden => isExpanded! && hideExpandedHeader;
 
   /// Sets necessary explicit heights to allow CSS transitions when expanding
   /// or collapsing.
@@ -594,7 +594,7 @@ class MaterialExpansionPanel
         _mainPanel.style.height = expandedPanelHeight;
       });
     } else {
-      _domService.nextFrame.then((_) => _mainPanel.style.height = '');
+      _domService.nextFrame!.then((_) => _mainPanel.style.height = '');
     }
 
     // If the header has to disappear, animate that transition as well
@@ -604,7 +604,7 @@ class MaterialExpansionPanel
 
       // On next frame, set target height for animation.
       if (expand) {
-        _domService.nextFrame.then((_) {
+        _domService.nextFrame!.then((_) {
           _headerPanel.style.height = '';
         });
       } else {
@@ -634,7 +634,7 @@ class MaterialExpansionPanel
   }
 
   String _readMainContentHeight() {
-    final contentHeight = _mainContent.scrollHeight;
+    final contentHeight = _mainContent!.scrollHeight;
     var expandedPanelHeight = '';
 
     // Do our best to make sure that onTransitionEnd will fire later.
@@ -644,7 +644,7 @@ class MaterialExpansionPanel
     if (hasHeightTransition) {
       // If the content-wrapper has a top margin, it is not reflected in the
       // scroll height.
-      final topMargin = _contentWrapper.getComputedStyle().marginTop;
+      final topMargin = _contentWrapper!.getComputedStyle().marginTop;
       expandedPanelHeight = 'calc(${contentHeight}px + ${topMargin})';
     }
     return expandedPanelHeight;

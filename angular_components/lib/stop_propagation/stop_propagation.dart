@@ -17,7 +17,7 @@ import 'package:angular_components/utils/browser/events/events.dart';
   selector: '[stopPropagation]',
 )
 class StopPropagationDirective implements OnDestroy {
-  StreamSubscription _clickSubscription, _keyPressSubscription;
+  StreamSubscription? _clickSubscription, _keyPressSubscription;
 
   StopPropagationDirective(Element e) {
     _clickSubscription = e.onClick.listen(_handleClick);

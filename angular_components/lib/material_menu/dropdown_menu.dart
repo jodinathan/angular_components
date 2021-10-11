@@ -62,40 +62,40 @@ class DropdownMenuComponent extends Object
 
   /// Dropdown button text.
   @Input()
-  String buttonText;
+  String? buttonText;
 
-  bool _disabled = false;
+  bool? _disabled = false;
 
-  bool get disabled => _disabled;
+  bool? get disabled => _disabled;
 
   @Input()
-  set disabled(bool d) {
+  set disabled(bool? d) {
     _disabled = d;
     focusable = _focusTarget;
   }
 
   /// The id of an element that describes the button for the drop down.
   @Input()
-  String buttonAriaLabelledBy;
+  String? buttonAriaLabelledBy;
 
   /// One or more space-delimited ids of elements that provide additional
   /// description for the button for the drop down.
   @Input()
-  String buttonAriaDescribedBy;
+  String? buttonAriaDescribedBy;
 
   /// Whether the menu is tabbable or not.
   @Input()
   bool tabbable = true;
 
-  String _popupClass;
-  String get popupClass => _popupClass;
+  String? _popupClass;
+  String? get popupClass => _popupClass;
 
   /// CSS classes to append onto the menu popup.
   ///
   /// These CSS classes will be copied into the popup overlay. The classes can
   /// be used to select DOM elements within the overlay when the popup is open.
   @Input()
-  set popupClass(String className) {
+  set popupClass(String? className) {
     _popupClass = constructEncapsulatedCss(className, _root.classes);
   }
 
@@ -103,11 +103,11 @@ class DropdownMenuComponent extends Object
   final bool _dropdownStyle = false;
 
   @ViewChild(DropdownButtonComponent)
-  DropdownButtonComponent dropdownButton;
+  DropdownButtonComponent? dropdownButton;
 
   @ViewChild(MenuPopupComponent)
-  MenuPopupComponent menuPopup;
+  MenuPopupComponent? menuPopup;
 
-  Focusable get _focusTarget =>
-      disabled ? null : (isExpanded ? menuPopup : dropdownButton);
+  Focusable? get _focusTarget =>
+      disabled! ? null : (isExpanded ? menuPopup : dropdownButton);
 }

@@ -90,8 +90,8 @@ class MaterialPaperTooltipComponent implements DeferredContentAware, Tooltip {
   // re-applied to material-popup.
   final String popupClassName;
 
-  PopupSource _tooltipSource;
-  PopupSource get popupSource => _tooltipSource;
+  PopupSource? _tooltipSource;
+  PopupSource? get popupSource => _tooltipSource;
 
   /// Relative positions where to try to show the tooltip.
   ///
@@ -156,7 +156,7 @@ class MaterialPaperTooltipComponent implements DeferredContentAware, Tooltip {
   }
 
   // Proxy control of this tooltip via the tooltip controller.
-  Tooltip _controllerProxy;
+  Tooltip? _controllerProxy;
   Tooltip get tooltipHandle =>
       _controllerProxy ??= _tooltipController.proxyFor(this);
 
