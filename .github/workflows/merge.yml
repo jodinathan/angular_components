@@ -8,7 +8,7 @@ on:
   #   - cron: '0 0 * * *' 
 
 jobs:
-  createPullRequest:
+  create_pr:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -17,7 +17,6 @@ jobs:
         id: cpr
         uses: peter-evans/create-pull-request@v3
         with:
-          token: ${{ secrets.PAT }}
           commit-message: Merge compatible into dev, commit ${{ GITHUB_SHA }}
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
