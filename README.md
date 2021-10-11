@@ -1,5 +1,7 @@
 [![AngularDart Chat](https://img.shields.io/gitter/room/angulardart/community?color=blue&label=angulardart%2Fcommunity&logo=matrix)](https://gitter.im/angulardart/community)
 
+Please refer to the [wiki](https://github.com/angulardart-community/angular_components/wiki) on how we plan to migrate `angular_components` to null safety! 
+
 > I attempt to migrate it to null-safety little by little, perhaps one `dart` file every day. ~~As the saying goes: a commit a day, keeps the doctor away.~~
 
 [Material design] components for [AngularDart]. Powering some of Google's most
