@@ -1,15 +1,30 @@
-include: package:pedantic/analysis_options.1.8.0.yaml
+include: package:lints/recommended.yaml
 
 analyzer:
   errors:
-    dead_code: warning
-    todo: ignore
-    unused_element: warning
-    unused_import: warning
-    unused_local_variable: warning
+    # Happen a lots with angular
     uri_has_not_been_generated: ignore
-    deprecated_member_use_from_same_package: ignore
-
-linter:
-  rules:
-  - prefer_generic_function_type_aliases
+    ###############
+    constant_identifier_names: ignore
+    annotate_overrides: ignore
+    unnecessary_this: ignore
+    unnecessary_brace_in_string_interps: ignore
+    prefer_final_fields: ignore
+    prefer_collection_literals: ignore
+    prefer_conditional_assignment: ignore
+    use_function_type_syntax_for_parameters: ignore
+    prefer_void_to_null: ignore
+    implementation_imports: ignore
+    avoid_function_literals_in_foreach_calls: ignore
+    unused_field: ignore
+    prefer_typing_uninitialized_variables: ignore
+    avoid_renaming_method_parameters: ignore
+    non_constant_identifier_names: ignore
+    prefer_function_declarations_over_variables: ignore
+    unnecessary_string_interpolations: ignore
+    avoid_returning_null_for_void: ignore
+    prefer_if_null_operators: ignore
+    overridden_fields: ignore
+    prefer_for_elements_to_map_fromIterable: ignore
+    prefer_spread_collections: ignore
+    prefer_initializing_formals: ignore
