@@ -51,9 +51,9 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
   final StreamController<Null> _onUpdate =
       StreamController.broadcast(sync: true);
 
-  ElementScrollHostBase _scrollHost;
+  late ElementScrollHostBase _scrollHost;
 
-  bool _disableAutoScroll;
+  late bool _disableAutoScroll;
   bool _usePositionSticky = false;
   bool _useTouchGestureListener = true;
   bool _enableSmoothPushing = false;
@@ -67,15 +67,18 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
   }
 
   void _init() {
-    _scrollHost?.dispose();
+    _scrollHost.dispose();
     _scrollHost = ElementScrollHostBase(
         _domService, _ngZone, _gestureListenerFactory, element,
         usePositionSticky: _usePositionSticky,
         useTouchGestureListener: _useTouchGestureListener);
-    stickyController.enableSmoothPushing = _enableSmoothPushing;
+    stickyController?.enableSmoothPushing = _enableSmoothPushing;
 
     if (!_usePositionSticky) {
-      _onUpdate.addStream(stickyController.onUpdate);
+      var onUpdate = stickyController?.onUpdate;
+      if (onUpdate != null) {
+        _onUpdate.addStream(onUpdate);
+      }
     }
   }
 
@@ -157,7 +160,7 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
 
   @override
   void dispose() {
-    _scrollHost?.dispose();
+    _scrollHost.dispose();
     _onUpdate.close();
   }
 
@@ -165,11 +168,10 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
   Rectangle calcViewportRect() => _scrollHost.calcViewportRect();
 
   @override
-  void scrollToPosition(int position) =>
-      _scrollHost?.scrollToPosition(position);
+  void scrollToPosition(int position) => _scrollHost.scrollToPosition(position);
 
   @override
-  void scrollWithDelta(int delta) => _scrollHost?.scrollWithDelta(delta);
+  void scrollWithDelta(int delta) => _scrollHost.scrollWithDelta(delta);
 
   @override
   void startNativeScrollListener() => _scrollHost.startNativeScrollListener();
@@ -208,13 +210,13 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
   Element get anchorElement => _scrollHost.anchorElement;
 
   @override
-  Stream<ScrollHostEvent> get onScroll => _scrollHost.onScroll;
+  Stream<ScrollHostEvent>? get onScroll => _scrollHost.onScroll;
 
   @override
-  PanController get panController => _scrollHost.panController;
+  PanController? get panController => _scrollHost.panController;
 
   @override
-  StickyController get stickyController => _scrollHost?.stickyController;
+  StickyController? get stickyController => _scrollHost.stickyController;
 
   @override
   int get scrollLength => _scrollHost.scrollLength;
@@ -223,7 +225,7 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
   int get scrollPosition => _scrollHost.scrollPosition;
 
   @override
-  Stream<IntersectionObserverEntry> onIntersection(Element element) =>
+  Stream<IntersectionObserverEntry?> onIntersection(Element? element) =>
       _scrollHost.onIntersection(element);
 
   @override
@@ -264,12 +266,12 @@ class StickyFloatingTracker implements OnInit, OnDestroy {
 
   @override
   void ngOnInit() {
-    _scrollHost.stickyController.trackFloating(_element);
+    _scrollHost.stickyController!.trackFloating(_element);
   }
 
   @override
   void ngOnDestroy() {
-    _scrollHost.stickyController.untrackFloating(_element);
+    _scrollHost.stickyController!.untrackFloating(_element);
   }
 }
 
@@ -325,9 +327,9 @@ class AcxPanClassDirective extends BasePanClassDirective
 class StickyElementDirective implements AfterViewInit, OnDestroy {
   final Element _stickyElement;
   final ScrollHost _scrollHost;
-  Element _endElement;
-  String _stickyClass;
-  String _stickyKey;
+  late Element _endElement;
+  late String _stickyClass;
+  late String _stickyKey;
   bool _sticky = true;
   StickyPosition _position = StickyPosition.TOP;
 
@@ -394,5 +396,5 @@ class StickyElementDirective implements AfterViewInit, OnDestroy {
     _stickyController?.unstick(_stickyElement);
   }
 
-  StickyController get _stickyController => _scrollHost.stickyController;
+  StickyController? get _stickyController => _scrollHost.stickyController;
 }

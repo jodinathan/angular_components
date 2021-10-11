@@ -23,7 +23,7 @@ const int hoverableAutoIncrement = 1000;
 /// elements will sometimes show up underneath existing elements.
 @Injectable()
 class ZIndexer {
-  static ZIndexer _currentInstance;
+  static ZIndexer? _currentInstance;
 
   static void _initZIndex() {
     if (_currentZIndex == null) {

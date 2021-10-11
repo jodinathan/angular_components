@@ -25,10 +25,10 @@ class DiffEntry<T> {
 /// Describes the difference of two lists.
 abstract class ListDiff<T> {
   /// The entries in the current list.
-  List<DiffEntry<T>> get entries;
+  List<DiffEntry<T>>? get entries;
 
   /// The deleted entries.
-  List<DiffEntry<T>> get deleted;
+  List<DiffEntry<T>>? get deleted;
 
   factory ListDiff.compare(List<T> prev, List<T> curr) =>
       _ComparingListDiff(prev, curr);
@@ -67,8 +67,8 @@ class _ComparingListDiff<T> implements ListDiff<T> {
 }
 
 class _ObservedListDiff<T> implements ListDiff<T> {
-  List<DiffEntry<T>> entries;
-  List<DiffEntry<T>> deleted;
+  List<DiffEntry<T>>? entries;
+  List<DiffEntry<T>>? deleted;
 
   _ObservedListDiff(List<ListChangeRecord> event) {
     _processEvent(event);
@@ -81,8 +81,8 @@ class _ObservedListDiff<T> implements ListDiff<T> {
     int offset = 0;
     for (int eventIndex = 0; eventIndex < event.length; eventIndex++) {
       ListChangeRecord record = event[eventIndex];
-      for (int i = entries.length; i < record.index; i++) {
-        entries.add(DiffEntry<T>.oldEntry(record.object[i] as T, i + offset));
+      for (int i = entries!.length; i < record.index; i++) {
+        entries!.add(DiffEntry<T>.oldEntry(record.object[i] as T, i + offset));
       }
       for (int i = 0; i < record.removed.length; i++) {
         var entity = record.removed[i] as T;
@@ -97,25 +97,25 @@ class _ObservedListDiff<T> implements ListDiff<T> {
         if (entry == null) {
           entry = DiffEntry<T>.newEntry(entity);
         }
-        entries.add(entry);
+        entries!.add(entry);
       }
       offset -= record.addedCount;
     }
-    for (int i = entries.length; i < event.last.object.length; i++) {
-      entries.add(DiffEntry<T>.oldEntry(event.last.object[i] as T, i + offset));
+    for (int i = entries!.length; i < event.last.object.length; i++) {
+      entries!.add(DiffEntry<T>.oldEntry(event.last.object[i] as T, i + offset));
     }
     if (removed.isNotEmpty) {
-      for (int i = 0; i < entries.length; i++) {
-        var entry = entries[i];
+      for (int i = 0; i < entries!.length; i++) {
+        var entry = entries![i];
         if (entry.isNew) {
           var source = removed.remove(entry.entity);
           if (source != null) {
-            entries[i] = source;
+            entries![i] = source;
           }
         }
       }
     }
     deleted = removed.values.where((entry) => entry.isOld).toList();
-    deleted.sort((a, b) => a.prevIndex.compareTo(b.prevIndex));
+    deleted!.sort((a, b) => a.prevIndex.compareTo(b.prevIndex));
   }
 }

@@ -77,10 +77,10 @@ class _SingleFunctionDisposable implements Disposable {
 /// Note that you should not rely on the disposal sequence for each added
 /// [disposable], just treat it random.
 class Disposer implements Disposable {
-  List<DisposeFunction> _disposeFunctions;
-  List<StreamSubscription<Object>> _disposeSubs;
-  List<EventSink<Object>> _disposeSinks;
-  List<Disposable> _disposeDisposables;
+  List<DisposeFunction>? _disposeFunctions;
+  List<StreamSubscription<Object?>>? _disposeSubs;
+  List<EventSink<Object?>>? _disposeSinks;
+  List<Disposable>? _disposeDisposables;
   final bool _oneShot;
   bool _disposeCalled = false;
 
@@ -108,7 +108,7 @@ class Disposer implements Disposable {
     dynamic disposable_ = disposable;
     if (disposable_ is Disposable) {
       _disposeDisposables ??= [];
-      _disposeDisposables.add(disposable as Disposable);
+      _disposeDisposables!.add(disposable as Disposable);
       _checkIfAlreadyDisposed();
     } else if (disposable_ is StreamSubscription) {
       addStreamSubscription(disposable_);
@@ -126,7 +126,7 @@ class Disposer implements Disposable {
   StreamSubscription<T> addStreamSubscription<T>(
       StreamSubscription<T> disposable) {
     _disposeSubs ??= [];
-    _disposeSubs.add(disposable);
+    _disposeSubs!.add(disposable);
     _checkIfAlreadyDisposed();
     return disposable;
   }
@@ -134,7 +134,7 @@ class Disposer implements Disposable {
   /// Registers [disposable].
   EventSink<T> addEventSink<T>(EventSink<T> disposable) {
     _disposeSinks ??= [];
-    _disposeSinks.add(disposable);
+    _disposeSinks!.add(disposable);
     _checkIfAlreadyDisposed();
     return disposable;
   }
@@ -143,7 +143,7 @@ class Disposer implements Disposable {
   DisposeFunction addFunction(DisposeFunction disposable) {
     assert(disposable != null);
     _disposeFunctions ??= [];
-    _disposeFunctions.add(disposable);
+    _disposeFunctions!.add(disposable);
     _checkIfAlreadyDisposed();
     return disposable;
   }
@@ -157,30 +157,30 @@ class Disposer implements Disposable {
   @override
   void dispose() {
     if (_disposeSubs != null) {
-      int len = _disposeSubs.length;
+      int len = _disposeSubs!.length;
       for (var i = 0; i < len; i++) {
-        _disposeSubs[i].cancel();
+        _disposeSubs![i].cancel();
       }
       _disposeSubs = null;
     }
     if (_disposeSinks != null) {
-      int len = _disposeSinks.length;
+      int len = _disposeSinks!.length;
       for (var i = 0; i < len; i++) {
-        _disposeSinks[i].close();
+        _disposeSinks![i].close();
       }
       _disposeSinks = null;
     }
     if (_disposeDisposables != null) {
-      int len = _disposeDisposables.length;
+      int len = _disposeDisposables!.length;
       for (var i = 0; i < len; i++) {
-        _disposeDisposables[i].dispose();
+        _disposeDisposables![i].dispose();
       }
       _disposeDisposables = null;
     }
     if (_disposeFunctions != null) {
-      int len = _disposeFunctions.length;
+      int len = _disposeFunctions!.length;
       for (var i = 0; i < len; i++) {
-        _disposeFunctions[i]();
+        _disposeFunctions![i]();
       }
       _disposeFunctions = null;
     }

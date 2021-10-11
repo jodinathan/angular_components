@@ -41,5 +41,5 @@ abstract class MaterialSelectBase<T> extends SelectionContainer<T>
   int _width = 0;
 
   @override
-  ItemRenderer<T> get itemRenderer => super.itemRenderer ?? defaultItemRenderer;
+  ItemRenderer<T>? get itemRenderer => super.itemRenderer ?? defaultItemRenderer;
 }

@@ -19,5 +19,5 @@ const rtlProvider =
 
 @Injectable()
 bool determineRtl(Document document) =>
-    document.documentElement.dir == 'rtl' ||
-    (document as HtmlDocument).body.dir == 'rtl';
+    document.documentElement?.dir == 'rtl' ||
+    (document as HtmlDocument).body?.dir == 'rtl';

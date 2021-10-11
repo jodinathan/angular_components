@@ -15,18 +15,18 @@ class DelegatingMenuItem<SubMenuType> implements MenuItem<SubMenuType> {
   DelegatingMenuItem(this._delegate);
 
   @override
-  MenuAction get action => _delegate.action;
+  MenuAction? get action => _delegate.action;
 
   @override
-  set action(MenuAction action) {
+  set action(MenuAction? action) {
     _delegate.action = action;
   }
 
   @override
-  ActionWithContext get actionWithContext => _delegate.actionWithContext;
+  ActionWithContext? get actionWithContext => _delegate.actionWithContext;
 
   @override
-  set actionWithContext(ActionWithContext actionWithContext) {
+  set actionWithContext(ActionWithContext? actionWithContext) {
     _delegate.actionWithContext = actionWithContext;
   }
 
@@ -45,34 +45,34 @@ class DelegatingMenuItem<SubMenuType> implements MenuItem<SubMenuType> {
   bool get hasSubMenu => _delegate.hasSubMenu;
 
   @override
-  Icon get icon => _delegate.icon;
+  Icon? get icon => _delegate.icon;
 
   @override
-  String get labelAnnotation => _delegate.labelAnnotation;
+  String? get labelAnnotation => _delegate.labelAnnotation;
 
   @override
   ObservableList<MenuItemAffix> get itemSuffixes => _delegate.itemSuffixes;
 
   @override
-  String get label => _delegate.label;
+  String? get label => _delegate.label;
 
   @override
-  String get ariaLabel => _delegate.ariaLabel;
+  String? get ariaLabel => _delegate.ariaLabel;
 
   @override
   bool get showTooltip => _delegate.showTooltip;
 
   @override
-  MenuModel<SubMenuType> get subMenu => _delegate.subMenu;
+  MenuModel<SubMenuType>? get subMenu => _delegate.subMenu;
 
   @override
-  String get tooltip => _delegate.tooltip;
+  String? get tooltip => _delegate.tooltip;
 
   @override
-  String get uiDisplayName => _delegate.uiDisplayName;
+  String? get uiDisplayName => _delegate.uiDisplayName;
 
   @override
-  Icon get uiIcon => _delegate.uiIcon;
+  Icon? get uiIcon => _delegate.uiIcon;
 
   @override
   BuiltList<String> get cssClasses => _delegate.cssClasses;
@@ -81,5 +81,5 @@ class DelegatingMenuItem<SubMenuType> implements MenuItem<SubMenuType> {
   bool get hasSecondaryLabel => _delegate.hasSecondaryLabel;
 
   @override
-  String get secondaryLabel => _delegate.secondaryLabel;
+  String? get secondaryLabel => _delegate.secondaryLabel;
 }
