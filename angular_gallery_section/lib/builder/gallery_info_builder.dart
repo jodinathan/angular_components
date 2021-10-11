@@ -173,8 +173,7 @@ class GalleryInfoBuilder extends Builder {
       // Must extract documentation from AST because the
       // classElement.documentationComment, classElement.metadata, etc are not
       // populated in the resolved element model available here.
-      var libraryId =
-          AssetId.resolve(classElement.library.source.uri);
+      var libraryId = AssetId.resolve(classElement.library.source.uri);
       docs =
           await extractDocumentation(classElement.name, libraryId, assetReader);
 
