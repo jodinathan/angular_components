@@ -34,6 +34,9 @@ Future<void> analyze() async {
   });
 
   log('${((1 - need_migrate.length / count) * 100).round()}% Done!');
-  log(
-      '${need_migrate.length} out of $count files are still using deprecated API!');
+  log('${need_migrate.length} out of $count files are still using deprecated API!\n');
+
+  need_migrate.forEach((element) {
+    print('- [ ] ' + p.relative(element, from: 'lib'));
+  });
 }
