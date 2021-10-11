@@ -114,11 +114,6 @@ class {{component}}Api {
       mainDemo:
           Demo({{mainDemo.className}}NgFactory, '{{mainDemo.className}}','{{mainDemo.examplePath}}'),
       {{/hasMainDemo}}
-      benchmarks: [
-        {{#benchmarks}}
-          '{{.}}',
-        {{/benchmarks}}
-      ],
       relatedUrls: {
         {{#relatedUrls}}
           '{{key}}': '{{value}}',

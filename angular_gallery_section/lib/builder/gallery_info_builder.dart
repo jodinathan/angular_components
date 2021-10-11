@@ -59,7 +59,6 @@ class GalleryInfoBuilder extends Builder {
         final resolved = ResolvedConfig()
           ..displayName = config.displayName
           ..group = config.group
-          ..benchmarks = config.benchmarks
           ..owners = config.owners
           ..uxOwners = config.uxOwners
           ..relatedUrls = config.relatedUrls

@@ -32,11 +32,6 @@ class GallerySectionConfig {
   /// be added in the demos section.
   final Type mainDemo;
 
-  /// The embed URLs for benchmark charts to display in this section.
-  ///
-  /// The charts are displayed in the order they are specified here.
-  final List<String> benchmarks;
-
   /// A list of owners for the components in this section.
   final List<String> owners;
 
@@ -56,7 +51,6 @@ class GallerySectionConfig {
       this.docs,
       this.demos,
       this.mainDemo,
-      this.benchmarks,
       this.owners,
       this.uxOwners,
       this.relatedUrls,
