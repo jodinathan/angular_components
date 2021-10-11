@@ -26,8 +26,8 @@ export 'package:angular_components/forms/error_renderer.dart' show ErrorFn;
 /// Key used in the Control's error map, when there is an error.
 const String materialInputErrorKey = 'material-input-error';
 
-typedef ValidityCheck = String Function(String inputText);
-typedef CharacterCounter = int Function(String inputText);
+typedef ValidityCheck = String? Function(String? inputText);
+typedef CharacterCounter = int Function(String? inputText);
 
 /// Represents which label should be shown in the BottomPanel
 enum BottomPanelState {
@@ -51,13 +51,13 @@ class BaseMaterialInput extends FocusableMixin
 
   bool _invalid = false;
   // Error message coming from the browser.
-  String _validationMessage;
+  String? _validationMessage;
   // Error message resulting from local validation.
-  String _localValidationMessage;
+  String? _localValidationMessage;
 
   bool _required = false;
   bool _showHintOnlyOnFocus = false;
-  bool _disabled = false;
+  bool? _disabled = false;
 
   /// Enable native validation (e.g. for type="url").
   bool useNativeValidation = true;
@@ -69,32 +69,32 @@ class BaseMaterialInput extends FocusableMixin
   BottomPanelState bottomPanelState = BottomPanelState.empty;
 
   /// Controls the aria-describedby attribute on the input element.
-  String ariaDescribedBy;
+  String? ariaDescribedBy;
 
-  String _errorMsg;
-  String get errorMsg => _errorMsg;
+  String? _errorMsg;
+  String? get errorMsg => _errorMsg;
 
   /// The error msg to be shown on the input if it has more than [maxCount]
   /// characters.
   @Input()
-  set errorMsg(String msg) {
+  set errorMsg(String? msg) {
     _errorMsg = msg;
     updateBottomPanelState();
   }
 
-  String _error;
-  String get error => _error;
+  String? _error;
+  String? get error => _error;
 
   /// Error to be displayed.
   ///
   /// Higher precendent than all other errors which may be on this input.
   @Input()
-  set error(String error) {
+  set error(String? error) {
     _error = error;
     updateBottomPanelState();
   }
 
-  String _inputAriaDescribedBy;
+  String? _inputAriaDescribedBy;
 
   /// The ID of an element which should be assigned to the inner input element's
   /// aria-describedby attribute.
@@ -109,13 +109,13 @@ class BaseMaterialInput extends FocusableMixin
   /// This is the default text that shows up if nothing's entered into the text
   /// box. It disappears when user inputs text.
   @Input()
-  String label;
+  String? label;
 
   /// The label to be used for assistive technologies.
   ///
   /// Use [label] instead of this when a visible label is desired.
   @Input()
-  String inputAriaLabel;
+  String? inputAriaLabel;
 
   /// The autocomplete attribute for the inner input element.
   ///
@@ -125,10 +125,10 @@ class BaseMaterialInput extends FocusableMixin
   /// Note: Setting this field may depend on the browser implementation and is
   /// not guaranteed to turn off the autocomplete functionality.
   @Input()
-  String inputAutocomplete;
+  String? inputAutocomplete;
 
-  String _hintText;
-  String get hintText => _hintText;
+  String? _hintText;
+  String? get hintText => _hintText;
 
   /// The hint to be shown on the input.
   ///
@@ -149,7 +149,7 @@ class BaseMaterialInput extends FocusableMixin
     if (_cd?.control != null) {
       // Validator was changed. Rerun validation as required message may
       // have changed.
-      _cd.control.updateValueAndValidity();
+      _cd.control!.updateValueAndValidity();
     }
   }
 
@@ -157,19 +157,19 @@ class BaseMaterialInput extends FocusableMixin
   ///
   /// Character count always is displayed when the value is non-null.
   @Input()
-  int maxCount;
+  int? maxCount;
 
-  ValidityCheck _checkValid;
-  ValidityCheck get checkValid => _checkValid;
+  ValidityCheck? _checkValid;
+  ValidityCheck? get checkValid => _checkValid;
   @Deprecated('Use angular2 forms API instead')
   @Input()
-  set checkValid(ValidityCheck validFn) {
+  set checkValid(ValidityCheck? validFn) {
     if (validFn == _checkValid) return; // Identical doesn't work on functions
     _checkValid = validFn;
     _changeDetector.markForCheck();
     if (_cd?.control != null) {
       // Validator was changed. Rerun validation.
-      _cd.control.updateValueAndValidity();
+      _cd.control!.updateValueAndValidity();
     }
     updateBottomPanelState();
   }
@@ -177,9 +177,9 @@ class BaseMaterialInput extends FocusableMixin
   int _inputTextLength = 0;
   int get inputTextLength => _inputTextLength;
 
-  String _inputText = '';
-  String get inputText => _inputText;
-  set inputText(String value) {
+  String? _inputText = '';
+  String? get inputText => _inputText;
+  set inputText(String? value) {
     _inputText = value;
     updateInputTextLength();
     _changeDetector.markForCheck();
@@ -195,9 +195,9 @@ class BaseMaterialInput extends FocusableMixin
   /// WARNING: The API of this mechanism is still in flux and there will be
   /// breaking changes. Be careful relying on it.
   @Input()
-  ErrorFn errorRenderer;
+  ErrorFn? errorRenderer;
 
-  CharacterCounter _characterCounter;
+  CharacterCounter? _characterCounter;
 
   /// A custom character counter function.
   ///
@@ -214,8 +214,8 @@ class BaseMaterialInput extends FocusableMixin
       _inputTextLength = 0;
     } else {
       _inputTextLength = _characterCounter != null
-          ? _characterCounter(_inputText)
-          : _inputText.length;
+          ? _characterCounter!(_inputText)
+          : _inputText!.length;
     }
   }
 
@@ -236,11 +236,11 @@ class BaseMaterialInput extends FocusableMixin
   @override
   void ngAfterViewInit() {
     if (_cd?.control != null) {
-      _disposer.addStreamSubscription(_cd.control.valueChanges.listen((value) {
+      _disposer.addStreamSubscription(_cd.control!.valueChanges.listen((value) {
         _changeDetector.markForCheck();
       }));
       _disposer
-          .addStreamSubscription(_cd.control.statusChanges.listen((status) {
+          .addStreamSubscription(_cd.control!.statusChanges.listen((status) {
         _changeDetector.markForCheck();
         updateBottomPanelState();
       }));
@@ -249,11 +249,11 @@ class BaseMaterialInput extends FocusableMixin
 
   // Angular2 Forms API methods.
   // Act as forms validator (previously NgValidator)
-  Map<String, dynamic> call(AbstractControl _) {
+  Map<String, dynamic>? call(AbstractControl _) {
     return _isLocallyValid(true);
   }
 
-  Map<String, dynamic> _isLocallyValid(bool fromFormsApi) {
+  Map<String, dynamic>? _isLocallyValid(bool fromFormsApi) {
     // Do local validation here. This simply counts as ONE OF the Validators
     // attached to this component. If there is a Control then it will use this
     // one and maybe others.
@@ -265,12 +265,12 @@ class BaseMaterialInput extends FocusableMixin
       _localValidationMessage = requiredErrorMsg;
       return {materialInputErrorKey: _localValidationMessage};
     }
-    if (maxCount != null && inputTextLength > maxCount) {
+    if (maxCount != null && inputTextLength > maxCount!) {
       _localValidationMessage = _errorMsg;
       return {materialInputErrorKey: _localValidationMessage};
     }
     if (checkValid != null) {
-      var _checkValidMessage = checkValid(inputText);
+      var _checkValidMessage = checkValid!(inputText);
       if (_checkValidMessage != null) {
         _localValidationMessage = _checkValidMessage;
         return {materialInputErrorKey: _localValidationMessage};
@@ -292,11 +292,11 @@ class BaseMaterialInput extends FocusableMixin
   @Input()
   bool floatingLabel = false;
 
-  bool get disabled => _disabled;
+  bool? get disabled => _disabled;
 
   /// Whether or not this input is disabled (readonly input.)
   @Input()
-  set disabled(bool disabled) {
+  set disabled(bool? disabled) {
     _disabled = disabled;
     _changeDetector.markForCheck();
   }
@@ -326,7 +326,7 @@ class BaseMaterialInput extends FocusableMixin
     if (prev != _required && _cd != null) {
       // Required value changed and we are using a control. Force revalidation
       // on the control.
-      _cd.control.updateValueAndValidity();
+      _cd.control!.updateValueAndValidity();
     }
   }
 
@@ -336,11 +336,11 @@ class BaseMaterialInput extends FocusableMixin
   @Output('inputKeyPress')
   Stream<String> get onKeypress => _keypressController.stream;
 
-  final _changeController = StreamController<String>.broadcast(sync: true);
+  final _changeController = StreamController<String?>.broadcast(sync: true);
 
   /// Publishes events when a change event is fired. (On enter, or on blur.)
   @Output('change')
-  Stream<String> get onChange => _changeController.stream;
+  Stream<String?> get onChange => _changeController.stream;
 
   final _blurController = StreamController<FocusEvent>.broadcast(sync: true);
 
@@ -372,7 +372,7 @@ class BaseMaterialInput extends FocusableMixin
       // Show errors only when a control is invalid, and a user has interacted
       // with it. This conforms to the material spec:
       // https://material.google.com/patterns/errors.html
-      return !_cd.valid && (_cd.touched || _cd.dirty);
+      return !_cd.valid! && (_cd.touched! || _cd.dirty!);
     }
     // otherwise, just do our local validation
     return _isLocallyValid(false) != null;
@@ -382,16 +382,16 @@ class BaseMaterialInput extends FocusableMixin
 
   bool get labelVisible => floatingLabelVisible || !hasVisibleText;
 
-  String get ariaLabel => inputAriaLabel ?? label;
+  String? get ariaLabel => inputAriaLabel ?? label;
 
-  String get errorMessage {
+  String? get errorMessage {
     if (_error?.isNotEmpty ?? false) return _error;
     // if there is a Control, then all error messages will be in the Control's
     // error map
     if (_cd != null && _cd.control?.errors != null) {
-      Map<String, dynamic> errorMap = _cd.control.errors;
-      if (errorRenderer != null) errorMap = errorRenderer(errorMap);
-      var stringValue = errorMap.values.firstWhere(
+      Map<String, dynamic>? errorMap = _cd.control!.errors;
+      if (errorRenderer != null) errorMap = errorRenderer!(errorMap);
+      var stringValue = errorMap!.values.firstWhere(
           ((v) => (v is String) && v.isNotEmpty),
           orElse: () => null);
       if (stringValue != null) {
@@ -423,7 +423,7 @@ class BaseMaterialInput extends FocusableMixin
   /// may be building new functionality that all ACX users could benefit
   /// from! If that's the case, please consider contributing your changes
   /// back upstream. Feel free to contact acx-widgets@ for more guidance.
-  ElementRef get inputRef => null;
+  ElementRef? get inputRef => null;
 
   @override
   void ngOnDestroy() {
@@ -489,12 +489,12 @@ class BaseMaterialInput extends FocusableMixin
 
   /// Selects all of the input's content.
   void selectAll() {
-    inputRef.nativeElement.select();
+    inputRef!.nativeElement.select();
   }
 
   @ViewChild(FocusableDirective)
   @override
-  set focusable(Focusable value) {
+  set focusable(Focusable? value) {
     super.focusable = value;
   }
 
@@ -553,14 +553,14 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
   final ChangeDetectorRef _changeDetector;
 
   @ViewChild('inputEl')
-  ElementRef inputEl;
+  ElementRef? inputEl;
 
   @ViewChild('popupSourceEl')
-  ElementRef popupSourceEl;
+  ElementRef? popupSourceEl;
 
   /// Container element for popup positioning.
   @override
-  ElementRef get elementRef => popupSourceEl;
+  ElementRef? get elementRef => popupSourceEl;
 
   /// The underlying <input> element.
   ///
@@ -569,13 +569,13 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
   /// from! If that's the case, please consider contributing your changes
   /// back upstream. Feel free to contact acx-widgets@ for more guidance.
   @override
-  ElementRef get inputRef => inputEl;
+  ElementRef? get inputRef => inputEl;
 
   /// Type of input.
   ///
   /// It can be one of the following:
   /// {"text", "email", "password", "url", "number", "tel", "search"}
-  String type;
+  String? type;
 
   /// Whether the user can enter multiple values, separated by commas.
   ///
@@ -584,7 +584,7 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
 
   final _labelId = SequentialIdGenerator.fromUUID().nextId();
 
-  String get labelId => inputAriaLabel != null ? null : _labelId;
+  String? get labelId => inputAriaLabel != null ? null : _labelId;
 
   // Overriden to add a HostListener event.
   @HostListener('focus')
@@ -595,16 +595,16 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
   ///
   /// Used to prevent focus/blur events on disabled inputs that caused weird
   /// behavior of floating label, input validations, etc.
-  int get inputTabIndex => disabled ? -1 : 0;
+  int get inputTabIndex => disabled! ? -1 : 0;
 
   bool get hasLeadingText => isNotEmpty(leadingText);
-  String get leadingText => _leadingText;
-  String _leadingText;
+  String? get leadingText => _leadingText;
+  String? _leadingText;
 
   /// Any text to show at the leading edge of the input -- e.g. a currency
   /// symbol or similar.
   @Input()
-  set leadingText(String value) {
+  set leadingText(String? value) {
     _leadingText = value;
     // Possibly set by a directive and not a template. So default change
     // detection doesn't work without calling markForCheck.
@@ -614,17 +614,17 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
   /// Any symbol to show at the leading edge of the input -- e.g. a URL link
   /// icon or similar.
   @Input()
-  String leadingGlyph;
+  String? leadingGlyph;
   bool get hasLeadingGlyph => isNotEmpty(leadingGlyph);
 
-  String get trailingText => _trailingText;
-  String _trailingText;
+  String? get trailingText => _trailingText;
+  String? _trailingText;
   bool get hasTrailingText => isNotEmpty(trailingText);
 
   /// Any text to show at the trailing edge of the input -- e.g. a currency
   /// symbol or similar.
   @Input()
-  set trailingText(String value) {
+  set trailingText(String? value) {
     _trailingText = value;
     // Possibly set by a directive and not a template. So default change
     // detection doesn't work without calling markForCheck.
@@ -634,22 +634,22 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
   /// Any symbol to show at the trailing edge of the input -- e.g. a URL link
   /// icon or similar.
   @Input()
-  String trailingGlyph;
+  String? trailingGlyph;
   bool get hasTrailingGlyph => isNotEmpty(trailingGlyph);
 
   /// Aria label used for the trailing glyph.
   @Input()
-  String trailingGlyphAriaLabel;
+  String? trailingGlyphAriaLabel;
 
   /// Aria label used for the leading glyph.
   @Input()
-  String leadingGlyphAriaLabel;
+  String? leadingGlyphAriaLabel;
 
   /// The role to assign to the inner input element.
   ///
   /// For example, "textbox", "checkbox" and etc.
   @Input()
-  String role;
+  String? role;
 
   bool get rightAlign => _rightAlign;
   bool _rightAlign = false;
@@ -668,12 +668,12 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
   /// The ID of an element which should be assigned to the inner input element's
   /// aria-owns attribute.
   @Input()
-  String inputAriaOwns;
+  String? inputAriaOwns;
 
   /// The ID of an element which should be assigned to the inner input element's
   /// aria-activedescendant attribute.
   @Input()
-  String inputAriaActivedescendent;
+  String? inputAriaActivedescendent;
 
   /// The value for the input element's aria-haspopup attribute, indicating that
   /// the element referred to by inputAriaOwns is expandable.
@@ -681,12 +681,12 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
   /// If the element referred to by [inputAriaOwns] is expandable, this should
   /// be either "true" or the role of the owned element.
   @Input()
-  String inputAriaHasPopup;
+  String? inputAriaHasPopup;
 
   /// Whether or not the expandable element referred to by [inputAriaOwns] is
   /// currently visible.
   @Input()
-  bool inputAriaExpanded;
+  bool? inputAriaExpanded;
 
   /// The autocomplete method applied to the inner input element.
   ///
@@ -694,12 +694,12 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
   /// "textbox". If this is "list" or "both", [inputAriaHasPopup] should be
   /// set to "true".
   @Input()
-  String inputAriaAutocomplete;
+  String? inputAriaAutocomplete;
 
   /// The ID of an element which should be assigned to the inner input element's
   /// aria-controls attribute.
   @Input()
-  String inputAriaControls;
+  String? inputAriaControls;
 
   BaseSingleLineInputComponent(String type, String multiple, NgControl cd,
       this._changeDetector, DeferredValidator validator)

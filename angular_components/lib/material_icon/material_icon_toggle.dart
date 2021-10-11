@@ -23,9 +23,9 @@ import 'material_icon.dart';
 class MaterialIconToggleDirective implements AfterChanges {
   MaterialIconComponent iconRef;
   final ChangeDetectorRef _cdRef;
-  bool _showToggled;
-  bool _showBasic;
-  bool _hideIcon;
+  bool? _showToggled;
+  bool? _showBasic;
+  bool? _hideIcon;
 
   MaterialIconToggleDirective(this._cdRef, this.iconRef);
 
@@ -48,7 +48,7 @@ class MaterialIconToggleDirective implements AfterChanges {
   ///
   /// The [toggledIcon] is displayed when true.
   @Input()
-  bool toggle;
+  late bool toggle;
 
   @override
   ngAfterChanges() {
@@ -63,15 +63,15 @@ class MaterialIconToggleDirective implements AfterChanges {
 
   @HostBinding('class.basic-icon.if')
   @visibleForTemplate
-  bool get showBasic => _showBasic;
+  bool? get showBasic => _showBasic;
 
   @HostBinding('class.toggled-icon.if')
   @visibleForTemplate
-  bool get showToggled => _showToggled;
+  bool? get showToggled => _showToggled;
 
   @HostBinding('class.hide-icon.if')
   @visibleForTemplate
-  bool get hideIcon => _hideIcon;
+  bool? get hideIcon => _hideIcon;
 
   bool _hasValue(dynamic iconValue) => !(iconValue == null || iconValue == '');
 }

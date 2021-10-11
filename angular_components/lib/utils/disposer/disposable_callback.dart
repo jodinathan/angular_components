@@ -15,7 +15,7 @@ typedef CallbackSingleParamFn<T> = void Function(T value);
 /// result.
 /// Being able to use noSuchMethod would simplify the need for multiple classes.
 class DisposableCallbackBase implements Disposable {
-  Function _callback;
+  Function? _callback;
 
   @override
   void dispose() {
@@ -33,7 +33,7 @@ class DisposableCallback extends DisposableCallbackBase {
 
   void call() {
     if (_callback != null) {
-      _callback();
+      _callback!();
     }
   }
 }
@@ -46,7 +46,7 @@ class SingleValueCallback<T> extends DisposableCallbackBase {
 
   void call(T value) {
     if (_callback != null) {
-      _callback(value);
+      _callback!(value);
     }
   }
 }

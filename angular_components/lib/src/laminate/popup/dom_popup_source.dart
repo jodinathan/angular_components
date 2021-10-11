@@ -16,7 +16,7 @@ import 'package:angular_components/src/laminate/popup/popup_source.dart';
 /// If [track] is true, should observe the DOM for layout changes. This is used
 /// to decouple [DomPopupSource] from the Ruler package.
 typedef AsyncMeasureSize<E> = Stream<Rectangle> Function(E element,
-    {bool track});
+    {bool? track});
 
 /// A factory that can [createPopupSource] from HTML elements.
 @Injectable()
@@ -26,7 +26,7 @@ class DomPopupSourceFactory {
   DomPopupSourceFactory(this._domRuler);
 
   /// Returns a new [DomPopupSource] from [sourceElement].
-  DomPopupSource createPopupSource(HtmlElement sourceElement,
+  DomPopupSource createPopupSource(HtmlElement? sourceElement,
       {Alignment alignOriginX = Alignment.Start,
       Alignment alignOriginY = Alignment.Start,
       bool initAriaAttributes = true}) {
@@ -55,8 +55,8 @@ class DomPopupSourceFactory {
 class DomPopupSource implements ElementPopupSource {
   static final bool _isRtl = determineRtl(document);
 
-  final AsyncMeasureSize<HtmlElement> _asyncMeasureSize;
-  final HtmlElement sourceElement;
+  final AsyncMeasureSize<HtmlElement?> _asyncMeasureSize;
+  final HtmlElement? sourceElement;
   final bool _initAriaAttributes;
 
   /// Creates a new source from a measure function and source DOM element.
@@ -77,37 +77,37 @@ class DomPopupSource implements ElementPopupSource {
     _alignOriginY = alignOriginY;
   }
 
-  Alignment _alignOriginX;
-  Alignment _alignOriginY;
-  String _id;
+  Alignment? _alignOriginX;
+  Alignment? _alignOriginY;
+  String? _id;
 
   @override
-  Alignment get alignOriginX => _alignOriginX;
+  Alignment? get alignOriginX => _alignOriginX;
 
   @override
-  Alignment get alignOriginY => _alignOriginY;
+  Alignment? get alignOriginY => _alignOriginY;
 
   @override
-  Stream<Rectangle<num>> onDimensionsChanged({bool track = false}) {
+  Stream<Rectangle<num>> onDimensionsChanged({bool? track = false}) {
     return _asyncMeasureSize(sourceElement, track: track);
   }
 
   @override
-  Rectangle get dimensions => sourceElement.getBoundingClientRect();
+  Rectangle get dimensions => sourceElement!.getBoundingClientRect();
 
   @override
   bool get isRtl => _isRtl;
 
   @override
-  set popupId(String id) {
+  set popupId(String? id) {
     _id = id;
     if (_id == null || !_initAriaAttributes) return;
-    sourceElement.setAttribute('aria-haspopup', 'true');
+    sourceElement!.setAttribute('aria-haspopup', 'true');
   }
 
   @override
   void focus() {
-    sourceElement.focus();
+    sourceElement!.focus();
   }
 
   @override
@@ -118,12 +118,12 @@ class DomPopupSource implements ElementPopupSource {
   @override
   void onOpen() {
     if (_id == null || !_initAriaAttributes) return;
-    sourceElement.setAttribute('aria-owns', _id);
+    sourceElement!.setAttribute('aria-owns', _id!);
   }
 
   @override
   void onClose() {
     if (_id == null || !_initAriaAttributes) return;
-    sourceElement.attributes.remove('aria-owns');
+    sourceElement!.attributes.remove('aria-owns');
   }
 }

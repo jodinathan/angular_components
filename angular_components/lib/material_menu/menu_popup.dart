@@ -38,19 +38,19 @@ class MenuPopupComponent extends Object with FocusableMixin, MenuPopupWrapper {
   HtmlElement element;
 
   @Input()
-  PopupSource popupSource;
+  PopupSource? popupSource;
 
   /// CSS classes to append onto the menu popup.
   ///
   /// These CSS classes will be copied into the popup overlay. The classes can
   /// be used to select DOM elements within the overlay when the popup is open.
   @Input()
-  set popupClass(String value) {
+  set popupClass(String? value) {
     _popupClass = constructEncapsulatedCss(value, element.classes);
   }
 
-  String get popupClass => _popupClass;
-  String _popupClass;
+  String? get popupClass => _popupClass;
+  String? _popupClass;
 
   MenuPopupComponent(this.element);
 

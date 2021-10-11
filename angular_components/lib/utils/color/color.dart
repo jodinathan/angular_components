@@ -64,7 +64,7 @@ class Color {
 
   /// A transformation used in the calculation of [_relativeLuminance].
   static double _luminanceChannel(double v) =>
-      (v <= 0.03928) ? v / 12.92 : math.pow((v + 0.055) / 1.055, 2.4);
+      (v <= 0.03928) ? v / 12.92 : math.pow((v + 0.055) / 1.055, 2.4) as double;
 
   /// The relative luminance of the color, as specified by
   /// https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef.
@@ -86,7 +86,7 @@ class Color {
       throw ArgumentError.value(background, 'background',
           'Cannot calculate contrast against non-opaque backgrounds.');
     }
-    final a = alpha == 1 ? this : withBackground(background);
+    final Color a = alpha == 1 ? this : withBackground(background);
     final la = a._relativeLuminance;
     final lb = background._relativeLuminance;
     return (math.max(la, lb) + 0.05) / (math.min(la, lb) + 0.05);
@@ -105,7 +105,7 @@ class Color {
   /// [t] is the fraction of interpolation from [a] to [b]; between 0 and 1.
   ///
   /// If one color is null, a transparent instance of the other color is used.
-  static Color lerp(Color a, Color b, num t) {
+  static Color? lerp(Color a, Color b, num t) {
     if (a == null && b == null) return null;
     if (a == null) return b.withAlpha(_lerpNum(0, b.alpha, t));
     if (b == null) return a.withAlpha(_lerpNum(a.alpha, 0, t));
@@ -116,7 +116,7 @@ class Color {
         _lerpNum(a.alpha, b.alpha, t));
   }
 
-  static void _checkValues(int r, int g, int b, num a, [String s]) {
+  static void _checkValues(int r, int g, int b, num a, [String? s]) {
     if (r < 0 ||
         r > 255 ||
         g < 0 ||
@@ -139,7 +139,7 @@ class Color {
       case 'r': // rgb
         final match = _rgbRE.firstMatch(s);
         if (match == null) break;
-        final values = match[1].split(_separatorRE);
+        final values = match[1]!.split(_separatorRE);
         if (values.length != 3 && values.length != 4) break;
         int color(String s) {
           final last = s.length - 1;
@@ -234,6 +234,6 @@ class Color {
   int distanceFrom(Color other) {
     return math.pow(other.red - red, 2) +
         math.pow(other.blue - blue, 2) +
-        math.pow(other.green - green, 2);
+        math.pow(other.green - green, 2) as int;
   }
 }

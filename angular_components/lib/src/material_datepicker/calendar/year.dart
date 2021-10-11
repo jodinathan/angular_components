@@ -18,10 +18,10 @@ class CalendarYear extends _HasHighlights {
 
   final Date _start;
   final int startingWeekday;
-  String _title;
-  List<CalendarMonth> _months;
+  String? _title;
+  List<CalendarMonth>? _months;
 
-  CalendarYear(int year, CalendarState state,
+  CalendarYear(int year, CalendarState? state,
       {this.startingWeekday = DateTime.monday})
       : _start = Date(year),
         super(state) {
@@ -35,26 +35,26 @@ class CalendarYear extends _HasHighlights {
   }
 
   CalendarYear.fromDate(Date date,
-      {CalendarState state, int startingWeekday = DateTime.monday})
+      {CalendarState? state, int startingWeekday = DateTime.monday})
       : this(date.year, state, startingWeekday: startingWeekday);
 
   CalendarYear.fromTime(DateTime time,
-      {CalendarState state, int startingWeekday = DateTime.monday})
+      {CalendarState? state, int startingWeekday = DateTime.monday})
       : this(time.year, state, startingWeekday: startingWeekday);
 
   Date get start => _start;
   int get year => _start.year;
-  String get title => _title;
-  List<CalendarMonth> get months => _months;
+  String? get title => _title;
+  List<CalendarMonth>? get months => _months;
 
   @override
-  List<Highlight> get highlights => _highlights;
+  List<Highlight>? get highlights => _highlights;
 
   void update(CalendarState state) {
     // TODO(google): Disable CSS transitions here somehow
     _state = state;
     if (months != null) {
-      months.forEach((m) => m.update(state));
+      months!.forEach((m) => m.update(state));
     }
     _updateHighlights();
   }
@@ -115,7 +115,7 @@ class CalendarYear extends _HasHighlights {
       Iterable.generate(12, (offset) => _start.add(months: offset));
 
   Iterable<CalendarMonth> monthsInRow(int row) {
-    return months.where((m) => _isMonthInRow(m.month, row));
+    return months!.where((m) => _isMonthInRow(m.month, row));
   }
 
   /// Adds the given number of years to this year. For instance:
@@ -136,7 +136,7 @@ class CalendarYear extends _HasHighlights {
   int deltaYears(CalendarYear other) => other.year - year;
 
   Iterable<CalendarMonth> _generateMonths() sync* {
-    var month = CalendarMonth(year, DateTime.january,
+    CalendarMonth? month = CalendarMonth(year, DateTime.january,
         state: _state, startingWeekday: startingWeekday);
     while (month != null) {
       yield month;
@@ -151,7 +151,7 @@ class CalendarYear extends _HasHighlights {
   int get hashCode => _start.hashCode;
 
   @override
-  String toString() => title;
+  String toString() => title!;
 }
 
 /// Lightweight class representing one or more consecutive years.
@@ -179,7 +179,7 @@ class YearRange {
   ///
   /// - `length: int` -- Must be at least 1.
   factory YearRange.within(CalendarYear min, CalendarYear max, int length,
-      {final CalendarYear tryToStartAt}) {
+      {final CalendarYear? tryToStartAt}) {
     if (length < 1) {
       throw ArgumentError.value(length, 'length', 'must be at least 1');
     }

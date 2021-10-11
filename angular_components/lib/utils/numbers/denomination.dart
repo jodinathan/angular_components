@@ -17,7 +17,7 @@ class Denomination {
 
   /// An amount that can be multiplied by the formatted number to cancel out
   /// the suffix when parsing
-  final int multiplier;
+  final int? multiplier;
 
   /// The string suffix, if any.
   final String suffix;
@@ -33,7 +33,9 @@ class Denomination {
     } else if (Trillions.suffix == suffix) {
       return Trillions;
     } else {
-      return null;
+      // TODO: This logic need to reevaluated
+      //return null;
+      throw ArgumentError("Unrecognized suffix [$suffix]");
     }
   }
 
@@ -41,7 +43,7 @@ class Denomination {
   ///
   /// If a [max] [Denomination] is provided, will not return a denomination
   /// larger than [max].
-  factory Denomination.fromValue(num value, [Denomination max]) {
+  factory Denomination.fromValue(num value, [Denomination? max]) {
     if (value < Thousands.minValue || max == Hundreds) {
       return Hundreds;
     } else if (value < Millions.minValue || max == Thousands) {
@@ -64,7 +66,7 @@ class Denomination {
 /// If [value] is a [num] or [Int64], it is converted to a double.
 ///
 /// Otherwise, `null` is returned.
-num toNum(Object value) {
+num? toNum(Object value) {
   if (value is num) {
     return value;
   } else if (value is Int64) {

@@ -73,7 +73,7 @@ class OverlayDomRenderService {
   /// we want to put it in front of anything else that might be using zIndexer,
   /// so we check the last value against _zIndexer.peek() and increment if
   /// necessary.
-  int _lastZIndex;
+  int? _lastZIndex;
 
   // An auto-incrementing value to help track what popups
   int _uniqueId = 0;
@@ -115,7 +115,7 @@ class OverlayDomRenderService {
     var cssClasses = <String>[];
 
     // Optionally, make the overlay "modal" style.
-    if (state.captureEvents) {
+    if (state.captureEvents!) {
       cssClasses.add('modal');
     }
 

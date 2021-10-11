@@ -27,14 +27,14 @@ import 'package:angular_components/utils/browser/events/events.dart';
 )
 class MaterialToggleComponent
     implements AfterViewInit, HasDisabled, ControlValueAccessor<bool> {
-  Function _onTouched;
+  Function? _onTouched;
   final ChangeDetectorRef _changeDetector;
 
   @HostBinding('class')
   static const hostClass = 'themeable';
 
   @ViewChild('toggle')
-  HtmlElement toggleElement;
+  HtmlElement? toggleElement;
 
   @override
   void ngAfterViewInit() {
@@ -45,7 +45,7 @@ class MaterialToggleComponent
   ///
   /// `true` is disabled and `false` is enabled.
   @Input()
-  bool disabled = false;
+  bool? disabled = false;
 
   /// Current state of the toggle button.
   ///
@@ -67,16 +67,16 @@ class MaterialToggleComponent
 
   /// Label for the toggle button.
   @Input()
-  String label;
+  String? label;
 
   /// ARIA label to use for the toggle button.
   @Input()
-  set ariaLabel(String value) {
+  set ariaLabel(String? value) {
     _ariaLabel = value;
   }
 
-  String get ariaLabel => _ariaLabel ?? label;
-  String _ariaLabel;
+  String? get ariaLabel => _ariaLabel ?? label;
+  String? _ariaLabel;
 
   /// Sets the depth of the shadow
   int shadow_z = 1;
@@ -96,11 +96,11 @@ class MaterialToggleComponent
   }
 
   MaterialToggleComponent(
-      this._changeDetector, @Self() @Optional() NgControl cd) {
+      this._changeDetector, @Self() @Optional() NgControl? cd) {
     cd?.valueAccessor = this;
   }
 
-  bool get hasLabel => label != null && label.isNotEmpty;
+  bool get hasLabel => label != null && label!.isNotEmpty;
 
   void _updateShadowZ() {
     shadow_z = isHovered
@@ -112,7 +112,7 @@ class MaterialToggleComponent
 
   @visibleForTesting
   void toggleChecked() {
-    if (!disabled) {
+    if (!disabled!) {
       checked = !checked;
       _controller.add(checked);
       _onTouched?.call();
@@ -138,13 +138,13 @@ class MaterialToggleComponent
 
   void _syncAriaPressed() {
     if (toggleElement == null) return;
-    toggleElement.attributes['aria-pressed'] = '$checked';
+    toggleElement!.attributes['aria-pressed'] = '$checked';
   }
 
   @override
   void writeValue(bool isChecked) {
     checked = isChecked;
-    _changeDetector?.markForCheck();
+    _changeDetector.markForCheck();
   }
 
   @override
@@ -160,7 +160,7 @@ class MaterialToggleComponent
   @override
   void onDisabledChanged(bool isDisabled) {
     disabled = isDisabled;
-    _changeDetector?.markForCheck();
+    _changeDetector.markForCheck();
   }
 
   // M2 interfaces that are unneeded for M1.

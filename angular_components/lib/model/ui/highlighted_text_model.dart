@@ -10,7 +10,7 @@ import 'package:quiver/core.dart' show hash2;
 /// Produces a list of [HighlightedTextSegment] instances for the given [query]
 /// and [value].
 typedef Highlighter<T> = List<HighlightedTextSegment> Function(
-    String query, T value);
+    String query, T? value);
 
 /// Represents a sub-sequence of a search suggestion, highlighted based on
 /// whether it matches the query string.
@@ -43,7 +43,7 @@ class TextHighlighter {
   const TextHighlighter(
       {this.caseSensitive = false, this.matchFromStartOfWord = true});
 
-  List<HighlightedTextSegment> highlight(String text, List<String> tokens) =>
+  List<HighlightedTextSegment> highlight(String text, List<String?> tokens) =>
       _applyMarkers(text, getMarkers(text, tokens));
 
   /// Mark the start of each occurrence of each token with a number equal to
@@ -59,14 +59,14 @@ class TextHighlighter {
   /// Subclasses of [TextHighlighter] can override this method to provide custom
   /// text highlighting behavior.
   @protected
-  List<int> getMarkers(String text, List<String> tokens) {
+  List<int> getMarkers(String text, List<String?> tokens) {
     var _matchText = caseSensitive ? text : text.toLowerCase();
     List<int> markers = List.filled(_matchText.length, 0);
 
-    for (String token in tokens) {
+    for (String? token in tokens) {
       // Prevents an infinite loop, since there are "infinite" occurrences of
       // the empty string.
-      if (token.isEmpty) continue;
+      if (token!.isEmpty) continue;
       if (!caseSensitive) {
         token = token.toLowerCase();
       }
@@ -76,7 +76,7 @@ class TextHighlighter {
         if (index == -1) {
           break;
         } else {
-          String wrapperToken = index != 0 ? _matchText[index - 1] : null;
+          String? wrapperToken = index != 0 ? _matchText[index - 1] : null;
           if (!matchFromStartOfWord ||
               (index == 0 ||
                   // Some suggestions will have an alternate label appended to
@@ -102,7 +102,7 @@ class TextHighlighter {
     var segments = <HighlightedTextSegment>[];
     var currentSegment = StringBuffer();
 
-    void commitSegment({@required bool highlight}) {
+    void commitSegment({required bool highlight}) {
       if (currentSegment.isEmpty) return;
       segments
           .add(HighlightedTextSegment(currentSegment.toString(), highlight));

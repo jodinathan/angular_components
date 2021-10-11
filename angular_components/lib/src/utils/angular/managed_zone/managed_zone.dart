@@ -63,31 +63,31 @@ abstract class ManagedZone implements Disposable {
 
 /// A partial implementation of [ManagedZone] without bindings to Angular.
 abstract class ManagedZoneBase extends ManagedZone {
-  StreamController _onTurnDoneController;
-  StreamController _onTurnStartController;
-  StreamController _onEventDoneController;
-  Zone get innerZone;
-  Zone get outerZone;
+  StreamController? _onTurnDoneController;
+  StreamController? _onTurnStartController;
+  StreamController? _onEventDoneController;
+  Zone? get innerZone;
+  Zone? get outerZone;
 
   bool _isRunning = false;
 
   void capturedTurnStart(dynamic event) {
     _isRunning = true;
     if (_onTurnStartController != null) {
-      _onTurnStartController.add(null);
+      _onTurnStartController!.add(null);
     }
   }
 
   void capturedTurnDone(dynamic event) {
     _isRunning = false;
     if (_onTurnDoneController != null) {
-      _onTurnDoneController.add(null);
+      _onTurnDoneController!.add(null);
     }
   }
 
   void capturedEventDone(dynamic event) {
     if (_onEventDoneController != null) {
-      _onEventDoneController.add(null);
+      _onEventDoneController!.add(null);
     }
   }
 
@@ -108,7 +108,7 @@ abstract class ManagedZoneBase extends ManagedZone {
     if (_onTurnStartController == null) {
       _onTurnStartController = StreamController.broadcast(sync: true);
     }
-    return _onTurnStartController.stream;
+    return _onTurnStartController!.stream;
   }
 
   @override
@@ -116,7 +116,7 @@ abstract class ManagedZoneBase extends ManagedZone {
     if (_onTurnDoneController == null) {
       _onTurnDoneController = StreamController.broadcast(sync: true);
     }
-    return _onTurnDoneController.stream;
+    return _onTurnDoneController!.stream;
   }
 
   @override
@@ -124,7 +124,7 @@ abstract class ManagedZoneBase extends ManagedZone {
     if (_onEventDoneController == null) {
       _onEventDoneController = StreamController.broadcast(sync: true);
     }
-    return _onEventDoneController.stream;
+    return _onEventDoneController!.stream;
   }
 
   @override
@@ -132,7 +132,7 @@ abstract class ManagedZoneBase extends ManagedZone {
     if (inInnerZone) {
       return fn();
     } else {
-      return innerZone.run(fn);
+      return innerZone!.run(fn);
     }
   }
 
@@ -141,7 +141,7 @@ abstract class ManagedZoneBase extends ManagedZone {
     if (inOuterZone) {
       return fn();
     } else {
-      return outerZone.run(fn);
+      return outerZone!.run(fn);
     }
   }
 

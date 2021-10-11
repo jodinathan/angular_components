@@ -13,10 +13,10 @@ class HighlightAssistant {
   final _highlightCache =
       <String, Map<dynamic, List<HighlightedTextSegment>>>{};
 
-  final Highlighter _optionHighlighter;
+  final Highlighter? _optionHighlighter;
 
   // Lazy private highlighter getter.
-  TextHighlighter __textHighlighter;
+  TextHighlighter? __textHighlighter;
 
   /// Gets the default text highlighter, creating a cached instance if needed.
   TextHighlighter get _textHighlighter => __textHighlighter ??=
@@ -28,7 +28,7 @@ class HighlightAssistant {
   /// Creates new HighlightAssistant, using provided [optionHighlighter] or
   /// TextHighlighter if no value is provided.
   HighlightAssistant(
-      {Highlighter optionHighlighter, bool matchFromStartOfWord = false})
+      {Highlighter? optionHighlighter, bool matchFromStartOfWord = false})
       : _optionHighlighter = optionHighlighter,
         _matchFromStartOfWord = matchFromStartOfWord;
 
@@ -38,9 +38,9 @@ class HighlightAssistant {
     var value = _queryHighlightCache[item];
     if (value == null) {
       value = (_optionHighlighter != null
-          ? _optionHighlighter(_lastQuery, item)
+          ? _optionHighlighter!(_lastQuery, item)
           : _textHighlighter.highlight(
-              itemRenderer(item), _lastQuery.split(_separatorRegex)));
+              itemRenderer(item)!, _lastQuery.split(_separatorRegex)));
       _queryHighlightCache[item] = value;
     }
     return value;

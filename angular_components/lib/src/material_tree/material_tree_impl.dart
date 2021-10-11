@@ -64,7 +64,7 @@ class MaterialTreeComponent<T> with MaterialTreeRoot<T>, SelectionContainer<T> {
   @Deprecated('Use [factoryRenderer] instead')
   @Input()
   @override
-  set componentRenderer(ComponentRenderer value) {
+  set componentRenderer(ComponentRenderer? value) {
     super.componentRenderer = value;
   }
 
@@ -72,21 +72,21 @@ class MaterialTreeComponent<T> with MaterialTreeRoot<T>, SelectionContainer<T> {
   /// rendering an item.
   @Input()
   @override
-  set factoryRenderer(FactoryRenderer<RendersValue, T> value) {
+  set factoryRenderer(FactoryRenderer<RendersValue, T>? value) {
     super.factoryRenderer = value;
   }
 
   /// A simple function to render the item to string.
   @Input()
   @override
-  set itemRenderer(ItemRenderer<T> value) {
+  set itemRenderer(ItemRenderer<T>? value) {
     super.itemRenderer = value;
   }
 
   /// The available options for this contianer.
   @Input()
   @override
-  set options(SelectionOptions<T> value) {
+  set options(SelectionOptions<T>? value) {
     super.options = value;
   }
 
@@ -147,7 +147,7 @@ class MaterialTreeComponent<T> with MaterialTreeRoot<T>, SelectionContainer<T> {
   }
 
   @ViewChildren(MaterialTreeGroupComponent)
-  List<MaterialTreeGroupComponent> treeGroupNodes;
+  late List<MaterialTreeGroupComponent> treeGroupNodes;
 
   /// Collapses all tree groups.
   ///

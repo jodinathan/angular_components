@@ -42,14 +42,14 @@ class MaterialSelectDropdownItemComponent<T>
 
   final String _generatedId;
 
-  String _id;
+  String? _id;
 
   /// The id of the element.
   @HostBinding('attr.id')
-  String get id => _customAriaHandling ? null : (_id ?? _generatedId);
+  String? get id => _customAriaHandling ? null : (_id ?? _generatedId);
 
   @Input()
-  set id(String id) {
+  set id(String? id) {
     _id = id;
   }
 

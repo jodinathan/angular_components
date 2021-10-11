@@ -19,10 +19,10 @@ class DatepickerPreset {
   final DatepickerDateRange range;
 
   /// An optional short label for the preset (e.g. "Mon - Sun").
-  final String shortTitle;
+  final String? shortTitle;
 
   /// An optional list of related presets to display in a dropdown menu.
-  final List<DatepickerPreset> alternatives;
+  final List<DatepickerPreset>? alternatives;
 
   /// Create a [DatepickerPreset] based on a [DatepickerDateRange].
   factory DatepickerPreset.fromRange(DatepickerDateRange range) =>
@@ -38,12 +38,12 @@ class DatepickerPreset {
   /// [validStartWeekdays] is a list of all starting weekdays which will be
   /// added as [alternatives].
   factory DatepickerPreset.thisWeek(Clock clock,
-      {int startWeekday, List<int> validStartWeekdays}) {
+      {int? startWeekday, List<int>? validStartWeekdays}) {
     startWeekday ??= _defaultStartWeekday;
     validStartWeekdays =
         _initValidStartWeekdays(startWeekday, validStartWeekdays);
 
-    DatepickerPreset result;
+    late DatepickerPreset result;
     List<DatepickerPreset> alternatives = [];
     for (var startDay in validStartWeekdays) {
       var startDayName = _weekdayName(startDay);
@@ -67,17 +67,17 @@ class DatepickerPreset {
   /// [validStartWeekdays] is a list of all starting weekdays which will be
   /// added as [alternatives].
   factory DatepickerPreset.lastWeek(Clock clock,
-      {int startWeekday, List<int> validStartWeekdays}) {
+      {int? startWeekday, List<int>? validStartWeekdays}) {
     startWeekday ??= _defaultStartWeekday;
     validStartWeekdays =
         _initValidStartWeekdays(startWeekday, validStartWeekdays);
 
-    DatepickerPreset result;
+    late DatepickerPreset result;
     List<DatepickerPreset> alternatives = [];
     for (var startDay in validStartWeekdays) {
-      var endDay = 1 + ((startDay - 1) + 6).remainder(7);
+      num endDay = 1 + ((startDay - 1) + 6).remainder(7);
       var startDayName = _weekdayName(startDay);
-      var endDayName = _weekdayName(endDay);
+      var endDayName = _weekdayName(endDay as int);
       var preset = DatepickerPreset(_lastWeekTitle(startDayName, endDayName),
           WeekRange.weeksAgo(clock, 1, startWeekday: startDay),
           shortTitle: _lastWeekShortTitle(startDayName, endDayName),
@@ -101,7 +101,7 @@ class DatepickerPreset {
   static const _defaultValidStartWeekdays = [DateTime.sunday, DateTime.monday];
 
   static List<int> _initValidStartWeekdays(
-      int startWeekday, List<int> validStartWeekdays) {
+      int startWeekday, List<int>? validStartWeekdays) {
     validStartWeekdays ??= List<int>.from(_defaultValidStartWeekdays);
     if (!validStartWeekdays.contains(startWeekday)) {
       validStartWeekdays.insert(0, startWeekday);

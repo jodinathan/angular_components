@@ -22,7 +22,7 @@ class FocusItemDirective extends RootFocusable implements FocusableItem {
   final String role;
 
   FocusItemDirective(HtmlElement element, this._changeDetectorRef,
-      @Attribute('role') String role)
+      @Attribute('role') String? role)
       : this.role = role ?? 'listitem',
         super(element);
 
@@ -36,9 +36,9 @@ class FocusItemDirective extends RootFocusable implements FocusableItem {
   @HostListener('keydown')
   void keydown(KeyboardEvent event) {
     var focusEvent = FocusMoveEvent.fromKeyboardEvent(this, event);
-    if (focusEvent != null) {
-      _focusMoveCtrl.add(focusEvent);
-    }
+    //if (focusEvent != null) {
+    _focusMoveCtrl.add(focusEvent);
+    //}
   }
 
   @override

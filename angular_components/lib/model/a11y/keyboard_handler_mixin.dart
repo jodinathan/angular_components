@@ -40,7 +40,7 @@ class KeyboardHandlerMixin {
   ///
   /// When this value is true, the LEFT keycode is handled by handleRightKey,
   /// and the RIGHT keycode is handled by handleLeftKey.
-  bool isRtl;
+  bool? isRtl;
 
   /// Keypress callback used to handle enter and space keys.
   void onKeyPress(KeyboardEvent event) {

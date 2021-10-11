@@ -11,34 +11,34 @@ import 'package:angular_components/model/ui/icon.dart';
 class MaterialButtonWrapper implements HasDisabled {
   /// Text on the button.
   @Input()
-  String buttonText;
+  String? buttonText;
 
   /// Aria label for the button.
   @Input()
-  String buttonAriaLabel;
+  String? buttonAriaLabel;
 
   /// Whether the button is disabled.
   @Input()
-  bool disabled = false;
+  bool? disabled = false;
 
   /// Icon to be used with the button. (Optional)
   @Input()
-  Icon icon;
+  Icon? icon;
 
   /// Icon to use for the button.
   ///
   /// See [MaterialIconComponent] for possible values.
   @Input()
-  String iconName;
+  String? iconName;
 
   /// Whether the button is raised.
   @Input()
   bool raised = false;
 
-  Icon _buttonIcon;
-  Icon get buttonIcon {
+  Icon? _buttonIcon;
+  Icon? get buttonIcon {
     if (icon != null) return icon;
-    if (_buttonIcon == null && (iconName != null && iconName.isNotEmpty)) {
+    if (_buttonIcon == null && (iconName != null && iconName!.isNotEmpty)) {
       _buttonIcon = Icon(iconName);
     }
     return _buttonIcon;

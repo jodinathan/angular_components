@@ -25,7 +25,7 @@ class MaterialTabPanelComponent implements AfterContentInit {
 
   final ChangeDetectorRef _changeDetector;
   bool _initialized = false;
-  Tab _previousActiveTab;
+  Tab? _previousActiveTab;
 
   /// Stream of [TabChangeEvent] instances, published before the tab has
   /// changed.
@@ -74,7 +74,7 @@ class MaterialTabPanelComponent implements AfterContentInit {
   }
 
   @ContentChildren(Tab)
-  set tabs(List<Tab> tabs) {
+  set tabs(List<Tab?> tabs) {
     _previousActiveTab = (_tabs != null) ? _activeTab : null;
     _tabs = tabs;
     // TODO(google): Remove if setting of content children occur after
@@ -83,8 +83,8 @@ class MaterialTabPanelComponent implements AfterContentInit {
   }
 
   void _initTabs() {
-    _tabLabels = _tabs.map((t) => t.label).toList();
-    _tabIds = _tabs.map((t) => t.tabId).toList();
+    _tabLabels = _tabs!.map((t) => t!.label).toList();
+    _tabIds = _tabs!.map((t) => t!.tabId).toList();
 
     // Setting the active tab needs to happen in the next turn as it is changing
     // the state of the tab.
@@ -92,7 +92,7 @@ class MaterialTabPanelComponent implements AfterContentInit {
       _changeDetector.markForCheck(); // call early so we can return early.
       // Look for the previously active tab.
       if (_previousActiveTab != null) {
-        _activeTabIndex = _tabs.indexOf(_previousActiveTab);
+        _activeTabIndex = _tabs!.indexOf(_previousActiveTab);
         _previousActiveTab = null;
         if (_activeTabIndex == -1) {
           // Couldn't find previous tab. Just activate the first tab.
@@ -102,28 +102,28 @@ class MaterialTabPanelComponent implements AfterContentInit {
           return;
         }
       }
-      _activeTab.activate();
+      _activeTab!.activate();
     });
   }
 
-  List<Tab> _tabs;
-  Tab get _activeTab => _tabs[_activeTabIndex];
+  List<Tab?>? _tabs;
+  Tab? get _activeTab => _tabs![_activeTabIndex];
 
-  List<String> _tabLabels;
-  List<String> get tabLabels => _tabLabels;
+  List<String?>? _tabLabels;
+  List<String?>? get tabLabels => _tabLabels;
 
-  List<String> _tabIds;
-  List<String> get tabIds => _tabIds;
+  List<String>? _tabIds;
+  List<String>? get tabIds => _tabIds;
 
   void _setActiveTab(int i, bool focusTab) {
-    assert(i >= 0 && i < _tabs.length);
+    assert(i >= 0 && i < _tabs!.length);
     _activeTab?.deactivate();
     _activeTabIndex = i;
-    _activeTab.activate();
+    _activeTab!.activate();
     _changeDetector.markForCheck();
 
     if (!focusTab) return;
-    _activeTab.focus();
+    _activeTab!.focus();
   }
 
   /// Fires beforeTabChange event.

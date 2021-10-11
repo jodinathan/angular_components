@@ -98,7 +98,7 @@ class MaterialRadioComponent extends RootFocusable
   @Input()
   @HostBinding('class.disabled')
   @HostBinding('attr.aria-disabled')
-  bool disabled = false;
+  bool? disabled = false;
 
   /// Published when the radio selection state changes.
   @Output('checkedChange')
@@ -135,7 +135,7 @@ class MaterialRadioComponent extends RootFocusable
   @HostBinding('attr.tabindex')
   @visibleForTesting
   @visibleForTemplate
-  int get tabIndex => disabled ? -1 : _enabledTabIndex;
+  int get tabIndex => disabled! ? -1 : _enabledTabIndex;
 
   int _enabledTabIndex = 0;
 
@@ -203,7 +203,7 @@ class MaterialRadioComponent extends RootFocusable
 
   @visibleForTesting
   void select() {
-    if (!disabled) checked = true;
+    if (!disabled!) checked = true;
   }
 
   @HostListener('click')
@@ -230,5 +230,5 @@ class MaterialRadioComponent extends RootFocusable
 
   // Unimplemented in M1.
   Future get focusDelegate async => null;
-  String radioGroupName;
+  String? radioGroupName;
 }

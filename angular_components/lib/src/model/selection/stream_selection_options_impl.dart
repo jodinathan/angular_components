@@ -5,7 +5,7 @@
 part of angular_components.model.selection.selection_options;
 
 class _StreamSelectionOptions<T> extends SelectionOptions<T> {
-  StreamSubscription _streamSub;
+  StreamSubscription? _streamSub;
   _StreamSelectionOptions(Stream<List<OptionGroup<T>>> optionGroupListStream)
       : super([]) {
     _streamSub = optionGroupListStream.listen(_setOptions);
