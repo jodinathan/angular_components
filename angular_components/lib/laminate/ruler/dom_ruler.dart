@@ -11,7 +11,7 @@ import 'package:angular_components/utils/browser/dom_service/dom_service.dart';
 
 /// Measures and tracks size changes for HTML elements in Dart web applications.
 @Injectable()
-abstract class DomRuler implements Ruler<Element?> {
+abstract class DomRuler implements Ruler<Element> {
   factory DomRuler(Document document, DomService domService) = DomRulerImpl;
 }
 

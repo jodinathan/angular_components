@@ -256,7 +256,7 @@ class ModalComponent
       if (_stack != null) {
         _stack?.onModalOpened(this);
       } else if (_parentModal != null) {
-        _parentModal.hidden = true;
+        _parentModal?.hidden = true;
       }
     }
     _resolvedOverlayRef.setVisible(true);
