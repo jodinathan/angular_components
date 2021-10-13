@@ -54,7 +54,7 @@ class MaterialTreeGroupFlatRadioComponent<T> extends MaterialTreeNode<T> {
   final DropdownHandle? _dropdownHandle;
 
   /// Exposed for [MaterialRadioGroupComponent].
-  final SelectionModel selectionModel;
+  final SelectionModel? selectionModel;
 
   MaterialTreeGroupFlatRadioComponent(
       MaterialTreeRoot<T> root, ChangeDetectorRef changeDetector,

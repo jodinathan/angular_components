@@ -51,7 +51,7 @@ abstract class PopupSource {
   /// changes. This has some performance impact. See [DomService]. If [track]
   /// is false, the stream will only update when [alignOriginX] or
   /// [alignOriginY] change.
-  Stream<Rectangle>? onDimensionsChanged({bool? track = false});
+  Stream<Rectangle>? onDimensionsChanged({bool track = false});
 
   /// The size of the source and its position relative to the viewport.
   Rectangle? get dimensions;
@@ -76,7 +76,7 @@ abstract class ElementPopupSource implements PopupSource, Focusable {
   HtmlElement? get sourceElement;
 
   @override
-  Rectangle? get dimensions => sourceElement!.getBoundingClientRect();
+  Rectangle? get dimensions => sourceElement?.getBoundingClientRect();
 }
 
 /// An immutable [PopupSource] implementation based on a predefined polygon.
@@ -93,7 +93,7 @@ class _RectanglePopupSource implements PopupSource {
       {this.alignOriginX, this.alignOriginY});
 
   @override
-  Stream<Rectangle> onDimensionsChanged({bool? track = false}) {
+  Stream<Rectangle>? onDimensionsChanged({bool track = false}) {
     // Track is ignored for this type, as it's assumed that the Rectangle is
     // immutable. If in the future we have an ObservableRectangle, then track
     // can be supported.

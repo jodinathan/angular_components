@@ -4,7 +4,6 @@
 
 import 'dart:html';
 
-import 'package:meta/meta.dart';
 import 'package:angular_components/material_datepicker/calendar.dart';
 import 'package:angular_components/model/date/date.dart';
 import 'package:angular_components/model/observable/observable.dart';
@@ -24,7 +23,7 @@ class CalendarListener implements Disposable {
   factory CalendarListener.singleDate(
       ObservableReference<CalendarState> model) = _DateListener;
   factory CalendarListener.dateRange(ObservableReference<CalendarState> model,
-      {@required bool movingStartMaintainsLength}) = _RangeListener;
+      {required bool movingStartMaintainsLength}) = _RangeListener;
 }
 
 /// Listens for clicks on single dates, and selects those.
