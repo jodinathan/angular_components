@@ -337,7 +337,7 @@ class ReorderListComponent implements OnDestroy {
     int childCount = contents.length;
     _moveSourceIndex = _handleElements.indexOf(_dragSourceElement);
     _curTransformY = List<int>.filled(childCount, 0);
-    _itemSizes = List<int?>(childCount);
+    _itemSizes = List<int?>.filled(childCount, null, growable: false);
     for (int i = 0; i < childCount; i++) {
       _itemSizes[i] = _computeItemSize(contents[i]!);
     }
@@ -643,8 +643,8 @@ class ReorderItemDirective {
   final ReorderHandleProvider _handleProvider;
   HtmlElement? _handleElement;
 
-  HtmlElement get _reorderHandle =>
-      _handleElement ?? _handleProvider?.reorderHandle?.element;
+  HtmlElement? get _reorderHandle =>
+      _handleElement ?? _handleProvider.reorderHandle.element;
 
   /// The [HtmlElement] to be used as the drag handle.
   ///

@@ -14,7 +14,7 @@ const focusIndicatorProviders = [
 
 @Injectable()
 FocusIndicatorController createFocusIndicatorControllerIfNotAvailable(
-        @Optional() @SkipSelf() FocusIndicatorController controller) =>
+        @Optional() @SkipSelf() FocusIndicatorController? controller) =>
     controller ?? FocusIndicatorController();
 
 /// Utility that attaches an a focus indicator to the page when enabled.

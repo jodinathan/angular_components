@@ -146,7 +146,7 @@ class LazyListTracker<S, T> extends Object
             .listChanges
             .listen((event) => _onSourceChanges(event));
       }
-      _target!.length = _source?.length ?? 0;
+      _target!.length = _source.length;
     }
   }
 
@@ -170,7 +170,8 @@ class LazyListTracker<S, T> extends Object
           assert(!removed.containsKey(_lookupSource(index, object)));
           removed[_lookupSource(index, object)] = object;
         }
-        _target!.removeRange(record.index, record.index + record.removed.length);
+        _target!
+            .removeRange(record.index, record.index + record.removed.length);
       }
 
       // nothing to add?
@@ -231,7 +232,8 @@ class LazyListTracker<S, T> extends Object
 
       for (int i = 0; i <= end; i++) {
         int index = record.index + i;
-        T? object = _onInsert!(index, record.object[index], _target![index]) as T?;
+        T? object =
+            _onInsert!(index, record.object[index], _target![index]) as T?;
         if (object != null) {
           _target![index] = object;
         }
