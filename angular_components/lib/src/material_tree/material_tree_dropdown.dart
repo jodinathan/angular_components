@@ -62,7 +62,7 @@ class MaterialTreeDropdownComponent<T>
   ];
 
   // Popup positioning to use when filtering is disabled.
-  static const List<RelativePosition> _popupPositionsInline =
+  static const List<Object> _popupPositionsInline =
       RelativePosition.InlinePositions;
 
   static const String _DEFAULT_PLACEHOLDER = 'Select';
@@ -71,7 +71,7 @@ class MaterialTreeDropdownComponent<T>
   bool _expandAll = false;
   String _placeholder = _DEFAULT_PLACEHOLDER;
   bool _visible = false;
-  List<RelativePosition>? _customPopupPositions;
+  List<Object> _customPopupPositions = [];
 
   @ViewChild(MaterialTreeFilterComponent)
   MaterialTreeFilterComponent? materialTreeFilterComponent;
@@ -139,9 +139,12 @@ class MaterialTreeDropdownComponent<T>
   /// render the selected value with [labelRenderer], [itemRenderer], or
   /// [defaultItemRenderer] in that order of preference.
   String? get placeholder {
-    if (selection is! MultiSelectionModel && selection.isNotEmpty) {
-      return (labelRenderer ?? (itemRenderer as String? Function(dynamic)? ?? defaultItemRenderer))(
-          selection.selectedValues.first);
+    if (selection != null) {
+      if (selection is! MultiSelectionModel && selection!.isNotEmpty) {
+        return (labelRenderer ??
+            (itemRenderer as String? Function(dynamic)? ??
+                defaultItemRenderer))(selection!.selectedValues.first);
+      }
     }
     return _placeholder;
   }
@@ -187,7 +190,7 @@ class MaterialTreeDropdownComponent<T>
   /// The selection model this container represents.
   @Input()
   @override
-  set selection(SelectionModel<T> value) {
+  set selection(SelectionModel<T>? value) {
     super.selection = value;
   }
 
@@ -202,18 +205,21 @@ class MaterialTreeDropdownComponent<T>
   /// If left unset or if explicitly set to null, [_defaultPopupPositions] will
   /// be used. See [MaterialPopupComponent] for more information.
   @Input()
-  set popupPositions(List<RelativePosition> positions) {
+  set popupPositions(List<Object> positions) {
     _customPopupPositions = positions;
   }
 
-  List /*RelativePosition | List<RelativePosition>*/ get popupPositions =>
-      _customPopupPositions ?? _defaultPopupPositions;
+  List<Object> /*RelativePosition | List<RelativePosition>*/ get popupPositions =>
+      _customPopupPositions.isEmpty
+          ? _defaultPopupPositions
+          : _customPopupPositions;
+  //_customPopupPositions ?? _defaultPopupPositions;
 
   /// Default positions to uses when [_customPopupPositions] is null.
   ///
   /// Returns offset positioning when the filter is enabled and inline
   /// positioning when the filter is disabled.
-  List /*RelativePosition | List<RelativePosition>*/
+  List<Object> /*RelativePosition | List<RelativePosition>*/
       get _defaultPopupPositions => showFilterInsideButton
           ? _popupPositionsOffset
           : _popupPositionsInline;

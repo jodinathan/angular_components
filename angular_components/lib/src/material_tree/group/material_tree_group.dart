@@ -108,7 +108,7 @@ class MaterialTreeGroupComponent<T> extends MaterialTreeNode<T?>
       @Inject(materialTreeLeftPaddingToken)
           int? constantLeftPadding])
       : fixedPadding = '${constantLeftPadding ?? defaultConstantLeftPadding}px',
-        super(_root as MaterialTreeRoot<T*>, changeDetector);
+        super(_root as MaterialTreeRoot<T>, changeDetector);
 
   // This is only used to standardize all the different group components.
   @HostBinding('class.material-tree-group')
@@ -133,29 +133,29 @@ class MaterialTreeGroupComponent<T> extends MaterialTreeNode<T?>
   }
 
   void handleExpansion(Event e, Object option) {
-    toggleExpansion(option as T*);
+    toggleExpansion(option as T);
     e.stopPropagation();
   }
 
   void handleSelectionOrExpansion(Event e, Object option) {
-    if (!isExpandable(option as T*) && isSelectable(option as T*) ||
-        (allowParentSingleSelection && isSelectable(option as T*)) ||
-        (allowParentMultiSelection && isSelectable(option as T*))) {
+    if (!isExpandable(option as T) && isSelectable(option as T) ||
+        (allowParentSingleSelection && isSelectable(option as T)) ||
+        (allowParentMultiSelection && isSelectable(option as T))) {
       final previouslyToggledNode = _root.previouslyToggledNode;
       _root.previouslyToggledNode = option;
 
       // If [option] is already selected, do not deselect it unless
       // [deselectOnTrigger] is `true`.
-      if (!isSelected(option as T*) || deselectOnTrigger) {
-        setSelectionState(option as T*, !isSelected(option as T*));
+      if (!isSelected(option as T) || deselectOnTrigger) {
+        setSelectionState(option as T, !isSelected(option as T));
       }
 
       // Handle shift + select behavior for multi-selection.
       if (isMultiSelect &&
           previouslyToggledNode != null &&
           (e is MouseEvent && e.shiftKey)) {
-        toggleSelectionRangeInclusive(
-            previouslyToggledNode, option as T*, isSelected(previouslyToggledNode));
+        toggleSelectionRangeInclusive(previouslyToggledNode, option as T,
+            isSelected(previouslyToggledNode));
       }
 
       // For single select, within a dropdown, close the dropdown on toggle.
@@ -163,7 +163,7 @@ class MaterialTreeGroupComponent<T> extends MaterialTreeNode<T?>
         _dropdownHandle?.close();
       }
     } else {
-      toggleExpansion(option as T*);
+      toggleExpansion(option as T);
     }
     e.stopPropagation();
   }
@@ -181,7 +181,7 @@ class MaterialTreeGroupComponent<T> extends MaterialTreeNode<T?>
   @Input()
   @override
   set group(OptionGroup _group) {
-    super.group = _group as OptionGroup<T*>;
+    super.group = _group as OptionGroup<T>;
 
     if (_maxInitialOptionsShown == null) {
       _visibleGroup = group;

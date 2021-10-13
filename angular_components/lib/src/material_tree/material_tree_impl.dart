@@ -53,11 +53,11 @@ class MaterialTreeComponent<T> with MaterialTreeRoot<T>, SelectionContainer<T> {
   @override
   bool optimizeForDropdown;
 
-  final MaterialTreeRenderingOptions renderingOptions;
+  final MaterialTreeRenderingOptions? renderingOptions;
 
   MaterialTreeComponent(@Optional() @SkipSelf() MaterialTreeRoot parentTreeRoot,
       @Optional() @Self() this.renderingOptions)
-      : optimizeForDropdown = parentTreeRoot?.optimizeForDropdown == true {
+      : optimizeForDropdown = parentTreeRoot.optimizeForDropdown == true {
     selection = SelectionModel<T>.empty();
   }
 
@@ -93,7 +93,7 @@ class MaterialTreeComponent<T> with MaterialTreeRoot<T>, SelectionContainer<T> {
   /// The selection model this container represents.
   @Input()
   @override
-  set selection(SelectionModel<T> value) {
+  set selection(SelectionModel<T>? value) {
     super.selection = value;
   }
 
@@ -133,17 +133,17 @@ class MaterialTreeComponent<T> with MaterialTreeRoot<T>, SelectionContainer<T> {
   bool shouldExpand(OptionGroup group, int index) {
     if (renderingOptions == null) return expandAll;
 
-    return expandAll || renderingOptions.shouldExpand(group, index);
+    return expandAll || renderingOptions!.shouldExpand(group, index);
   }
 
   /// How many items to show initially under a given option group.
   ///
   /// Returns null when there's no limit, otherwise show the returned number of
   /// items initially and hides the rest behind a "View more" link.
-  int maxInitialOptionsShown(OptionGroup group, int index) {
+  int? maxInitialOptionsShown(OptionGroup group, int index) {
     if (renderingOptions == null) return null;
 
-    return renderingOptions.maxInitialOptionsShown(group, index);
+    return renderingOptions?.maxInitialOptionsShown(group, index);
   }
 
   @ViewChildren(MaterialTreeGroupComponent)

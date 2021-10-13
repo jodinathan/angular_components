@@ -162,7 +162,7 @@ class MaterialTreeNode<T> {
       !hasChildren(option);
 
   /// Returns whether [option] is selected.
-  bool isSelected(T option) => _root.selection.isSelected(option);
+  bool isSelected(T option) => _root.selection?.isSelected(option) ?? false;
 
   /// Returns any child groups of [option] that are loaded.
   Iterable<OptionGroup>? getChildGroups(option) => _expandedNodes[option];
@@ -175,7 +175,7 @@ class MaterialTreeNode<T> {
     Iterable<OptionGroup<T>> childGroups = await _parent!.childrenOf(option);
 
     setExpandedState(option, true);
-    if (expandAll && childGroups != null) {
+    if (expandAll && childGroups.isNotEmpty) {
       for (var group in childGroups) {
         for (var option in group) {
           await expandOption(option);
@@ -221,9 +221,9 @@ class MaterialTreeNode<T> {
   bool setSelectionState(T option, bool state) {
     if (isSelected(option) == state) return state;
     if (!state) {
-      return !_root.selection.deselect(option);
+      return !(_root.selection?.deselect(option) ?? false);
     } else {
-      return _root.selection.select(option);
+      return _root.selection?.select(option) ?? false;
     }
   }
 
@@ -243,9 +243,9 @@ class MaterialTreeNode<T> {
       }
 
       if (isSelection) {
-        _root.selection.select(node);
+        _root.selection?.select(node);
       } else {
-        _root.selection.deselect(node);
+        _root.selection?.deselect(node);
       }
 
       if (node == firstNode || node == lastNode) {
@@ -280,7 +280,8 @@ class MaterialTreeNode<T> {
 
   /// Converts [T] into a text equivalent (requires [useItemRenderer]).
   String? getOptionAsText(T option) {
-    String? Function(T) itemRenderer = _root.itemRenderer ?? defaultItemRenderer;
+    String? Function(T) itemRenderer =
+        _root.itemRenderer ?? defaultItemRenderer;
     return itemRenderer(option);
   }
 
