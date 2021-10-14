@@ -32,7 +32,7 @@ class MaterialListItemComponent extends ButtonDirective implements OnDestroy {
   static const hostClass = 'item';
 
   final _disposer = Disposer.oneShot();
-  final DropdownHandle _dropdown;
+  final DropdownHandle? _dropdown;
 
   @override
   final String hostTabIndex;
@@ -40,7 +40,7 @@ class MaterialListItemComponent extends ButtonDirective implements OnDestroy {
   dom.HtmlElement element;
 
   MaterialListItemComponent(this.element, @Optional() this._dropdown,
-      @Attribute('tabindex') String tabIndex, @Attribute('role') String role)
+      @Attribute('tabindex') String? tabIndex, @Attribute('role') String? role)
       : hostTabIndex = tabIndex ?? '0',
         super(element, role ?? 'listitem') {
     if (_dropdown != null) {
