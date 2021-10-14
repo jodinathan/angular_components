@@ -66,11 +66,11 @@ class MaterialCheckboxComponent
   MaterialCheckboxComponent(
       this._root,
       this._changeDetector,
-      @Self() @Optional() NgControl cd,
+      @Self() @Optional() NgControl? cd,
       @Attribute('tabindex') String hostTabIndex,
-      @Attribute('role') String role)
-      : _defaultTabIndex =
-            hostTabIndex?.isNotEmpty ?? false ? hostTabIndex : '0',
+      @Attribute('role') String? role)
+      : _defaultTabIndex = hostTabIndex.isNotEmpty ? hostTabIndex : '0',
+        //hostTabIndex.isNotEmpty ?? false ? hostTabIndex : '0',
         this.role = role ?? 'checkbox' {
     // When NgControl is present on the host element, the component
     // participates in the Forms API.
@@ -83,7 +83,7 @@ class MaterialCheckboxComponent
   @override
   void writeValue(bool isChecked) {
     // Need to ignore the null on init.
-    if (isChecked == null) return;
+    //if (isChecked == null) return;
     _setStates(checked: isChecked, emitEvent: false);
   }
 
@@ -225,9 +225,9 @@ class MaterialCheckboxComponent
   }
 
   void _syncAriaChecked() {
-    if (_root == null) return;
+    //if (_root == null) return;
     _root.attributes['aria-checked'] = _checkedStr;
-    _changeDetector?.markForCheck();
+    _changeDetector.markForCheck();
   }
 
   /// Current icon, depends on the state of [checked] and [indeterminate].
@@ -344,7 +344,7 @@ class MaterialCheckboxComponent
   @override
   void onDisabledChanged(bool isDisabled) {
     disabled = isDisabled;
-    _changeDetector?.markForCheck();
+    _changeDetector.markForCheck();
   }
 
   /// Unimplemented for M1.
