@@ -104,7 +104,7 @@ class MaterialPopupComponent extends Object
   final NgZone _ngZone;
   final OverlayService _overlayService;
   final DomService _domService;
-  PopupHierarchy _hierarchy;
+  PopupHierarchy? _hierarchy;
 
   final List<RelativePosition> _defaultPreferredPositions;
   RelativePosition? _alignmentPosition;
@@ -113,7 +113,7 @@ class MaterialPopupComponent extends Object
 
   // Needed to implement the PopupHierarchyElement interface.
   @override
-  final ElementRef elementRef;
+  final Element elementRef;
 
   final String role;
   static final _idGenerator = SequentialIdGenerator.fromUUID();
@@ -251,8 +251,8 @@ class MaterialPopupComponent extends Object
 
   MaterialPopupComponent(
       @Optional() @SkipSelf() this._hierarchy,
-      @Optional() @SkipSelf() MaterialPopupComponent parentPopup,
-      @Attribute('role') String role,
+      @Optional() @SkipSelf() MaterialPopupComponent? parentPopup,
+      @Attribute('role') String? role,
       this._ngZone,
       this._overlayService,
       this._domService,
@@ -281,7 +281,7 @@ class MaterialPopupComponent extends Object
   /// The popup visible hierarchy.
   PopupHierarchy get hierarchy {
     _hierarchy = _hierarchy ?? PopupHierarchy();
-    return _hierarchy;
+    return _hierarchy!;
   }
 
   @override
@@ -292,7 +292,7 @@ class MaterialPopupComponent extends Object
   void _updateOverlayCssClass() {
     if (_overlayRef == null) return;
     // Copy host CSS classes for integration with Angular CSS shimming.
-    var hostClassName = elementRef.nativeElement.className;
+    var hostClassName = elementRef.className;
     _overlayRef!.overlayElement.className += ' $hostClassName';
   }
 
@@ -462,8 +462,8 @@ class MaterialPopupComponent extends Object
     var popupContentsLayoutStream = _overlayRef!
         .measureSizeChanges()
         .asBroadcastStream(onListen: _visibleDisposer.addStreamSubscription);
-    var popupSourceLayoutStream =
-        state.source!.onDimensionsChanged(track: state.trackLayoutChanges);
+    var popupSourceLayoutStream = state.source!
+        .onDimensionsChanged(track: state.trackLayoutChanges ?? false);
     if (!state.trackLayoutChanges!) {
       popupContentsLayoutStream = popupContentsLayoutStream.take(1);
     }
@@ -560,7 +560,8 @@ class MaterialPopupComponent extends Object
     // the popup source element instead of some seemingly random DOM location.
     // TODO(google): removed the islastTriggerWithKeyboard to better support
     // mouse/keyboard mixed interactions.
-    if (state.source is Focusable && hierarchy.islastTriggerWithKeyboard) {
+    var islastTriggerWithKeyboard = hierarchy.islastTriggerWithKeyboard;
+    if (state.source is Focusable && islastTriggerWithKeyboard) {
       _domService.scheduleWrite(() {
         if (_overlayRef!.overlayElement
             .contains(window.document.activeElement)) {
@@ -612,8 +613,8 @@ class MaterialPopupComponent extends Object
   Rectangle? get _sourceDimensions {
     var sourceDimensions = state.source?.dimensions;
     if (sourceDimensions == null) return null;
-    var containerRect = _overlayRef!.containerElement?.getBoundingClientRect();
-    if (containerRect == null) return null;
+    var containerRect = _overlayRef!.containerElement.getBoundingClientRect();
+    //if (containerRect == null) return null;
     return Rectangle(
         (sourceDimensions.left - containerRect.left).round(),
         (sourceDimensions.top - containerRect.top).round(),
@@ -634,9 +635,16 @@ class MaterialPopupComponent extends Object
     if (_repositionOffsetX != 0 || _repositionOffsetY != 0) {
       // Prevent later overlay state changes from resetting the reposition
       // transform.
-      _overlayRef!.state
-        ..left += _repositionOffsetX
-        ..top += _repositionOffsetY;
+      var left = _overlayRef!.state.left;
+      if (left != null) {
+        _overlayRef!.state.left = left + _repositionOffsetX;
+      }
+      var top = _overlayRef!.state.top;
+      if (top != null) {
+        _overlayRef!.state.top = top + _repositionOffsetY;
+      }
+      //  ..left += _repositionOffsetX
+      //  ..top += _repositionOffsetY;
       _repositionOffsetX = _repositionOffsetY = 0;
     }
   }
@@ -680,7 +688,7 @@ class MaterialPopupComponent extends Object
   }
 
   void _updatePopupMinMaxSize() {
-    if (_popupSizeProvider == null) return;
+    //if (_popupSizeProvider == null) return;
     var boundedViewportRect =
         _boundRectangle(_viewportRect, _viewportBoundaries);
     minHeight = _popupSizeProvider.getMinHeight(
@@ -816,7 +824,7 @@ class MaterialPopupComponent extends Object
 }
 
 @Injectable()
-PopupHierarchy getHierarchy(MaterialPopupComponent c) => c.hierarchy;
+PopupHierarchy? getHierarchy(MaterialPopupComponent c) => c.hierarchy;
 
 @Injectable()
 PopupRef? getResolvedPopupRef(MaterialPopupComponent c) => c._resolvedPopupRef;
@@ -855,8 +863,10 @@ class _DeferredToggleable extends Toggleable {
 //
 // TODO(google): This belongs as a utility not inlined here.
 Stream<List<T>> _mergeStreams<T>(List<Stream<T>?> streams) {
-  var streamSubscriptions = List<StreamSubscription<T>?>(streams.length);
-  var cachedResults = List<T?>(streams.length);
+  var streamSubscriptions = List<StreamSubscription<T>?>.filled(
+      streams.length, null,
+      growable: false);
+  var cachedResults = List<T?>.filled(streams.length, null, growable: false);
   late StreamController<List<T?>> streamController;
   streamController = StreamController<List<T>>.broadcast(
       sync: true,
