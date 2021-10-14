@@ -198,8 +198,12 @@ abstract class ObservableView<T> extends ChangeAware<T> implements Disposable {
 
   /// An [ObservableView] of the most-recently-published value on the given
   /// [stream].
-  factory ObservableView.fromStream(Stream<T> stream, {T? initialValue}) =>
-      ObservableReference(initialValue)..listen(stream);
+  factory ObservableView.fromStream(Stream<T> stream, {T? initialValue}) {
+    var instance = ObservableReference(initialValue);
+    instance.listen(stream);
+    return instance as ObservableView<T>;
+    //return ObservableReference(initialValue)..listen(stream);
+  }
 }
 
 /// Implements methods of [ObservableView] in terms of the basic [value] and
@@ -351,7 +355,7 @@ class ObservableComposite<T> extends ChangeNotificationProvider<T> {
   }
 
   /// Starts listening on value changes (if not already doing so).
-  ObserveAware register(ObserveAware value,
+  ObserveAware? register(ObserveAware? value,
       {ObserveAware? replaces, bool initialNotification = true}) {
     if (value == null) return null;
     Stream? replacesStream = (replaces == null) ? null : replaces.stream;
@@ -364,7 +368,7 @@ class ObservableComposite<T> extends ChangeNotificationProvider<T> {
   }
 
   /// Stops listening on value changes.
-  void unregister(ObserveAware value) {
+  void unregister(ObserveAware? value) {
     if (value == null) return;
     unregisterStream(value.stream);
   }
@@ -402,7 +406,7 @@ class ObservableComposite<T> extends ChangeNotificationProvider<T> {
   }
 
   /// Stops listening on stream events.
-  void unregisterStream(Stream stream) {
+  void unregisterStream(Stream? stream) {
     if (stream == null) return;
     StreamSubscription? subs = _subscriptions.remove(stream);
     if (subs != null) {
