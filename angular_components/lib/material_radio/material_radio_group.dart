@@ -44,7 +44,7 @@ class MaterialRadioGroupComponent
 
   List<MaterialRadioComponent> _radioComponents = <MaterialRadioComponent>[];
 
-  MaterialRadioGroupComponent(this._ngZone, @Self() @Optional() NgControl cd) {
+  MaterialRadioGroupComponent(this._ngZone, @Self() @Optional() NgControl? cd) {
     // When NgControl is present on the host element, the component participates
     // in the Forms API.
     cd?.valueAccessor = this;
@@ -53,7 +53,7 @@ class MaterialRadioGroupComponent
         componentSelection.selectionChanges.listen((checkedChanges) {
       // Need to uncheck if selection change was made via user action.
       for (var checkedChange in checkedChanges) {
-        for (var radioComponent in checkedChange.removed!) {
+        for (var radioComponent in checkedChange.removed) {
           radioComponent.checked = false;
         }
       }
@@ -110,7 +110,8 @@ class MaterialRadioGroupComponent
     // Since this is updating children that were already dirty-checked,
     // need to delay this change until next angular cycle.
     _ngZone.runAfterChangesObserved(() {
-      if (_radioComponents == null) return; // Component was destroyed.
+      //if (_radioComponents == null) return; // Component was destroyed.
+      if (_radioComponents.isEmpty) return; // Component was destroyed.
       // Disable everything first.
       for (var radioComponent in _radioComponents) {
         radioComponent.tabbable = false;
@@ -145,7 +146,7 @@ class MaterialRadioGroupComponent
     if (_valueSelection == value) return;
     _selectionSubscription?.cancel();
     _valueSelection = value;
-    _selectionSubscription = _valueSelection?.selectionChanges?.listen((_) {
+    _selectionSubscription = _valueSelection?.selectionChanges.listen((_) {
       selected = _valueSelection!.selectedValues
           .firstWhere((_) => true, orElse: () => null);
     });
@@ -173,7 +174,7 @@ class MaterialRadioGroupComponent
   /// Value of currently selected radio. Prefer `[ngModel]`.
   @Input()
   set selected(dynamic selectedValue) {
-    if (_radioComponents != null && _isContentInit) {
+    if (_radioComponents.isNotEmpty && _isContentInit) {
       for (var radioComponent in _radioComponents) {
         radioComponent.checked = (radioComponent.value == selectedValue);
       }
