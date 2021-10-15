@@ -168,7 +168,7 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
       return null;
     } else if (factoryRenderer == null &&
         !identical(itemRenderer, nullRenderer)) {
-      return itemRenderer!(value);
+      return itemRenderer!(value!);
     }
     return null;
   }

@@ -407,7 +407,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
           // Make sure input text is initialized correctly regardless of input
           // order. Specified input text should take precedence over selection
           // status.
-          inputText = itemRenderer!(_lastSelectedItem as T?);
+          inputText = itemRenderer!(_lastSelectedItem as T);
         }
       }
     }
@@ -425,7 +425,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
         if (_lastSelectedItem != selectedItem) {
           _lastSelectedItem = selectedItem;
           inputText = _lastSelectedItem != null
-              ? itemRenderer!(_lastSelectedItem as T?)
+              ? itemRenderer!(_lastSelectedItem as T)
               : '';
         }
       }
@@ -600,7 +600,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
       // Deselect previously selected item as the component was not asked to
       // clear the text upon selection, indicating that the selection is bound
       // to the text.
-      if (inputText != itemRenderer!(_lastSelectedItem as T?)) {
+      if (inputText != itemRenderer!(_lastSelectedItem as T)) {
         selection?.deselect(_lastSelectedItem as T);
         _lastSelectedItem = null;
       }
@@ -876,7 +876,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
     _isInitialized = true;
     scheduleMicrotask(() {
       if (inputText.isEmpty && _lastSelectedItem != null) {
-        _setInputText(itemRenderer!(_lastSelectedItem as T?));
+        _setInputText(itemRenderer!(_lastSelectedItem as T));
       }
     });
   }

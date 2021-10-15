@@ -14,7 +14,7 @@ import 'package:angular_components/model/date/date.dart';
 /// If the given range is valid (non-null with non-null start and end dates),
 /// returns the result of calling the given function. Otherwise returns `null`.
 DatepickerDateRange? _ifValidRange(
-    DatepickerDateRange r, DatepickerDateRange fn()) {
+    DatepickerDateRange? r, DatepickerDateRange fn()) {
   if (r == null || r.start == null || r.end == null) {
     return null;
   }
