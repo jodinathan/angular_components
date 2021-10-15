@@ -5,7 +5,7 @@
 import 'dart:async';
 
 import 'package:build/build.dart';
-import 'package:mustache/mustache.dart' show Template;
+import 'package:mustache_template/mustache.dart' show Template;
 
 /// Generates a small app that hosts a single AngularDart standalone example
 /// and gallery page that are generated from @GallerySectionConfig annotations.

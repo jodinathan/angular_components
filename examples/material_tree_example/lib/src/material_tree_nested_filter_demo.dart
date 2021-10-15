@@ -33,5 +33,5 @@ class MaterialTreeDropdownNestedFilterableDemoComponent {
   final SelectionModel singleSelection = SelectionModel.single();
 
   @ViewChild(MaterialTreeDropdownComponent)
-  MaterialTreeDropdownComponent materialTreeDropdownComponent;
+  MaterialTreeDropdownComponent? materialTreeDropdownComponent;
 }

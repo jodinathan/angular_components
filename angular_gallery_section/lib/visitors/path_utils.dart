@@ -23,7 +23,7 @@ final String _thirdPartyPrefix = 'third_party/dart/';
 ///
 ///     pathToImportUri('a/b/lib/c.dart');  // => 'a.b/c.dart'
 ///     pathToImportUri('a/b/lib/src/c.dart');  // => 'a/b/src/c.dart'
-String pathToImportUri(String pathName, {Pattern pattern}) {
+String pathToImportUri(String pathName, {Pattern? pattern}) {
   pattern ??= _pathPartsRegExp;
   if (pathName.contains(_genFilesDir)) {
     pathName = pathName.split(_genFilesDir)[1];
@@ -39,7 +39,7 @@ String pathToImportUri(String pathName, {Pattern pattern}) {
 
   pathName = path.normalize(pathName);
   return pathName.replaceFirstMapped(
-      pattern, (m) => '${m[1].replaceAll('/', '.')}/${m[2]}');
+      pattern, (m) => '${m[1]!.replaceAll('/', '.')}/${m[2]}');
 }
 
 /// Converts a path to a Dart import URI, prefixed with the "package:" scheme.
@@ -92,7 +92,7 @@ List<String> splitPathOnPackage(String p) {
 /// Example: "package.name|lib/path/to/asset.txt" to
 /// "package/name/lib/path/to/asset.txt".
 String assetToPath(String asset) => asset.replaceFirstMapped(
-    RegExp(r'(.*)\|(lib.*)'), (m) => '${m[1].replaceAll('.', '/')}/${m[2]}');
+    RegExp(r'(.*)\|(lib.*)'), (m) => '${m[1]!.replaceAll('.', '/')}/${m[2]}');
 
 /// Convert assetId string representation to a package string usable in a dart
 /// import.

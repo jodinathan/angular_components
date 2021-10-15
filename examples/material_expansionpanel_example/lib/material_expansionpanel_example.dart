@@ -59,18 +59,18 @@ class MaterialExpansionDemo {
   bool isCustomToolBeltPanelExpanded = true;
 
   bool showConfirmation = false;
-  Completer<bool> dialogFutureCompleter;
+  Completer<bool>? dialogFutureCompleter;
 
   void showConfirmationDialog(AsyncAction event) {
     showConfirmation = true;
     dialogFutureCompleter = Completer();
-    event.cancelIf(dialogFutureCompleter.future);
+    event.cancelIf(dialogFutureCompleter!.future);
   }
 
   void closeDialog(bool proceed) {
     showConfirmation = false;
     if (dialogFutureCompleter != null) {
-      dialogFutureCompleter.complete(!proceed);
+      dialogFutureCompleter!.complete(!proceed);
     }
   }
 }

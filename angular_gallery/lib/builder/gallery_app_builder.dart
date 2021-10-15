@@ -13,8 +13,8 @@ import '../src/template_util.dart';
 class GalleryWebBuilder extends Builder {
   final String _galleryTitle;
   final String _direction;
-  final String _galleryBindingName;
-  final String _galleryBindingImport;
+  final String? _galleryBindingName;
+  final String? _galleryBindingImport;
   final String _bugUrl;
   final String _sourcecodeUrl;
 

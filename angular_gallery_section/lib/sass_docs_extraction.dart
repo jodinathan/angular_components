@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:build/build.dart';
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:sass/src/ast/sass.dart';
 import 'package:angular_gallery_section/g3doc_markdown.dart';
 import 'package:angular_gallery_section/components/gallery_component/documentation_info.dart';
@@ -22,10 +23,10 @@ Future<SassDocInfo> extractSassDocs(
   final functionRules = <SassCallableInfo>[];
   final mixinRules = <SassCallableInfo>[];
 
-  final first = stylesheet.children.firstWhere((_) => true, orElse: () => null);
+  final first = stylesheet.children.firstWhereOrNull((_) => true);
   if (first is SilentComment) {
     final second =
-        stylesheet.children.skip(1).firstWhere((_) => true, orElse: () => null);
+        stylesheet.children.skip(1).firstWhereOrNull((_) => true);
     if (second is! VariableDeclaration &&
         second is! FunctionRule &&
         second is! MixinRule) {
@@ -61,7 +62,7 @@ SassCallableInfo _extractCallable(CallableDeclaration callable) {
   restArg = restArg != null && !restArg.startsWith('_') ? restArg : null;
   return SassCallableInfo(
       callable.name,
-      args.where((arg) => !arg.name.startsWith('_')),
+      args.where((arg) => !arg.name!.startsWith('_')),
       restArg,
       _formatComment(callable.comment));
 }
@@ -69,8 +70,8 @@ SassCallableInfo _extractCallable(CallableDeclaration callable) {
 /// Extracts any documentation (triple slash) comments from [silentComment].
 ///
 /// The comment text is assumed to be markdown and converted to HTML.
-String _formatComment(SilentComment silentComment) {
+String _formatComment(SilentComment? silentComment) {
   if (silentComment?.docComment == null) return '';
 
-  return g3docMarkdownToHtml(silentComment.docComment);
+  return g3docMarkdownToHtml(silentComment!.docComment!);
 }

@@ -35,7 +35,7 @@ class GalleryComponent {
   /// The base model for the gallery that gathers all of the details needed by
   /// the template.
   @Input()
-  GalleryInfo model;
+  late GalleryInfo model;
 
   /// The beginning of the link to the source code for all components.
   final String _sourcecodeUrl;
@@ -44,11 +44,11 @@ class GalleryComponent {
 
   bool get showToc => (model.docs.length + model.demos.length) > 1;
 
-  String getDocId(DocInfo doc) => '${doc.name.replaceAll(' ', '_')}Doc';
+  String getDocId(DocInfo doc) => '${doc.name!.replaceAll(' ', '_')}Doc';
 
   String getDemoId(Demo demo) => '${demo.name}Demo';
 
-  void scroll(String locator) => querySelector(locator).scrollIntoView();
+  void scroll(String locator) => querySelector(locator)!.scrollIntoView();
 
   String getTeamsLink(String ldap) => 'http://who/$ldap';
 
@@ -65,7 +65,7 @@ class GalleryComponent {
 /// Relies on syntax highlighting from highlight.js
 /// https://github.com/highlightjs/highlight.js which must be loaded in the page
 /// first.
-String applyHighlighting(String htmlFragment) {
+String? applyHighlighting(String htmlFragment) {
   // Create a temporary document containing the fragment.
   final fragment = DocumentFragment.html(htmlFragment,
       treeSanitizer: _NullNodeTreeSanitizer());

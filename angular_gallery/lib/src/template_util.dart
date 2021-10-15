@@ -5,7 +5,7 @@
 import 'dart:async';
 
 import 'package:build/build.dart';
-import 'package:mustache/mustache.dart';
+import 'package:mustache_template/mustache.dart';
 
 /// Writes a [newAssetId] via the provided [buildStep].
 ///

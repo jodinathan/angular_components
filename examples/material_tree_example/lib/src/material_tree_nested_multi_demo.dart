@@ -50,5 +50,5 @@ class MaterialTreeNestedMultiDemoComponent {
   var allowParentMultiSelection = true;
 
   @ViewChild(MaterialTreeComponent)
-  MaterialTreeComponent materialTree;
+  MaterialTreeComponent? materialTree;
 }

@@ -36,8 +36,8 @@ class MaterialCheckboxGalleryConfig {}
 )
 class MaterialCheckboxExample {
   /// Todo list example
-  List<Todo> todos;
-  String todoText;
+  late List<Todo> todos;
+  String? todoText;
 
   MaterialCheckboxExample() {
     todos = [
@@ -61,7 +61,7 @@ class MaterialCheckboxExample {
   bool checkedState = false;
   bool indeterminateState = false;
   bool indeterminateBehavior = false;
-  String customLabel = "custom label";
+  String? customLabel = "custom label";
   Control newLabel = Control("");
   String statusStr = "???";
 
@@ -72,7 +72,7 @@ class MaterialCheckboxExample {
 }
 
 class Todo {
-  String text;
+  String? text;
   bool done;
 
   Todo(this.text, this.done);

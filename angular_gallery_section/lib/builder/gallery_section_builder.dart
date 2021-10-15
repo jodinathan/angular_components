@@ -7,7 +7,7 @@ import 'dart:convert';
 
 import 'package:build/build.dart';
 import 'package:glob/glob.dart';
-import 'package:mustache/mustache.dart' show Template;
+import 'package:mustache_template/mustache.dart' show Template;
 import 'package:angular_gallery_section/resolved_config.dart';
 import 'package:angular_gallery_section/visitors/path_utils.dart';
 
@@ -25,8 +25,8 @@ class GallerySectionBuilder extends Builder {
     if (infoAssets.isEmpty) return;
 
     final mergedImports = <String>{};
-    final mergedDemos = <String, String>{};
-    final mergedMainDemo = <String, String>{};
+    final mergedDemos = <String?, String?>{};
+    final mergedMainDemo = <String?, String?>{};
     final apis = [];
 
     for (final assetId in infoAssets) {
@@ -43,8 +43,8 @@ class GallerySectionBuilder extends Builder {
       var docs = [];
 
       for (final info in infoList) {
-        for (final demo in info.demos) {
-          mergedDemos[demo.name] = demo.selector;
+        for (final demo in info.demos!) {
+          mergedDemos[demo!.name] = demo.selector;
           mergedImports.add(demo.import);
         }
 
@@ -53,7 +53,7 @@ class GallerySectionBuilder extends Builder {
           'selector': '${info.selectorSafeName}-api'
         });
         if (info.mainDemo != null) {
-          mergedMainDemo[info.mainDemo.name] = info.mainDemo.selector;
+          mergedMainDemo[info.mainDemo!.name] = info.mainDemo!.selector;
         }
       }
       api['docs'] = docs;

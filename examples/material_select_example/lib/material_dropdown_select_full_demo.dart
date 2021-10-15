@@ -119,7 +119,8 @@ class MaterialDropdownSelectFullDemoComponent {
   // Specifying an itemRenderer avoids the selected item from knowing how to
   // display itself.
   static final ItemRenderer _itemRenderer = newCachingItemRenderer<Language>(
-      (language) => "${language.label} (${language.code})");
+          (language) => "${language.label} (${language.code})")
+      as String? Function(dynamic);
 
   bool useFactoryRenderer = false;
   bool useItemRenderer = false;
@@ -146,7 +147,7 @@ class MaterialDropdownSelectFullDemoComponent {
       SelectionModel.single(selected: _languagesList[1]);
 
   /// Label for the button for single selection.
-  String get singleSelectLanguageLabel =>
+  String? get singleSelectLanguageLabel =>
       singleSelectModel.selectedValues.isNotEmpty
           ? itemRenderer(singleSelectModel.selectedValues.first)
           : 'Select Language';
@@ -178,7 +179,7 @@ class MaterialDropdownSelectFullDemoComponent {
       ? slideSelection.selectedValues.first
       : 'Default';
 
-  int get width => widthSelection.selectedValues.isNotEmpty
+  int? get width => widthSelection.selectedValues.isNotEmpty
       ? widthSelection.selectedValues.first
       : null;
 
@@ -192,12 +193,12 @@ class MaterialDropdownSelectFullDemoComponent {
     return RelativePosition.overlapAlignments;
   }
 
-  String get slide => slideSelection.selectedValues.isNotEmpty &&
+  String? get slide => slideSelection.selectedValues.isNotEmpty &&
           slideSelection.selectedValues.first != 'Default'
       ? slideSelection.selectedValues.first
       : null;
 
-  String get singleSelectedLanguage =>
+  String? get singleSelectedLanguage =>
       singleSelectModel.selectedValues.isNotEmpty
           ? singleSelectModel.selectedValues.first.uiDisplayName
           : null;
@@ -209,15 +210,15 @@ class MaterialDropdownSelectFullDemoComponent {
   ItemRenderer<Language> get itemRenderer =>
       useItemRenderer ? _itemRenderer : _displayNameRenderer;
 
-  FactoryRenderer get factoryRenderer =>
+  FactoryRenderer? get factoryRenderer =>
       useFactoryRenderer ? (_) => demo.ExampleRendererComponentNgFactory : null;
 
-  FactoryRenderer get labelFactory => useLabelFactory
+  FactoryRenderer? get labelFactory => useLabelFactory
       ? (_) => demo.ExampleLabelRendererComponentNgFactory
       : null;
 
   /// Label for the button for multi selection.
-  String get multiSelectLanguageLabel {
+  String? get multiSelectLanguageLabel {
     var selectedValues = multiSelectModel.selectedValues;
     if (selectedValues.isEmpty) {
       return "Select Languages";
@@ -229,7 +230,7 @@ class MaterialDropdownSelectFullDemoComponent {
   }
 
   @ViewChild(MaterialSelectSearchboxComponent)
-  MaterialSelectSearchboxComponent searchbox;
+  late MaterialSelectSearchboxComponent searchbox;
 
   void onDropdownVisibleChange(bool visible) {
     if (visible) {
@@ -240,9 +241,9 @@ class MaterialDropdownSelectFullDemoComponent {
     }
   }
 
-  Language selectionValue;
+  Language? selectionValue;
   List<Language> selectionValues = [];
-  String get selectionValuesLabel {
+  String? get selectionValuesLabel {
     final size = selectionValues.length;
     if (size == 0) {
       return 'Select Languages';
@@ -253,7 +254,7 @@ class MaterialDropdownSelectFullDemoComponent {
     }
   }
 
-  String selectionOption;
+  String? selectionOption;
 
   void alert(String message) => window.alert(message);
 
@@ -317,7 +318,7 @@ class ExampleSelectionOptions extends StringSelectionOptions<Language>
       : super(options,
             toFilterableString: (Language option) => option.toString());
   ExampleSelectionOptions.withOptionGroups(List<OptionGroup> optionGroups)
-      : super.withOptionGroups(optionGroups,
+      : super.withOptionGroups(optionGroups as List<OptionGroup<Language>>,
             toFilterableString: (Language option) => option.toString());
   @override
   SelectableOption getSelectable(Language item) =>

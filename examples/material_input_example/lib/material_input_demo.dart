@@ -13,7 +13,7 @@ import 'package:angular_components/material_input/material_input_multiline.dart'
 import 'package:angular_components/material_input/material_number_accessor.dart';
 import 'package:angular_components/material_tooltip/material_tooltip.dart';
 
-typedef ValidityCheck = String Function(String inputText);
+typedef ValidityCheck = String? Function(String inputText);
 
 /// This directive applies a custom Validator to any material-input that uses
 /// the Forms API, and also has this directive.
@@ -32,15 +32,15 @@ typedef ValidityCheck = String Function(String inputText);
 )
 class TextValidator {
   @Input('textValidator')
-  String text;
-  Map<String, dynamic> call(AbstractControl c) {
+  String? text;
+  Map<String, dynamic>? call(AbstractControl c) {
     return (c.value != null && text != null && c.value.contains(text))
         ? {'material-input-error': 'cannot contain $text'}
         : null;
   }
 }
 
-String demoValidator(String inputText) {
+String? demoValidator(String inputText) {
   if (inputText.isEmpty) return null;
 
   if (inputText.contains('0')) return 'Input contains 0';
@@ -80,14 +80,14 @@ class MaterialInputDemoComponent {
   String manualUpdateInputText = '';
   String boundText = '';
   num numericValue = 88888;
-  String urlValue;
+  String? urlValue;
   ValidityCheck get checkValid => demoValidator;
   Function get characterCount => countIgnoringAdCustomizers;
-  Control form;
+  late Control form;
   bool showAuto = false;
 
   @ViewChild('manualSelectInput')
-  MaterialInputComponent manualSelectInput;
+  late MaterialInputComponent manualSelectInput;
 
   MaterialInputDemoComponent() {
     form = Control(

@@ -38,7 +38,7 @@ class MaterialCalendarPickerDemoComponent {
   void creepForward() {
     var current = mutableModel.selection('range');
     mutableModel = mutableModel.setSelection(CalendarSelection(
-        'range', current.start.add(days: 1), current.end.add(days: 1)));
+        'range', current.start!.add(days: 1), current.end!.add(days: 1)));
   }
 
   CalendarState singleDateModel =

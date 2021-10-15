@@ -53,7 +53,7 @@ class MaterialTreeNestedSingleDemoComponent {
   MaterialTreeNestedSingleDemoComponent(this._changeDetector);
 
   @ViewChild(MaterialTreeComponent)
-  MaterialTreeComponent materialTree;
+  MaterialTreeComponent? materialTree;
 
   bool _expandAll = false;
   bool get expandAll => _expandAll;
@@ -62,5 +62,5 @@ class MaterialTreeNestedSingleDemoComponent {
     _changeDetector.markForCheck();
   }
 
-  bool allowDeselectInHierarchy;
+  bool? allowDeselectInHierarchy;
 }

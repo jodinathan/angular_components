@@ -18,5 +18,5 @@ import 'package:angular_components/model/ui/has_renderer.dart';
 )
 class ComponentRendererExample implements RendersValue<String> {
   @override
-  String value;
+  String? value;
 }

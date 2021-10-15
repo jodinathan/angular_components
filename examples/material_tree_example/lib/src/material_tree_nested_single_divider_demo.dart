@@ -67,7 +67,7 @@ class MaterialTreeNestedSingleDividerDemoComponent {
   String selected = 'tree-border-expanded';
 
   @ViewChild(MaterialTreeComponent)
-  MaterialTreeComponent materialTree;
+  MaterialTreeComponent? materialTree;
 }
 
 class Option {

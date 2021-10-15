@@ -53,7 +53,7 @@ class MaterialDialogExample {
   bool isInFullscreenMode = false;
 
   final maxHeightDialogLines = <String>[];
-  String dialogWithErrorErrorMessage;
+  String? dialogWithErrorErrorMessage;
 
   void addMaxHeightDialogLine() {
     maxHeightDialogLines.add('This is some text!');

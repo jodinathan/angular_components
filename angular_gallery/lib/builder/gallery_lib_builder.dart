@@ -15,7 +15,7 @@ import '../src/template_util.dart';
 /// ACX component gallery.
 class GalleryLibBuilder extends Builder {
   final String _galleryTitle;
-  final List<String> _styleUrls;
+  final List<String>? _styleUrls;
   final List<String> _examplePackages;
 
   GalleryLibBuilder(this._galleryTitle, this._styleUrls, this._examplePackages);
@@ -104,25 +104,25 @@ class GalleryLibBuilder extends Builder {
     }
 
     examples
-        .sort((Example a, Example b) => a.displayName.compareTo(b.displayName));
+        .sort((Example a, Example b) => a.displayName!.compareTo(b.displayName!));
     return examples;
   }
 }
 
 class Example {
-  final String displayName;
-  final String group;
-  final String dartImport;
-  final String component;
-  final List<String> relatedComponents;
+  final String? displayName;
+  final String? group;
+  final String? dartImport;
+  final String? component;
+  final List<String>? relatedComponents;
 
   Example(this.displayName, this.group, this.dartImport, this.component,
       this.relatedComponents);
 
   String get name => strings
-      .underscore(displayName.replaceAll(RegExp(r'[^a-zA-Z0-9 _-]'), ''));
+      .underscore(displayName!.replaceAll(RegExp(r'[^a-zA-Z0-9 _-]'), ''));
 
-  String get linkName => strings.capitalizeFirstLetter(name);
+  String? get linkName => strings.capitalizeFirstLetter(name);
 
   String get loader => 'load${name}Example';
 }

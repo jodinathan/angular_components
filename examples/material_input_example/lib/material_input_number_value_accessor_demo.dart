@@ -21,7 +21,7 @@ import 'package:angular_components/material_input/material_number_accessor.dart'
 )
 class MaterialInputNumberValueAccessorDemoComponent {
   num value = 123;
-  Control form;
+  late Control form;
   num decimalValue = 123.45678;
 
   MaterialInputNumberValueAccessorDemoComponent() {
