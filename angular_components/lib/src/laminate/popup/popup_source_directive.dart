@@ -24,7 +24,7 @@ class PopupSourceDirective
     implements ElementPopupSource, AfterViewInit, OnDestroy {
   final DomPopupSourceFactory _domPopupSourceFactory;
   final bool _initAriaAttributes;
-  HtmlElement? _element;
+  HtmlElement _element;
   ReferenceDirective? _referenceDirective;
   Focusable? _focusable;
 
@@ -48,7 +48,7 @@ class PopupSourceDirective
 
   @override
   ngOnDestroy() {
-    _element = null;
+    //_element = null;
     _popupSource = null;
     _referenceDirective = null;
     _focusable = null;
@@ -126,12 +126,12 @@ class PopupSourceDirective
   }
 
   void _updateSource() {
-    if (_element != null) {
-      _popupSource = _domPopupSourceFactory.createPopupSource(_element!,
-          alignOriginX: _alignOriginX,
-          alignOriginY: _alignOriginY,
-          initAriaAttributes: _initAriaAttributes);
-    }
+    //if (_element != null) {
+    _popupSource = _domPopupSourceFactory.createPopupSource(_element,
+        alignOriginX: _alignOriginX,
+        alignOriginY: _alignOriginY,
+        initAriaAttributes: _initAriaAttributes);
+    //}
     if (_popupId != null) {
       _popupSource!.popupId = _popupId;
     }
@@ -142,7 +142,7 @@ class PopupSourceDirective
     if (_focusable != null) {
       _focusable!.focus();
     } else {
-      _element?.focus();
+      _element.focus();
     }
   }
 

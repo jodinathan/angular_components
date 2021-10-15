@@ -89,14 +89,14 @@ class MaterialMenuComponent extends Object
   MaterialButtonComponent? _button;
 
   @ViewChild(MaterialButtonComponent)
-  set button(MaterialButtonComponent b) {
+  set button(MaterialButtonComponent? b) {
     _button = b;
   }
 
   MenuPopupComponent? _menuPopup;
 
   @ViewChild(MenuPopupComponent)
-  set menuPopup(MenuPopupComponent m) {
+  set menuPopup(MenuPopupComponent? m) {
     _menuPopup = m;
   }
 

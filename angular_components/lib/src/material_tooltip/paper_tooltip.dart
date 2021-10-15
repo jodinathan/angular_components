@@ -130,7 +130,7 @@ class MaterialPaperTooltipComponent implements DeferredContentAware, Tooltip {
             constructEncapsulatedCss(tooltipClass, hostElement.classes);
 
   @ViewChild(MaterialPopupComponent)
-  set popupChild(MaterialPopupComponent popup) {
+  set popupChild(MaterialPopupComponent? popup) {
     if (popup == null) return;
     _visibleCtrl.addStream(popup.contentVisible);
   }

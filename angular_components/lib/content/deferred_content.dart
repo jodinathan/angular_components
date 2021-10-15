@@ -120,8 +120,8 @@ class DeferredContentDirective implements OnDestroy {
   selector: '[cachedDeferredContent]',
 )
 class CachingDeferredContentDirective implements OnDestroy {
-  ViewContainerRef? _viewContainer;
-  TemplateRef? _template;
+  ViewContainerRef _viewContainer;
+  TemplateRef _template;
   final _disposer = Disposer.oneShot();
   ViewRef? _view;
 
@@ -131,7 +131,7 @@ class CachingDeferredContentDirective implements OnDestroy {
   void _setVisible(bool value) {
     if (value == _visible) return;
     if (value && _view == null) {
-      _view = _viewContainer!.createEmbeddedView(_template!);
+      _view = _viewContainer.createEmbeddedView(_template);
     }
     _visible = value;
   }
@@ -151,7 +151,7 @@ class CachingDeferredContentDirective implements OnDestroy {
   @override
   void ngOnDestroy() {
     _disposer.dispose();
-    _viewContainer = null;
-    _template = null;
+    //_viewContainer = null;
+    //_template = null;
   }
 }

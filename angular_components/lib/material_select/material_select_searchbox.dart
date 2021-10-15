@@ -57,7 +57,7 @@ class MaterialSelectSearchboxComponent extends FocusableMixin
   }
 
   @ViewChild(MaterialInputComponent)
-  set input(MaterialInputComponent input) {
+  set input(MaterialInputComponent? input) {
     focusable = input;
   }
 

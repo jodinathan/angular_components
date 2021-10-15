@@ -148,14 +148,15 @@ class MaterialTreeComponent<T> with MaterialTreeRoot<T>, SelectionContainer<T> {
   }
 
   @ViewChildren(MaterialTreeGroupComponent)
-  late List<MaterialTreeGroupComponent> treeGroupNodes;
+  List<MaterialTreeGroupComponent>? treeGroupNodes;
 
   /// Collapses all tree groups.
   ///
   /// Remember to set expandAll to false in your component. This will not
   /// override that behavior.
   void collapseAllTreeGroups() {
-    for (var tree in treeGroupNodes) {
+    if (treeGroupNodes == null) return;
+    for (var tree in treeGroupNodes!) {
       tree.clearExpansions();
     }
   }
@@ -165,7 +166,8 @@ class MaterialTreeComponent<T> with MaterialTreeRoot<T>, SelectionContainer<T> {
   /// Remember to set expandAll to true in your component. This will not
   /// override that behavior.
   void expandAllTreeGroups() {
-    for (var tree in treeGroupNodes) {
+    if (treeGroupNodes == null) return;
+    for (var tree in treeGroupNodes!) {
       tree.expandAllOptions();
     }
   }

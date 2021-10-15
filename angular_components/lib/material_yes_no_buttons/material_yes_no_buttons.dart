@@ -290,8 +290,8 @@ class EscapeCancelsDirective extends BoundaryAwareKeyDirective
 
   MaterialButtonComponent? get noButton => _yesNo.noButton;
 
-  EscapeCancelsDirective(
-      this._yesNo, Element element, @Optional() KeyUpBoundaryDirective boundary)
+  EscapeCancelsDirective(this._yesNo, Element element,
+      @Optional() KeyUpBoundaryDirective? boundary)
       : super.keyup(element, boundary);
 
   @override
@@ -321,8 +321,8 @@ class EnterAcceptsDirective extends BoundaryAwareKeyDirective
   MaterialButtonComponent? get yesButton => _yesNo.yesButton;
   MaterialButtonComponent? get noButton => _yesNo.noButton;
 
-  EnterAcceptsDirective(
-      this._yesNo, Element element, @Optional() KeyUpBoundaryDirective boundary)
+  EnterAcceptsDirective(this._yesNo, Element element,
+      @Optional() KeyUpBoundaryDirective? boundary)
       : super.keypress(element, boundary);
 
   /// Enables the directive to be conditionally applied.

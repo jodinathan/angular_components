@@ -25,10 +25,10 @@ class ActiveItemDirective implements AfterViewInit, OnDestroy {
   final DomService _domService;
 
   /// Parent modal if any.
-  final Modal _modal;
+  final Modal? _modal;
 
   /// Parent popup if any.
-  final PopupRef _popupRef;
+  final PopupRef? _popupRef;
 
   bool _active = false;
 
@@ -70,17 +70,17 @@ class ActiveItemDirective implements AfterViewInit, OnDestroy {
 
     if (_shouldScrollIntoView) {
       var isVisible = _popupRef != null
-          ? _popupRef.isVisible
+          ? _popupRef!.isVisible
           : _modal != null
-              ? _modal.visible
+              ? _modal!.visible
               : true;
       if (isVisible) {
         _scrollIntoView();
       } else {
         var onVisibleChanged = _popupRef != null
-            ? _popupRef.onVisibleChanged
-            : _modal.onVisibleChanged;
-        _visibilitySubscription = onVisibleChanged.listen((isVisible) {
+            ? _popupRef!.onVisibleChanged
+            : _modal?.onVisibleChanged;
+        _visibilitySubscription = onVisibleChanged?.listen((isVisible) {
           if (isVisible) {
             _visibilitySubscription?.cancel();
             if (_shouldScrollIntoView) {

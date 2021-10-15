@@ -108,15 +108,17 @@ class MaterialDateRangePickerComponent
   final PopupSizeProvider? _popupSizeProvider;
 
   @ViewChild(ButtonDirective)
-  set focusableElement(ButtonDirective button) {
+  set focusableElement(ButtonDirective? button) {
     focusable = button;
   }
 
+  /*
   @Deprecated('Use [presets] instead.')
   @Input('predefinedRanges')
   set predefinedRanges(List<DatepickerDateRange> ranges) {
     presets = ranges.map((range) => DatepickerPreset.fromRange(range)).toList();
   }
+  */
 
   /// A list of positions for popup alignment.
   ///
@@ -340,7 +342,7 @@ class MaterialDateRangePickerComponent
   List<ComparisonOption>? _comparisonOptions;
 
   @ViewChild('focusOnClose')
-  late KeyboardOnlyFocusIndicatorDirective focusOnClose;
+  KeyboardOnlyFocusIndicatorDirective? focusOnClose;
 
   final model = DateRangeEditorModel();
   ModelState? _lastState;
@@ -465,7 +467,7 @@ class MaterialDateRangePickerComponent
   void ngOnDestroy() => _disposer.dispose();
 
   @ViewChild(MaterialPopupComponent)
-  late MaterialPopupComponent popup;
+  MaterialPopupComponent? popup;
 
   /// Open the datepicker popup.
   void open() {
@@ -473,7 +475,7 @@ class MaterialDateRangePickerComponent
 
     _popupVisible = true;
     _onPopupVisible.add(true);
-    popup.open();
+    popup?.open();
 
     // Initialize the date-range-editor (if it hasn't been already).
     initEditor();
@@ -518,7 +520,7 @@ class MaterialDateRangePickerComponent
 
     _popupVisible = false;
     _onPopupVisible.add(false);
-    popup.close();
+    popup?.close();
 
     _domService.nextFrame!.then((_) {
       // Double-check that the popup is still closing.
@@ -577,7 +579,7 @@ class MaterialDateRangePickerComponent
     _isApplying = true;
     selection.value = model.value;
     close();
-    focusOnClose.focus(event);
+    focusOnClose?.focus(event);
   }
 
   @visibleForTemplate
@@ -591,7 +593,7 @@ class MaterialDateRangePickerComponent
     selection.value = _lastState!.value;
     _showApplyBar(!_isPreset(_lastState!.value));
     close();
-    focusOnClose.focus();
+    focusOnClose?.focus();
   }
 
   @visibleForTemplate

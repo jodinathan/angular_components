@@ -745,9 +745,9 @@ class MaterialCalendarPickerComponent
   }
 
   @ViewChild('container')
-  set container(HtmlElement container) {
+  set container(HtmlElement? container) {
     _container = container;
-    _scroller = container.parent as HtmlElement?;
+    _scroller = container?.parent as HtmlElement?;
   }
 
   @override

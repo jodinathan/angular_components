@@ -234,10 +234,10 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
   bool supportsClearRange = false;
 
   @ViewChild(MaterialCalendarPickerComponent)
-  late MaterialCalendarPickerComponent calendarPicker;
+  MaterialCalendarPickerComponent? calendarPicker;
 
   @ViewChild(MaterialMonthPickerComponent)
-  late MaterialMonthPickerComponent monthSelector;
+  MaterialMonthPickerComponent? monthSelector;
 
   /// Whether or not this date range picker supports choosing custom range.
   /// Calendar will be hidden when custom range is not supported.
@@ -338,9 +338,9 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
     _today = Date.today(_clock);
     editorHost?.dateRangeEditorCreated(this);
     nextPrevModel = DateRangeEditorNextPrevModel(onNext: () {
-      calendarPicker.scrollToDate(_visibleMonth!.add(months: 1));
+      calendarPicker?.scrollToDate(_visibleMonth!.add(months: 1));
     }, onPrev: () {
-      calendarPicker.scrollToDate(_visibleMonth!.add(months: -1));
+      calendarPicker?.scrollToDate(_visibleMonth!.add(months: -1));
     });
   }
 
@@ -519,7 +519,7 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
     showMonthSelector = !showMonthSelector;
     if (showMonthSelector) {
       _domService.scheduleWrite(() {
-        monthSelector.scrollToYear(_visibleMonth!.year);
+        monthSelector?.scrollToYear(_visibleMonth!.year);
       });
     }
   }
@@ -534,7 +534,7 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
           CalendarState.empty(resolution: CalendarResolution.months);
       final selectedMonth = state.selection(state.currentSelection);
       _domService.scheduleWrite(() {
-        calendarPicker.scrollToDate(selectedMonth.start!);
+        calendarPicker?.scrollToDate(selectedMonth.start!);
       });
     }
   }

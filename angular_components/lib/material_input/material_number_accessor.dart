@@ -136,7 +136,7 @@ class MaterialInt64ValueAccessor
       @Attribute('keypressUpdate') String keypressUpdateAttr,
       @Attribute('checkInteger') String checkInteger,
       @Attribute('blurFormat') String blurFormat,
-      @Optional() NumberFormat numberFormat)
+      @Optional() NumberFormat? numberFormat)
       : super(
             input as MaterialInputComponent,
             control,

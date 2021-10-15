@@ -69,7 +69,7 @@ abstract class TooltipBehavior extends TooltipTarget {
   TooltipBehavior(
       DomPopupSourceFactory domPopupSourceFactory,
       ViewContainerRef viewContainerRef,
-      HtmlElement? element,
+      HtmlElement element,
       this._changeDetector,
       String initAriaAttributes)
       : super(domPopupSourceFactory, viewContainerRef, element,
@@ -156,7 +156,7 @@ abstract class TooltipBehavior extends TooltipTarget {
 class ClickableTooltipTargetDirective extends TooltipBehavior
     implements AfterViewInit, OnDestroy {
   late StreamSubscription _tooltipSubscription;
-  HtmlElement? element;
+  HtmlElement element;
   bool _tooltipVisible = false;
 
   ClickableTooltipTargetDirective(
@@ -196,7 +196,7 @@ class ClickableTooltipTargetDirective extends TooltipBehavior
 
   @override
   void ngOnDestroy() {
-    element = null;
+    //element = null;
     _tooltipSubscription.cancel();
   }
 }
@@ -208,7 +208,7 @@ class ClickableTooltipTargetDirective extends TooltipBehavior
 abstract class TooltipTarget extends PopupSourceDirective {
   Tooltip? _tooltip;
   final ViewContainerRef viewContainerRef;
-  final HtmlElement? _element;
+  final HtmlElement _element;
   String? _previousDescribedbyId;
 
   TooltipTarget(DomPopupSourceFactory domPopupSourceFactory,
@@ -232,17 +232,17 @@ abstract class TooltipTarget extends PopupSourceDirective {
   @override
   void onOpen() {
     if (_id == null) return;
-    _previousDescribedbyId = _element!.getAttribute('aria-describedby');
-    _element!.setAttribute('aria-describedby', _id!);
+    _previousDescribedbyId = _element.getAttribute('aria-describedby');
+    _element.setAttribute('aria-describedby', _id!);
   }
 
   @override
   void onClose() {
     if (_id == null) return;
     if (_previousDescribedbyId != null) {
-      _element!.setAttribute('aria-describedby', _previousDescribedbyId!);
+      _element.setAttribute('aria-describedby', _previousDescribedbyId!);
     } else {
-      _element!.attributes.remove('aria-describedby');
+      _element.attributes.remove('aria-describedby');
     }
   }
 }

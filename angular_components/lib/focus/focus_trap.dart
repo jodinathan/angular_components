@@ -24,13 +24,13 @@ class FocusTrapComponent implements OnDestroy {
 
   AutoFocusDirective? _autoFocusDirective;
   @ContentChild(AutoFocusDirective)
-  set autoFocus(AutoFocusDirective value) {
+  set autoFocus(AutoFocusDirective? value) {
     _autoFocusDirective = value;
   }
 
   FocusContentWrapper? _content;
   @ViewChild(FocusContentWrapper)
-  set content(FocusContentWrapper value) {
+  set content(FocusContentWrapper? value) {
     _content = value;
     if (_content != null && _autoFocusDirective == null) {
       _content!._element.focus();
@@ -43,8 +43,10 @@ class FocusTrapComponent implements OnDestroy {
   }
 
   void focusFirst() {
-    _focusFirstInOrder(
-        DomTreeIterator(_content!.element, scope: _content!.element));
+    if (_content != null) {
+      _focusFirstInOrder(
+          DomTreeIterator(_content!.element, scope: _content!.element));
+    }
   }
 
   void focusLast() {
@@ -52,10 +54,10 @@ class FocusTrapComponent implements OnDestroy {
         scope: _content!.element, reverse: true, wraps: true));
   }
 
-  void _focusFirstInOrder(Iterator<Element?> iterator) {
+  void _focusFirstInOrder(Iterator<Element> iterator) {
     while (iterator.moveNext()) {
-      if (iterator.current!.tabIndex == 0 && _visible(iterator.current!)) {
-        iterator.current!.focus();
+      if (iterator.current.tabIndex == 0 && _visible(iterator.current)) {
+        iterator.current.focus();
         return;
       }
     }

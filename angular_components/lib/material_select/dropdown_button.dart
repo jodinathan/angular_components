@@ -9,7 +9,6 @@ import 'package:angular/angular.dart';
 import 'package:angular_components/button_decorator/button_decorator.dart';
 import 'package:angular_components/focus/focus_interface.dart';
 import 'package:angular_components/focus/keyboard_only_focus_indicator.dart';
-import 'package:angular_components/glyph/glyph.dart';
 import 'package:angular_components/interfaces/has_disabled.dart';
 import 'package:angular_components/mixins/button_wrapper.dart';
 import 'package:angular_components/mixins/focusable_mixin.dart';
@@ -32,7 +31,6 @@ import 'package:angular_components/utils/id_generator/id_generator.dart';
   ],
   directives: [
     ButtonDirective,
-    GlyphComponent,
     KeyboardOnlyFocusIndicatorDirective,
     NgIf,
   ],
@@ -51,10 +49,10 @@ class DropdownButtonComponent extends Object
     iconName = 'arrow_drop_down';
   }
 
-  late ButtonDirective _button;
+  ButtonDirective? _button;
 
   @ViewChild(ButtonDirective)
-  set button(ButtonDirective b) {
+  set button(ButtonDirective? b) {
     _button = b;
     focusable = b;
   }
@@ -149,7 +147,7 @@ class DropdownButtonComponent extends Object
 
   /// Event fired when the button is clicked or keyboard activated.
   @Output()
-  Stream<UIEvent> get trigger => _button.trigger;
+  Stream<UIEvent>? get trigger => _button?.trigger;
 
   /// Is the component tabbable.
   @Input()

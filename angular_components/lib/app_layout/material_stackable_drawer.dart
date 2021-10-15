@@ -23,7 +23,7 @@ import 'package:angular_components/content/deferred_content_aware.dart';
 )
 class MaterialStackableDrawerComponent
     extends MaterialTemporaryDrawerComponent {
-  final MaterialStackableDrawerComponent parent;
+  final MaterialStackableDrawerComponent? parent;
 
   MaterialStackableDrawerComponent(@Optional() @SkipSelf() this.parent)
       : super();
@@ -36,7 +36,7 @@ class MaterialStackableDrawerComponent
   set visible(bool newVisible) {
     super.visible = newVisible;
 
-    parent.isExpanded = newVisible;
+    parent?.isExpanded = newVisible;
   }
 
   @HostBinding('class.mat-drawer-collapsed')
