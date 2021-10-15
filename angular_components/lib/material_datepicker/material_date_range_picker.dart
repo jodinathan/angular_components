@@ -105,7 +105,7 @@ class MaterialDateRangePickerComponent
         PopupSizeProvider {
   Focusable? _dateRangeEditor;
   bool _focusOnDateRangeEditorInit = false;
-  final PopupSizeProvider _popupSizeProvider;
+  final PopupSizeProvider? _popupSizeProvider;
 
   @ViewChild(ButtonDirective)
   set focusableElement(ButtonDirective button) {
@@ -311,7 +311,7 @@ class MaterialDateRangePickerComponent
 
   /// A placeholder message to display if no date range is selected.
   @Input()
-  set placeHolderMsg(String msg) {
+  set placeHolderMsg(String? msg) {
     if (msg == null) return;
     _customPlaceHolderMsg = msg;
   }
@@ -325,7 +325,7 @@ class MaterialDateRangePickerComponent
   /// This can only be set once. Null or empty values are ignored.
   @Input()
   set comparisonOptions(List<ComparisonOption> options) {
-    if (options != null && options.isNotEmpty) {
+    if (options.isNotEmpty) {
       // User cannot change this value after setting it.
       assert(_comparisonOptions == null || _comparisonOptions == options);
       _comparisonOptions = options;
@@ -398,9 +398,9 @@ class MaterialDateRangePickerComponent
   final String popupClassName;
 
   MaterialDateRangePickerComponent(
-      @Optional() @Inject(datepickerClock) Clock clock,
+      @Optional() @Inject(datepickerClock) Clock? clock,
       Clock legacyClock,
-      @Optional() DatepickerConfig config,
+      @Optional() DatepickerConfig? config,
       @Attribute('popupClass') String popupClass,
       @Optional() @SkipSelf() this._popupSizeProvider,
       HtmlElement element,

@@ -1,6 +1,7 @@
 // Copyright (c) 2016, the Dart project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+@use "sass:math";
 
 // Typography constants
 // https://material.io/design/typography
@@ -46,7 +47,7 @@ $mat-font-leading-caption: 20px;
 
 // Converts tracking to letter-spacing.
 @function font-tracking($tracking) {
-  @return ($tracking / 1000) * 1em;
+  @return (math.div($tracking , 1000)) * 1em;
 }
 
 // Prevents text from wrapping.

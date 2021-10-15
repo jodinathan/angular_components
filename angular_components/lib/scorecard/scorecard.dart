@@ -94,7 +94,7 @@ class ScorecardComponent extends KeyboardOnlyFocusIndicatorDirective {
   /// * 'NEGATIVE'
   /// * 'NEUTRAL' (default)
   @Input()
-  set changeType(String changeType) {
+  set changeType(String? changeType) {
     // Reset the flags.
     _isChangePositive = _isChangeNegative = _isChangeNeutral = false;
     switch ((changeType ?? changeTypeNeutral).toUpperCase()) {

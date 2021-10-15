@@ -162,7 +162,7 @@ class MaterialTreeNode<T> {
       !hasChildren(option);
 
   /// Returns whether [option] is selected.
-  bool isSelected(T option) => _root.selection.isSelected(option);
+  bool isSelected(T option) => _root.selection?.isSelected(option) ?? false;
 
   /// Returns any child groups of [option] that are loaded.
   Iterable<OptionGroup>? getChildGroups(option) => _expandedNodes[option];
@@ -175,7 +175,7 @@ class MaterialTreeNode<T> {
     Iterable<OptionGroup<T>> childGroups = await _parent!.childrenOf(option);
 
     setExpandedState(option, true);
-    if (expandAll && childGroups != null) {
+    if (expandAll && childGroups.isNotEmpty) {
       for (var group in childGroups) {
         for (var option in group) {
           await expandOption(option);
@@ -214,16 +214,16 @@ class MaterialTreeNode<T> {
     if (!didClose) {
       return expandOption(option);
     }
-    return Future<Iterable<OptionGroup<T>>>.value();
+    return Future<Iterable<OptionGroup<T>>>.value([]);
   }
 
   /// Sets the [isSelected] state of [option] and returns the result.
   bool setSelectionState(T option, bool state) {
     if (isSelected(option) == state) return state;
     if (!state) {
-      return !_root.selection.deselect(option);
+      return !(_root.selection?.deselect(option) ?? false);
     } else {
-      return _root.selection.select(option);
+      return _root.selection?.select(option) ?? false;
     }
   }
 
@@ -243,9 +243,9 @@ class MaterialTreeNode<T> {
       }
 
       if (isSelection) {
-        _root.selection.select(node);
+        _root.selection?.select(node);
       } else {
-        _root.selection.deselect(node);
+        _root.selection?.deselect(node);
       }
 
       if (node == firstNode || node == lastNode) {
@@ -262,7 +262,7 @@ class MaterialTreeNode<T> {
   // TODO(google): Rename this is to control whether to use dynamic component
   // loader.
   bool get useComponentRenderer =>
-      _root.factoryRenderer != null || _root.componentRenderer != null;
+      _root.factoryRenderer != null; // || _root.componentRenderer != null;
 
   /// Whether to use a simple text formatter to render an option.
   bool get useItemRenderer => !useComponentRenderer;
@@ -271,8 +271,8 @@ class MaterialTreeNode<T> {
   bool get showSelectionState => isMultiSelect || !_root.optimizeForDropdown;
 
   /// Converts [T] into a component type (requires [useComponentRenderer]).
-  Type? getComponentType(option) =>
-      _root.componentRenderer != null ? _root.componentRenderer!(option) : null;
+  //Type? getComponentType(option) =>
+  //    _root.componentRenderer != null ? _root.componentRenderer!(option) : null;
 
   /// Converts [T] into a component factory (requires [factoryRenderer]).
   ComponentFactory? getComponentFactory(option) =>
@@ -280,7 +280,8 @@ class MaterialTreeNode<T> {
 
   /// Converts [T] into a text equivalent (requires [useItemRenderer]).
   String? getOptionAsText(T option) {
-    String? Function(T) itemRenderer = _root.itemRenderer ?? defaultItemRenderer;
+    String? Function(T) itemRenderer =
+        _root.itemRenderer ?? defaultItemRenderer;
     return itemRenderer(option);
   }
 

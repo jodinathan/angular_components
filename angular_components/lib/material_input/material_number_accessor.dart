@@ -64,7 +64,7 @@ abstract class BaseMaterialNumberValueAccessor<T>
     }
     if (blurFormat) {
       disposer.addStreamSubscription(input.onBlur.listen((_) {
-        if (input == null) return; // Input is no longer valid
+        //if (input == null) return; // Input is no longer valid
         final parsedNumber = parseNumber(input.inputText);
         // If the value parses, it's a number so format it as such.
         if (parsedNumber != null) {
@@ -75,9 +75,11 @@ abstract class BaseMaterialNumberValueAccessor<T>
   }
 
   @override
-  void writeValue(T newValue) {
+  void writeValue(T? newValue) {
     // Treat null as special as an invalid input will also parse as null.
-    if (newValue == null) super.writeValue(null);
+    if (newValue == null) {
+      super.writeValue(null);
+    }
     if (parseNumber(input.inputText) != newValue) {
       // If the numeric value of the current input text doesn't equal to the
       // new numeric value, update the input text accordingly.
@@ -88,8 +90,8 @@ abstract class BaseMaterialNumberValueAccessor<T>
   @override
   void registerOnChange(callback) {
     disposer.addStreamSubscription(_updateStream.listen((_) {
-      if (input == null) return; // Input is no longer valid
-      final rawValue = input.inputText;
+      //if (input == null) return; // Input is no longer valid
+      final rawValue = input.inputText ?? '';
       final value = parseNumber(rawValue);
       // Pass the rawValue and the num value. This allows validators to process
       // whichever one they would like.
@@ -103,7 +105,7 @@ abstract class BaseMaterialNumberValueAccessor<T>
   /// Formats a value using provided [NumberFormat], falling back to
   /// [MaterialInputDefaultValueAccessor] formatValue if none provided.
   @override
-  String formatValue(T value) {
+  String formatValue(T? value) {
     if (value == null) return '';
     return _numberFormat?.format(value) ?? super.formatValue(value);
   }
@@ -148,7 +150,7 @@ class MaterialInt64ValueAccessor
         'You must supply a NumberFormat if using blurFormat');
   }
 
-  bool _checkValues(NumberFormat numberFormat, bool blurFormat) {
+  bool _checkValues(NumberFormat? numberFormat, bool blurFormat) {
     if (numberFormat != null) {
       print('Warning: numberFormat only works with num and will overflow '
           'if the number is larger than a native int, even when using '
@@ -191,7 +193,8 @@ class MaterialInt64ValueAccessor
 @Directive(
   selector: 'material-input[type=number],material-input[type=percent]',
 )
-class MaterialNumberValueAccessor extends BaseMaterialNumberValueAccessor<num?> {
+class MaterialNumberValueAccessor
+    extends BaseMaterialNumberValueAccessor<num?> {
   final bool _checkInteger;
 
   MaterialNumberValueAccessor(
@@ -201,7 +204,7 @@ class MaterialNumberValueAccessor extends BaseMaterialNumberValueAccessor<num?> 
       @Attribute('keypressUpdate') String keypressUpdateAttr,
       @Attribute('checkInteger') String checkInteger,
       @Attribute('blurFormat') String blurFormat,
-      @Optional() NumberFormat numberFormat)
+      @Optional() NumberFormat? numberFormat)
       : this._checkInteger = attributeToBool(checkInteger, defaultValue: false),
         super(
             input as MaterialInputComponent,

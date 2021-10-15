@@ -53,11 +53,6 @@
       {{demo.name}}
     </a>
   </ng-container>
-
-  <ng-container *ngIf="latencyChartsEnabled && model.benchmarks.isNotEmpty">
-    <label>Latency</label>
-    <a buttonDecorator (trigger)="scroll('#latency')">Latency Charts</a>
-  </ng-container>
 </section>
 
 <section *ngFor="let doc of model.docs" class="doc">
@@ -88,10 +83,4 @@
     <a [href]="getCodeSearchLink(demo.path)" target="_blank">Source Code</a>
   </h2>
   <dynamic-component [componentFactory]="demo.demoFactory"></dynamic-component>
-</section>
-
-<section *ngIf="latencyChartsEnabled && model.benchmarks.isNotEmpty" class="latency-chart">
-  <h2 id="latency">Latency Charts</h2>
-  <latency-chart *ngFor="let url of model.benchmarks">
-  </latency-chart>
 </section>

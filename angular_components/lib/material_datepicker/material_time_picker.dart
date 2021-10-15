@@ -62,7 +62,9 @@ class MaterialTimePickerComponent extends KeyboardHandlerMixin
   /// based on [increment] in minutes.
   static List<DateTime> _generateTimeOptions(int increment,
       {bool utc = false}) {
-    final time = utc ? _utcTime as DateTime Function(int?, [int?]) : _localTime as DateTime Function(int?, [int?]);
+    final time = utc
+        ? _utcTime as DateTime Function(int?, [int?])
+        : _localTime as DateTime Function(int?, [int?]);
     final minutesToTime = (minutes) => time(minutes ~/ 60, minutes % 60);
     return List<DateTime>.generate(
         minutesInDay ~/ increment, (index) => minutesToTime(index * increment));
@@ -231,7 +233,7 @@ class MaterialTimePickerComponent extends KeyboardHandlerMixin
         .addStreamSubscription(selectedTime.selectionChanges.listen((change) {
       /// Triggers _trySetTime only when user selects/changes selection.
       /// Deselect or clear the selection will not trigger _trySetTime.
-      if (change.last.added!.isNotEmpty) {
+      if (change.last.added.isNotEmpty) {
         time = selectedTime.selectedValues.first;
       }
     }));
@@ -303,9 +305,9 @@ class MaterialTimePickerComponent extends KeyboardHandlerMixin
     for (final format in formats) {
       try {
         final parsed = format.parseLoose(trimmed, utc);
-        if (parsed != null) {
-          return _withEpochDate(parsed);
-        }
+        //if (parsed != null) {
+        return _withEpochDate(parsed);
+        //}
       } on FormatException {
         // Ignores error, try different format.
       }

@@ -11,6 +11,8 @@ dependencies:
   build: ^2.1.1
   build_config: ^1.0.0
   mustache: ^1.0.0
+  ngsecurity:
+    git: https://github.com/angulardart-community/ngsecurity.git
 
 dependency_overrides:
   angular_components:

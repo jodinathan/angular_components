@@ -217,7 +217,7 @@ class MenuItem<T> with MenuItemMixin implements HasUIDisplayName, HasIcon {
       : itemSuffixes = itemSuffixes ??
             ObservableList<MenuItemAffix>.from(
                 Optional.fromNullable(itemSuffix)),
-        cssClasses = BuiltList<String>((cssClasses ?? const []) as Iterable<dynamic>),
+        cssClasses = BuiltList<String>((cssClasses ?? const <String>[])),
         ariaLabel = ariaLabel ?? label {
     assert(itemSuffix == null || itemSuffixes == null,
         'Only one of itemSuffix or itemSuffixes should be provided');
@@ -301,7 +301,7 @@ class ActiveMenuItemModel<T> extends ActiveItemModel<T> {
 
   set menu(MenuModel<T> menu) {
     super.items = _createEnabledItemGroupList(
-        menu?.itemGroups, _filterOutUnselectableItems);
+        menu.itemGroups, _filterOutUnselectableItems);
   }
 
   @override

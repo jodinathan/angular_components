@@ -6,7 +6,7 @@ import 'dart:html';
 
 import 'package:angular/angular.dart';
 import 'package:angular_components/dynamic_component/dynamic_component.dart';
-import 'package:angular_components/glyph/glyph.dart';
+//import 'package:angular_components/glyph/glyph.dart';
 import 'package:angular_components/material_checkbox/material_checkbox.dart';
 import 'package:angular_components/material_select/activation_handler.dart';
 import 'package:angular_components/material_select/handles_aria.dart';
@@ -28,7 +28,7 @@ import 'package:angular_components/utils/id_generator/id_generator.dart';
   styleUrls: ['material_select_dropdown_item.scss.css'],
   directives: [
     DynamicComponent,
-    GlyphComponent,
+    //GlyphComponent,
     MaterialCheckboxComponent,
     NgIf
   ],
@@ -57,10 +57,10 @@ class MaterialSelectDropdownItemComponent<T>
 
   MaterialSelectDropdownItemComponent(
       HtmlElement element,
-      @Attribute('role') String role,
-      @Optional() DropdownHandle dropdown,
-      @Optional() ActivationHandler activationHandler,
-      @Optional() IdGenerator idGenerator,
+      @Attribute('role') String? role,
+      @Optional() DropdownHandle? dropdown,
+      @Optional() ActivationHandler? activationHandler,
+      @Optional() IdGenerator? idGenerator,
       ChangeDetectorRef cdRef)
       : _generatedId =
             (idGenerator ?? SequentialIdGenerator.fromUUID()).nextId(),
@@ -79,7 +79,7 @@ class MaterialSelectDropdownItemComponent<T>
 
   @override
   void onLoadCustomComponent(ComponentRef ref) {
-    _customAriaHandling = ref?.instance is HandlesAria;
+    _customAriaHandling = ref.instance is HandlesAria;
     if (_customAriaHandling) role = null;
   }
 }

@@ -336,7 +336,7 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
     // TODO(google): Migrate to use only datepickerClock
     _clock ??= legacyClock;
     _today = Date.today(_clock);
-    editorHost?.dateRangeEditorCreated(this);
+    editorHost.dateRangeEditorCreated(this);
     nextPrevModel = DateRangeEditorNextPrevModel(onNext: () {
       calendarPicker.scrollToDate(_visibleMonth!.add(months: 1));
     }, onPrev: () {
@@ -461,7 +461,7 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
 
   void onRangeClicked(UIEvent? event, DatepickerDateRange range) {
     if (_presetSelection.isNotEmpty &&
-        _presetSelection.selectedValue.range != range) {
+        _presetSelection.selectedValue?.range != range) {
       _presetSelection.clear();
     }
     model.selectRange(range.clamp(min: minDate, max: maxDate));

@@ -101,8 +101,7 @@ class StringSelectionOptions<T> extends SelectionOptions<T>
         _shouldFilterEmpty = shouldFilterEmpty,
         _sanitizeString = sanitizeString,
         super(optionGroups) {
-    _suggestionFilter =
-        suggestionFilter != null ? suggestionFilter : filterOption;
+    _suggestionFilter = suggestionFilter ?? filterOption;
   }
 
   /// Accepts a string query and limit and applies the filter to the options.
@@ -128,7 +127,7 @@ class StringSelectionOptions<T> extends SelectionOptions<T>
     List<OptionGroup<T>> filtered = [];
     int count = 0;
     String? filterQuery =
-        _currentQuery == null ? '' : _sanitizeString(_currentQuery);
+        _currentQuery == null ? '' : _sanitizeString(_currentQuery!);
     for (var group in _optionGroups!) {
       if (count >= currentLimit!) break;
       var filteredGroup =
@@ -165,9 +164,15 @@ class StringSelectionOptions<T> extends SelectionOptions<T>
 
   @protected
   bool filterOption(T option, String filterQuery) {
+    //TODO: To revisit on this logic later
     // StringFormatSuggestion is used to eliminate spaces to make the
     // pattern matching a simple contains as opposed to a regex.
-    return _sanitizeString(_toFilterableString(option))!.contains(filterQuery);
+    var filterableString = _toFilterableString(option);
+    if (filterableString != null) {
+      return _sanitizeString(filterableString)?.contains(filterQuery) ?? false;
+    } else {
+      return false;
+    }
   }
 
   @override

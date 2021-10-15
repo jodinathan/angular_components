@@ -37,7 +37,7 @@ class MaterialTreeFilterComponent {
 
   /// If created within a [MaterialTreeRoot], automatically setup.
   MaterialTreeFilterComponent(@Optional() this._treeRoot) {
-    if (_treeRoot?.supportsFiltering == true) {
+    if (_treeRoot.supportsFiltering == true) {
       filterable = _treeRoot.options as Filterable?;
     }
   }

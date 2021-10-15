@@ -25,15 +25,16 @@ class DropdownSelectValueAccessor<T> extends BaseDropdownSelectValueAccessor<T>
     implements ControlValueAccessor, OnDestroy {
   StreamSubscription? _selectionChangesSub;
   DropdownSelectValueAccessor(MaterialDropdownSelectComponent select)
-      : super(select as MaterialDropdownSelectComponent<T*>, SelectionModel.single());
+      : super(select as MaterialDropdownSelectComponent<T>,
+            SelectionModel.single());
 
   @override
   void registerOnChange(callback) {
     _selectionChangesSub = selectionModel.selectionChanges.listen((_) {
-      T? value = (selectionModel.selectedValues == null ||
+      T? value = (selectionModel.selectedValues.isEmpty ||
               selectionModel.selectedValues.isEmpty)
           ? null
-          : selectionModel.selectedValues?.first;
+          : selectionModel.selectedValues.first;
       callback(value);
     });
   }
@@ -77,7 +78,7 @@ class MultiDropdownSelectValueAccessor<T>
   @override
   void registerOnChange(callback) {
     selectionChangesSub = selectionModel.selectionChanges.listen((_) {
-      callback(selectionModel.selectedValues?.toList());
+      callback(selectionModel.selectedValues.toList());
     });
   }
 
@@ -115,8 +116,8 @@ abstract class BaseDropdownSelectValueAccessor<T>
   void initializeSelectionModel() {
     if (initialized) return;
     initialized = true;
-    assert(_select.selection == null,
-        'Cannot set [selection] when using a Dropdown control value accessor.');
+    //assert(_select.selection == null,
+    //    'Cannot set [selection] when using a Dropdown control value accessor.');
     _select.selection = selectionModel;
   }
 

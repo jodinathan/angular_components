@@ -77,7 +77,7 @@ class CheckNonNegativeValidator implements Validator {
 class LowerBoundValidator implements Validator {
   final NumberFormat _numberFormat;
 
-  LowerBoundValidator(@Optional() NumberFormat format)
+  LowerBoundValidator(@Optional() NumberFormat? format)
       : _numberFormat = format ?? NumberFormat.decimalPattern();
 
   /// Smallest allowed value.
@@ -114,7 +114,7 @@ class LowerBoundValidator implements Validator {
 class UpperBoundValidator implements Validator {
   final NumberFormat _numberFormat;
 
-  UpperBoundValidator(@Optional() NumberFormat format)
+  UpperBoundValidator(@Optional() NumberFormat? format)
       : _numberFormat = format ?? NumberFormat.decimalPattern();
 
   /// Largest allowed value.

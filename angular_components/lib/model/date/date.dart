@@ -153,7 +153,10 @@ class DateRange {
 
     // Note that we don't use >= here, as [DateRange]s are inclusive;
     // `start == end` is a valid condition for a date range.
-    if (start != null && end != null && start > end) return null;
+    if (start != null && end != null && start > end) {
+      // TODO: Need to refactor this logic
+      return DateRange(null, null);
+    }
 
     return DateRange(start, end);
   }

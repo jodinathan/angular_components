@@ -26,7 +26,7 @@ typedef AsyncApplyState<E> = Future<Object> Function(
 /// This exists to separate the ruler API from tight coupling on overlays; see
 /// [Ruler.measure] and [Ruler.track] for the default implementations.
 typedef AsyncMeasureSize<E> = Stream<Rectangle> Function(E element,
-    {bool? track});
+    {bool track});
 
 /// A handle to manipulate an existing overlay pane.
 class OverlayRef implements PortalHost {

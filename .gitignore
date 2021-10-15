@@ -23,10 +23,11 @@ doc/api/
 *.iws
 
 # Vim
+*.yml~
 *.yaml~
 *.dart~
 
-## VsCode
+# VsCode
 .vscode/
 !.vscode/settings.json
 .metals

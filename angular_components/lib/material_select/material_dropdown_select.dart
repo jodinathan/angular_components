@@ -86,7 +86,7 @@ import 'package:angular_components/utils/id_generator/id_generator.dart';
   visibility: Visibility.all, // injected by directives
   changeDetection: ChangeDetectionStrategy.OnPush,
 )
-class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T?>
+class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
     with
         MaterialDropdownBase,
         SelectionInputAdapter<T>,
@@ -94,7 +94,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T?>
         TrackLayoutChangesMixin,
         KeyboardHandlerMixin,
         ActivateItemOnKeyPressMixin<T>,
-        ShiftClickSelectionMixin<T?>
+        ShiftClickSelectionMixin<T>
     implements PopupSizeProvider, AfterChanges, OnDestroy {
   /// Function for use by NgFor for optionGroup.
   ///
@@ -129,14 +129,14 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T?>
   String? buttonAriaDescribedBy;
 
   /// Listener for options changes.
-  StreamSubscription<List<OptionGroup<T?>>?>? _optionsListener;
+  StreamSubscription<List<OptionGroup<T>>>? _optionsListener;
 
   /// Listener for selection changes.
-  StreamSubscription<List<SelectionChangeRecord<T?>>>? _selectionListener;
+  StreamSubscription<List<SelectionChangeRecord<T>>>? _selectionListener;
 
   /// If a parent provides a [PopupSizeProvider], the provider will be used
   /// instead of the implementation of this class.
-  final PopupSizeProvider _popupSizeDelegate;
+  final PopupSizeProvider? _popupSizeDelegate;
 
   /// Text label for select item that deselects the current selection.
   @Input()
@@ -193,7 +193,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T?>
   }
 
   MaterialDropdownSelectComponent(
-      @Optional() IdGenerator idGenerator,
+      @Optional() IdGenerator? idGenerator,
       @Optional() @SkipSelf() this._popupSizeDelegate,
       @Optional() @Inject(rtlToken) bool rtl,
       @Attribute('popupClass') String popupClass,
@@ -238,12 +238,12 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T?>
   @Input()
   bool listAutoFocus = true;
 
-  @Input()
-  @override
-  @Deprecated('Use factoryRenderer it allows for more tree-shakable code.')
-  set componentRenderer(ComponentRenderer? value) {
-    super.componentRenderer = value;
-  }
+  //@Input()
+  //@override
+  //@Deprecated('Use factoryRenderer it allows for more tree-shakable code.')
+  //set componentRenderer(ComponentRenderer? value) {
+  //  super.componentRenderer = value;
+  //}
 
   /// Function that returns a component factory to render the Item.
   ///
@@ -296,7 +296,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T?>
   }
 
   @override
-  set options(SelectionOptions<T?>? newOptions) {
+  set options(SelectionOptions<T>? newOptions) {
     _changeDetector.markForCheck();
     super.options = newOptions;
 
@@ -304,7 +304,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T?>
     _setInitialActiveItem();
 
     _optionsListener?.cancel();
-    _optionsListener = options?.stream?.listen((_) {
+    _optionsListener = options?.stream.listen((_) {
       _changeDetector.markForCheck();
       _updateActiveModel();
       _setInitialActiveItem();
@@ -332,17 +332,17 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T?>
   }
 
   @override
-  set selection(SelectionModel<T?> newSelection) {
+  set selection(SelectionModel<T>? newSelection) {
     _changeDetector.markForCheck();
     super.selection = newSelection;
     _setInitialActiveItem();
 
     _selectionListener?.cancel();
-    _selectionListener = selection?.selectionChanges?.listen((changes) {
+    _selectionListener = selection?.selectionChanges.listen((changes) {
       _changeDetector.markForCheck();
       // Update active item if new items are selected.
       var added =
-          changes.last.added!.isNotEmpty ? changes.last.added!.first : null;
+          changes.last.added.isNotEmpty ? changes.last.added.first : null;
       if (added != null && !activeModel.isActive(added)) {
         activeModel.activate(added);
       }
@@ -359,14 +359,14 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T?>
   }
 
   void _setInitialActiveItem({bool allowDeactivate = true}) {
-    if (selection == null || selection.selectedValues.isEmpty) {
+    if (selection == null || selection!.selectedValues.isEmpty) {
       if (allowDeactivate) activeModel.activate(null);
     } else if (activeModel.activeItem == null ||
         (showDeselectItem && activeModel.activeItem == deselectLabel) ||
-        !selection.isSelected(activeModel.activeItem)) {
+        !selection!.isSelected(activeModel.activeItem)) {
       // If the current active item is not selected, activate the first selected
       // item.
-      activeModel.activate(selection.selectedValues.first);
+      activeModel.activate(selection!.selectedValues.first);
     }
     if (activateFirstOption && activeModel.activeItem == null) {
       activeModel.activateFirst();
@@ -383,7 +383,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T?>
       if (item == deselectLabel) {
         deselectCurrentSelection();
       } else if (item != null && !isOptionDisabled(item)) {
-        selection.select(item);
+        selection?.select(item);
       }
     }
     if (!visible) {
@@ -430,12 +430,12 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T?>
       if (item != null && selection != null) {
         if (item == deselectLabel) {
           deselectCurrentSelection();
-        } else if (!selection.isSelected(item)) {
+        } else if (!selection!.isSelected(item)) {
           if (!isOptionDisabled(item)) {
-            selection.select(item);
+            selection!.select(item);
           }
         } else if (deselectOnActivate) {
-          selection.deselect(item);
+          selection!.deselect(item);
         }
       }
       if (isSingleSelect) {
@@ -453,7 +453,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T?>
   @override
   void handleSpaceKey(KeyboardEvent event) {
     // Prevent any scrolling.
-    event?.preventDefault();
+    event.preventDefault();
     _handleKeyboardTrigger();
   }
 
@@ -468,7 +468,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T?>
     if (itemRenderer != null && options != null && !disabled!) {
       // Don't activate or select if the widget is disabled.
       // Don't select if the selection model is multi-select.
-      activateOnKeyPress(activeModel, event.charCode, options, itemRenderer,
+      activateOnKeyPress(activeModel, event.charCode, options!, itemRenderer,
           !visible && isSingleSelect ? selection : null);
     }
   }
@@ -496,9 +496,9 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T?>
       _popupSizeDelegate?.getMinWidth(positionX, viewportWidth);
 
   @override
-  num? getMaxHeight(num positionY, num viewportHeight) {
+  num getMaxHeight(num positionY, num viewportHeight) {
     if (_popupSizeDelegate != null) {
-      return _popupSizeDelegate.getMaxHeight(positionY, viewportHeight);
+      return _popupSizeDelegate?.getMaxHeight(positionY, viewportHeight) ?? 400;
     } else {
       // The default max height for dropdown select's popup.
       return 400;
@@ -506,9 +506,9 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T?>
   }
 
   @override
-  num? getMaxWidth(num positionX, num viewportWidth) {
+  num getMaxWidth(num positionX, num viewportWidth) {
     if (_popupSizeDelegate != null) {
-      return _popupSizeDelegate.getMaxWidth(positionX, viewportWidth);
+      return _popupSizeDelegate?.getMaxWidth(positionX, viewportWidth) ?? 448;
     } else {
       // The default max width for dropdown select's popup. This was previously
       // max width for material list.
@@ -535,11 +535,13 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T?>
   bool get showDeselectItem =>
       !isMultiSelect && deselectLabel?.isNotEmpty == true;
 
-  bool get isDeselectItemSelected => selection.isEmpty;
+  bool get isDeselectItemSelected => selection?.isEmpty ?? true;
 
   void deselectCurrentSelection() {
-    if (selection.isNotEmpty) {
-      selection.deselect(selection.selectedValues.single);
+    if (selection != null) {
+      if (selection!.isNotEmpty) {
+        selection!.deselect(selection!.selectedValues.single);
+      }
     }
   }
 }
@@ -557,7 +559,7 @@ class ActivateItemOnKeyPressMixin<T> {
   void activateOnKeyPress(
       ActiveItemModel activeModel,
       int charCode,
-      SelectionOptions options,
+      SelectionOptions? options,
       ItemRenderer<T>? itemRenderer,
       SelectionModel? selection) {
     // Guard against being called when not all data is initialized.
@@ -591,7 +593,7 @@ class ActivateItemOnKeyPressMixin<T> {
     // If there's previously entered keys, try to match multiple keys.
     if (_enteredKeys.isNotEmpty) {
       var keys = _enteredKeys + key;
-      for (var option in optionsList!) {
+      for (var option in optionsList) {
         if (maybeSelectOption(option, keys)) return;
       }
     }
@@ -602,7 +604,7 @@ class ActivateItemOnKeyPressMixin<T> {
       if (maybeSelectOption(activeModel.peekNext, key)) return;
     }
 
-    for (var option in optionsList!) {
+    for (var option in optionsList) {
       if (maybeSelectOption(option, key)) return;
     }
 

@@ -95,7 +95,7 @@ class DateInputDirective implements OnDestroy {
   /// The latest recognized date, inclusive.
   /// Defaults to Dec 31, 9999 -- i.e., limited to 4-digit years.
   @Input()
-  set maxDate(Date date) {
+  set maxDate(Date? date) {
     if (date == null || date == _maxDate) return;
     _maxDate = date;
 
@@ -110,7 +110,7 @@ class DateInputDirective implements OnDestroy {
   /// The earliest recognized date, inclusive.
   /// Defaults to Jan 1, 1000 -- i.e., limited to 4-digit years.
   @Input()
-  set minDate(Date date) {
+  set minDate(Date? date) {
     if (date == null || date == _minDate) return;
     _minDate = date;
 
@@ -172,15 +172,15 @@ class DateInputDirective implements OnDestroy {
   Date? _cachedMaxDate;
   Date? _lastParse;
 
-  DateInputDirective(@Optional() @Inject(datepickerClock) Clock clock,
+  DateInputDirective(@Optional() @Inject(datepickerClock) Clock? clock,
       Clock legacyClock, this._input)
       : _clock = clock ?? legacyClock {
     // TODO(google): Migrate to use only datepickerClock
     // TODO(google): Participate in Forms API?
     _disposer.addStreamSubscription(_input.onChange
         .listen((String? input) => _parseDate(input!, setAsCurrent: true)));
-
     _input.checkValid = (String? input) => _parseDateCached(input);
+
     _input.requiredErrorMsg = invalidDateMsg;
   }
 

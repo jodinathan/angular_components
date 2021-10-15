@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:built_collection/built_collection.dart';
-import 'package:meta/meta.dart';
 import 'package:observable/observable.dart';
 import 'package:quiver/core.dart' show Optional;
 import 'package:quiver/strings.dart';
@@ -43,7 +42,7 @@ class MenuItemGroupWithSelection<SelectionItemType>
       bool? shouldCloseMenuOnSelection})
       : shouldCloseMenuOnSelection = shouldCloseMenuOnSelection ??
             selectionModel is! MultiSelectionModel,
-        itemsRole = (selectionModel?.isSingleSelect ?? true)
+        itemsRole = (selectionModel.isSingleSelect ?? true)
             ? 'menuitemradio'
             : 'menuitemcheckbox',
         super(items, label);
@@ -144,7 +143,7 @@ class SelectableMenuItem<ItemType> extends PropertyChangeNotifier
         itemSuffixes = itemSuffixes ??
             ObservableList<MenuItemAffix>.from(
                 Optional.fromNullable(itemSuffix)),
-        cssClasses = BuiltList<String>((cssClasses ?? const []) as Iterable<dynamic>) {
+        cssClasses = BuiltList<String>((cssClasses ?? const <String>[])) {
     assert(itemSuffix == null || itemSuffixes == null,
         'Only one of itemSuffix or itemSuffixes should be provided');
     assert(action == null || actionWithContext == null,

@@ -57,7 +57,7 @@ class PopupSourceDirective
   @override
   void ngAfterViewInit() {
     // We have to wait until the view is inited to have elementRef
-    _element = _referenceDirective?.elementRef?.nativeElement ?? _element;
+    _element = _referenceDirective?.elementRef as HtmlElement? ?? _element;
     _updateSource();
   }
 
@@ -65,7 +65,7 @@ class PopupSourceDirective
   HtmlElement? get sourceElement => _element;
 
   @override
-  Alignment? get alignOriginX => _popupSource!.alignOriginX;
+  Alignment? get alignOriginX => _popupSource?.alignOriginX;
 
   /// Alignment of the popup in the horizontal direction.
   ///
@@ -109,7 +109,7 @@ class PopupSourceDirective
   }
 
   @override
-  Stream<Rectangle<num>>? onDimensionsChanged({bool? track = false}) {
+  Stream<Rectangle<num>>? onDimensionsChanged({bool track = false}) {
     return _popupSource?.onDimensionsChanged(track: track)?.distinct();
   }
 
@@ -126,11 +126,12 @@ class PopupSourceDirective
   }
 
   void _updateSource() {
-    _popupSource = _domPopupSourceFactory.createPopupSource(_element,
-        alignOriginX: _alignOriginX,
-        alignOriginY: _alignOriginY,
-        initAriaAttributes: _initAriaAttributes);
-
+    if (_element != null) {
+      _popupSource = _domPopupSourceFactory.createPopupSource(_element!,
+          alignOriginX: _alignOriginX,
+          alignOriginY: _alignOriginY,
+          initAriaAttributes: _initAriaAttributes);
+    }
     if (_popupId != null) {
       _popupSource!.popupId = _popupId;
     }

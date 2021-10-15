@@ -18,8 +18,8 @@ abstract class ShiftClickSelectionMixin<T>
     implements ActivationHandler<dynamic /* T | String */ > {
   T? _pivot;
 
-  SelectionModel<T?> get selection;
-  SelectionOptions<T?> get options;
+  SelectionModel<T>? get selection;
+  SelectionOptions<T>? get options;
 
   /// Toggles the clicked value within [model].
   ///
@@ -28,21 +28,28 @@ abstract class ShiftClickSelectionMixin<T>
   /// value you shift-click was previously selected all values in the range will
   /// become unselected.
   void _handleClick(MouseEvent e, T value) {
+    // TODO: This need to be reviewed later
+    if (selection == null) {
+      return;
+    }
     var toggleSelection =
-        selection.isSelected(value) ? selection.deselect : selection.select;
+        selection!.isSelected(value) ? selection!.deselect : selection!.select;
+
     if (_pivot == null || !e.shiftKey) {
       toggleSelection(value);
     } else {
-      final optionValues = options.optionsList!;
-      final clickedIndex = optionValues.indexOf(value);
-      final pivotIndex = optionValues.indexOf(_pivot);
-      if (pivotIndex == -1) {
-        throw StateError("pivot item is no longer in the model: $_pivot");
+      if (options != null) {
+        final optionValues = options!.optionsList;
+        final clickedIndex = optionValues.indexOf(value);
+        final pivotIndex = optionValues.indexOf(_pivot!);
+        if (pivotIndex == -1) {
+          throw StateError("pivot item is no longer in the model: $_pivot");
+        }
+        optionValues
+            .skip(min(pivotIndex, clickedIndex))
+            .take((pivotIndex - clickedIndex).abs() + 1)
+            .forEach(toggleSelection);
       }
-      optionValues
-          .skip(min(pivotIndex, clickedIndex))
-          .take((pivotIndex - clickedIndex).abs() + 1)
-          .forEach(toggleSelection);
     }
     _pivot = value;
   }

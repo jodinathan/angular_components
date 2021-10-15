@@ -16,7 +16,6 @@ class ResolvedConfig {
   Iterable<DocInfo> docs;
   Iterable<DemoInfo> demos;
   DemoInfo mainDemo;
-  Iterable<String> benchmarks;
   Iterable<String> owners;
   Iterable<String> uxOwners;
   Map<String, String> relatedUrls;
@@ -56,7 +55,6 @@ class ResolvedConfig {
     if (jsonMap['mainDemo'] != null) {
       mainDemo = DemoInfo.fromJson(jsonMap['mainDemo']);
     }
-    benchmarks = (jsonMap['benchmarks'] as Iterable)?.cast<String>();
     owners = (jsonMap['owners'] as Iterable)?.cast<String>();
     uxOwners = (jsonMap['uxOwners'] as Iterable)?.cast<String>();
     relatedUrls = (jsonMap['relatedUrls'] as Map)?.cast<String, String>();
@@ -70,7 +68,6 @@ class ResolvedConfig {
         'docs': docs?.toList(),
         'demos': demos?.toList(),
         'mainDemo': mainDemo,
-        'benchmarks': benchmarks?.toList(),
         'owners': owners?.toList(),
         'uxOwners': uxOwners?.toList(),
         'relatedUrls': relatedUrls,

@@ -246,7 +246,7 @@ class MaterialMonthPickerComponent
   CalendarListener _inputListener = CalendarListener.noop();
   StreamSubscription? _calendarStream;
 
-  MaterialMonthPickerComponent(@Optional() @Inject(datepickerClock) Clock clock,
+  MaterialMonthPickerComponent(@Optional() @Inject(datepickerClock) Clock? clock,
       @Attribute('mode') String mode) {
     clock ??= Clock();
 
@@ -257,7 +257,7 @@ class MaterialMonthPickerComponent
 
     _today = Date.today(clock);
 
-    if (mode != null && mode.isNotEmpty) {
+    if (mode.isNotEmpty) {
       _mode = fuzzyParseEnum(CalendarSelectionMode.values, mode);
     }
   }
@@ -348,7 +348,7 @@ class MaterialMonthPickerComponent
   void _addEventListeners() {
     // Process the events outside of Angular for lower overhead.
     _container
-      ..addEventListener('click', _clickListener = _onClick)
+      ?..addEventListener('click', _clickListener = _onClick)
       ..addEventListener('mousedown', _mouseDownListener = _onMouseDown)
       ..addEventListener('mousemove', _mouseMoveListener = _onMouseMove)
       ..addEventListener('mouseleave', _mouseLeaveListener = _onMouseLeave);
@@ -356,7 +356,7 @@ class MaterialMonthPickerComponent
 
   void _removeEventListeners() {
     _container
-      ..removeEventListener('click', _clickListener)
+      ?..removeEventListener('click', _clickListener)
       ..removeEventListener('mousedown', _mouseDownListener)
       ..removeEventListener('mousemove', _mouseMoveListener)
       ..removeEventListener('mouseleave', _mouseLeaveListener);

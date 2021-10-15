@@ -48,7 +48,7 @@ class ScorecardBarDirective implements OnInit, OnDestroy, AfterViewChecked {
   ScorecardBarDirective(
     this._domService,
     this._element,
-    @Optional() @Inject(rtlToken) bool isRtl,
+    @Optional() @Inject(rtlToken) bool? isRtl,
   ) {
     _isRtl = isRtl ?? false;
   }
@@ -112,8 +112,9 @@ class ScorecardBarDirective implements OnInit, OnDestroy, AfterViewChecked {
   /// The current size of the client.
   ///
   /// Depends upon orientation of scrollbar.
-  int get currentClientSize =>
-      _isVertical ? _element.parent!.clientHeight : _element.parent!.clientWidth;
+  int get currentClientSize => _isVertical
+      ? _element.parent!.clientHeight
+      : _element.parent!.clientWidth;
 
   /// The current size of the scrollbar.
   ///
@@ -141,7 +142,11 @@ class ScorecardBarDirective implements OnInit, OnDestroy, AfterViewChecked {
       _readElement();
       var newValue = _scrollingMove;
       assert(_buttonSize > 0);
-      if (atEnd) newValue -= _buttonSize;
+      if (atEnd) {
+        if (newValue != null) {
+          newValue -= _buttonSize;
+        }
+      }
       if (_transform.abs() - newValue! < 0) {
         newValue = _transform.abs();
       }
@@ -163,7 +168,11 @@ class ScorecardBarDirective implements OnInit, OnDestroy, AfterViewChecked {
       _readElement();
       var newValue = _scrollingMove;
       assert(_buttonSize > 0);
-      if (atStart) newValue -= _buttonSize;
+      if (atStart) {
+        if (newValue != null) {
+          newValue -= _buttonSize;
+        }
+      }
       if (_scrollSize! + _transform < newValue! + _clientSize!) {
         newValue = _scrollSize! + _transform - _clientSize!;
       }

@@ -37,11 +37,16 @@ abstract class SelectionInputAdapter<T> implements SelectionContainer<T> {
   void emitSelectionChange() {
     if (_selectionChangeController == null) return;
     if (selection is SingleSelectionModel<T>) {
-      _selectionChangeController!.add(selection.selectedValues.isNotEmpty
-          ? selection.selectedValues.first
-          : null);
+      var s = selection?.selectedValues;
+
+      if (s != null) {
+        _selectionChangeController?.add(s.isNotEmpty ? s.first : null);
+      }
     } else {
-      _selectionChangeController!.add(selection.selectedValues);
+      var s = selection?.selectedValues;
+      if (s != null) {
+        _selectionChangeController?.add(s);
+      }
     }
   }
 
@@ -56,13 +61,13 @@ abstract class SelectionInputAdapter<T> implements SelectionContainer<T> {
     }
     _initSelectionModel();
     if (value == null) {
-      selection.clear();
+      selection?.clear();
     } else {
       assert(
           selection is SingleSelectionModel<T>,
           'Passing selected value through `selection` input is only supported '
           'for single select.');
-      selection.select(value);
+      selection?.select(value);
     }
   }
 

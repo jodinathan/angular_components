@@ -1,6 +1,7 @@
 // Copyright (c) 2016, the Dart project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+@use "sass:math";
 
 @import 'package:angular_components/css/material/material';
 @import 'package:angular_components/material_input/mixins';
@@ -261,7 +262,7 @@ input[type=number] {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-top: $mat-grid / 2;
+  margin-top: math.div($mat-grid , 2);
 }
 
 .counter,

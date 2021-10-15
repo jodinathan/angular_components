@@ -42,7 +42,7 @@ class ActiveItemModel<T> {
   /// no items can be active or else their selection will be toggled. Setting
   /// this value to false will prevent items from auto-activating when the
   /// search query changes.
-  ActiveItemModel(IdGenerator idGenerator,
+  ActiveItemModel(IdGenerator? idGenerator,
       {bool loop = false,
       this.activateFirstItemByDefault = true,
       List<T> items = const []})

@@ -85,7 +85,7 @@ class MaterialSliderComponent implements AfterChanges, HasDisabled {
   /// of [step] and less than or equal to [value].
   num get leftValue => isTwoSided ? _leftValue : min;
   @Input()
-  set leftValue(int val) {
+  set leftValue(num val) {
     if (isTwoSided) {
       _leftValue = val;
     }
@@ -200,7 +200,8 @@ class MaterialSliderComponent implements AfterChanges, HasDisabled {
           (newValue < leftValue && !isRightKnobSelected)) {
         if (newValue != leftValue) {
           // Prevent left knob value from being greater than right knob value
-          leftValue = _getValidLeftValue(value as double, newValue as double) as int;
+          leftValue =
+              _getValidLeftValue(value as double, newValue as double) as int;
           _leftChangeController.add(leftValue);
         }
       } else {
@@ -289,7 +290,8 @@ class MaterialSliderComponent implements AfterChanges, HasDisabled {
     }
     if (isLeftKnobPressed) {
       if (newValue != leftValue) {
-        leftValue = _getValidLeftValue(value as double, newValue as double) as int;
+        leftValue =
+            _getValidLeftValue(value as double, newValue as double) as int;
         _leftChangeController.add(leftValue);
       }
     } else if (newValue != value) {
