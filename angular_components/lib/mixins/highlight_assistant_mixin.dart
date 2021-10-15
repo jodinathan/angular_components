@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:angular/angular.dart';
-import 'package:angular_components/highlighted_text/highlighted_value.dart';
+//import 'package:angular_components/highlighted_text/highlighted_value.dart';
 //import 'package:angular_components/highlighted_text/highlighted_value.template.dart'
 //    as highlight;
 import 'package:angular_components/model/selection/select.dart';
@@ -16,9 +16,9 @@ import 'package:angular_components/model/ui/highlighted_text_model.dart';
 /// Assistant to support highlighting in a SelectionContainer.
 abstract class HighlightAssistantMixin<T>
     implements SelectionContainer<T>, HighlightProvider {
-  @Deprecated('Use highlightFactoryRenderer instead as it allows tree-shaking.')
-  final ComponentRenderer highlightComponentRenderer =
-      (_) => HighlightedValueComponent;
+  //@Deprecated('Use highlightFactoryRenderer instead as it allows tree-shaking.')
+  //final ComponentRenderer highlightComponentRenderer =
+  //    (_) => HighlightedValueComponent;
   final FactoryRenderer highlightFactoryRenderer =
       (_) => null; //highlight.HighlightedValueComponentNgFactory;
 
@@ -48,14 +48,17 @@ abstract class HighlightAssistantMixin<T>
   }
 
   /// The query to highlight.
-  String get highlightQuery =>
-      options is Filterable ? (options as Filterable).currentQuery as String? ?? '' : '';
+  String get highlightQuery => options is Filterable
+      ? (options as Filterable).currentQuery as String? ?? ''
+      : '';
 
   ItemRenderer<T> get _highlightRenderer {
-    if ((componentRenderer == null ||
-            componentRenderer == highlightComponentRenderer) &&
-        (factoryRenderer == null ||
-            factoryRenderer == highlightFactoryRenderer)) {
+    //  if ((componentRenderer == null ||
+    //          componentRenderer == highlightComponentRenderer) &&
+    //      (factoryRenderer == null ||
+    //          factoryRenderer == highlightFactoryRenderer)) {
+    if (factoryRenderer == null ||
+        factoryRenderer == highlightFactoryRenderer) {
       return itemRenderer ?? defaultItemRenderer;
     }
     return defaultItemRenderer;
@@ -66,7 +69,7 @@ abstract class HighlightAssistantMixin<T>
     _highlightAssistant ??= HighlightAssistant(
         optionHighlighter: optionHighlighter,
         matchFromStartOfWord: _highlightMatchFromStartOfWord);
-    return _highlightAssistant!.highlightOption(
-        highlightQuery, item, _highlightRenderer);
+    return _highlightAssistant!
+        .highlightOption(highlightQuery, item, _highlightRenderer);
   }
 }

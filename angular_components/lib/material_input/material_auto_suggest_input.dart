@@ -324,11 +324,11 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
 
   // Override renderer here to just add the @Input annotation and keep the
   // angular dependency out of models.
-  @override
-  @Input()
-  @Deprecated('Use factoryRenderer instead as it is tree shakeable.')
-  set componentRenderer(ComponentRenderer? value) =>
-      super.componentRenderer = value;
+  //@override
+  //@Input()
+  //@Deprecated('Use factoryRenderer instead as it is tree shakeable.')
+  //set componentRenderer(ComponentRenderer? value) =>
+  //    super.componentRenderer = value;
 
   /// [FactoryRenderer] used to display the item.
   @override

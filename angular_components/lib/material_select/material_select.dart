@@ -86,12 +86,12 @@ class MaterialSelectComponent<T> extends MaterialSelectBase<T>
   @Input()
   String? ariaDescribedBy;
 
-  @Deprecated('Use factoryRenderer instead it is more tree-shakable')
-  @Input()
-  @override
-  set componentRenderer(ComponentRenderer? value) {
-    super.componentRenderer = value;
-  }
+  //@Deprecated('Use factoryRenderer instead it is more tree-shakable')
+  //@Input()
+  //@override
+  //set componentRenderer(ComponentRenderer? value) {
+  //  super.componentRenderer = value;
+  //}
 
   /// Used to create a [ComponentFactory] that must override [RendersValue]
   /// from a given option allowing for a more expressive option.
@@ -104,13 +104,13 @@ class MaterialSelectComponent<T> extends MaterialSelectBase<T>
   /// The [SelectionModel] for this container.
   @Input()
   @override
-  set selection(SelectionModel<T> value) {
+  set selection(SelectionModel<T>? value) {
     super.selection = value;
     _refreshItems();
   }
 
   @override
-  SelectionModel<T> get selection => super.selection;
+  SelectionModel<T>? get selection => super.selection;
 
   /// If selectionOptions implements Selectable, it is called to decided
   /// whether an item is disabled.
@@ -158,22 +158,25 @@ class MaterialSelectComponent<T> extends MaterialSelectBase<T>
 
   @ContentChildren(SelectionItem)
   set selectItems(List<SelectionItem<T>> value) {
-    if (value != null) {
-      // ContentChildren call is inside change detection. We can't alter
-      // state inside change detector therefore schedule a microtask.
-      scheduleMicrotask(() {
-        _selectItems = value;
-        _refreshItems();
-      });
-    }
+    //if (value != null) {
+    // ContentChildren call is inside change detection. We can't alter
+    // state inside change detector therefore schedule a microtask.
+    scheduleMicrotask(() {
+      _selectItems = value;
+      _refreshItems();
+    });
+    //}
   }
 
   @override
   void ngOnInit() {
     if (!_listAutoFocus || options == null) return;
-    _autoFocusIndex = selection.isNotEmpty
-        ? options!.optionsList!.indexOf(selection.selectedValues.first)
-        : 0;
+
+    if (selection != null) {
+      _autoFocusIndex = selection!.isNotEmpty
+          ? options!.optionsList.indexOf(selection!.selectedValues.first)
+          : 0;
+    }
   }
 
   void _refreshItems() {

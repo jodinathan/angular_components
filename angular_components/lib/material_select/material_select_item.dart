@@ -9,7 +9,7 @@ import 'package:angular/angular.dart';
 import 'package:angular/src/meta.dart';
 import 'package:angular_components/button_decorator/button_decorator.dart';
 import 'package:angular_components/dynamic_component/dynamic_component.dart';
-import 'package:angular_components/glyph/glyph.dart';
+//import 'package:angular_components/glyph/glyph.dart';
 import 'package:angular_components/interfaces/has_disabled.dart';
 import 'package:angular_components/material_checkbox/material_checkbox.dart';
 import 'package:angular_components/material_select/activation_handler.dart';
@@ -33,7 +33,7 @@ import 'package:angular_components/utils/disposer/disposer.dart';
   ],
   styleUrls: ['material_select_item.scss.css'],
   directives: [
-    GlyphComponent,
+    //GlyphComponent,
     MaterialCheckboxComponent,
     NgIf,
     DynamicComponent
@@ -44,17 +44,17 @@ import 'package:angular_components/utils/disposer/disposer.dart';
 class MaterialSelectItemComponent<T> extends ButtonDirective
     implements
         OnDestroy,
-        SelectionItem<T?>,
+        SelectionItem<T>,
         HasRenderer<T>,
-        HasComponentRenderer,
-        HasFactoryRenderer<RendersValue, T?> {
+        //HasComponentRenderer,
+        HasFactoryRenderer<RendersValue, T> {
   @HostBinding('class')
   static const hostClass = 'item';
 
   final _disposer = Disposer.oneShot();
-  final ActivationHandler _activationHandler;
+  final ActivationHandler? _activationHandler;
   final ChangeDetectorRef _cdRef;
-  final DropdownHandle _dropdown;
+  final DropdownHandle? _dropdown;
 
   final HtmlElement element;
 
@@ -65,7 +65,7 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
       @Optional() this._dropdown,
       @Optional() this._activationHandler,
       this._cdRef,
-      @Attribute('role') String role,
+      @Attribute('role') String? role,
       {bool addTabIndexWhenNonTabbable = false})
       : super(element, role ?? 'option',
             addTabIndexWhenNonTabbable: addTabIndexWhenNonTabbable) {
@@ -117,11 +117,13 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
   @override
   ItemRenderer<T>? itemRenderer = nullRenderer;
 
+  /*
   @Input()
   @override
   @Deprecated('Use factoryrenderer instead as it will produce more '
       'tree-shakeable code.')
   ComponentRenderer? componentRenderer;
+  */
 
   /// Returns a [ComponentFactory] for dynamic component loader to use to render
   /// an item.
@@ -131,7 +133,7 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
   /// update the component.
   @Input()
   @override
-  FactoryRenderer<RendersValue, T?>? factoryRenderer;
+  FactoryRenderer<RendersValue, T>? factoryRenderer;
 
   /// If true, check marks are used instead of checkboxes to indicate whether or
   /// not the item is selected for multi-select items.
@@ -164,22 +166,22 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
   String? get valueLabel {
     if (value == null) {
       return null;
-    } else if (componentRenderer == null &&
-        factoryRenderer == null &&
+    } else if (factoryRenderer == null &&
         !identical(itemRenderer, nullRenderer)) {
       return itemRenderer!(value);
     }
     return null;
   }
 
-  SelectionModel<T?>? _selection;
+  SelectionModel<T>? _selection;
+
   @override
-  SelectionModel<T?> get selection => _selection!;
+  SelectionModel<T>? get selection => _selection;
 
   /// Selection model to update with changes.
   @Input()
   @override
-  set selection(SelectionModel<T?> sel) {
+  set selection(SelectionModel<T>? sel) {
     _selection = sel;
     _supportsMultiSelect = sel is MultiSelectionModel<T>;
 
@@ -187,7 +189,7 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
     // direction to support onpush components that use this component. There may
     // be other mutable state that needs to trigger change detection.
     _selectionChangeStreamSub?.cancel();
-    _selectionChangeStreamSub = sel.selectionChanges.listen((_) {
+    _selectionChangeStreamSub = sel?.selectionChanges.listen((_) {
       _cdRef.markForCheck();
     });
   }
@@ -203,8 +205,8 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
   bool closeOnActivate = true;
 
   // TODO(google): Remove after migration from ComponentRenderer is complete
-  Type? get componentType =>
-      componentRenderer != null ? componentRenderer!(value) : null;
+  //Type? get componentType =>
+  //    componentRenderer != null ? componentRenderer!(value) : null;
 
   ComponentFactory? get componentFactory =>
       factoryRenderer != null ? factoryRenderer!(value) : null;
@@ -217,25 +219,29 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
   @HostBinding('class.selected')
   bool get isSelected => _isMarkedSelected || _isSelectedInSelectionModel;
 
-  bool get _isMarkedSelected => selected != null && selected;
+  bool get _isMarkedSelected => selected;
   bool get _isSelectedInSelectionModel =>
-      value != null && (_selection?.isSelected(value) ?? false);
+      value != null && (_selection?.isSelected(value!) ?? false);
 
   void handleActivate(UIEvent e) {
     var hasCheckbox = supportsMultiSelect && !hideCheckbox;
-    if (_dropdown != null && closeOnActivate && !hasCheckbox) {
-      _dropdown.close();
+    if (closeOnActivate && !hasCheckbox) {
+      _dropdown?.close();
       if (e is KeyboardEvent) {
         e.stopPropagation();
       }
     }
 
-    if (_activationHandler?.handle(e, value) ?? false) return;
+    if (_activationHandler != null) {
+      if (_activationHandler!.handle(e, value)) {
+        return;
+      }
+    }
     if (_selectOnActivate && _selection != null && value != null) {
-      if (!_selection!.isSelected(value)) {
-        _selection!.select(value);
+      if (!_selection!.isSelected(value!)) {
+        _selection!.select(value!);
       } else if (_deselectOnActivate) {
-        _selection!.deselect(value);
+        _selection!.deselect(value!);
       }
     }
   }

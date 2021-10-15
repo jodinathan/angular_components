@@ -18,7 +18,7 @@ final _rendererMarker = Expando('Renderer marker');
 /// If the item passed in is already a caching ItemRenderer, it is returned
 /// unchanged.
 ItemRenderer<T> newCachingItemRenderer<T>(ItemRenderer<T> itemRenderer) {
-  if (itemRenderer != null && _rendererMarker[itemRenderer] != null) {
+  if (_rendererMarker[itemRenderer] != null) {
     return itemRenderer;
   }
   var _cache = <T?, String?>{};
