@@ -19,7 +19,7 @@ dependencies:
   sass: '>=1.15.3 <2.0.0'
 
   ngsecurity: 
-    git: https://github.com/angulardart-community/ngsecurity.git
+    git: https://github.com/angulardart-community/ngsecurity
 
 dependency_overrides:
   angular_components:
