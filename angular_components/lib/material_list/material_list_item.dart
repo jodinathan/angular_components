@@ -32,7 +32,7 @@ class MaterialListItemComponent extends ButtonDirective implements OnDestroy {
   static const hostClass = 'item';
 
   final _disposer = Disposer.oneShot();
-  final DropdownHandle _dropdown;
+  final DropdownHandle? _dropdown;
 
   @override
   final String hostTabIndex;
@@ -40,7 +40,7 @@ class MaterialListItemComponent extends ButtonDirective implements OnDestroy {
   dom.HtmlElement element;
 
   MaterialListItemComponent(this.element, @Optional() this._dropdown,
-      @Attribute('tabindex') String tabIndex, @Attribute('role') String role)
+      @Attribute('tabindex') String? tabIndex, @Attribute('role') String? role)
       : hostTabIndex = tabIndex ?? '0',
         super(element, role ?? 'listitem') {
     if (_dropdown != null) {
@@ -50,13 +50,13 @@ class MaterialListItemComponent extends ButtonDirective implements OnDestroy {
 
   @HostBinding('class.disabled')
   @override
-  bool get disabled => super.disabled;
+  bool? get disabled => super.disabled;
 
   /// Disables the trigger and gives item a disabled style.
   // Overridden just to give a better doc-comment;
   @override
   @Input()
-  set disabled(bool value) => super.disabled = value;
+  set disabled(bool? value) => super.disabled = value;
 
   /// Whether the encompassing dropdown should close on selection of
   /// this item.

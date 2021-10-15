@@ -118,7 +118,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   /// For example, a text element that says "results per page" for a dropdown
   /// with numerical options.
   @Input()
-  String buttonAriaLabelledBy;
+  String? buttonAriaLabelledBy;
 
   /// One or more space-delimited ids of elements that provide additional
   /// description for the dropdown select.
@@ -126,29 +126,29 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   /// For example, the id of a text element that says "Select a foo to use with
   /// your bar."
   @Input()
-  String buttonAriaDescribedBy;
+  String? buttonAriaDescribedBy;
 
   /// Listener for options changes.
-  StreamSubscription<List<OptionGroup<T>>> _optionsListener;
+  StreamSubscription<List<OptionGroup<T>>>? _optionsListener;
 
   /// Listener for selection changes.
-  StreamSubscription<List<SelectionChangeRecord<T>>> _selectionListener;
+  StreamSubscription<List<SelectionChangeRecord<T>>>? _selectionListener;
 
   /// If a parent provides a [PopupSizeProvider], the provider will be used
   /// instead of the implementation of this class.
-  final PopupSizeProvider _popupSizeDelegate;
+  final PopupSizeProvider? _popupSizeDelegate;
 
   /// Text label for select item that deselects the current selection.
   @Input()
-  String deselectLabel;
+  String? deselectLabel;
 
   /// An error displayed below the dropdown button.
   @Input()
-  String error;
+  String? error;
 
   /// Whether to show the bottom border of the dropdown button.
   @Input()
-  bool showButtonBorder;
+  bool? showButtonBorder;
 
   bool _deselectOnActivate = true;
 
@@ -164,7 +164,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
 
   /// Factory that returns a component to be used for rendering group labels.
   @Input()
-  FactoryRenderer labelFactory;
+  FactoryRenderer? labelFactory;
 
   // Whether a custom label render is used.
   bool get hasCustomLabelRenderer => labelFactory != null;
@@ -180,20 +180,20 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   /// Only visible for the template.
   final String popupClassName;
 
-  String _ariaActiveDescendant;
+  String? _ariaActiveDescendant;
 
   final ChangeDetectorRef _changeDetector;
 
   bool _disabledChanged = false;
 
   @override
-  set disabled(bool value) {
+  set disabled(bool? value) {
     super.disabled = value;
     _disabledChanged = true;
   }
 
   MaterialDropdownSelectComponent(
-      @Optional() IdGenerator idGenerator,
+      @Optional() IdGenerator? idGenerator,
       @Optional() @SkipSelf() this._popupSizeDelegate,
       @Optional() @Inject(rtlToken) bool rtl,
       @Attribute('popupClass') String popupClass,
@@ -209,11 +209,11 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   }
 
   @ViewChild(DropdownButtonComponent)
-  DropdownButtonComponent dropdownButton;
+  late DropdownButtonComponent dropdownButton;
 
   // The id of the currently selected item, or the first item if none are
   // selected.
-  String get ariaActiveDescendant {
+  String? get ariaActiveDescendant {
     if (!visible) return '';
 
     if (_ariaActiveDescendant != null) return _ariaActiveDescendant;
@@ -227,7 +227,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
 
   /// The id of the active element of the dropdown.
   @Input()
-  set ariaActiveDescendant(String id) {
+  set ariaActiveDescendant(String? id) {
     _ariaActiveDescendant = id;
   }
 
@@ -238,26 +238,26 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   @Input()
   bool listAutoFocus = true;
 
-  @Input()
-  @override
-  @Deprecated('Use factoryRenderer it allows for more tree-shakable code.')
-  set componentRenderer(ComponentRenderer value) {
-    super.componentRenderer = value;
-  }
+  //@Input()
+  //@override
+  //@Deprecated('Use factoryRenderer it allows for more tree-shakable code.')
+  //set componentRenderer(ComponentRenderer? value) {
+  //  super.componentRenderer = value;
+  //}
 
   /// Function that returns a component factory to render the Item.
   ///
   /// The resulting component must implement RendersValue.
   @Input()
   @override
-  set factoryRenderer(FactoryRenderer<RendersValue, T> value) {
+  set factoryRenderer(FactoryRenderer<RendersValue, T>? value) {
     super.factoryRenderer = value;
   }
 
   /// Function to convert an option object to string.
   @Input()
   @override
-  set itemRenderer(ItemRenderer<T> value) {
+  set itemRenderer(ItemRenderer<T>? value) {
     super.itemRenderer = value;
   }
 
@@ -296,7 +296,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   }
 
   @override
-  set options(SelectionOptions<T> newOptions) {
+  set options(SelectionOptions<T>? newOptions) {
     _changeDetector.markForCheck();
     super.options = newOptions;
 
@@ -304,7 +304,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
     _setInitialActiveItem();
 
     _optionsListener?.cancel();
-    _optionsListener = options?.stream?.listen((_) {
+    _optionsListener = options?.stream.listen((_) {
       _changeDetector.markForCheck();
       _updateActiveModel();
       _setInitialActiveItem();
@@ -332,13 +332,13 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   }
 
   @override
-  set selection(SelectionModel<T> newSelection) {
+  set selection(SelectionModel<T>? newSelection) {
     _changeDetector.markForCheck();
     super.selection = newSelection;
     _setInitialActiveItem();
 
     _selectionListener?.cancel();
-    _selectionListener = selection?.selectionChanges?.listen((changes) {
+    _selectionListener = selection?.selectionChanges.listen((changes) {
       _changeDetector.markForCheck();
       // Update active item if new items are selected.
       var added =
@@ -359,14 +359,14 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   }
 
   void _setInitialActiveItem({bool allowDeactivate = true}) {
-    if (selection == null || selection.selectedValues.isEmpty) {
+    if (selection == null || selection!.selectedValues.isEmpty) {
       if (allowDeactivate) activeModel.activate(null);
     } else if (activeModel.activeItem == null ||
         (showDeselectItem && activeModel.activeItem == deselectLabel) ||
-        !selection.isSelected(activeModel.activeItem)) {
+        !selection!.isSelected(activeModel.activeItem)) {
       // If the current active item is not selected, activate the first selected
       // item.
-      activeModel.activate(selection.selectedValues.first);
+      activeModel.activate(selection!.selectedValues.first);
     }
     if (activateFirstOption && activeModel.activeItem == null) {
       activeModel.activateFirst();
@@ -374,7 +374,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   }
 
   void _handleNavigationKey(KeyboardEvent event, Function activateFunction) {
-    if (disabled) return;
+    if (disabled!) return;
     event.preventDefault();
     activateFunction();
     // Only select if the popup is not visible.
@@ -383,7 +383,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
       if (item == deselectLabel) {
         deselectCurrentSelection();
       } else if (item != null && !isOptionDisabled(item)) {
-        selection.select(item);
+        selection?.select(item);
       }
     }
     if (!visible) {
@@ -422,7 +422,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   }
 
   void _handleKeyboardTrigger() {
-    if (disabled) return;
+    if (disabled!) return;
     if (!visible) {
       open();
     } else {
@@ -430,12 +430,12 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
       if (item != null && selection != null) {
         if (item == deselectLabel) {
           deselectCurrentSelection();
-        } else if (!selection.isSelected(item)) {
+        } else if (!selection!.isSelected(item)) {
           if (!isOptionDisabled(item)) {
-            selection.select(item);
+            selection!.select(item);
           }
         } else if (deselectOnActivate) {
-          selection.deselect(item);
+          selection!.deselect(item);
         }
       }
       if (isSingleSelect) {
@@ -453,29 +453,29 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   @override
   void handleSpaceKey(KeyboardEvent event) {
     // Prevent any scrolling.
-    event?.preventDefault();
+    event.preventDefault();
     _handleKeyboardTrigger();
   }
 
   void handleClick(UIEvent event) {
     // Ignore keyboard events caught by button decorator.
     if (event is! MouseEvent) return;
-    if (!disabled) toggle();
+    if (!disabled!) toggle();
   }
 
   @override
   void handleCharCodeKey(KeyboardEvent event) {
-    if (itemRenderer != null && options != null && !disabled) {
+    if (itemRenderer != null && options != null && !disabled!) {
       // Don't activate or select if the widget is disabled.
       // Don't select if the selection model is multi-select.
-      activateOnKeyPress(activeModel, event.charCode, options, itemRenderer,
+      activateOnKeyPress(activeModel, event.charCode, options!, itemRenderer,
           !visible && isSingleSelect ? selection : null);
     }
   }
 
   @override
   void ngAfterChanges() {
-    if (_disabledChanged && disabled) {
+    if (_disabledChanged && disabled!) {
       close();
     }
     _disabledChanged = false;
@@ -488,17 +488,17 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   }
 
   @override
-  num getMinHeight(num positionY, num viewportHeight) =>
+  num? getMinHeight(num positionY, num viewportHeight) =>
       _popupSizeDelegate?.getMinHeight(positionY, viewportHeight);
 
   @override
-  num getMinWidth(num positionX, num viewportWidth) =>
+  num? getMinWidth(num positionX, num viewportWidth) =>
       _popupSizeDelegate?.getMinWidth(positionX, viewportWidth);
 
   @override
   num getMaxHeight(num positionY, num viewportHeight) {
     if (_popupSizeDelegate != null) {
-      return _popupSizeDelegate.getMaxHeight(positionY, viewportHeight);
+      return _popupSizeDelegate?.getMaxHeight(positionY, viewportHeight) ?? 400;
     } else {
       // The default max height for dropdown select's popup.
       return 400;
@@ -508,7 +508,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   @override
   num getMaxWidth(num positionX, num viewportWidth) {
     if (_popupSizeDelegate != null) {
-      return _popupSizeDelegate.getMaxWidth(positionX, viewportWidth);
+      return _popupSizeDelegate?.getMaxWidth(positionX, viewportWidth) ?? 448;
     } else {
       // The default max width for dropdown select's popup. This was previously
       // max width for material list.
@@ -535,11 +535,13 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   bool get showDeselectItem =>
       !isMultiSelect && deselectLabel?.isNotEmpty == true;
 
-  bool get isDeselectItemSelected => selection.isEmpty;
+  bool get isDeselectItemSelected => selection?.isEmpty ?? true;
 
   void deselectCurrentSelection() {
-    if (selection.isNotEmpty) {
-      selection.deselect(selection.selectedValues.single);
+    if (selection != null) {
+      if (selection!.isNotEmpty) {
+        selection!.deselect(selection!.selectedValues.single);
+      }
     }
   }
 }
@@ -557,9 +559,9 @@ class ActivateItemOnKeyPressMixin<T> {
   void activateOnKeyPress(
       ActiveItemModel activeModel,
       int charCode,
-      SelectionOptions options,
-      ItemRenderer<T> itemRenderer,
-      SelectionModel selection) {
+      SelectionOptions? options,
+      ItemRenderer<T>? itemRenderer,
+      SelectionModel? selection) {
     // Guard against being called when not all data is initialized.
     if (itemRenderer == null || options == null) return;
 
@@ -572,7 +574,7 @@ class ActivateItemOnKeyPressMixin<T> {
       if (option == null) return false;
       var searchString = searchMap[option];
       if (searchString == null) {
-        searchString = itemRenderer(option).toLowerCase();
+        searchString = itemRenderer(option)!.toLowerCase();
         searchMap[option] = searchString;
       }
       return searchString.startsWith(keys);
@@ -615,7 +617,7 @@ class ActivateItemOnKeyPressMixin<T> {
 
   /// Utility method to convert a charCode to a lower case character.
   String _charCodeToString(int charCode) {
-    String key = _charCodeMap[charCode];
+    String? key = _charCodeMap[charCode];
     if (key == null) {
       key = String.fromCharCode(charCode).toLowerCase();
       _charCodeMap[charCode] = key;

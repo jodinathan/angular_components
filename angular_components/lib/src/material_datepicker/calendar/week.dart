@@ -8,15 +8,15 @@ part of '../../../material_datepicker/calendar.dart';
 class CalendarWeek extends _HasHighlights {
   final Date _start;
   final int _startingWeekday;
-  List<CalendarDay> _days;
-  List _spacers;
-  Date _end;
+  List<CalendarDay>? _days;
+  List? _spacers;
+  Date? _end;
 
-  CalendarWeek(this._start, CalendarState state,
+  CalendarWeek(this._start, CalendarState? state,
       [this._startingWeekday = DateTime.monday])
       : super(state) {
     _end = _start.add(days: numDays - 1);
-    if (_end.isAfter(_endOfMonth)) {
+    if (_end!.isAfter(_endOfMonth)) {
       _end = _endOfMonth;
     }
 
@@ -25,7 +25,7 @@ class CalendarWeek extends _HasHighlights {
     } else {
       _days = _generateDays().toList();
     }
-    _spacers = List(numBlankDays);
+    _spacers = List.filled(numBlankDays, null, growable: false);
     _updateHighlights();
   }
 
@@ -33,7 +33,7 @@ class CalendarWeek extends _HasHighlights {
   ///
   /// Note that if the [CalendarResolution] of the associated [CalendarState]
   /// is >= [CalendarResolution.weeks], this list will be empty.
-  List<CalendarDay> get days => _days;
+  List<CalendarDay>? get days => _days;
 
   int get numDays => 7 - ((_start.weekday - 1) - (_startingWeekday - 1)) % 7;
 
@@ -41,20 +41,20 @@ class CalendarWeek extends _HasHighlights {
   /// does not start on the first day of the week. Publicly visible for tests.
   int get numBlankDays => 7 - numDays;
 
-  List get spacers => _spacers;
+  List? get spacers => _spacers;
 
   @override
-  List<Highlight> get highlights => _highlights;
+  List<Highlight>? get highlights => _highlights;
 
-  void update(CalendarState state) {
+  void update(CalendarState? state) {
     _state = state;
-    days.forEach((d) => d.updateClasses(state));
+    days!.forEach((d) => d.updateClasses(state));
     _updateHighlights();
   }
 
-  CalendarWeek get next {
-    if (_end.isBefore(_endOfMonth)) {
-      return CalendarWeek(_end.add(days: 1), _state, _startingWeekday);
+  CalendarWeek? get next {
+    if (_end!.isBefore(_endOfMonth)) {
+      return CalendarWeek(_end!.add(days: 1), _state, _startingWeekday);
     }
     return null;
   }
@@ -105,7 +105,7 @@ class CalendarWeek extends _HasHighlights {
     }
 
     // Position 8: day after this week
-    var day = _end.add(days: 1);
+    var day = _end!.add(days: 1);
     yield Highlight(lastPos, 8, _matching(last, day));
   }
 

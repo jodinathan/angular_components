@@ -23,7 +23,7 @@ import 'dart:html';
 /// Dart Code:
 ///  final popupClass =
 ///      constructEncapsulatedCss('myPopup', _hostElement.classes);
-String constructEncapsulatedCss(String className, CssClassSet classes) {
+String constructEncapsulatedCss(String? className, CssClassSet classes) {
   var result = className ?? '';
   for (final i in classes) {
     // Add encapsulation classes from host

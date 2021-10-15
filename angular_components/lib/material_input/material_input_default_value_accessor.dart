@@ -50,7 +50,9 @@ class MaterialInputBlurValueAccessor
   @override
   void registerOnChange(callback) {
     disposer.addStreamSubscription(input.onBlur.listen((_) {
-      if (input != null) callback(input.inputText);
+      if (input.inputText != null) {
+        callback(input.inputText!);
+      }
     }));
   }
 }
@@ -69,7 +71,9 @@ class MaterialInputChangeValueAccessor
   @override
   void registerOnChange(callback) {
     disposer.addStreamSubscription(input.onChange.listen((_) {
-      if (input != null) callback(input.inputText);
+      if (input.inputText != null) {
+        callback(input.inputText!);
+      }
     }));
   }
 }
@@ -87,16 +91,16 @@ abstract class BaseMaterialInputValueAccessor<T>
   BaseMaterialInputValueAccessor(this.input, @Self() @Optional() this._cd) {
     // To get around a circular dependency injection assign the valueAccessor
     // ourselves.
-    _cd?.valueAccessor = this;
+    _cd.valueAccessor = this;
     disposer.addFunction(() {
       // Kill the control's handle on this accessor directive so that it can be
       // GC'ed.
-      _cd?.valueAccessor = null;
+      _cd.valueAccessor = null;
     });
   }
 
   @override
-  void writeValue(T newValue) {
+  void writeValue(T? newValue) {
     input.inputText = formatValue(newValue);
   }
 
@@ -104,11 +108,11 @@ abstract class BaseMaterialInputValueAccessor<T>
   ///
   /// Override this if you need additional formatting for your value type, ex.
   /// if using a [NumberFormatter].
-  String formatValue(T value) => '${value ?? ''}';
+  String formatValue(T? value) => '${value ?? ''}';
 
   @override
   void registerOnTouched(callback) {
-    StreamSubscription sub;
+    late StreamSubscription sub;
     sub = input.onBlur.listen((_) {
       sub.cancel(); // We only need the first event. Cancel the subscription.
       callback();

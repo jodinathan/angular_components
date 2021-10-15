@@ -27,7 +27,7 @@ abstract class PopupInterface {
 
   /// Sets whether the popup should dismiss (close) itself on document press.
   @Input()
-  set autoDismiss(bool autoDismiss);
+  set autoDismiss(bool? autoDismiss);
 
   /// Sets whether the popup should automatically reposition itself based on
   /// space available relative to the viewport.
@@ -105,7 +105,7 @@ abstract class PopupBase implements PopupInterface {
   PopupState get state;
 
   @override
-  set autoDismiss(bool autoDismiss) {
+  set autoDismiss(bool? autoDismiss) {
     state.autoDismiss = autoDismiss;
   }
 
@@ -157,7 +157,7 @@ abstract class PopupBase implements PopupInterface {
 /// want the same properties as a popup without the verbosity of re-typing.
 abstract class PopupComposite implements PopupInterface {
   @override
-  bool autoDismiss = true;
+  bool? autoDismiss = true;
 
   @override
   bool enforceSpaceConstraints = false;
@@ -175,7 +175,7 @@ abstract class PopupComposite implements PopupInterface {
   Iterable<Object> preferredPositions = const [];
 
   @override
-  PopupSource source;
+  PopupSource? source;
 
   @override
   bool trackLayoutChanges = true;

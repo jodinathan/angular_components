@@ -4,5 +4,5 @@
 
 /// Interface for classes accepting a disabled setting.
 abstract class HasDisabled {
-  bool disabled;
+  bool? disabled;
 }

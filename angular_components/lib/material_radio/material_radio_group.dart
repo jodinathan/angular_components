@@ -44,7 +44,7 @@ class MaterialRadioGroupComponent
 
   List<MaterialRadioComponent> _radioComponents = <MaterialRadioComponent>[];
 
-  MaterialRadioGroupComponent(this._ngZone, @Self() @Optional() NgControl cd) {
+  MaterialRadioGroupComponent(this._ngZone, @Self() @Optional() NgControl? cd) {
     // When NgControl is present on the host element, the component participates
     // in the Forms API.
     cd?.valueAccessor = this;
@@ -62,7 +62,7 @@ class MaterialRadioGroupComponent
       _resetTabIndex();
       _selected = _selectedRadioComponent?.value;
       if (_valueSelection != null && _selected != null) {
-        _valueSelection.select(_selected);
+        _valueSelection!.select(_selected);
       }
       _onChange.add(_selected);
     }));
@@ -110,7 +110,8 @@ class MaterialRadioGroupComponent
     // Since this is updating children that were already dirty-checked,
     // need to delay this change until next angular cycle.
     _ngZone.runAfterChangesObserved(() {
-      if (_radioComponents == null) return; // Component was destroyed.
+      //if (_radioComponents == null) return; // Component was destroyed.
+      if (_radioComponents.isEmpty) return; // Component was destroyed.
       // Disable everything first.
       for (var radioComponent in _radioComponents) {
         radioComponent.tabbable = false;
@@ -145,20 +146,20 @@ class MaterialRadioGroupComponent
     if (_valueSelection == value) return;
     _selectionSubscription?.cancel();
     _valueSelection = value;
-    _selectionSubscription = _valueSelection?.selectionChanges?.listen((_) {
-      selected = _valueSelection.selectedValues
+    _selectionSubscription = _valueSelection?.selectionChanges.listen((_) {
+      selected = _valueSelection!.selectedValues
           .firstWhere((_) => true, orElse: () => null);
     });
   }
 
-  SelectionModel _valueSelection;
-  StreamSubscription<List<SelectionChangeRecord<dynamic>>>
+  SelectionModel? _valueSelection;
+  StreamSubscription<List<SelectionChangeRecord<dynamic>>>?
       _selectionSubscription;
 
   /// Internal selection model containing the radio component.
   final componentSelection = SelectionModel<MaterialRadioComponent>.single();
 
-  MaterialRadioComponent get _selectedRadioComponent {
+  MaterialRadioComponent? get _selectedRadioComponent {
     if (componentSelection.selectedValues.isEmpty) return null;
     return componentSelection.selectedValues.single;
   }
@@ -173,7 +174,7 @@ class MaterialRadioGroupComponent
   /// Value of currently selected radio. Prefer `[ngModel]`.
   @Input()
   set selected(dynamic selectedValue) {
-    if (_radioComponents != null && _isContentInit) {
+    if (_radioComponents.isNotEmpty && _isContentInit) {
       for (var radioComponent in _radioComponents) {
         radioComponent.checked = (radioComponent.value == selectedValue);
       }
@@ -191,18 +192,18 @@ class MaterialRadioGroupComponent
   void _moveSelection(FocusMoveEvent event) => _move(event, true);
 
   List<MaterialRadioComponent> _getFocusableChildren(
-      [MaterialRadioComponent source]) {
+      [MaterialRadioComponent? source]) {
     // Make sure current focus is in the list even if it's disabled.
     return _radioComponents
         .where((radioComponent) =>
-            !radioComponent.disabled || radioComponent == source)
+            !radioComponent.disabled! || radioComponent == source)
         .toList();
   }
 
   // Move focus and selection via keyboard event. Need to wrap, also jump over
   // disabled siblings.
   void _move(FocusMoveEvent event, [bool moveSelection = false]) {
-    MaterialRadioComponent source = event.focusItem;
+    MaterialRadioComponent source = event.focusItem as MaterialRadioComponent;
 
     // Siblings can be disabled, so we have to discount those when applying
     // offset.

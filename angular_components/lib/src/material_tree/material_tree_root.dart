@@ -10,7 +10,7 @@ import 'package:angular_components/model/ui/has_factory.dart';
 abstract class MaterialTreeRoot<T>
     implements
         SelectionContainer<T>,
-        HasComponentRenderer<RendersValue, Object>,
+        //HasComponentRenderer<RendersValue, Object>,
         HasFactoryRenderer<RendersValue, T> {
   /// Whether a filter is currently applied.
   bool isFiltered = false;
@@ -46,5 +46,5 @@ abstract class MaterialTreeRoot<T>
   bool get allowParentMultiSelection => true;
 
   /// The previously toggled node.
-  T previouslyToggledNode;
+  T? previouslyToggledNode;
 }

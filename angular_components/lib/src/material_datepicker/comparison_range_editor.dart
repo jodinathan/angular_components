@@ -43,18 +43,18 @@ import 'package:angular_components/utils/angular/scroll_host/angular_2.dart';
 )
 class ComparisonRangeEditorComponent {
   final NgZone _ngZone;
-  final ScrollHost _scrollHost;
+  final ScrollHost? _scrollHost;
   ComparisonRangeEditorComponent(this._ngZone, @Optional() this._scrollHost);
 
   /// A mutable model describing a comparison date range. The only expected
   /// non-test implementation is [DateRangeEditorModel].
   @Input()
-  HasComparisonRange model;
+  late HasComparisonRange model;
   final Map<ComparisonOption, String> _optionMsgCache = {};
-  DatepickerDateRange _primaryDateRange;
+  DatepickerDateRange? _primaryDateRange;
 
   // Handle the comparison toggle.
-  bool get comparisonEnabled => model.comparisonEnabled;
+  bool get comparisonEnabled => model.comparisonEnabled!;
 
   set comparisonEnabled(bool enabled) {
     model.comparisonEnabled = enabled;
@@ -62,7 +62,7 @@ class ComparisonRangeEditorComponent {
       // When users turn on toggle, scrolls to the end to make
       // comparison options discoverable.
       _ngZone.runAfterChangesObserved(
-          () => _scrollHost?.scrollToPosition(_scrollHost.scrollLength));
+          () => _scrollHost?.scrollToPosition(_scrollHost?.scrollLength ?? 0));
     }
   }
 
@@ -71,7 +71,7 @@ class ComparisonRangeEditorComponent {
       desc: 'Label for a toggle that turns time comparison on/off.');
 
   /// Gets display message from given option.
-  String comparisonOptionMsg(ComparisonOption option) {
+  String? comparisonOptionMsg(ComparisonOption option) {
     if (_primaryDateRange != model.primaryRange) {
       _updateOptionMsg();
       _primaryDateRange = model.primaryRange;

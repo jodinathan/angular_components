@@ -5,7 +5,7 @@
 // @dart = 2.12
 // ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields
 
-import 'dart:core' as $core;
+import angular_components/lib/material_datepicker/proto/date_range.pb.dart t 'dart:core' as $core;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
@@ -285,6 +285,8 @@ class DateRange extends $pb.GeneratedMessage {
   static $pb.PbList<DateRange> createRepeated() => $pb.PbList<DateRange>();
   @$core.pragma('dart2js:noInline')
   static DateRange getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<DateRange>(create);
+  static DateRange getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<DateRange>(create);
   static DateRange? _defaultInstance;
 
   @$pb.TagNumber(1)

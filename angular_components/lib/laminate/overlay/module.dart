@@ -32,7 +32,7 @@ export 'package:angular_components/src/laminate/overlay/render/overlay_dom_rende
 /// A hidden focusable element is inserted before and after the overlay
 /// container to support a11y features.
 HtmlElement createAcxOverlayContainer(HtmlElement parent,
-    {@required String id, @required String name, String className}) {
+    {required String id, required String name, String? className}) {
   var container = parent.querySelector('#$id');
   if (container == null) {
     container = DivElement()
@@ -42,7 +42,7 @@ HtmlElement createAcxOverlayContainer(HtmlElement parent,
     parent.append(container);
   }
   container.attributes[overlayContainerNameAttribute] = name;
-  return container;
+  return container as HtmlElement;
 }
 
 /// Either finds, or creates an "acx-overlay-container" div at the end of body.
@@ -74,7 +74,7 @@ HtmlElement getDebugContainer(@Inject(overlayContainerName) String name,
 @Injectable()
 HtmlElement getOverlayContainerParent(Document document,
     @Optional() @SkipSelf() @Inject(overlayContainerParent) containerParent) {
-  return containerParent ?? document.querySelector('body');
+  return containerParent ?? document.querySelector('body') as HtmlElement;
 }
 
 /// DI module for Overlay and its dependencies.

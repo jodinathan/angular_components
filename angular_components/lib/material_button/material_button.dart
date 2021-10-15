@@ -103,11 +103,11 @@ class MaterialButtonComponent extends MaterialButtonBase {
 
   @HostBinding('attr.disabled')
   @visibleForTemplate
-  String get hostDisabled => disabled ? "" : null;
+  String? get hostDisabled => disabled! ? "" : null;
 
   @HostBinding('attr.raised')
   @visibleForTemplate
-  String get hostRaised => raised ? "" : null;
+  String? get hostRaised => raised ? "" : null;
 
   @HostBinding('class.is-focused')
   @visibleForTemplate
@@ -122,5 +122,5 @@ class MaterialButtonComponent extends MaterialButtonBase {
   static const String hostAnimated = 'true';
 
   // not used for M1
-  final String ariaLabel = null;
+  final String? ariaLabel = null;
 }

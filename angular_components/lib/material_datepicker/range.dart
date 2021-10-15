@@ -13,25 +13,25 @@ import 'package:angular_components/model/date/date.dart';
 
 /// If the given range is valid (non-null with non-null start and end dates),
 /// returns the result of calling the given function. Otherwise returns `null`.
-DatepickerDateRange _ifValidRange(
-    DatepickerDateRange r, DatepickerDateRange fn()) {
+DatepickerDateRange? _ifValidRange(
+    DatepickerDateRange? r, DatepickerDateRange fn()) {
   if (r == null || r.start == null || r.end == null) {
     return null;
   }
   return fn();
 }
 
-DatepickerDateRange _genericNext(DatepickerDateRange r) => _ifValidRange(
+DatepickerDateRange? _genericNext(DatepickerDateRange r) => _ifValidRange(
     r,
     () => DatepickerDateRange.custom(
-        r.end.add(days: 1), r.end.add(days: daysSpanned(r.start, r.end))));
-DatepickerDateRange _genericPrev(DatepickerDateRange r) => _ifValidRange(
+        r.end!.add(days: 1), r.end!.add(days: daysSpanned(r.start!, r.end!))));
+DatepickerDateRange? _genericPrev(DatepickerDateRange r) => _ifValidRange(
     r,
     () => DatepickerDateRange.custom(
-        r.start.add(days: -daysSpanned(r.start, r.end)),
-        r.start.add(days: -1)));
+        r.start!.add(days: -daysSpanned(r.start!, r.end!)),
+        r.start!.add(days: -1)));
 
-typedef RangeFn = DatepickerDateRange Function(DatepickerDateRange range);
+typedef RangeFn = DatepickerDateRange? Function(DatepickerDateRange range);
 
 /// A datepicker-specific implementation of [DateRange], extended with a title
 /// and an interface for computing the next/previous date range.
@@ -40,18 +40,18 @@ abstract class DatepickerDateRange implements DateRange {
   String get title;
 
   @override
-  Date get start;
+  Date? get start;
 
   @override
-  Date get end;
+  Date? get end;
 
   /// A date range which begins immediately after this one ends, and has either
   /// the same length or similar semantics (such as "the next month").
-  DatepickerDateRange get next;
+  DatepickerDateRange? get next;
 
   /// A date range which ends immediately before this one starts, and has either
   /// the same length or similar semantics (such as "the previous year").
-  DatepickerDateRange get prev;
+  DatepickerDateRange? get prev;
 
   /// Whether the date range is predefined by the application.
   ///
@@ -72,7 +72,7 @@ abstract class DatepickerDateRange implements DateRange {
   ///
   /// This clamping applies recursively; `range.clamp(max: someDate).prev.next`
   /// will return the clamped date range, not the original date range.
-  DatepickerDateRange clamp({Date min, Date max});
+  DatepickerDateRange? clamp({Date? min, Date? max});
 
   /// Reverses the effect of one call to clamp() (assuming clamp() didn't return
   /// null). If clamp() succeeds, range.clamp(...).unclamped() == range.
@@ -92,7 +92,7 @@ abstract class DatepickerDateRange implements DateRange {
   /// date_range.proto.
   proto.DatepickerDateRange toProtoBuf();
 
-  factory DatepickerDateRange(String title, Date start, Date end,
+  factory DatepickerDateRange(String title, Date? start, Date? end,
           {RangeFn next = _genericNext,
           RangeFn prev = _genericPrev,
           bool isPredefined = false,
@@ -101,7 +101,7 @@ abstract class DatepickerDateRange implements DateRange {
 
   /// Shortcut to define a "custom" date range with a localized "Custom" title
   /// and default behavior.
-  factory DatepickerDateRange.custom(Date start, Date end) =>
+  factory DatepickerDateRange.custom(Date? start, Date? end) =>
       DatepickerDateRange(_customDateRangeMsg, start, end);
 
   /// Construct from the protocol buffer format defined in date_range.proto.
@@ -135,7 +135,7 @@ abstract class DatepickerDateRange implements DateRange {
   }
 }
 
-DatepickerDateRange _clamp(DatepickerDateRange range, {Date min, Date max}) {
+DatepickerDateRange? _clamp(DatepickerDateRange range, {Date? min, Date? max}) {
   if (min != null && max != null) assert(min <= max);
   if ((min == null || range.end == null || min <= range.end) &&
       (max == null || range.start == null || max >= range.start)) {
@@ -144,7 +144,7 @@ DatepickerDateRange _clamp(DatepickerDateRange range, {Date min, Date max}) {
   return null;
 }
 
-bool rangeEqual(DatepickerDateRange range, o) =>
+bool rangeEqual(DatepickerDateRange? range, o) =>
     (range == null && o == null) ||
     (range is DatepickerDateRange &&
         o is DatepickerDateRange &&
@@ -165,7 +165,7 @@ proto.DatepickerDateRange _makeProtoBuf(DatepickerDateRange range) =>
     range.isAllTime
         ? (proto.DatepickerDateRange()..allTimeRange = true)
         : (proto.DatepickerDateRange()
-          ..dateRange = _makeDateRangeProto(range.start, range.end));
+          ..dateRange = _makeDateRangeProto(range.start!, range.end!));
 
 proto.DateRange _makeDateRangeProto(Date start, Date end) => proto.DateRange()
   ..start = _makeDateProto(start)
@@ -187,11 +187,11 @@ Date _convertToDate(dateproto.Date date) =>
 /// calling clampedDateRange.prev.next should be equivalent to the clamped date
 /// range, and not the underlying date range.
 class _ClampedDateRange implements DatepickerDateRange {
-  final Date _min;
-  final Date _max;
+  final Date? _min;
+  final Date? _max;
   final DatepickerDateRange _delegate;
 
-  _ClampedDateRange(this._delegate, {Date min, Date max})
+  _ClampedDateRange(this._delegate, {Date? min, Date? max})
       : _min = min,
         _max = max;
 
@@ -203,35 +203,35 @@ class _ClampedDateRange implements DatepickerDateRange {
   bool get isAllTime => _delegate.isAllTime;
 
   @override
-  Date get start {
+  Date? get start {
     final date = _delegate.start;
-    return (date == null || (_min != null && _min > date)) ? _min : date;
+    return (date == null || (_min != null && _min! > date)) ? _min : date;
   }
 
   @override
-  Date get end {
+  Date? get end {
     final date = _delegate.end;
-    return (date == null || (_max != null && _max < date)) ? _max : date;
+    return (date == null || (_max != null && _max! < date)) ? _max : date;
   }
 
   @override
-  DatepickerDateRange get next {
-    if (_max != null && _delegate.end != null && _delegate.end > _max) {
+  DatepickerDateRange? get next {
+    if (_max != null && _delegate.end != null && _delegate.end! > _max) {
       return null;
     }
     return _delegate.next?.clamp(min: _min, max: _max);
   }
 
   @override
-  DatepickerDateRange get prev {
-    if (_min != null && _delegate.start != null && _delegate.start < _min) {
+  DatepickerDateRange? get prev {
+    if (_min != null && _delegate.start != null && _delegate.start! < _min) {
       return null;
     }
     return _delegate.prev?.clamp(min: _min, max: _max);
   }
 
   @override
-  DatepickerDateRange clamp({Date min, Date max}) =>
+  DatepickerDateRange? clamp({Date? min, Date? max}) =>
       _clamp(this, min: min, max: max);
 
   @override
@@ -244,7 +244,7 @@ class _ClampedDateRange implements DatepickerDateRange {
   /// concrete dates with clamped ones.
   @override
   proto.DatepickerDateRange toProtoBuf() =>
-      _delegate.toProtoBuf()..dateRange = _makeDateRangeProto(start, end);
+      _delegate.toProtoBuf()..dateRange = _makeDateRangeProto(start!, end!);
 
   bool operator ==(o) =>
       rangeEqual(this, o) &&
@@ -263,8 +263,8 @@ class _ClampedDateRange implements DatepickerDateRange {
 /// but can return a `YearRange` as its previous range.
 class _BasicDateRange implements DatepickerDateRange {
   final String title;
-  final Date start;
-  final Date end;
+  final Date? start;
+  final Date? end;
   final bool isPredefined;
   final bool isAllTime;
 
@@ -274,10 +274,10 @@ class _BasicDateRange implements DatepickerDateRange {
   _BasicDateRange(this.title, this.start, this.end, this._next, this._prev,
       this.isPredefined, this.isAllTime);
 
-  DatepickerDateRange get next => _next(this);
-  DatepickerDateRange get prev => _prev(this);
+  DatepickerDateRange? get next => _next(this);
+  DatepickerDateRange? get prev => _prev(this);
 
-  DatepickerDateRange clamp({Date min, Date max}) =>
+  DatepickerDateRange? clamp({Date? min, Date? max}) =>
       _clamp(this, min: min, max: max);
   DatepickerDateRange unclamped() => this;
   DateRange asPlainRange() => _plainRange(this);
@@ -315,7 +315,7 @@ class SingleDayRange implements DatepickerDateRange {
   /// Number of days ago relative to the current date.
   int get ago => _ago;
 
-  DatepickerDateRange clamp({Date min, Date max}) =>
+  DatepickerDateRange? clamp({Date? min, Date? max}) =>
       _clamp(this, min: min, max: max);
   DatepickerDateRange unclamped() => this;
   DateRange asPlainRange() => _plainRange(this);
@@ -359,15 +359,15 @@ abstract class MultipleDaysRange implements DatepickerDateRange {
 
   Date get start => _start;
   Date get end => _start.add(days: _lengthInDays - 1);
-  DatepickerDateRange get next => _genericNext(this);
-  DatepickerDateRange get prev => _genericPrev(this);
+  DatepickerDateRange? get next => _genericNext(this);
+  DatepickerDateRange? get prev => _genericPrev(this);
   bool get isPredefined => true;
   bool get isAllTime => false;
 
   /// Length of the range in number of days.
   int get lengthInDays => _lengthInDays;
 
-  DatepickerDateRange clamp({Date min, Date max}) =>
+  DatepickerDateRange? clamp({Date? min, Date? max}) =>
       _clamp(this, min: min, max: max);
   DatepickerDateRange unclamped() => this;
   DateRange asPlainRange() => _plainRange(this);
@@ -383,10 +383,10 @@ abstract class MultipleDaysRange implements DatepickerDateRange {
 /// Special-cased to have titles like 'Last 7 days', etc.
 /// [lengthInDays] should be at least 1.
 class LastNDaysRange extends MultipleDaysRange {
-  LastNDaysRange(Date start, int lengthInDays, [String title])
+  LastNDaysRange(Date start, int lengthInDays, [String? title])
       : super(start, lengthInDays, title ?? _lastNDaysMsg(lengthInDays));
 
-  LastNDaysRange.beforeToday(clock, lengthInDays, [String title])
+  LastNDaysRange.beforeToday(clock, lengthInDays, [String? title])
       : super(Date.today(clock).add(days: -lengthInDays), lengthInDays,
             title ?? _lastNDaysMsg(lengthInDays));
 
@@ -409,10 +409,10 @@ class LastNDaysRange extends MultipleDaysRange {
 /// Special-cased to have titles like '7 days to today', etc.
 /// [lengthInDays] should be at least 1.
 class LastNDaysToTodayRange extends MultipleDaysRange {
-  LastNDaysToTodayRange(Date start, int lengthInDays, [String title])
+  LastNDaysToTodayRange(Date start, int lengthInDays, [String? title])
       : super(start, lengthInDays, title ?? _lastNDaysToTodayMsg(lengthInDays));
 
-  LastNDaysToTodayRange.beforeToday(clock, lengthInDays, [String title])
+  LastNDaysToTodayRange.beforeToday(clock, lengthInDays, [String? title])
       : super(Date.today(clock).add(days: -(lengthInDays - 1)), lengthInDays,
             title ?? _lastNDaysToTodayMsg(lengthInDays));
 
@@ -436,11 +436,11 @@ class LastNDaysToTodayRange extends MultipleDaysRange {
 /// [lengthInDays] should be at least 1.
 /// A range 'N' days long which starts today.
 class NextNDaysFromTodayRange extends MultipleDaysRange {
-  NextNDaysFromTodayRange(Date start, int lengthInDays, [String title])
+  NextNDaysFromTodayRange(Date start, int lengthInDays, [String? title])
       : super(
             start, lengthInDays, title ?? _nextNDaysFromTodayMsg(lengthInDays));
 
-  NextNDaysFromTodayRange.afterToday(clock, lengthInDays, [String title])
+  NextNDaysFromTodayRange.afterToday(clock, lengthInDays, [String? title])
       : super(Date.today(clock), lengthInDays,
             title ?? _nextNDaysFromTodayMsg(lengthInDays));
 
@@ -466,7 +466,7 @@ class WeekRange implements DatepickerDateRange {
 
   final Date _start;
   final int _ago;
-  final int _startWeekday;
+  final int? _startWeekday;
   final RangeTitle _titleFunction;
   WeekRange(this._start, this._ago,
       [this._titleFunction = _defaultTitle, this._startWeekday]);
@@ -479,13 +479,13 @@ class WeekRange implements DatepickerDateRange {
   /// Tuesday, etc. It defaults to the first day of the week specified in the
   /// current locale.
   WeekRange.weeksAgo(clock, ago,
-      {RangeTitle titleFunction = _defaultTitle, int startWeekday})
+      {RangeTitle titleFunction = _defaultTitle, int? startWeekday})
       : this(
             _weekStart(
                     Date.today(clock),
                     startWeekday ??
                         (DateFormat().dateSymbols.FIRSTDAYOFWEEK + 1))
-                .add(days: -7 * ago),
+                .add(days: -7 * ago as int),
             ago,
             titleFunction,
             startWeekday);
@@ -503,7 +503,7 @@ class WeekRange implements DatepickerDateRange {
   /// Number of weeks ago relative to the current date.
   int get ago => _ago;
 
-  DatepickerDateRange clamp({Date min, Date max}) =>
+  DatepickerDateRange? clamp({Date? min, Date? max}) =>
       _clamp(this, min: min, max: max);
   DatepickerDateRange unclamped() => this;
   DateRange asPlainRange() => _plainRange(this);
@@ -511,7 +511,7 @@ class WeekRange implements DatepickerDateRange {
   proto.DatepickerDateRange toProtoBuf() {
     var result = _makeProtoBuf(this)..weeksAgo = _ago;
     if (_startWeekday != null) {
-      result.startWeekday = _startWeekday;
+      result.startWeekday = _startWeekday!;
     }
     return result;
   }
@@ -580,7 +580,7 @@ class MonthRange implements DatepickerDateRange {
   /// Number of months ago relative to the current date.
   int get ago => _ago;
 
-  DatepickerDateRange clamp({Date min, Date max}) =>
+  DatepickerDateRange? clamp({Date? min, Date? max}) =>
       _clamp(this, min: min, max: max);
   DatepickerDateRange unclamped() => this;
   DateRange asPlainRange() => _plainRange(this);
@@ -677,7 +677,7 @@ class BroadcastMonthRange implements DatepickerDateRange {
   bool get isPredefined => true;
   bool get isAllTime => false;
 
-  DatepickerDateRange clamp({Date min, Date max}) =>
+  DatepickerDateRange? clamp({Date? min, Date? max}) =>
       _clamp(this, min: min, max: max);
   DatepickerDateRange unclamped() => this;
   DateRange asPlainRange() => _plainRange(this);
@@ -736,7 +736,7 @@ class YearRange implements DatepickerDateRange {
   /// Number of years ago relative to the current date.
   int get ago => _ago;
 
-  DatepickerDateRange clamp({Date min, Date max}) =>
+  DatepickerDateRange? clamp({Date? min, Date? max}) =>
       _clamp(this, min: min, max: max);
   DatepickerDateRange unclamped() => this;
   DateRange asPlainRange() => _plainRange(this);
@@ -815,7 +815,7 @@ class QuarterRange implements DatepickerDateRange {
   int get ago => _ago;
 
   @override
-  DatepickerDateRange clamp({Date min, Date max}) =>
+  DatepickerDateRange? clamp({Date? min, Date? max}) =>
       _clamp(this, min: min, max: max);
   @override
   DatepickerDateRange unclamped() => this;

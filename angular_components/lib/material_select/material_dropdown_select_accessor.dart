@@ -23,17 +23,18 @@ import 'material_dropdown_select.dart';
 )
 class DropdownSelectValueAccessor<T> extends BaseDropdownSelectValueAccessor<T>
     implements ControlValueAccessor, OnDestroy {
-  StreamSubscription _selectionChangesSub;
+  StreamSubscription? _selectionChangesSub;
   DropdownSelectValueAccessor(MaterialDropdownSelectComponent select)
-      : super(select, SelectionModel.single());
+      : super(select as MaterialDropdownSelectComponent<T>,
+            SelectionModel.single());
 
   @override
   void registerOnChange(callback) {
     _selectionChangesSub = selectionModel.selectionChanges.listen((_) {
-      var value = (selectionModel.selectedValues == null ||
+      T? value = (selectionModel.selectedValues.isEmpty ||
               selectionModel.selectedValues.isEmpty)
           ? null
-          : selectionModel.selectedValues?.first;
+          : selectionModel.selectedValues.first;
       callback(value);
     });
   }
@@ -67,9 +68,9 @@ class DropdownSelectValueAccessor<T> extends BaseDropdownSelectValueAccessor<T>
   ],
 )
 class MultiDropdownSelectValueAccessor<T>
-    extends BaseDropdownSelectValueAccessor<T>
+    extends BaseDropdownSelectValueAccessor<T?>
     implements ControlValueAccessor, OnDestroy {
-  StreamSubscription<List<SelectionChangeRecord<T>>> selectionChangesSub;
+  StreamSubscription<List<SelectionChangeRecord<T?>>>? selectionChangesSub;
 
   MultiDropdownSelectValueAccessor(MaterialDropdownSelectComponent<T> select)
       : super(select, MultiSelectionModel<T>());
@@ -77,7 +78,7 @@ class MultiDropdownSelectValueAccessor<T>
   @override
   void registerOnChange(callback) {
     selectionChangesSub = selectionModel.selectionChanges.listen((_) {
-      callback(selectionModel.selectedValues?.toList());
+      callback(selectionModel.selectedValues.toList());
     });
   }
 
@@ -106,7 +107,7 @@ abstract class BaseDropdownSelectValueAccessor<T>
   final MaterialDropdownSelectComponent<T> _select;
   @protected
   final SelectionModel<T> selectionModel;
-  StreamSubscription _visibileSub;
+  StreamSubscription? _visibileSub;
   bool initialized = false;
 
   BaseDropdownSelectValueAccessor(this._select, this.selectionModel);
@@ -115,8 +116,8 @@ abstract class BaseDropdownSelectValueAccessor<T>
   void initializeSelectionModel() {
     if (initialized) return;
     initialized = true;
-    assert(_select.selection == null,
-        'Cannot set [selection] when using a Dropdown control value accessor.');
+    //assert(_select.selection == null,
+    //    'Cannot set [selection] when using a Dropdown control value accessor.');
     _select.selection = selectionModel;
   }
 
@@ -124,7 +125,7 @@ abstract class BaseDropdownSelectValueAccessor<T>
   void registerOnTouched(callback) {
     _visibileSub = _select.visibleStream.listen((_) {
       // We only need the first event. Cancel the subscription.
-      _visibileSub.cancel();
+      _visibileSub!.cancel();
       callback();
     });
   }

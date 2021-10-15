@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:html';
+
 import 'package:angular/angular.dart';
 
 // TODO(google): Remove this once use of '#' in a template is either
@@ -19,7 +21,7 @@ import 'package:angular/angular.dart';
   exportAs: 'ref',
 )
 class ReferenceDirective {
-  final ElementRef elementRef;
+  final Element? elementRef;
 
   ReferenceDirective(this.elementRef);
 }

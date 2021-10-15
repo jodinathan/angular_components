@@ -73,7 +73,7 @@ class MaterialIconComponent {
   dynamic _icon;
 
   /// The icon identifier.
-  String get iconName => _icon is Icon ? _icon.name : _icon;
+  String? get iconName => _icon is Icon ? _icon.name : _icon;
 
   final HtmlElement _element;
 

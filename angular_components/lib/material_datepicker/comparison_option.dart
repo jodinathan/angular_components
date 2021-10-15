@@ -8,7 +8,8 @@ import 'package:angular_components/material_datepicker/range.dart';
 /// Converts current date range to comparison date range.
 ///
 /// Return null if this is a "custom".
-typedef ComparisonFn = DatepickerDateRange Function(DatepickerDateRange range);
+typedef ComparisonFn = DatepickerDateRange? Function(
+    DatepickerDateRange? range);
 
 /// The [ComparisonOption]s the component provides to the user by default.
 List<ComparisonOption> defaultComparisonOptions = [
@@ -28,8 +29,8 @@ class ComparisonOption {
   const ComparisonOption(this.displayName, this.computeComparisonRange);
 
   static final ComparisonOption previousPeriod =
-      ComparisonOption(_prevPeriodMsg, (DatepickerDateRange range) {
-    var prev = range.prev;
+      ComparisonOption(_prevPeriodMsg, (DatepickerDateRange? range) {
+    var prev = range?.prev;
     if (prev != null && !prev.isPredefined) {
       return DatepickerDateRange(_prevPeriodMsg, prev.start, prev.end);
     }
@@ -38,11 +39,11 @@ class ComparisonOption {
 
   static final ComparisonOption samePeriodLastYear = ComparisonOption(
       _previousYearMsg,
-      (DatepickerDateRange range) => DatepickerDateRange(_previousYearMsg,
-          range.start.add(years: -1), range.end.add(years: -1)));
+      (DatepickerDateRange? range) => DatepickerDateRange(_previousYearMsg,
+          range?.start?.add(years: -1), range?.end?.add(years: -1)));
 
   static final ComparisonOption custom =
-      ComparisonOption(_customMsg, (DatepickerDateRange range) => null);
+      ComparisonOption(_customMsg, (DatepickerDateRange? range) => null);
 
   static final String _prevPeriodMsg = Intl.message('Previous period',
       name: '_prevPeriodMsg',

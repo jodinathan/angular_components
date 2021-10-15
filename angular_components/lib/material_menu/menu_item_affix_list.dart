@@ -34,35 +34,35 @@ import 'package:quiver/core.dart' as qc;
 class MenuItemAffixListComponent implements HasDisabled, OnDestroy {
   final ChangeDetectorRef _cdRef;
 
-  StreamSubscription _itemChangeStreamSub;
+  StreamSubscription? _itemChangeStreamSub;
 
   final _affixComponentRefs = <_AffixRef>[];
 
-  ObservableList<MenuItemAffix> _items;
+  ObservableList<MenuItemAffix>? _items;
 
   @ViewChild('loadPoint', read: ViewContainerRef)
   @visibleForTemplate
-  ViewContainerRef viewRef;
+  late ViewContainerRef viewRef;
 
-  bool _disabled = false;
+  bool? _disabled = false;
 
   MenuItemAffixListComponent(this._cdRef);
 
   @Input()
-  set disabled(bool disabled) {
+  set disabled(bool? disabled) {
     _disabled = disabled;
 
     _updateItemProperties();
   }
 
-  bool get disabled => _disabled;
+  bool? get disabled => _disabled;
 
   /// Observable list of affix items.
   @Input()
   set items(ObservableList<MenuItemAffix> items) {
     _itemChangeStreamSub?.cancel();
 
-    _itemChangeStreamSub = items?.listChanges?.listen((change) {
+    _itemChangeStreamSub = items.listChanges.listen((change) {
       _updateVisibleItems(change);
       _cdRef.markForCheck();
     });
@@ -135,7 +135,7 @@ class MenuItemAffixListComponent implements HasDisabled, OnDestroy {
 
     return _AffixRef(
         affix,
-        viewRef.createComponent(affix.componentFactory, index)
+        viewRef.createComponent(affix.componentFactory!, index)
           ..location.classes.add('affix')
           ..instance.value = affix
           ..instance.disabled = disabled);

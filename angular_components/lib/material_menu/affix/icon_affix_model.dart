@@ -3,7 +3,6 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:angular/angular.dart';
-import 'package:meta/meta.dart';
 import 'package:angular_components/material_menu/affix/base_affix.dart';
 import 'package:angular_components/material_menu/affix/icon_affix.template.dart'
     as ng;
@@ -18,20 +17,20 @@ class IconAffix extends BaseMenuItemAffixModel {
   final Icon icon;
 
   @override
-  final String cssClass;
+  final String? cssClass;
 
-  final String ariaLabel;
-  final IconAction _action;
-  final int _keyCode;
+  final String? ariaLabel;
+  final IconAction? _action;
+  final int? _keyCode;
 
   @override
   final bool shouldCloseMenuOnTrigger;
 
   @Deprecated('Use IconAffix.simple and IconAffix.withAction instead')
   factory IconAffix(
-      {@required Icon icon,
+      {required Icon icon,
       IconVisibility visibility = IconVisibility.visible,
-      String cssClass}) {
+      String? cssClass}) {
     if (icon is IconWithAction) {
       return IconAffix.withAction(
           icon: icon,
@@ -48,7 +47,7 @@ class IconAffix extends BaseMenuItemAffixModel {
 
   /// Creates a simple icon without any trigger action.
   const IconAffix.simple(
-      {@required this.icon,
+      {required this.icon,
       this.visibility = IconVisibility.visible,
       this.cssClass})
       : _action = null,
@@ -58,10 +57,10 @@ class IconAffix extends BaseMenuItemAffixModel {
 
   /// Creates an icon that has a trigger action with a shortcut key.
   const IconAffix.withAction(
-      {@required this.icon,
-      @required IconAction action,
-      @required this.ariaLabel,
-      int keyCode,
+      {required this.icon,
+      required IconAction action,
+      required this.ariaLabel,
+      int? keyCode,
       this.shouldCloseMenuOnTrigger = false,
       this.visibility = IconVisibility.visible,
       this.cssClass})
@@ -69,7 +68,7 @@ class IconAffix extends BaseMenuItemAffixModel {
         _keyCode = keyCode;
 
   @override
-  ComponentFactory<BaseAffixComponent> get componentFactory =>
+  ComponentFactory<BaseAffixComponent>? get componentFactory =>
       ng.IconAffixComponentNgFactory;
 
   bool get hasAction => _action != null;

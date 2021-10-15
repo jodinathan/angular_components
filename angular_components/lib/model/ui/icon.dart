@@ -4,7 +4,7 @@
 
 /// Designates a model class which has a canonical _icon_ field.
 abstract class HasIcon {
-  Icon get uiIcon;
+  Icon? get uiIcon;
 }
 
 /// Designates a model class which has a canonical _icon_ field when it is
@@ -16,7 +16,7 @@ abstract class HasHoverIcon {
 /// Simple container for icons. Models may implement this class, or the
 /// `HasIcon` interface.
 class Icon {
-  final String name;
+  final String? name;
 
   const Icon(this.name);
 

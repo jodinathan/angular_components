@@ -17,7 +17,7 @@ abstract class DropdownHandle {
   void open();
   void close();
   void toggle();
-  bool autoDismiss;
+  bool? autoDismiss;
 }
 
 /// Base class for Material Dropdown components.
@@ -59,10 +59,10 @@ class MaterialDropdownBase
   ///
   /// Valid values are `x`, `y`, or `null`.
   @Input()
-  String slide;
+  String? slide;
 
   /// Whether the popup should close when the document pressed.
-  bool autoDismiss = true;
+  bool? autoDismiss = true;
 
   bool _visible = false;
 

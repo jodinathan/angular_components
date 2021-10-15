@@ -16,7 +16,7 @@ import 'package:angular_components/src/laminate/popup/popup_source.dart';
 /// notified when a property changes;
 class PopupState extends Observable {
   // The backing implementation to simplify copying and observability.
-  final ObservableMap<Symbol, Object> _backingMap;
+  final ObservableMap<Symbol, Object?> _backingMap;
 
   /// Create a new, empty popup state (with defaults).
   factory PopupState(
@@ -26,7 +26,7 @@ class PopupState extends Observable {
       int offsetX = 0,
       int offsetY = 0,
       Iterable<Object> preferredPositions = const [],
-      PopupSource source,
+      PopupSource? source,
       bool trackLayoutChanges = true,
       bool constrainToViewport = true}) {
     return PopupState._(ObservableMap<Symbol, dynamic>.from({
@@ -59,7 +59,7 @@ class PopupState extends Observable {
         for (var record in records) {
           if (record is MapChangeRecord<Object, Object>) {
             propertyRecords.add(PropertyChangeRecord(
-                this, record.key, record.oldValue, record.newValue));
+                this, record.key as Symbol, record.oldValue, record.newValue));
           }
         }
         return propertyRecords;
@@ -67,22 +67,22 @@ class PopupState extends Observable {
 
   /// If set to true, the popup should attempt to close itself when a mouse
   /// click or finger tap is detected outside of the bounds of the popup.
-  bool get autoDismiss => _backingMap[#autoDismiss];
-  set autoDismiss(bool autoDismiss) {
+  bool? get autoDismiss => _backingMap[#autoDismiss] as bool?;
+  set autoDismiss(bool? autoDismiss) {
     _backingMap[#autoDismiss] = autoDismiss;
   }
 
   /// If true, the popup will attempt to make intelligent decisions about
   /// positioning and layout depending on the size of the inner content and the
   /// distance to the viewport edges.
-  bool get enforceSpaceConstraints => _backingMap[#enforceSpaceConstraints];
-  set enforceSpaceConstraints(bool enforceSpaceConstraints) {
+  bool? get enforceSpaceConstraints => _backingMap[#enforceSpaceConstraints] as bool?;
+  set enforceSpaceConstraints(bool? enforceSpaceConstraints) {
     _backingMap[#enforceSpaceConstraints] = enforceSpaceConstraints;
   }
 
   /// If true, the popup will set a min-width to the width of [source].
-  bool get matchMinSourceWidth => _backingMap[#matchMinSourceWidth];
-  set matchMinSourceWidth(bool matchMinSourceWidth) {
+  bool? get matchMinSourceWidth => _backingMap[#matchMinSourceWidth] as bool?;
+  set matchMinSourceWidth(bool? matchMinSourceWidth) {
     _backingMap[#matchMinSourceWidth] = matchMinSourceWidth;
   }
 
@@ -91,20 +91,20 @@ class PopupState extends Observable {
   ///
   /// For example, in a typical material dropdown menu, the source will be the
   /// selected item.
-  PopupSource get source => _backingMap[#source];
-  set source(PopupSource source) {
+  PopupSource? get source => _backingMap[#source] as PopupSource?;
+  set source(PopupSource? source) {
     _backingMap[#source] = source;
   }
 
   /// How much to transform the x-axis position by.
-  int get offsetX => _backingMap[#offsetX];
-  set offsetX(int offsetX) {
+  int? get offsetX => _backingMap[#offsetX] as int?;
+  set offsetX(int? offsetX) {
     _backingMap[#offsetX] = offsetX;
   }
 
   /// How much to transform the y-axis position by.
-  int get offsetY => _backingMap[#offsetY];
-  set offsetY(int offsetY) {
+  int? get offsetY => _backingMap[#offsetY] as int?;
+  set offsetY(int? offsetY) {
     _backingMap[#offsetY] = offsetY;
   }
 
@@ -113,20 +113,20 @@ class PopupState extends Observable {
   /// Similarly to Angular providers, this supports nested lists of
   /// [RelativePosition]s. Under the hood, we'll flatten out the list and pick
   /// the first position that fits onscreen.
-  Iterable<Object /* RelativePosition | Iterable */ > get preferredPositions =>
-      _backingMap[#preferredPositions];
-  set preferredPositions(Iterable<Object> preferredPositions) {
+  Iterable<Object /* RelativePosition | Iterable */ >? get preferredPositions =>
+      _backingMap[#preferredPositions] as Iterable<Object>?;
+  set preferredPositions(Iterable<Object>? preferredPositions) {
     _backingMap[#preferredPositions] = preferredPositions;
   }
 
   /// Whether to track the [source] for changes.
-  bool get trackLayoutChanges => _backingMap[#trackLayoutChanges];
-  set trackLayoutChanges(bool trackLayoutChanges) {
+  bool? get trackLayoutChanges => _backingMap[#trackLayoutChanges] as bool?;
+  set trackLayoutChanges(bool? trackLayoutChanges) {
     _backingMap[#trackLayoutChanges] = trackLayoutChanges;
   }
 
-  bool get constrainToViewport => _backingMap[#constrainToViewport];
-  set constrainToViewport(bool constrainToViewport) {
+  bool? get constrainToViewport => _backingMap[#constrainToViewport] as bool?;
+  set constrainToViewport(bool? constrainToViewport) {
     _backingMap[#constrainToViewport] = constrainToViewport;
   }
 

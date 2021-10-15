@@ -9,7 +9,7 @@ class _NoopSelectionModelImpl<T> implements NullSelectionModel<T> {
   const _NoopSelectionModelImpl();
 
   @override
-  final bool isSingleSelect = null;
+  final bool? isSingleSelect = null;
 
   // Selection observable.
 
@@ -20,7 +20,7 @@ class _NoopSelectionModelImpl<T> implements NullSelectionModel<T> {
   final bool hasSelectionObservers = false;
 
   @override
-  void notifySelectionChange({added, removed}) {}
+  void notifySelectionChange({added = const [], removed = const []}) {}
 
   // Observable.
 
@@ -37,7 +37,8 @@ class _NoopSelectionModelImpl<T> implements NullSelectionModel<T> {
   void notifyChange([_]) {}
 
   @override
-  S notifyPropertyChange<S>(Symbol field, S oldValue, S newValue) => null;
+  //S notifyPropertyChange<S>(Symbol field, S oldValue, S newValue) => null;
+  S notifyPropertyChange<S>(Symbol field, S oldValue, S newValue) => newValue;
 
   @override
   void observed() {}
@@ -70,7 +71,7 @@ class _NoopSelectionModelImpl<T> implements NullSelectionModel<T> {
       Stream.fromIterable(const []);
 
   @override
-  final T selectedValue = null;
+  final T? selectedValue = null;
 
   @override
   final List<T> selectedValues = const [];

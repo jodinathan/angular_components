@@ -15,12 +15,12 @@ class PopupHierarchy {
   final _visiblePopupStack = <PopupHierarchyElement>[];
 
   /// Parent pane of the first popup hierarchy element.
-  Element _rootPane;
+  Element? _rootPane;
 
-  StreamSubscription<Event> _triggerListener;
-  StreamSubscription<Event> _keyUpListener;
+  StreamSubscription<Event>? _triggerListener;
+  StreamSubscription<Event>? _keyUpListener;
 
-  Event _lastTriggerEvent;
+  Event? _lastTriggerEvent;
 
   /// Whether last trigger event is a keyboard event or focus event.
   bool get islastTriggerWithKeyboard =>
@@ -36,13 +36,12 @@ class PopupHierarchy {
     _disposeListeners();
   }
 
-  void _attach(PopupHierarchyElement child) {
+  void _attach(PopupHierarchyElement? child) {
     assert(child != null);
     if (_visiblePopupStack.isEmpty) {
-      _rootPane =
-          events.closestWithClass(child.elementRef.nativeElement, 'pane');
+      _rootPane = events.closestWithClass(child?.elementRef, 'pane');
     }
-    _visiblePopupStack.add(child);
+    _visiblePopupStack.add(child!);
 
     if (_triggerListener == null) {
       // Passing null to triggersOutside listens to triggers on any elements.
@@ -54,8 +53,8 @@ class PopupHierarchy {
   }
 
   void _disposeListeners() {
-    _triggerListener.cancel();
-    _keyUpListener.cancel();
+    _triggerListener!.cancel();
+    _keyUpListener!.cancel();
     _triggerListener = null;
     _keyUpListener = null;
   }
@@ -90,7 +89,7 @@ class PopupHierarchy {
 
   void _onTrigger(Event event) {
     // Some weird event, ignore it.
-    if (event?.target == null) return;
+    if (event.target == null) return;
 
     _lastTriggerEvent = event;
 
@@ -98,21 +97,21 @@ class PopupHierarchy {
 
     for (int i = _visiblePopupStack.length - 1; i >= 0; i--) {
       final current = _visiblePopupStack[i];
-      if (current?.container == null) continue;
+      if (current.container == null) continue;
 
-      if (events.isParentOf(current.container, event.target)) return;
+      if (events.isParentOf(current.container, event.target as Node?)) return;
 
       for (var blockerElement in current.autoDismissBlockers) {
-        if (events.isParentOf(blockerElement, event.target)) return;
+        if (events.isParentOf(blockerElement, event.target as Node?)) return;
       }
 
-      if (current.autoDismiss) current.onAutoDismiss(event);
+      if (current.autoDismiss!) current.onAutoDismiss(event);
     }
   }
 
   void _onKeyUp(KeyboardEvent event) {
     // Some weird event, ignore it.
-    if (event?.target == null) return;
+    if (event.target == null) return;
 
     _lastTriggerEvent = event;
 
@@ -121,16 +120,16 @@ class PopupHierarchy {
     if (event.keyCode == KeyCode.ESC) {
       for (int i = _visiblePopupStack.length - 1; i >= 0; i--) {
         final current = _visiblePopupStack[i];
-        if (current?.container == null) continue;
+        if (current.container == null) continue;
 
-        if (events.isParentOf(current.container, event.target)) {
+        if (events.isParentOf(current.container, event.target as Node?)) {
           event.stopPropagation();
           current.onDismiss();
           return;
         }
 
         for (var blockerElement in current.autoDismissBlockers) {
-          if (events.isParentOf(blockerElement, event.target)) {
+          if (events.isParentOf(blockerElement, event.target as Node?)) {
             event.stopPropagation();
             current.onDismiss();
             return;
@@ -144,12 +143,12 @@ class PopupHierarchy {
 /// An electable element for the [PopupHierarchy].
 abstract class PopupHierarchyElement {
   PopupHierarchy get hierarchy;
-  bool get autoDismiss;
+  bool? get autoDismiss;
 
   /// The html element corresponding to the popup.
-  Element get container;
+  Element? get container;
 
-  ElementRef get elementRef => null;
+  Element? get elementRef => null;
 
   /// The outer element which should prevent the auto dismiss logic.
   List<Element> get autoDismissBlockers;

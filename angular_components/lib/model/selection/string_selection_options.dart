@@ -9,11 +9,11 @@ import 'package:angular_components/model/ui/has_renderer.dart';
 import 'package:angular_components/utils/async/async.dart';
 
 /// Formats [value] as a lowercase string without spaces.
-String _stringFormatSuggestion(String value) =>
-    value.replaceAll(' ', '').toLowerCase();
+String _stringFormatSuggestion(String? value) =>
+    value!.replaceAll(' ', '').toLowerCase();
 
 ItemRenderer<T> _defaultRenderer<T>(ItemRenderer<String> sanitizeString) =>
-    newCachingItemRenderer<T>((T value) => sanitizeString(value.toString()));
+    newCachingItemRenderer<T>((T? value) => sanitizeString(value.toString()));
 
 typedef StringSuggestionFilter<T> = bool Function(
     T suggestion, String filterQuery);
@@ -41,19 +41,19 @@ class StringSelectionOptions<T> extends SelectionOptions<T>
   static const int UNLIMITED = 9007199254740992;
 
   /// The last query passed to [filter].
-  String _currentQuery;
+  String? _currentQuery;
 
   /// The current limit for the filter being applied.
-  int _currentLimit = -1;
+  int? _currentLimit = -1;
 
-  List<OptionGroup<T>> _optionGroups;
+  List<OptionGroup<T>>? _optionGroups;
 
   /// A function that converts a single option to a filterable string.
   final ItemRenderer<T> _toFilterableString;
 
   /// Function for filtering a single suggestion/option, defaults to
   /// [filterOption] method.
-  StringSuggestionFilter<T> _suggestionFilter;
+  late StringSuggestionFilter<T> _suggestionFilter;
 
   /// The [ItemRenderer] that sanitizes options and queries before filtering.
   final ItemRenderer<String> _sanitizeString;
@@ -77,8 +77,8 @@ class StringSelectionOptions<T> extends SelectionOptions<T>
   /// Set [shouldFilterEmpty] to false if [filter] should return empty when the
   /// query is empty.
   StringSelectionOptions(List<T> options,
-      {ItemRenderer<T> toFilterableString,
-      StringSuggestionFilter<T> suggestionFilter,
+      {ItemRenderer<T>? toFilterableString,
+      StringSuggestionFilter<T>? suggestionFilter,
       ItemRenderer<String> sanitizeString = _stringFormatSuggestion,
       bool shouldSort = false,
       bool shouldFilterEmpty = true})
@@ -90,8 +90,8 @@ class StringSelectionOptions<T> extends SelectionOptions<T>
             shouldFilterEmpty: shouldFilterEmpty);
 
   StringSelectionOptions.withOptionGroups(List<OptionGroup<T>> optionGroups,
-      {ItemRenderer<T> toFilterableString,
-      StringSuggestionFilter<T> suggestionFilter,
+      {ItemRenderer<T>? toFilterableString,
+      StringSuggestionFilter<T>? suggestionFilter,
       ItemRenderer<String> sanitizeString = _stringFormatSuggestion,
       bool shouldSort = false,
       bool shouldFilterEmpty = true})
@@ -101,8 +101,7 @@ class StringSelectionOptions<T> extends SelectionOptions<T>
         _shouldFilterEmpty = shouldFilterEmpty,
         _sanitizeString = sanitizeString,
         super(optionGroups) {
-    _suggestionFilter =
-        suggestionFilter != null ? suggestionFilter : filterOption;
+    _suggestionFilter = suggestionFilter ?? filterOption;
   }
 
   /// Accepts a string query and limit and applies the filter to the options.
@@ -113,8 +112,8 @@ class StringSelectionOptions<T> extends SelectionOptions<T>
   /// TODO(google): In a followup CL, refactor the reusable portions of this code
   /// into a generic filter.
   @override
-  DisposableFuture<bool> filter(Object query, {int limit = -1}) {
-    _currentLimit = limit < 1 ? UNLIMITED : limit;
+  DisposableFuture<bool> filter(Object query, {int? limit = -1}) {
+    _currentLimit = limit! < 1 ? UNLIMITED : limit;
     _currentQuery = query as String;
     refilter();
     return DisposableFuture.fromValue(true);
@@ -127,12 +126,12 @@ class StringSelectionOptions<T> extends SelectionOptions<T>
   void refilter() {
     List<OptionGroup<T>> filtered = [];
     int count = 0;
-    String filterQuery =
-        _currentQuery == null ? '' : _sanitizeString(_currentQuery);
-    for (var group in _optionGroups) {
-      if (count >= currentLimit) break;
+    String? filterQuery =
+        _currentQuery == null ? '' : _sanitizeString(_currentQuery!);
+    for (var group in _optionGroups!) {
+      if (count >= currentLimit!) break;
       var filteredGroup =
-          filterOptionGroup(group, filterQuery, currentLimit - count);
+          filterOptionGroup(group, filterQuery!, currentLimit! - count);
       count += filteredGroup.length;
       filtered.add(filteredGroup);
     }
@@ -165,18 +164,24 @@ class StringSelectionOptions<T> extends SelectionOptions<T>
 
   @protected
   bool filterOption(T option, String filterQuery) {
+    //TODO: To revisit on this logic later
     // StringFormatSuggestion is used to eliminate spaces to make the
     // pattern matching a simple contains as opposed to a regex.
-    return _sanitizeString(_toFilterableString(option)).contains(filterQuery);
+    var filterableString = _toFilterableString(option);
+    if (filterableString != null) {
+      return _sanitizeString(filterableString)?.contains(filterQuery) ?? false;
+    } else {
+      return false;
+    }
   }
 
   @override
-  Object get currentQuery => _currentQuery;
+  Object? get currentQuery => _currentQuery;
 
   @override
-  int get currentLimit => _currentLimit;
+  int? get currentLimit => _currentLimit;
 
-  List<OptionGroup<T>> get unfilteredOptionGroups => _optionGroups;
+  List<OptionGroup<T>>? get unfilteredOptionGroups => _optionGroups;
 
   @override
   set optionGroups(List<OptionGroup<T>> value) {
@@ -195,5 +200,5 @@ class StringSelectionOptions<T> extends SelectionOptions<T>
   }
 
   int _sortFn(T a, T b) =>
-      _toFilterableString(a).compareTo(_toFilterableString(b));
+      _toFilterableString(a)!.compareTo(_toFilterableString(b)!);
 }

@@ -5,5 +5,5 @@
 import 'package:angular_components/model/ui/highlighted_text_model.dart';
 
 abstract class HighlightProvider {
-  List<HighlightedTextSegment> highlightOption(Object value);
+  List<HighlightedTextSegment> highlightOption(Object? value);
 }

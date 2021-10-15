@@ -24,15 +24,15 @@ class PopupSourceDirective
     implements ElementPopupSource, AfterViewInit, OnDestroy {
   final DomPopupSourceFactory _domPopupSourceFactory;
   final bool _initAriaAttributes;
-  HtmlElement _element;
-  ReferenceDirective _referenceDirective;
-  Focusable _focusable;
+  HtmlElement? _element;
+  ReferenceDirective? _referenceDirective;
+  Focusable? _focusable;
 
   Alignment _alignOriginX = Alignment.Start;
   Alignment _alignOriginY = Alignment.Start;
 
-  PopupSource _popupSource;
-  String _popupId;
+  PopupSource? _popupSource;
+  String? _popupId;
 
   /// [initPopupAriaAttributes] is an attribute input that decide whether to
   /// set the popup related aria attributes. This defaults to true and can be
@@ -57,15 +57,15 @@ class PopupSourceDirective
   @override
   void ngAfterViewInit() {
     // We have to wait until the view is inited to have elementRef
-    _element = _referenceDirective?.elementRef?.nativeElement ?? _element;
+    _element = _referenceDirective?.elementRef as HtmlElement? ?? _element;
     _updateSource();
   }
 
   @override
-  HtmlElement get sourceElement => _element;
+  HtmlElement? get sourceElement => _element;
 
   @override
-  Alignment get alignOriginX => _popupSource.alignOriginX;
+  Alignment? get alignOriginX => _popupSource?.alignOriginX;
 
   /// Alignment of the popup in the horizontal direction.
   ///
@@ -87,7 +87,7 @@ class PopupSourceDirective
   }
 
   @override
-  Alignment get alignOriginY => _popupSource.alignOriginY;
+  Alignment? get alignOriginY => _popupSource!.alignOriginY;
 
   /// Alignment of the popup in the vertical direction.
   ///
@@ -109,37 +109,38 @@ class PopupSourceDirective
   }
 
   @override
-  Stream<Rectangle<num>> onDimensionsChanged({bool track = false}) {
+  Stream<Rectangle<num>>? onDimensionsChanged({bool track = false}) {
     return _popupSource?.onDimensionsChanged(track: track)?.distinct();
   }
 
   @override
-  Rectangle get dimensions => _popupSource?.dimensions;
+  Rectangle? get dimensions => _popupSource?.dimensions;
 
   @override
-  bool get isRtl => _popupSource.isRtl;
+  bool get isRtl => _popupSource!.isRtl;
 
   @override
-  set popupId(String id) {
+  set popupId(String? id) {
     _popupId = id;
     _popupSource?.popupId = id;
   }
 
   void _updateSource() {
-    _popupSource = _domPopupSourceFactory.createPopupSource(_element,
-        alignOriginX: _alignOriginX,
-        alignOriginY: _alignOriginY,
-        initAriaAttributes: _initAriaAttributes);
-
+    if (_element != null) {
+      _popupSource = _domPopupSourceFactory.createPopupSource(_element!,
+          alignOriginX: _alignOriginX,
+          alignOriginY: _alignOriginY,
+          initAriaAttributes: _initAriaAttributes);
+    }
     if (_popupId != null) {
-      _popupSource.popupId = _popupId;
+      _popupSource!.popupId = _popupId;
     }
   }
 
   @override
   void focus() {
     if (_focusable != null) {
-      _focusable.focus();
+      _focusable!.focus();
     } else {
       _element?.focus();
     }

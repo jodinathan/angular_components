@@ -73,7 +73,7 @@ class OverlayDomRenderService {
   /// we want to put it in front of anything else that might be using zIndexer,
   /// so we check the last value against _zIndexer.peek() and increment if
   /// necessary.
-  int _lastZIndex;
+  int? _lastZIndex;
 
   // An auto-incrementing value to help track what popups
   int _uniqueId = 0;
@@ -115,7 +115,7 @@ class OverlayDomRenderService {
     var cssClasses = <String>[];
 
     // Optionally, make the overlay "modal" style.
-    if (state.captureEvents) {
+    if (state.captureEvents!) {
       cssClasses.add('modal');
     }
 
@@ -144,11 +144,12 @@ class OverlayDomRenderService {
 
     // If it exists, also update z-index of overlay container so it's on top of
     // any other zIndexer-using components
-    if (pane.parent != null) {
+    var p = pane.parent;
+    if (p != null) {
       if (_lastZIndex != _zIndexer.peek()) {
         _lastZIndex = _zIndexer.pop();
       }
-      _domRuler.updateSync(pane.parent, zIndex: _lastZIndex);
+      _domRuler.updateSync(p, zIndex: _lastZIndex);
     }
   }
 

@@ -11,10 +11,10 @@ import 'package:angular_components/model/observable/observable.dart';
 /// the next/prev element.
 abstract class Sequential<T> {
   /// `true` if there's a next item to advance to.
-  ObservableView<bool> get hasNext;
+  ObservableView<bool?> get hasNext;
 
   /// `true` if there's a previous item to revert to.
-  ObservableView<bool> get hasPrev;
+  ObservableView<bool?> get hasPrev;
 
   /// Tries to advance to the next item, and returns it if possible.
   T next();

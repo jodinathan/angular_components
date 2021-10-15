@@ -13,10 +13,10 @@ import 'package:angular_components/utils/angular/properties/properties.dart'
 /// Use this if your component needs to suppress its tab index when disabled but
 /// you want to support a custom tab index via host element.
 abstract class HasTabIndex {
-  String get hostTabIndex => '0';
-  bool get disabled;
+  String? get hostTabIndex => '0';
+  bool? get disabled;
 
-  String _tabIndex;
+  String? _tabIndex;
 
   /// Use this method if you want to manually compute and cache the tab index.
   void updateTabIndex() {
@@ -24,10 +24,10 @@ abstract class HasTabIndex {
   }
 
   @HostBinding('attr.tabindex')
-  String get tabIndex => _tabIndex ?? _computeTabIndex();
+  String? get tabIndex => _tabIndex ?? _computeTabIndex();
 
-  String _computeTabIndex() {
-    if (disabled) {
+  String? _computeTabIndex() {
+    if (disabled!) {
       return '-1';
     } else if (hostTabIndex == null) {
       return null;

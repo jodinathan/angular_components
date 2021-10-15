@@ -8,7 +8,7 @@ import 'package:angular/angular.dart';
 
 /// A mixin for use by tab button component and tab dropdown menu component.
 abstract class TabMixin {
-  String _label;
+  String? _label;
   int _textWidth = 0;
 
   /// The host element.
@@ -18,9 +18,9 @@ abstract class TabMixin {
   ///
   /// When it's being set, it also resets the text width for re-calculation
   /// subsequently.
-  String get label => _label;
+  String? get label => _label;
   @Input()
-  set label(String label) {
+  set label(String? label) {
     _textWidth = 0;
     _label = label;
   }

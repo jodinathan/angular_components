@@ -30,7 +30,7 @@ abstract class PopupSource {
   /// - [Alignment.end] == clientRect.left + clientRect.width
   ///
   /// Changing this value will fire a new event on [measure]
-  Alignment get alignOriginX;
+  Alignment? get alignOriginX;
 
   /// What point of the origin to use on the y-axis.
   ///
@@ -40,7 +40,7 @@ abstract class PopupSource {
   /// - [Alignment.end] == clientRect.top + clientRect.height
   ///
   /// Changing this value will fire a new event on [measure].
-  Alignment get alignOriginY;
+  Alignment? get alignOriginY;
 
   /// Returns a stream that has events with the dimensions of a DOM element that
   /// the popup is positioned relatively to.
@@ -51,10 +51,10 @@ abstract class PopupSource {
   /// changes. This has some performance impact. See [DomService]. If [track]
   /// is false, the stream will only update when [alignOriginX] or
   /// [alignOriginY] change.
-  Stream<Rectangle> onDimensionsChanged({bool track = false});
+  Stream<Rectangle>? onDimensionsChanged({bool track = false});
 
   /// The size of the source and its position relative to the viewport.
-  Rectangle get dimensions;
+  Rectangle? get dimensions;
 
   /// Whether the source direction is RTL.
   bool get isRtl;
@@ -62,7 +62,7 @@ abstract class PopupSource {
   /// Set the DOM ID of the popup controlled by this source.
   ///
   /// Setting this ensures that popups get ARIA a11y attributes.
-  set popupId(String id);
+  set popupId(String? id);
 
   /// Called when the popup is opened.
   void onOpen();
@@ -73,19 +73,19 @@ abstract class PopupSource {
 
 /// An [PopupSource] that's based on an element.
 abstract class ElementPopupSource implements PopupSource, Focusable {
-  HtmlElement get sourceElement;
+  HtmlElement? get sourceElement;
 
   @override
-  Rectangle get dimensions => sourceElement.getBoundingClientRect();
+  Rectangle? get dimensions => sourceElement?.getBoundingClientRect();
 }
 
 /// An immutable [PopupSource] implementation based on a predefined polygon.
 class _RectanglePopupSource implements PopupSource {
   @override
-  final Alignment alignOriginX;
+  final Alignment? alignOriginX;
 
   @override
-  final Alignment alignOriginY;
+  final Alignment? alignOriginY;
 
   final Rectangle _predefinedRectangle;
 
@@ -93,7 +93,7 @@ class _RectanglePopupSource implements PopupSource {
       {this.alignOriginX, this.alignOriginY});
 
   @override
-  Stream<Rectangle> onDimensionsChanged({bool track = false}) {
+  Stream<Rectangle>? onDimensionsChanged({bool track = false}) {
     // Track is ignored for this type, as it's assumed that the Rectangle is
     // immutable. If in the future we have an ObservableRectangle, then track
     // can be supported.
@@ -107,7 +107,7 @@ class _RectanglePopupSource implements PopupSource {
   final bool isRtl = false;
 
   @override
-  set popupId(String id) {
+  set popupId(String? id) {
     // There's no DOM element, so ARIA attributes aren't applicable.
   }
 

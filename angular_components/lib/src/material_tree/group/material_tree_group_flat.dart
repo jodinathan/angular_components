@@ -51,10 +51,10 @@ class MaterialTreeGroupFlatListComponent<T> extends MaterialTreeNode<T> {
   styleUrls: ['material_tree_group_flat_radio.scss.css'],
 )
 class MaterialTreeGroupFlatRadioComponent<T> extends MaterialTreeNode<T> {
-  final DropdownHandle _dropdownHandle;
+  final DropdownHandle? _dropdownHandle;
 
   /// Exposed for [MaterialRadioGroupComponent].
-  final SelectionModel selectionModel;
+  final SelectionModel? selectionModel;
 
   MaterialTreeGroupFlatRadioComponent(
       MaterialTreeRoot<T> root, ChangeDetectorRef changeDetector,
@@ -91,7 +91,7 @@ class MaterialTreeGroupFlatRadioComponent<T> extends MaterialTreeNode<T> {
   styleUrls: ['material_tree_group_flat_check.scss.css'],
 )
 class MaterialTreeGroupFlatCheckComponent<T> extends MaterialTreeNode<T> {
-  final DropdownHandle _dropdownHandle;
+  final DropdownHandle? _dropdownHandle;
 
   MaterialTreeGroupFlatCheckComponent(
       MaterialTreeRoot<T> root, ChangeDetectorRef changeDetector,

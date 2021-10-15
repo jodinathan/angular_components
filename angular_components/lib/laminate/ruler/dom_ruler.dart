@@ -26,13 +26,13 @@ class DomRulerImpl extends RulerBase<Element> implements DomRuler {
   @override
   bool canSyncWrite(Element element) {
     if (_document is HtmlDocument) {
-      return !(_document as HtmlDocument).body.contains(element);
+      return !(_document as HtmlDocument).body!.contains(element);
     }
     return !_document.contains(element);
   }
 
   @override
-  Stream<DomService> get onLayoutChanged => _domService.onLayoutChanged;
+  Stream<DomService>? get onLayoutChanged => _domService.onLayoutChanged;
 
   @override
   Future<void> onRead() => _domService.onRead();
@@ -87,7 +87,7 @@ class DomRulerImpl extends RulerBase<Element> implements DomRuler {
 
   @override
   void setCssPropertySync(
-      Element element, String propertyName, String propertyValue) {
-    element.style.setProperty(propertyName, propertyValue);
+      Element element, String? propertyName, String? propertyValue) {
+    element.style.setProperty(propertyName!, propertyValue);
   }
 }

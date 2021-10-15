@@ -12,12 +12,12 @@ import 'package:angular_components/utils/browser/dom_service/dom_service.dart';
 class StickyControllerImpl implements StickyController {
   final DomService _domService;
   final ScrollHost _scrollHost;
-  StreamController<Null> _onUpdateController;
+  StreamController<Null>? _onUpdateController;
 
   @override
   final bool usePositionSticky = false;
 
-  StreamSubscription _layoutSubscription;
+  StreamSubscription? _layoutSubscription;
 
   final _rowMap = <Element, _StickyRow>{};
   final Set<Element> _floatingElements = {};
@@ -25,15 +25,15 @@ class StickyControllerImpl implements StickyController {
   /// The ordered list of rows, based on their position. The order will be
   /// cached between layout checks, unless there was a register or an unregister
   /// call.
-  List<_StickyRow> _orderedRows;
-  StickyContainerLayout<_StickyRow> _currentLayout;
+  List<_StickyRow>? _orderedRows;
+  StickyContainerLayout<_StickyRow>? _currentLayout;
 
   StickyControllerImpl(this._domService, this._scrollHost);
 
   @override
-  void stick(Element element, StickyPosition position, Element range,
-      {String stickyClass, String stickyKey}) {
-    _StickyRow row = _rowMap[element];
+  void stick(Element element, StickyPosition position, Element? range,
+      {String? stickyClass, String? stickyKey}) {
+    _StickyRow? row = _rowMap[element];
     // if the definition's key fields are the same, assume that nothing changed
     if ((row != null) &&
         (row.position == position) &&
@@ -51,7 +51,7 @@ class StickyControllerImpl implements StickyController {
   void unstick(Element element) {
     // clearing ordered row cache for both register and unregister
     _orderedRows = null;
-    _StickyRow row = _rowMap.remove(element);
+    _StickyRow? row = _rowMap.remove(element);
     if (row == null) return;
     _currentLayout?.remove(row);
     row.resetTop();
@@ -80,11 +80,11 @@ class StickyControllerImpl implements StickyController {
   @override
   Stream<Null> get onUpdate {
     _onUpdateController ??= StreamController<Null>.broadcast(sync: true);
-    return _onUpdateController.stream;
+    return _onUpdateController!.stream;
   }
 
   @override
-  bool enableSmoothPushing = false;
+  bool? enableSmoothPushing = false;
 
   @override
   void dispose() {
@@ -105,7 +105,7 @@ class StickyControllerImpl implements StickyController {
 
   void _startEventListeners() {
     if (_layoutSubscription != null) return;
-    _layoutSubscription = _domService.onLayoutChanged.listen((_) {
+    _layoutSubscription = _domService.onLayoutChanged!.listen((_) {
       _checkAndUpdateLayout();
     });
     // Make sure scroll host is listening for events that trigger scrolling.
@@ -116,7 +116,7 @@ class StickyControllerImpl implements StickyController {
 
   void _stopEventListeners() {
     if (_layoutSubscription != null) {
-      _layoutSubscription.cancel();
+      _layoutSubscription!.cancel();
       _layoutSubscription = null;
     }
   }
@@ -161,7 +161,7 @@ class StickyControllerImpl implements StickyController {
     Rectangle hostPosition = _getAvailableArea();
 
     return StickyRowUtils.calculateLayout<_StickyRow>(
-        hostPosition, _orderedRows,
+        hostPosition, _orderedRows!,
         enableSmoothPushing: enableSmoothPushing);
   }
 
@@ -171,7 +171,7 @@ class StickyControllerImpl implements StickyController {
     if (layout != _currentLayout && _orderedRows != null) {
       _updateContainer(layout);
       if (_onUpdateController?.hasListener ?? false) {
-        _onUpdateController.add(null);
+        _onUpdateController!.add(null);
       }
     }
   }
@@ -180,43 +180,43 @@ class StickyControllerImpl implements StickyController {
     if (_orderedRows == null) {
       _orderedRows = _rowMap.values.toList();
     }
-    for (int i = 0; i < _orderedRows.length; i++) {
-      _orderedRows[i].readRowPositions();
+    for (int i = 0; i < _orderedRows!.length; i++) {
+      _orderedRows![i].readRowPositions();
     }
     // For rows that have StickyPosition.TOP, they are sorted from top down.
     // For rows that have StickyPosition.BOTTOM, they are sorted from bottom up.
     // Rows that have StickyPosition.TOP are stored before those have
     // StickyPosition.BOTTOM.
-    _orderedRows.sort((a, b) {
+    _orderedRows!.sort((a, b) {
       if (a.isTop != b.isTop) {
         return a.isTop ? -1 : 1;
       }
       return a.isTop
-          ? a.rowPosition.top.compareTo(b.rowPosition.top)
-          : b.rowPosition.top.compareTo(a.rowPosition.top);
+          ? a.rowPosition!.top.compareTo(b.rowPosition!.top)
+          : b.rowPosition!.top.compareTo(a.rowPosition!.top);
     });
   }
 
   void _updateContainer(StickyContainerLayout<_StickyRow> layout) {
     if (layout.topRows != null) {
-      num top = layout.hostPosition.top;
-      for (int i = 0; i < layout.topRows.length; i++) {
-        final data = layout.topRows[i];
+      num top = layout.hostPosition!.top;
+      for (int i = 0; i < layout.topRows!.length; i++) {
+        final data = layout.topRows![i];
         data.row.moveToTop(top + data.offsetY);
-        top += data.row.rowPosition.height;
+        top += data.row.rowPosition!.height;
       }
     }
     if (layout.bottomRows != null) {
-      num top = layout.hostPosition.bottom;
-      for (int i = 0; i < layout.bottomRows.length; i++) {
-        final data = layout.bottomRows[i];
-        top -= data.row.rowPosition.height;
+      num top = layout.hostPosition!.bottom;
+      for (int i = 0; i < layout.bottomRows!.length; i++) {
+        final data = layout.bottomRows![i];
+        top -= data.row.rowPosition!.height;
         data.row.moveToTop(top + data.offsetY);
       }
     }
     if (layout.hiddenRows != null) {
-      for (int i = 0; i < layout.hiddenRows.length; i++) {
-        layout.hiddenRows[i].softResetTop();
+      for (int i = 0; i < layout.hiddenRows!.length; i++) {
+        layout.hiddenRows![i].softResetTop();
       }
     }
     _currentLayout = layout;
@@ -225,9 +225,9 @@ class StickyControllerImpl implements StickyController {
 
 /// Interface to make testing easier
 abstract class StickyRowPosition {
-  String get stickyKey;
-  Rectangle get rowPosition;
-  Rectangle get rangePosition;
+  String? get stickyKey;
+  Rectangle? get rowPosition;
+  Rectangle? get rangePosition;
   bool get isTop;
   bool get isBottom;
 }
@@ -235,14 +235,14 @@ abstract class StickyRowPosition {
 class _StickyRow implements StickyRowPosition {
   final Element element;
   final StickyPosition position;
-  final Element range;
-  final String stickyClass;
-  final String _stickyKey;
+  final Element? range;
+  final String? stickyClass;
+  final String? _stickyKey;
 
   @override
-  Rectangle rowPosition;
+  Rectangle? rowPosition;
   @override
-  Rectangle rangePosition;
+  Rectangle? rangePosition;
   String _currentPosition = '';
   String _currentTransform = '';
   String _currentZIndex = '';
@@ -263,7 +263,7 @@ class _StickyRow implements StickyRowPosition {
   }
 
   @override
-  String get stickyKey => _stickyKey;
+  String? get stickyKey => _stickyKey;
 
   @override
   bool get isTop => (position == StickyPosition.TOP);
@@ -275,8 +275,8 @@ class _StickyRow implements StickyRowPosition {
   void readRowPositions() {
     rowPosition = element.getBoundingClientRect();
     if (translateY != null) {
-      rowPosition = Rectangle(rowPosition.left, rowPosition.top - translateY,
-          rowPosition.width, rowPosition.height);
+      rowPosition = Rectangle(rowPosition!.left, rowPosition!.top - translateY,
+          rowPosition!.width, rowPosition!.height);
     }
     rangePosition = range?.getBoundingClientRect();
   }
@@ -293,7 +293,7 @@ class _StickyRow implements StickyRowPosition {
     }
     _currentTransform = '';
     _currentZIndex = '';
-    if (stickyClass != null) element.classes.toggle(stickyClass, false);
+    if (stickyClass != null) element.classes.toggle(stickyClass!, false);
   }
 
   /// Completely resets the row's position and styling (expensive in Firefox).
@@ -307,7 +307,7 @@ class _StickyRow implements StickyRowPosition {
 
   /// Sets sticky styles and positions the row onto the given [top] coordinate.
   void moveToTop(num top) {
-    num newY = top - rowPosition.top;
+    num newY = top - rowPosition!.top;
     if (translateY != newY) {
       translateY = newY;
       String newTransform = 'translate3d(0px, ${translateY}px, 0px)';
@@ -323,7 +323,7 @@ class _StickyRow implements StickyRowPosition {
         _currentTransform = newTransform;
         _currentZIndex = newZIndex;
       }
-      if (stickyClass != null) element.classes.toggle(stickyClass, true);
+      if (stickyClass != null) element.classes.toggle(stickyClass!, true);
     }
   }
 
@@ -366,21 +366,21 @@ class _RowData<T> {
 /// bottom, or keep hidden.
 class StickyContainerLayout<T> {
   /// The host's visible area
-  Rectangle hostPosition;
+  Rectangle? hostPosition;
 
   /// Rows that should stick to the top.
-  List<_RowData<T>> topRows;
+  List<_RowData<T>>? topRows;
 
   /// Rows that should stick to the bottom.
-  List<_RowData<T>> bottomRows;
+  List<_RowData<T>>? bottomRows;
 
   /// Rows that should not stick.
-  List<T> hiddenRows;
+  List<T>? hiddenRows;
 
   /// The offset we are using to move the row to the sticking position. Both
   /// the top and bottom rows are contained, and its use is only for checking
   /// whether any UI update needs to be done.
-  List<num> _translateYs;
+  List<num>? _translateYs;
 
   @override
   bool operator ==(other) =>
@@ -391,7 +391,7 @@ class StickyContainerLayout<T> {
       _listEquals(hiddenRows, other.hiddenRows) &&
       _listEquals(_translateYs, other._translateYs);
 
-  bool _listEquals(List aList, List bList) {
+  bool _listEquals(List? aList, List? bList) {
     if ((aList == null) && (bList == null)) return true;
     if ((aList == null) || (bList == null)) return false;
     if (aList.length != bList.length) return false;
@@ -435,7 +435,7 @@ abstract class StickyRowUtils {
 
   /// Whether the row should stick or not, given the surrounding.
   static bool shouldStick(bool isTop, num hostTop, num hostBottom,
-      Rectangle rowPosition, Rectangle rangePosition) {
+      Rectangle rowPosition, Rectangle? rangePosition) {
     if (rowPosition.height == 0) {
       return false;
     }
@@ -468,7 +468,7 @@ abstract class StickyRowUtils {
   /// and computes an additional offset for top/bottom rows.
   static StickyContainerLayout<T> calculateLayout<T extends StickyRowPosition>(
       Rectangle hostPosition, List<T> rows,
-      {bool enableSmoothPushing = false}) {
+      {bool? enableSmoothPushing = false}) {
     num hostTop = hostPosition.top;
     num hostBottom = hostPosition.bottom;
     var layout = StickyContainerLayout<T>()
@@ -478,11 +478,11 @@ abstract class StickyRowUtils {
     // An eager, single-pass algorithm to decide which rows should stick or not.
     // The downside: importance of the rows are not accounted, and it may not
     // display a summary footer in certain conditions.
-    Map<String, int> stickyKeyToRowIndex;
+    Map<String?, int>? stickyKeyToRowIndex;
     for (var i = 0; i < rows.length; i++) {
       var row = rows[i];
       bool shouldStick = StickyRowUtils.shouldStick(
-          row.isTop, hostTop, hostBottom, row.rowPosition, row.rangePosition);
+          row.isTop, hostTop, hostBottom, row.rowPosition!, row.rangePosition);
 
       // Prevent sticky rows with duplicate sticky keys from showing. The set
       // of rows sharing the same sticky key are assumed to be the same height.
@@ -496,12 +496,12 @@ abstract class StickyRowUtils {
       // as only the first instance is stuck, the re-computation is unnecessary
       // and skipped.
       if (hasStuckDuplicate && row.isTop) {
-        var duplicateRow = layout.topRows[stickyKeyToRowIndex[row.stickyKey]];
+        var duplicateRow = layout.topRows![stickyKeyToRowIndex![row.stickyKey]!];
         shouldStick = StickyRowUtils.shouldStick(
             row.isTop,
-            hostTop - duplicateRow.row.rowPosition.height,
+            hostTop - duplicateRow.row.rowPosition!.height,
             hostBottom,
-            row.rowPosition,
+            row.rowPosition!,
             row.rangePosition);
       }
 
@@ -519,26 +519,26 @@ abstract class StickyRowUtils {
           if (layout.topRows == null) {
             layout.topRows = [];
           }
-          layout.topRows.add(_RowData(row, offsetY: 0));
-          layout._translateYs.add(hostTop - row.rowPosition.top);
-          hostTop += row.rowPosition.height;
+          layout.topRows!.add(_RowData(row, offsetY: 0));
+          layout._translateYs!.add(hostTop - row.rowPosition!.top);
+          hostTop += row.rowPosition!.height;
 
           if (row.stickyKey != null) {
-            stickyKeyToRowIndex ??= <String, int>{};
-            stickyKeyToRowIndex[row.stickyKey] = layout.topRows.length - 1;
+            stickyKeyToRowIndex ??= <String?, int>{};
+            stickyKeyToRowIndex[row.stickyKey] = layout.topRows!.length - 1;
           }
         } else {
           assert(row.isBottom);
           if (layout.bottomRows == null) {
             layout.bottomRows = [];
           }
-          layout.bottomRows.add(_RowData(row, offsetY: 0));
-          layout._translateYs.add(hostBottom - row.rowPosition.bottom);
-          hostBottom -= row.rowPosition.height;
+          layout.bottomRows!.add(_RowData(row, offsetY: 0));
+          layout._translateYs!.add(hostBottom - row.rowPosition!.bottom);
+          hostBottom -= row.rowPosition!.height;
 
           if (row.stickyKey != null) {
-            stickyKeyToRowIndex ??= <String, int>{};
-            stickyKeyToRowIndex[row.stickyKey] = layout.bottomRows.length - 1;
+            stickyKeyToRowIndex ??= <String?, int>{};
+            stickyKeyToRowIndex[row.stickyKey] = layout.bottomRows!.length - 1;
           }
         }
       } else {
@@ -549,9 +549,9 @@ abstract class StickyRowUtils {
         bool shouldReplace = shouldStick && hasStuckDuplicate && row.isTop;
         if (shouldReplace) {
           final duplicateRow =
-              layout.topRows[stickyKeyToRowIndex[row.stickyKey]].row;
-          layout.hiddenRows.add(duplicateRow);
-          layout.topRows[stickyKeyToRowIndex[row.stickyKey]] =
+              layout.topRows![stickyKeyToRowIndex![row.stickyKey]!].row;
+          layout.hiddenRows!.add(duplicateRow);
+          layout.topRows![stickyKeyToRowIndex[row.stickyKey]!] =
               _RowData(row, offsetY: 0);
 
           // Partial support for replacing rows of different heights.
@@ -559,9 +559,9 @@ abstract class StickyRowUtils {
           // different stickyKeys, but fixes a glitch in some cases.
           // As before, when interleaving stickyKeys, rows with the same
           // stickyKey must have the same height.
-          hostTop += row.rowPosition.height - duplicateRow.rowPosition.height;
+          hostTop += row.rowPosition!.height - duplicateRow.rowPosition!.height;
         } else {
-          layout.hiddenRows.add(row);
+          layout.hiddenRows!.add(row);
         }
       }
 
@@ -571,14 +571,14 @@ abstract class StickyRowUtils {
       // stickyKeys, so is disabled by default.
       // TODO(google): Relax this limitation.
       // TODO(google): Support this for bottom rows as well.
-      if (enableSmoothPushing &&
+      if (enableSmoothPushing! &&
           !shouldStick &&
           hasStuckDuplicate &&
           row.isTop) {
-        var duplicateRowIdx = stickyKeyToRowIndex[row.stickyKey];
-        var duplicateRow = layout.topRows[duplicateRowIdx];
-        if (row.rowPosition.top < hostTop) {
-          duplicateRow.offsetY = row.rowPosition.top - hostTop;
+        var duplicateRowIdx = stickyKeyToRowIndex![row.stickyKey]!;
+        var duplicateRow = layout.topRows![duplicateRowIdx];
+        if (row.rowPosition!.top < hostTop) {
+          duplicateRow.offsetY = row.rowPosition!.top - hostTop;
         }
       }
     }

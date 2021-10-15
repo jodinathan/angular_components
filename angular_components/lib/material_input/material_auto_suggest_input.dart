@@ -7,6 +7,7 @@ import 'dart:html' as html;
 
 import 'package:angular/angular.dart';
 import 'package:angular/src/meta.dart';
+import 'package:collection/collection.dart';
 import 'package:angular_components/button_decorator/button_decorator.dart';
 import 'package:angular_components/content/deferred_content.dart';
 import 'package:angular_components/dynamic_component/dynamic_component.dart';
@@ -59,7 +60,7 @@ typedef _InputChangeCallback = String Function(String inputText);
     ExistingProvider(SelectionContainer, MaterialAutoSuggestInputComponent),
     ExistingProvider(HighlightProvider, MaterialAutoSuggestInputComponent),
     ExistingProvider(DropdownHandle, MaterialAutoSuggestInputComponent),
-    ExistingProvider(HasComponentRenderer, MaterialAutoSuggestInputComponent),
+    //ExistingProvider(HasComponentRenderer, MaterialAutoSuggestInputComponent),
     ExistingProvider(HasFactoryRenderer, MaterialAutoSuggestInputComponent),
     ExistingProvider(Focusable, MaterialAutoSuggestInputComponent),
     ExistingProvider(PopupSizeProvider, MaterialAutoSuggestInputComponent),
@@ -108,7 +109,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
         OnInit,
         OnDestroy,
         HasRenderer<T>,
-        HasComponentRenderer<RendersValue, Object>,
+        //HasComponentRenderer<RendersValue, Object>,
         HasFactoryRenderer<RendersValue, T>,
         DropdownHandle,
         PopupSizeProvider {
@@ -129,7 +130,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
 
   /// Keeps track of the item matching the filter as the suggestions are
   /// being updated.
-  final ActiveItemModel<T> activeModel;
+  final ActiveItemModel<T?> activeModel;
 
   bool _isInitialized = false;
 
@@ -173,8 +174,8 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
 
   bool _showPopup = false;
   bool _focusPending = false;
-  MaterialInputComponent _input;
-  _InputChangeCallback _callback;
+  MaterialInputComponent? _input;
+  _InputChangeCallback? _callback;
 
   /// The current text being displayed.
   String _inputText = '';
@@ -184,10 +185,10 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
 
   /// The last item that was selected.  This is needed if clearOnSelection is
   /// false to determine if an item needs to be unselected.
-  Object _lastSelectedItem;
+  Object? _lastSelectedItem;
 
   /// The last future of filtering the options.
-  DisposableFuture _lastFilterFuture;
+  DisposableFuture? _lastFilterFuture;
 
   /// Whether a filter is scheduled during the next call of [ngAfterChanges].
   bool _filterScheduled = false;
@@ -234,7 +235,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   ///   when the suggestions list opens. Also, do not clear the active item when
   ///   the search text changes.
   @Input()
-  set accessibleItemActivation(bool value) {
+  set accessibleItemActivation(bool? value) {
     if (value == null) return;
     _accessibleItemActivation = value;
     activeModel.activateFirstItemByDefault =
@@ -252,7 +253,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   /// Note: Setting this field may depend on the browser implementation and is
   /// not guaranteed to turn off the autocomplete functionality.
   @Input()
-  String inputAutocomplete;
+  String? inputAutocomplete;
 
   int _limit = 10;
 
@@ -284,16 +285,16 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   List<RelativePosition> _popupPositions = _defaultPopupPositions;
 
   /// Listener for selection model changes.
-  StreamSubscription _selectionListener;
+  StreamSubscription? _selectionListener;
 
   /// Listener for selection options changes.
-  StreamSubscription _optionsListener;
+  StreamSubscription? _optionsListener;
 
   /// Direction of popup scaling.
   ///
   /// Valid values are `x`, `y`, or `null`.
   @Input()
-  String slide;
+  String? slide;
 
   /// Show or hide the trailing close icon.
   ///
@@ -304,7 +305,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
 
   /// Tooltip shown on clear icon.
   @Input()
-  String clearIconTooltip;
+  String? clearIconTooltip;
 
   bool get hasClearIconTooltip => clearIconTooltip?.isNotEmpty ?? false;
 
@@ -319,20 +320,20 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   /// A simple function to render the an item to string.
   @override
   @Input()
-  set itemRenderer(ItemRenderer<T> value) => super.itemRenderer = value;
+  set itemRenderer(ItemRenderer<T>? value) => super.itemRenderer = value;
 
   // Override renderer here to just add the @Input annotation and keep the
   // angular dependency out of models.
-  @override
-  @Input()
-  @Deprecated('Use factoryRenderer instead as it is tree shakeable.')
-  set componentRenderer(ComponentRenderer value) =>
-      super.componentRenderer = value;
+  //@override
+  //@Input()
+  //@Deprecated('Use factoryRenderer instead as it is tree shakeable.')
+  //set componentRenderer(ComponentRenderer? value) =>
+  //    super.componentRenderer = value;
 
   /// [FactoryRenderer] used to display the item.
   @override
   @Input()
-  set factoryRenderer(FactoryRenderer<RendersValue, T> value) =>
+  set factoryRenderer(FactoryRenderer<RendersValue, T>? value) =>
       super.factoryRenderer = value;
 
   /// Function for use by NgFor for optionGroup to avoid recreating the
@@ -341,18 +342,18 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
 
   /// If a parent provides a [PopupSizeProvider], the provider will be used
   /// instead of the implementation of this class.
-  final PopupSizeProvider _popupSizeDelegate;
+  final PopupSizeProvider? _popupSizeDelegate;
 
   /// Control used to forward errors.
-  NgControl _cd;
+  NgControl? _cd;
 
   // Use a factory as a layer of indirection, in order to resolve a default
   // IdGenerator if there is none bound.
   factory MaterialAutoSuggestInputComponent(
-          @Optional() @Self() NgControl cd,
-          @Optional() IdGenerator idGenerator,
+          @Optional() @Self() NgControl? cd,
+          @Optional() IdGenerator? idGenerator,
           ChangeDetectorRef changeDetector,
-          @Optional() @SkipSelf() PopupSizeProvider popupSizeDelegate) =>
+          @Optional() @SkipSelf() PopupSizeProvider? popupSizeDelegate) =>
       MaterialAutoSuggestInputComponent.protected(
           cd,
           idGenerator ?? SequentialIdGenerator.fromUUID(),
@@ -366,7 +367,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
         popupId = idGenerator.nextId(),
         inputId = idGenerator.nextId() {
     if (_cd != null) {
-      _cd.valueAccessor = this;
+      _cd?.valueAccessor = this;
     }
     selection = SelectionModel.single();
   }
@@ -378,10 +379,12 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   // Stopgap to foward errors from the control to the internal material-input
   // representation.
   // TODO(google): Migrate to using error-panel once it gets added to acx.
-  String get errorText {
+  String? get errorText {
     if (error != null) return error;
-    if (_cd?.control?.errors != null) {
-      Map<String, dynamic> errorMap = _cd.control.errors;
+
+    var err = _cd?.control?.errors;
+    if (err != null) {
+      Map<String, dynamic> errorMap = err;
       var stringValue = errorMap.values.firstWhere(
           ((v) => (v is String) && v.isNotEmpty),
           orElse: () => null);
@@ -391,23 +394,25 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   }
 
   @override
-  set selection(SelectionModel<T> selection) {
+  set selection(SelectionModel<T>? selection) {
     super.selection = selection;
     activeModel.activateFirstItemByDefault =
         (isSingleSelect && accessibleItemActivation) ||
             (isMultiSelect && !accessibleItemActivation);
 
-    if (isSingleSelect && selection.selectedValues.isNotEmpty) {
-      _lastSelectedItem = selection.selectedValues.first;
-      if (_isInitialized) {
-        // Make sure input text is initialized correctly regardless of input
-        // order. Specified input text should take precedence over selection
-        // status.
-        inputText = itemRenderer(_lastSelectedItem);
+    if (selection != null) {
+      if (isSingleSelect && selection.selectedValues.isNotEmpty) {
+        _lastSelectedItem = selection.selectedValues.first;
+        if (_isInitialized) {
+          // Make sure input text is initialized correctly regardless of input
+          // order. Specified input text should take precedence over selection
+          // status.
+          inputText = itemRenderer!(_lastSelectedItem as T);
+        }
       }
     }
     _selectionListener?.cancel();
-    _selectionListener = selection.selectionChanges.listen((_) {
+    _selectionListener = selection?.selectionChanges.listen((_) {
       // If the input fields shows the selected value then update it if the
       // selection changes or clear it if the selection model is empty.
       if (shouldClearInputOnSelection) {
@@ -419,8 +424,9 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
         // Make sure that the change was not caused by this component.
         if (_lastSelectedItem != selectedItem) {
           _lastSelectedItem = selectedItem;
-          inputText =
-              _lastSelectedItem != null ? itemRenderer(_lastSelectedItem) : '';
+          inputText = _lastSelectedItem != null
+              ? itemRenderer!(_lastSelectedItem as T)
+              : '';
         }
       }
       emitSelectionChange();
@@ -440,7 +446,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   }
 
   @override
-  set options(SelectionOptions<T> options) {
+  set options(SelectionOptions<T>? options) {
     if (options == null) return;
     super.options = options;
     activeModel.items = options.optionsList;
@@ -448,7 +454,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
     _optionsListener = options.stream.listen((_) {
       activeModel.items = options.optionsList;
       _updateItemActivation();
-      _changeDetector?.markForCheck();
+      _changeDetector.markForCheck();
     });
     if (!_filterScheduled) {
       _filterSuggestions();
@@ -469,27 +475,29 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   }
 
   /// The suggestions that match the current input text.
-  List<OptionGroup> get visibleSuggestionGroups => options.optionGroups;
+  List<OptionGroup>? get visibleSuggestionGroups => options!.optionGroups;
 
-  bool get hasOptions => options.optionsList.isNotEmpty;
+  bool get hasOptions => options!.optionsList.isNotEmpty;
 
-  bool get showLoadingSpinner => loading && options.optionsList.isEmpty;
+  bool get showLoadingSpinner => loading && options!.optionsList.isEmpty;
 
+/*
   @Deprecated('Use labelFactory instead.')
   @Input()
-  ComponentRenderer labelRenderer;
+  ComponentRenderer? labelRenderer;
+*/
 
   /// Custom factory for rendering suggestion labels.
   @Input()
-  FactoryRenderer labelFactory;
+  FactoryRenderer? labelFactory;
 
   // Whether a custom label render is used.
-  bool get hasCustomLabelRenderer =>
-      labelRenderer != null || labelFactory != null;
+  bool get hasCustomLabelRenderer => labelFactory != null;
+  //labelRenderer != null || labelFactory != null;
 
   /// An option is disabled if the options implements Selectable, but the [item]
   /// is not selectable.
-  bool isOptionDisabled(T item) {
+  bool isOptionDisabled(T? item) {
     // TODO: Verify if this can be simplified to .isDisabledIn.
     //
     // The prior code did a check for `!= SelectableOption.Selected`. It is
@@ -506,17 +514,18 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   @Input()
   bool highlightOptions = true;
 
+/*
   @override
-  ComponentRenderer get componentRenderer => highlightOptions &&
+  ComponentRenderer? get componentRenderer => highlightOptions &&
           super.componentRenderer == null &&
           super.factoryRenderer == null
       ? highlightComponentRenderer
       : super.componentRenderer;
+*/
 
   @override
-  FactoryRenderer<RendersValue, T> get factoryRenderer => highlightOptions &&
-          super.factoryRenderer == null &&
-          super.componentRenderer == null
+  FactoryRenderer<RendersValue, T>? get factoryRenderer => highlightOptions &&
+          super.factoryRenderer == null //&& super.componentRenderer == null
       ? highlightFactoryRenderer
       : super.factoryRenderer;
 
@@ -526,7 +535,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   @Output()
   Stream<bool> get showPopupChange => _showPopupController.stream;
 
-  bool get showPopup => _showPopup && !disabled;
+  bool get showPopup => _showPopup && !disabled!;
 
   /// Used to control the visibility of the suggestion popup.
   @Input()
@@ -549,7 +558,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
 
   bool get showEmptyPlaceholder =>
       emptyPlaceholder.isNotEmpty &&
-      options.optionsList.isEmpty &&
+      options!.optionsList.isEmpty &&
       !showLoadingSpinner;
 
   List<RelativePosition> get popupPositions => _popupPositions;
@@ -559,7 +568,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   /// See [MaterialPopupComponent] for more information.
   @Input()
   set popupPositions(List<RelativePosition> positions) {
-    if (positions?.isNotEmpty == true) {
+    if (positions.isNotEmpty == true) {
       _popupPositions = positions;
     } else {
       _popupPositions = _defaultPopupPositions;
@@ -571,14 +580,14 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
 
   /// Filters suggestion list according to input.
   @override
-  set inputText(String inputText) {
+  set inputText(String? inputText) {
     if (_setInputText(inputText) && _callback != null) {
-      _callback(_inputText);
+      _callback!(_inputText);
     }
   }
 
   /// Returns true if [inputText] was changed.
-  bool _setInputText(String inputText) {
+  bool _setInputText(String? inputText) {
     inputText ??= '';
 
     if (inputText == _inputText) {
@@ -591,8 +600,8 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
       // Deselect previously selected item as the component was not asked to
       // clear the text upon selection, indicating that the selection is bound
       // to the text.
-      if (inputText != itemRenderer(_lastSelectedItem)) {
-        selection.deselect(_lastSelectedItem);
+      if (inputText != itemRenderer!(_lastSelectedItem as T)) {
+        selection?.deselect(_lastSelectedItem as T);
         _lastSelectedItem = null;
       }
     }
@@ -661,7 +670,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
     _onInputBlur.add(null);
 
     _isFocused = false;
-    if ((!showPopup || !hasOptions) && _onBlur != null) {
+    if (!showPopup || !hasOptions) {
       _onBlur.add(null);
     }
   }
@@ -694,10 +703,10 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
       if (popupOpening) {
         // The first value in selection.selectedValues is not necessarily the
         // first option in the suggestions list.
-        var firstSelection = selection.selectedValues.isEmpty
+        T? firstSelection = selection!.selectedValues.isEmpty
             ? null
-            : options.optionsList.firstWhere((opt) => selection.isSelected(opt),
-                orElse: () => null);
+            : options!.optionsList
+                .firstWhereOrNull((opt) => selection!.isSelected(opt));
         if (firstSelection == null) {
           activeModel.activateFirst();
         } else {
@@ -770,12 +779,14 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
     if (isSingleSelect) {
       showPopup = false;
     }
-    if (!selection.isSelected(item)) {
-      if (!isOptionDisabled(item)) {
-        selection.select(item);
+    if (selection != null) {
+      if (!selection!.isSelected(item)) {
+        if (!isOptionDisabled(item)) {
+          selection?.select(item);
+        }
+      } else if (deselectOnActivate) {
+        selection?.deselect(item);
       }
-    } else if (deselectOnActivate) {
-      selection.deselect(item);
     }
   }
 
@@ -846,7 +857,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
     _input = input;
     if (_focusPending) {
       _focusPending = false;
-      _input.focus();
+      _input!.focus();
     }
   }
 
@@ -856,7 +867,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
       /// input component is not there yet, defer the focus.
       _focusPending = true;
     } else {
-      _input.focus();
+      _input!.focus();
     }
   }
 
@@ -865,7 +876,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
     _isInitialized = true;
     scheduleMicrotask(() {
       if (inputText.isEmpty && _lastSelectedItem != null) {
-        _setInputText(itemRenderer(_lastSelectedItem));
+        _setInputText(itemRenderer!(_lastSelectedItem as T));
       }
     });
   }
@@ -879,7 +890,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   }
 
   @override
-  bool autoDismiss = true;
+  bool? autoDismiss = true;
 
   @override
   void close() {
@@ -897,19 +908,19 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   }
 
   @override
-  num getMinHeight(num positionY, num viewportHeight) {
+  num? getMinHeight(num positionY, num viewportHeight) {
     return _popupSizeDelegate?.getMinHeight(positionY, viewportHeight);
   }
 
   @override
-  num getMinWidth(num positionX, num viewportWidth) {
+  num? getMinWidth(num positionX, num viewportWidth) {
     return _popupSizeDelegate?.getMinWidth(positionX, viewportWidth);
   }
 
   @override
-  num getMaxHeight(num positionY, num viewportHeight) {
+  num? getMaxHeight(num positionY, num viewportHeight) {
     if (_popupSizeDelegate != null) {
-      return _popupSizeDelegate.getMaxHeight(positionY, viewportHeight);
+      return _popupSizeDelegate!.getMaxHeight(positionY, viewportHeight);
     } else {
       // The default max height for auto suggest input's popup.
       return 400;
@@ -917,9 +928,9 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   }
 
   @override
-  num getMaxWidth(num positionX, num viewportWidth) {
+  num? getMaxWidth(num positionX, num viewportWidth) {
     if (_popupSizeDelegate != null) {
-      return _popupSizeDelegate.getMaxWidth(positionX, viewportWidth);
+      return _popupSizeDelegate!.getMaxWidth(positionX, viewportWidth);
     } else {
       // The default max height for auto suggest input's popup. This was
       // previously max width for material list.
