@@ -63,7 +63,7 @@ class BaseMaterialInput extends FocusableMixin
   bool useNativeValidation = true;
 
   bool _pristine = true;
-  final NgControl _cd;
+  final NgControl? _cd;
 
   /// Controls what section of the BottomPanel is displayed.
   BottomPanelState bottomPanelState = BottomPanelState.empty;
@@ -146,10 +146,10 @@ class BaseMaterialInput extends FocusableMixin
   @Input()
   set requiredErrorMsg(String value) {
     _requiredErrorMsg = value;
-    if (_cd.control != null) {
+    if (_cd?.control != null) {
       // Validator was changed. Rerun validation as required message may
       // have changed.
-      _cd.control!.updateValueAndValidity();
+      _cd?.control?.updateValueAndValidity();
     }
   }
 
@@ -167,9 +167,9 @@ class BaseMaterialInput extends FocusableMixin
     if (validFn == _checkValid) return; // Identical doesn't work on functions
     _checkValid = validFn;
     _changeDetector.markForCheck();
-    if (_cd.control != null) {
+    if (_cd?.control != null) {
       // Validator was changed. Rerun validation.
-      _cd.control!.updateValueAndValidity();
+      _cd?.control?.updateValueAndValidity();
     }
     updateBottomPanelState();
   }
@@ -235,12 +235,12 @@ class BaseMaterialInput extends FocusableMixin
 
   @override
   void ngAfterViewInit() {
-    if (_cd.control != null) {
-      _disposer.addStreamSubscription(_cd.control!.valueChanges.listen((value) {
+    var ctrl = _cd?.control;
+    if (ctrl != null) {
+      _disposer.addStreamSubscription(ctrl.valueChanges.listen((value) {
         _changeDetector.markForCheck();
       }));
-      _disposer
-          .addStreamSubscription(_cd.control!.statusChanges.listen((status) {
+      _disposer.addStreamSubscription(ctrl.statusChanges.listen((status) {
         _changeDetector.markForCheck();
         updateBottomPanelState();
       }));
@@ -326,7 +326,7 @@ class BaseMaterialInput extends FocusableMixin
     if (prev != _required) {
       // Required value changed and we are using a control. Force revalidation
       // on the control.
-      _cd.control!.updateValueAndValidity();
+      _cd?.control?.updateValueAndValidity();
     }
   }
 
@@ -368,11 +368,12 @@ class BaseMaterialInput extends FocusableMixin
     if (_error?.isNotEmpty ?? false) return true;
     // If there is a Control, then it is already using this as a Validator, and
     // possibly others.
-    if (_cd.control != null) {
+
+    if (_cd != null && _cd?.control != null) {
       // Show errors only when a control is invalid, and a user has interacted
       // with it. This conforms to the material spec:
       // https://material.google.com/patterns/errors.html
-      return !_cd.valid! && (_cd.touched! || _cd.dirty!);
+      return !_cd!.valid! && (_cd!.touched! || _cd!.dirty!);
     }
     // otherwise, just do our local validation
     return _isLocallyValid(false) != null;
@@ -388,8 +389,8 @@ class BaseMaterialInput extends FocusableMixin
     if (_error?.isNotEmpty ?? false) return _error;
     // if there is a Control, then all error messages will be in the Control's
     // error map
-    if (_cd.control?.errors != null) {
-      Map<String, dynamic>? errorMap = _cd.control!.errors;
+    if (_cd?.control?.errors != null) {
+      Map<String, dynamic>? errorMap = _cd?.control?.errors;
       if (errorRenderer != null) errorMap = errorRenderer!(errorMap);
       var stringValue = errorMap!.values.firstWhere(
           ((v) => (v is String) && v.isNotEmpty),
@@ -708,7 +709,7 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
   @Input()
   String? inputAriaControls;
 
-  BaseSingleLineInputComponent(String? type, String multiple, NgControl cd,
+  BaseSingleLineInputComponent(String? type, String multiple, NgControl? cd,
       this._changeDetector, DeferredValidator validator)
       : super(cd, _changeDetector, validator) {
     if (type == null) {

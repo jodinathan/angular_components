@@ -43,7 +43,7 @@ class IconAffixComponent implements BaseAffixComponent<IconAffix?> {
   /// The top most menu node.
   ///
   /// Used in order to close the whole hierarchy.
-  final MenuRoot _menuRoot;
+  final MenuRoot? _menuRoot;
 
   final ChangeDetectorRef _cdRef;
 
@@ -91,7 +91,7 @@ class IconAffixComponent implements BaseAffixComponent<IconAffix?> {
       _viewModel!.triggerShortcutAction();
       event.stopPropagation();
 
-      if (_viewModel!.shouldCloseMenuOnTrigger) _menuRoot.closeHierarchy();
+      if (_viewModel!.shouldCloseMenuOnTrigger) _menuRoot?.closeHierarchy();
     }
   }
 }

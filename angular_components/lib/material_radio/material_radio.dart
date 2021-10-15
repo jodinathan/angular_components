@@ -53,13 +53,13 @@ class MaterialRadioComponent extends RootFocusable
       this._root,
       this._changeDetector,
       @Host() @Optional() this._group,
-      @Self() @Optional() NgControl cd,
+      @Self() @Optional() NgControl? cd,
       @Attribute('role') String? role)
       : this.role = role ?? 'radio',
         super(_root) {
     // When NgControl is present on the host element, the component
     // participates in the Forms API.
-    cd.valueAccessor = this;
+    cd?.valueAccessor = this;
   }
 
   @visibleForTemplate

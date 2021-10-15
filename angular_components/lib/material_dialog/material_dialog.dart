@@ -48,7 +48,7 @@ class MaterialDialogComponent
   final DomService _domService;
   final ChangeDetectorRef _changeDetector;
   final NgZone _ngZone;
-  final ModalComponent _modal;
+  final ModalComponent? _modal;
   final _disposer = Disposer.oneShot();
   final _uid = SequentialIdGenerator.fromUUID().nextId();
 
@@ -78,8 +78,10 @@ class MaterialDialogComponent
     _disposer.addStreamSubscription(element.onScroll.listen((_) {
       _setHeaderFooterScrollBorder();
     }));
-    if (_modal == null) return;
-    _disposer.addStreamSubscription(_modal.onOpen.listen((_) {
+    if (_modal == null) {
+      return;
+    }
+    _disposer.addStreamSubscription(_modal!.onOpen.listen((_) {
       _setHeaderFooterScrollBorder();
     }));
   }
@@ -182,7 +184,7 @@ class MaterialDialogComponent
   void _defaultEscapeHandler(KeyboardEvent event) {
     if (_modal != null) {
       event.preventDefault();
-      _modal.close();
+      _modal?.close();
     }
   }
 

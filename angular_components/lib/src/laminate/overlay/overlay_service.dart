@@ -53,7 +53,8 @@ class OverlayService {
   final OverlayDomRenderService _renderService;
 
   OverlayRef _createRef(HtmlElement pane, OverlayState state) => OverlayRef(
-      _renderService.applyState as Future<Object> Function(OverlayState, HtmlElement),
+      _renderService.applyState as Future<Object> Function(
+          OverlayState, HtmlElement),
       _measurePane,
       _renderService.createPortalHost(pane),
       _renderService.containerElement,
@@ -71,7 +72,7 @@ class OverlayService {
       this._ngZone,
       @Inject(overlaySyncDom) this._useDomSynchronously,
       this._renderService,
-      @SkipSelf() @Optional() OverlayService existingInstance) {
+      @SkipSelf() @Optional() OverlayService? existingInstance) {
     assert(() {
       // Overlay service should not be injected if it is already available
       if (existingInstance != null) {

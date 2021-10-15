@@ -192,7 +192,7 @@ class MaterialPopupComponent extends Object
   }
 
   /// Optional handler for calculating popup sizes.
-  PopupSizeProvider _popupSizeProvider;
+  PopupSizeProvider? _popupSizeProvider;
 
   /// Sets a provider for the popup size.
   ///
@@ -319,17 +319,21 @@ class MaterialPopupComponent extends Object
   String get uniqueId => _uniqueId;
 
   @ViewChild('template')
-  late TemplateRef templateRef;
+  TemplateRef? templateRef;
 
   void _initView() {
     assert(_viewInitialized == false);
 
     _overlayRef = _overlayService.createOverlayRefSync();
-    _disposer.addFunction(_overlayRef!.dispose);
-    _zIndex = _zIndexer.pop();
-    var view = _viewContainer.createEmbeddedView(templateRef);
-    for (var node in view.rootNodes) {
-      _overlayRef!.overlayElement.append(node);
+    if (_overlayRef != null) {
+      _disposer.addFunction(_overlayRef!.dispose);
+      _zIndex = _zIndexer.pop();
+      if (templateRef != null) {
+        var view = _viewContainer.createEmbeddedView(templateRef!);
+        for (var node in view.rootNodes) {
+          _overlayRef!.overlayElement.append(node);
+        }
+      }
     }
     _updateOverlayCssClass();
     _viewInitialized = true;
@@ -691,13 +695,13 @@ class MaterialPopupComponent extends Object
     //if (_popupSizeProvider == null) return;
     var boundedViewportRect =
         _boundRectangle(_viewportRect, _viewportBoundaries);
-    minHeight = _popupSizeProvider.getMinHeight(
+    minHeight = _popupSizeProvider?.getMinHeight(
         _overlayRef!.state.top ?? 0, boundedViewportRect.height);
-    minWidth = _popupSizeProvider.getMinWidth(
+    minWidth = _popupSizeProvider?.getMinWidth(
         _overlayRef!.state.left ?? 0, boundedViewportRect.width);
-    maxHeight = _popupSizeProvider.getMaxHeight(
+    maxHeight = _popupSizeProvider?.getMaxHeight(
         _overlayRef!.state.top ?? 0, boundedViewportRect.height);
-    maxWidth = _popupSizeProvider.getMaxWidth(
+    maxWidth = _popupSizeProvider?.getMaxWidth(
         _overlayRef!.state.left ?? 0, boundedViewportRect.width);
   }
 

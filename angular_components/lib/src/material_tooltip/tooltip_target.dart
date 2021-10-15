@@ -28,7 +28,7 @@ import 'tooltip_source.dart' show tooltipShowDelay;
 )
 class MaterialTooltipTargetDirective extends TooltipBehavior
     implements AfterViewInit, OnDestroy {
-  HtmlElement? element;
+  HtmlElement element;
 
   MaterialTooltipTargetDirective(
       DomPopupSourceFactory domPopupSourceFactory,
@@ -48,7 +48,7 @@ class MaterialTooltipTargetDirective extends TooltipBehavior
 
   @override
   void ngOnDestroy() {
-    element = null;
+    //element = null;
   }
 }
 
@@ -129,7 +129,9 @@ abstract class TooltipBehavior extends TooltipTarget {
 
     // Don't hide the tooltip if focus went to an element inside the tooltip.
     HtmlElement? el;
-    for (el = event.relatedTarget as HtmlElement?; el!.parent != null; el = el.parent as HtmlElement?) {
+    for (el = event.relatedTarget as HtmlElement?;
+        el!.parent != null;
+        el = el.parent as HtmlElement?) {
       if (el.className == overlayContainerClassName) return;
     }
 

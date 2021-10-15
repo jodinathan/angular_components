@@ -55,9 +55,10 @@ class MaterialTreeComponent<T> with MaterialTreeRoot<T>, SelectionContainer<T> {
 
   final MaterialTreeRenderingOptions? renderingOptions;
 
-  MaterialTreeComponent(@Optional() @SkipSelf() MaterialTreeRoot parentTreeRoot,
+  MaterialTreeComponent(
+      @Optional() @SkipSelf() MaterialTreeRoot? parentTreeRoot,
       @Optional() @Self() this.renderingOptions)
-      : optimizeForDropdown = parentTreeRoot.optimizeForDropdown == true {
+      : optimizeForDropdown = parentTreeRoot?.optimizeForDropdown == true {
     selection = SelectionModel<T>.empty();
   }
 

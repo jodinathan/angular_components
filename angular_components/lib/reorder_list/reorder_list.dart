@@ -640,11 +640,11 @@ class ReorderItemDirective {
   static const hostTabIndex = 0;
 
   final HtmlElement element;
-  final ReorderHandleProvider _handleProvider;
+  final ReorderHandleProvider? _handleProvider;
   HtmlElement? _handleElement;
 
   HtmlElement? get _reorderHandle =>
-      _handleElement ?? _handleProvider.reorderHandle.element;
+      _handleElement ?? _handleProvider?.reorderHandle.element;
 
   /// The [HtmlElement] to be used as the drag handle.
   ///
