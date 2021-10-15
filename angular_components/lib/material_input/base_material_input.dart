@@ -146,7 +146,7 @@ class BaseMaterialInput extends FocusableMixin
   @Input()
   set requiredErrorMsg(String value) {
     _requiredErrorMsg = value;
-    if (_cd?.control != null) {
+    if (_cd.control != null) {
       // Validator was changed. Rerun validation as required message may
       // have changed.
       _cd.control!.updateValueAndValidity();
@@ -167,7 +167,7 @@ class BaseMaterialInput extends FocusableMixin
     if (validFn == _checkValid) return; // Identical doesn't work on functions
     _checkValid = validFn;
     _changeDetector.markForCheck();
-    if (_cd?.control != null) {
+    if (_cd.control != null) {
       // Validator was changed. Rerun validation.
       _cd.control!.updateValueAndValidity();
     }
@@ -235,7 +235,7 @@ class BaseMaterialInput extends FocusableMixin
 
   @override
   void ngAfterViewInit() {
-    if (_cd?.control != null) {
+    if (_cd.control != null) {
       _disposer.addStreamSubscription(_cd.control!.valueChanges.listen((value) {
         _changeDetector.markForCheck();
       }));
@@ -323,7 +323,7 @@ class BaseMaterialInput extends FocusableMixin
   set required(bool required) {
     var prev = _required;
     _required = required;
-    if (prev != _required && _cd != null) {
+    if (prev != _required) {
       // Required value changed and we are using a control. Force revalidation
       // on the control.
       _cd.control!.updateValueAndValidity();
@@ -368,7 +368,7 @@ class BaseMaterialInput extends FocusableMixin
     if (_error?.isNotEmpty ?? false) return true;
     // If there is a Control, then it is already using this as a Validator, and
     // possibly others.
-    if (_cd?.control != null) {
+    if (_cd.control != null) {
       // Show errors only when a control is invalid, and a user has interacted
       // with it. This conforms to the material spec:
       // https://material.google.com/patterns/errors.html
@@ -388,7 +388,7 @@ class BaseMaterialInput extends FocusableMixin
     if (_error?.isNotEmpty ?? false) return _error;
     // if there is a Control, then all error messages will be in the Control's
     // error map
-    if (_cd != null && _cd.control?.errors != null) {
+    if (_cd.control?.errors != null) {
       Map<String, dynamic>? errorMap = _cd.control!.errors;
       if (errorRenderer != null) errorMap = errorRenderer!(errorMap);
       var stringValue = errorMap!.values.firstWhere(
@@ -423,7 +423,7 @@ class BaseMaterialInput extends FocusableMixin
   /// may be building new functionality that all ACX users could benefit
   /// from! If that's the case, please consider contributing your changes
   /// back upstream. Feel free to contact acx-widgets@ for more guidance.
-  ElementRef? get inputRef => null;
+  HtmlElement? get inputRef => null;
 
   @override
   void ngOnDestroy() {
@@ -489,7 +489,13 @@ class BaseMaterialInput extends FocusableMixin
 
   /// Selects all of the input's content.
   void selectAll() {
-    inputRef!.nativeElement.select();
+    if (inputRef != null) {
+      var el = inputRef!;
+      if (el is InputElement) {
+        el.select();
+      }
+    }
+    //inputRef!.va.nativeElement.select();
   }
 
   @ViewChild(FocusableDirective)
@@ -502,16 +508,17 @@ class BaseMaterialInput extends FocusableMixin
   ///
   /// The character count in the form "[currentCount] / [maxCount]", such as
   /// `12 / 25`, when [maxCount] is non-null; otherwise simply "[currentCount]".
-  String msgCharacterCounter(int currentCount, int maxCount) => maxCount == null
-      ? '$currentCount'
-      : _msgCharacterCounter(currentCount, maxCount);
+  String msgCharacterCounter(int currentCount, int? maxCount) =>
+      maxCount == null
+          ? '$currentCount'
+          : _msgCharacterCounter(currentCount, maxCount);
 
   /// The aria label to use for the character limit label.
   ///
   /// The character count in the form "text is [currentCount] characters out of
   /// [maxCount]", such as `12 characters out of  25`, when [maxCount] is
   /// non-null; otherwise simply "Text is [currentCount] characters".
-  String msgCharacterCounterAriaLabel(int currentCount, int maxCount) =>
+  String msgCharacterCounterAriaLabel(int currentCount, int? maxCount) =>
       maxCount == null
           ? _msgCharacterCounterAriaLabelNoLimitation(currentCount)
           : _msgCharacterCounterAriaLabelNoLimitation(currentCount) +
@@ -553,14 +560,14 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
   final ChangeDetectorRef _changeDetector;
 
   @ViewChild('inputEl')
-  ElementRef? inputEl;
+  HtmlElement? inputEl;
 
   @ViewChild('popupSourceEl')
-  ElementRef? popupSourceEl;
+  Element? popupSourceEl;
 
   /// Container element for popup positioning.
   @override
-  ElementRef? get elementRef => popupSourceEl;
+  Element? get elementRef => popupSourceEl;
 
   /// The underlying <input> element.
   ///
@@ -569,7 +576,7 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
   /// from! If that's the case, please consider contributing your changes
   /// back upstream. Feel free to contact acx-widgets@ for more guidance.
   @override
-  ElementRef? get inputRef => inputEl;
+  HtmlElement? get inputRef => inputEl;
 
   /// Type of input.
   ///
@@ -701,7 +708,7 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
   @Input()
   String? inputAriaControls;
 
-  BaseSingleLineInputComponent(String type, String multiple, NgControl cd,
+  BaseSingleLineInputComponent(String? type, String multiple, NgControl cd,
       this._changeDetector, DeferredValidator validator)
       : super(cd, _changeDetector, validator) {
     if (type == null) {
