@@ -9,7 +9,7 @@ import 'package:angular/angular.dart';
 import 'package:angular/src/meta.dart';
 import 'package:angular_components/button_decorator/button_decorator.dart';
 import 'package:angular_components/dynamic_component/dynamic_component.dart';
-//import 'package:angular_components/glyph/glyph.dart';
+import 'package:angular_components/glyph/glyph.dart';
 import 'package:angular_components/interfaces/has_disabled.dart';
 import 'package:angular_components/material_checkbox/material_checkbox.dart';
 import 'package:angular_components/material_select/activation_handler.dart';
@@ -33,7 +33,7 @@ import 'package:angular_components/utils/disposer/disposer.dart';
   ],
   styleUrls: ['material_select_item.scss.css'],
   directives: [
-    //GlyphComponent,
+    GlyphComponent,
     MaterialCheckboxComponent,
     NgIf,
     DynamicComponent

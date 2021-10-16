@@ -52,7 +52,7 @@ class MaterialDialogComponent
   final _disposer = Disposer.oneShot();
   final _uid = SequentialIdGenerator.fromUUID().nextId();
 
-  late HtmlElement _mainElement;
+  HtmlElement? _mainElement;
   bool _shouldShowHeader = true;
   bool _shouldShowFooter = true;
   bool shouldShowTopScrollStroke = false;
@@ -73,11 +73,13 @@ class MaterialDialogComponent
   }
 
   @ViewChild('main', read: HtmlElement)
-  set main(HtmlElement element) {
+  set main(HtmlElement? element) {
     _mainElement = element;
-    _disposer.addStreamSubscription(element.onScroll.listen((_) {
-      _setHeaderFooterScrollBorder();
-    }));
+    if (_mainElement != null) {
+      _disposer.addStreamSubscription(_mainElement!.onScroll.listen((_) {
+        _setHeaderFooterScrollBorder();
+      }));
+    }
     if (_modal == null) {
       return;
     }
@@ -118,12 +120,13 @@ class MaterialDialogComponent
   void _setHeaderFooterScrollBorder() {
     if (!shouldShowScrollStrokes) return;
     _disposer.addDisposable(_domService.scheduleRead(() {
+      if (_mainElement == null) return;
       var shouldShowTopScrollStroke =
-          _mainElement.scrollTop > 0 && error == null;
+          _mainElement!.scrollTop > 0 && error == null;
       var shouldShowBottomScrollStroke =
-          _mainElement.clientHeight < _mainElement.scrollHeight &&
-              _mainElement.scrollTop <
-                  _mainElement.scrollHeight - _mainElement.clientHeight;
+          _mainElement!.clientHeight < _mainElement!.scrollHeight &&
+              _mainElement!.scrollTop <
+                  _mainElement!.scrollHeight - _mainElement!.clientHeight;
       if (shouldShowTopScrollStroke != this.shouldShowTopScrollStroke ||
           shouldShowBottomScrollStroke != this.shouldShowBottomScrollStroke) {
         this.shouldShowTopScrollStroke = shouldShowTopScrollStroke;

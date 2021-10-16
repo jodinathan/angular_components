@@ -13,6 +13,7 @@ import 'package:angular_components/interfaces/has_disabled.dart';
 import 'package:angular_components/mixins/button_wrapper.dart';
 import 'package:angular_components/mixins/focusable_mixin.dart';
 import 'package:angular_components/utils/id_generator/id_generator.dart';
+import 'package:angular_components/glyph/glyph.dart';
 
 /// A button styled specifically for dropdowns.
 ///
@@ -31,6 +32,7 @@ import 'package:angular_components/utils/id_generator/id_generator.dart';
   ],
   directives: [
     ButtonDirective,
+    GlyphComponent,
     KeyboardOnlyFocusIndicatorDirective,
     NgIf,
   ],
