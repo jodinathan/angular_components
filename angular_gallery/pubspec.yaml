@@ -13,7 +13,7 @@ dependencies:
   #mustache: ^1.0.0
   mustache_template: ^2.0.0
   ngsecurity:
-    git: https://github.com/angulardart-community/ngsecurity.git
+    git: https://github.com/angulardart-community/ngsecurity
 
 dependency_overrides:
   angular_components:
