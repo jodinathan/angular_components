@@ -5,7 +5,7 @@
 -->
 <div
     *ngIf="doc.libraryDoc.isNotEmpty"
-    [safeInnerHtml]="getSafeHtml(doc.libraryDoc)">
+    [innerHtml]="doc.libraryDoc">
 </div>
 
 <ng-container *ngIf="doc.variables.isNotEmpty">
@@ -13,7 +13,7 @@
   <ul class="property-list">
     <li *ngFor="let variable of doc.variables">
       <code class="property-name">${{variable.name}}</code>
-      <div *ngIf="variable.comment.isNotEmpty" [safeInnerHtml]="getSafeHtml(variable.comment)">
+      <div *ngIf="variable.comment.isNotEmpty" [innerHtml]="variable.comment">
       </div>
     </li>
   </ul>
@@ -24,7 +24,7 @@
   <ul class="property-list">
     <li *ngFor="let function of doc.functions">
       <code class="property-name">{{function.signature}}</code>
-      <div *ngIf="function.comment.isNotEmpty" [safeInnerHtml]="getSafeHtml(function.comment)">
+      <div *ngIf="function.comment.isNotEmpty" [innerHtml]="function.comment">
       </div>
     </li>
   </ul>
@@ -35,7 +35,7 @@
   <ul class="property-list">
     <li *ngFor="let mix of doc.mixins">
       <code class="property-name">{{mix.signature}}</code>
-      <div *ngIf="mix.comment.isNotEmpty" [safeInnerHtml]="getSafeHtml(mix.comment)"></div>
+      <div *ngIf="mix.comment.isNotEmpty" [innerHtml]="mix.comment"></div>
     </li>
   </ul>
 </ng-container>
