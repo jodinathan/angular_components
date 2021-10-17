@@ -34,19 +34,19 @@ class BoolExtractor extends SimpleAstVisitor<bool> {
 }
 
 /// [AstVisitor] to extract a [ListLiteral].
-class ListStringExtractor extends SimpleAstVisitor<Iterable<String?>> {
+class ListStringExtractor extends SimpleAstVisitor<Iterable<String>> {
   @override
   visitListLiteral(ListLiteral node) =>
-      node.elements.map((element) => element.accept(StringExtractor()));
+      node.elements.map((element) => element.accept(StringExtractor()) ?? '');
 }
 
 /// [AstVisitor] to extract a [MapLiteral] and [MapLiteralEntry].
-class MapStringExtractor extends SimpleAstVisitor<Map<String?, String?>> {
+class MapStringExtractor extends SimpleAstVisitor<Map<String, String>> {
   @override
   visitSetOrMapLiteral(SetOrMapLiteral node) =>
       Map.fromEntries(node.elements.map((collectionElement) {
         var entry = collectionElement as MapLiteralEntry;
-        return MapEntry(entry.key.accept(StringExtractor()),
-            entry.value.accept(StringExtractor()));
+        return MapEntry(entry.key.accept(StringExtractor()) ?? '',
+            entry.value.accept(StringExtractor()) ?? '');
       }));
 }

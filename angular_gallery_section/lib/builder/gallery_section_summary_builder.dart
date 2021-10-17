@@ -35,7 +35,7 @@ class GallerySectionSummaryBuilder extends Builder {
             'group': info.group,
             'dartImport': _toApiTemplatePath(assetId.uri.toString()),
             'componentClass': '${info.classSafeName}Api',
-            'docs': info.docs!.map((doc) => doc!.name).toList(),
+            'docs': info.docs.map((doc) => doc.name).toList(),
           }));
     }
 

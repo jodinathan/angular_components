@@ -25,8 +25,8 @@ class GallerySectionBuilder extends Builder {
     if (infoAssets.isEmpty) return;
 
     final mergedImports = <String>{};
-    final mergedDemos = <String?, String?>{};
-    final mergedMainDemo = <String?, String?>{};
+    final mergedDemos = <String, String>{};
+    final mergedMainDemo = <String, String>{};
     final apis = [];
 
     for (final assetId in infoAssets) {
@@ -43,8 +43,8 @@ class GallerySectionBuilder extends Builder {
       var docs = [];
 
       for (final info in infoList) {
-        for (final demo in info.demos!) {
-          mergedDemos[demo!.name] = demo.selector;
+        for (final demo in info.demos) {
+          mergedDemos[demo.name] = demo.selector;
           mergedImports.add(demo.import);
         }
 
@@ -52,8 +52,9 @@ class GallerySectionBuilder extends Builder {
           'className': '${info.classSafeName}Api',
           'selector': '${info.selectorSafeName}-api'
         });
-        if (info.mainDemo != null) {
-          mergedMainDemo[info.mainDemo!.name] = info.mainDemo!.selector;
+        var mainDemo = info.mainDemo;
+        if (mainDemo != null) {
+          mergedMainDemo[mainDemo.name] = mainDemo.selector;
         }
       }
       api['docs'] = docs;

@@ -15,7 +15,7 @@ import '../src/template_util.dart';
 /// ACX component gallery.
 class GalleryLibBuilder extends Builder {
   final String _galleryTitle;
-  final List<String>? _styleUrls;
+  final List<String> _styleUrls;
   final List<String> _examplePackages;
 
   GalleryLibBuilder(this._galleryTitle, this._styleUrls, this._examplePackages);
@@ -49,9 +49,9 @@ class GalleryLibBuilder extends Builder {
 
   Future<void> _generateGalleryDart(
       BuildStep buildStep, List<Example> examples) async {
-    final mustacheContext = {
+    final Map<String, List<Object>> mustacheContext = {
       'styleUrls': _styleUrls,
-      'examples': examples,
+      'examples': examples.map((e) => e.toJson()).toList(),
     };
 
     final newAssetId =
@@ -69,9 +69,13 @@ class GalleryLibBuilder extends Builder {
 
   Future<void> _generateGalleryRouteLibraryDart(
       BuildStep buildStep, List<Example> examples) async {
-    final mustacheContext = {
-      'examples': examples,
+    final Map<String, List<Map<String, String>>> mustacheContext = {
+      'examples': examples.map((e) => e.toJson()).toList(),
     };
+
+    //examples.forEach((element) {
+    //  print('Example: name=${element.name} group=${element.group}');
+    //});
 
     final newAssetId = AssetId(
         buildStep.inputId.package, 'lib/gallery/gallery_route_library.dart');
@@ -100,29 +104,43 @@ class GalleryLibBuilder extends Builder {
           summary['group'],
           summary['dartImport'],
           summary['componentClass'],
-          summary['docs']?.cast<String>())));
+          summary['docs'].cast<String>())));
     }
 
     examples
-        .sort((Example a, Example b) => a.displayName!.compareTo(b.displayName!));
+        .sort((Example a, Example b) => a.displayName.compareTo(b.displayName));
     return examples;
   }
 }
 
 class Example {
-  final String? displayName;
-  final String? group;
-  final String? dartImport;
-  final String? component;
-  final List<String>? relatedComponents;
+  String displayName;
+  String group;
+  String dartImport;
+  String component;
+  List<String> relatedComponents = [];
 
   Example(this.displayName, this.group, this.dartImport, this.component,
       this.relatedComponents);
 
   String get name => strings
-      .underscore(displayName!.replaceAll(RegExp(r'[^a-zA-Z0-9 _-]'), ''));
+      .underscore(displayName.replaceAll(RegExp(r'[^a-zA-Z0-9 _-]'), ''));
 
-  String? get linkName => strings.capitalizeFirstLetter(name);
+  String get linkName => strings.capitalizeFirstLetter(name) ?? '';
 
   String get loader => 'load${name}Example';
+
+  Map<String, String> toJson() {
+    Map<String, String> map = {};
+    map["name"] = name;
+    map["displayName"] = displayName;
+    map["group"] = group;
+    map["dartImport"] = dartImport;
+    map["component"] = component;
+    map["linkName"] = linkName;
+    map["loader"] = loader;
+    map["relatedComponents"] = json.encode(relatedComponents);
+
+    return map;
+  }
 }

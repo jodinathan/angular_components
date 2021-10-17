@@ -33,7 +33,7 @@ class GalleryInfoBuilder extends Builder {
 
     final extractedConfigs =
         await (extractGallerySectionConfigs(inputId, buildStep)
-            as FutureOr<Iterable<ConfigInfo?>>);
+            as FutureOr<Iterable<ConfigInfo>>);
 
     // File does not contain @GallerySectionConfig annotation.
     if (extractedConfigs.isEmpty) return;
@@ -54,13 +54,11 @@ class GalleryInfoBuilder extends Builder {
   ///
   /// Will search imports starting at [rootLibrary] for demo classes and
   /// documentation. Reads files with [assetReader] during the search.
-  Future<Iterable<ResolvedConfig>> _resolveConfigs(
-          Iterable<ConfigInfo?> configs,
-          LibraryElement rootLibrary,
-          AssetReader assetReader) async =>
+  Future<Iterable<ResolvedConfig>> _resolveConfigs(Iterable<ConfigInfo> configs,
+          LibraryElement rootLibrary, AssetReader assetReader) async =>
       Future.wait(configs.map((config) async {
         final resolved = ResolvedConfig()
-          ..displayName = config!.displayName
+          ..displayName = config.displayName
           ..group = config.group
           ..owners = config.owners
           ..uxOwners = config.uxOwners
@@ -68,12 +66,14 @@ class GalleryInfoBuilder extends Builder {
           ..showGeneratedDocs = config.showGeneratedDocs;
         await Future.wait([
           Future.wait(_resolveDocs(config.docs, rootLibrary, assetReader)).then(
-              (docs) =>
-                  resolved.docs = docs.where((doc) => doc != null).toList()),
+              (docs) => resolved.docs =
+                  docs.where((doc) => doc != null).toList().cast<DocInfo>()),
           Future.wait(_resolveDemos(
                   config.demoClassNames, rootLibrary, assetReader))
-              .then((demos) => resolved.demos =
-                  demos.where((demo) => demo != null).toList()),
+              .then((demos) => resolved.demos = demos
+                  .where((demo) => demo != null)
+                  .toList()
+                  .cast<DemoInfo>()),
           _resolveDemoFromRootLibrary(
                   config.mainDemoName, rootLibrary, assetReader)
               .then((demo) => resolved.mainDemo = demo),
@@ -86,12 +86,12 @@ class GalleryInfoBuilder extends Builder {
   ///
   /// Searches imports for documentation starting at [rootLibrary], reading
   /// source files with [assetReader].
-  Iterable<Future<DocInfo?>> _resolveDocs(Iterable<String?>? docs,
+  Iterable<Future<DocInfo?>> _resolveDocs(Iterable<String> docs,
       LibraryElement rootLibrary, AssetReader assetReader) {
-    if (docs == null) return const Iterable.empty();
+    //if (docs == null) return const Iterable.empty();
 
     return docs.map((doc) async {
-      if (doc!.startsWith('package:')) {
+      if (doc.startsWith('package:')) {
         // This is an external asset to collect docs from.
         return _readExternalAsset(doc, assetReader);
       } else {
@@ -169,8 +169,8 @@ class GalleryInfoBuilder extends Builder {
 
     // Otherwise there is additional documentation for a class. Collect all
     // inherited @Input and @Output documentation.
-    final mergedInputs = <String?, DartPropertyInfo?>{};
-    final mergedOutputs = <String?, DartPropertyInfo?>{};
+    final mergedInputs = <String, DartPropertyInfo>{};
+    final mergedOutputs = <String, DartPropertyInfo>{};
 
     for (final classElement in _classHierarchy(docClass)) {
       // Must extract documentation from AST because the
@@ -198,20 +198,34 @@ class GalleryInfoBuilder extends Builder {
       // to the defining LibraryElement. NOTE: Collecting the types like this
       // diverges from the behavior of DartDoc which always uses the getter type
       // when they are different.
-      docs!.inputs!.forEach((input) => mergedInputs[input!.name] = input
-        ..type = _setterType(input.name!, classElement));
+      docs?.inputs?.forEach((input) {
+        if (input != null) {
+          var inputName = input.name;
+          //if (inputName != null) {
+          mergedInputs[inputName] = input
+            ..type = _setterType(inputName, classElement);
+          //}
+        }
+      });
 
-      docs.outputs!.forEach((output) => mergedOutputs[output!.name] = output
-        ..type = _getterType(output.name!, classElement));
+      docs?.outputs?.forEach((output) {
+        if (output != null) {
+          var outputName = output.name;
+          //if (outputName != null) {
+          mergedOutputs[outputName] = output
+            ..type = _getterType(outputName, classElement);
+          //}
+        }
+      });
     }
 
     if (docs == null) failBuild(identifier);
 
     // Sort the inputs and outputs by name to make the display simple later.
     final inputs = mergedInputs.values.toList();
-    inputs.sort((a, b) => Comparable.compare(a!.name!, b!.name!));
+    inputs.sort((a, b) => Comparable.compare(a.name, b.name));
     final outputs = mergedOutputs.values.toList();
-    outputs.sort((a, b) => Comparable.compare(a!.name!, b!.name!));
+    outputs.sort((a, b) => Comparable.compare(a.name, b.name));
 
     // Assign the merged and sorted properties to the leaf class docs.
     docs!.inputs = inputs;
@@ -257,9 +271,9 @@ class GalleryInfoBuilder extends Builder {
   ///
   /// Will search imports starting at [rootLibrary] for the demo classes. Reads
   /// files with [assetReader] during the search.
-  Iterable<Future<DemoInfo?>> _resolveDemos(Iterable<String?>? demoClassNames,
+  Iterable<Future<DemoInfo?>> _resolveDemos(Iterable<String> demoClassNames,
       LibraryElement rootLibrary, AssetReader assetReader) {
-    if (demoClassNames == null) return const Iterable.empty();
+    if (demoClassNames == '') return const Iterable.empty();
     return demoClassNames.map((demoClassName) async =>
         _resolveDemoFromRootLibrary(demoClassName, rootLibrary, assetReader));
   }
@@ -268,10 +282,11 @@ class GalleryInfoBuilder extends Builder {
   ///
   /// Will search imports starting at [rootLibrary] for the demo class. Reads
   /// files with [assetReader] during the search.
-  Future<DemoInfo?> _resolveDemoFromRootLibrary(String? demoClassName,
+  Future<DemoInfo?> _resolveDemoFromRootLibrary(String demoClassName,
       LibraryElement rootLibrary, AssetReader assetReader) async {
-    if (demoClassName == null) return null;
+    if (demoClassName == '') return null;
     final demoLibrary = _getLibrary(demoClassName, rootLibrary);
+    if (demoLibrary == null) return null;
     return _resolveDemo(demoClassName, demoLibrary, assetReader);
   }
 
@@ -280,10 +295,10 @@ class GalleryInfoBuilder extends Builder {
   ///
   /// Searches imports starting at [library], reading source files with
   /// [assetReader].
-  Future<DemoInfo> _resolveDemo(String demoClassName, LibraryElement? library,
+  Future<DemoInfo> _resolveDemo(String demoClassName, LibraryElement library,
       AssetReader assetReader) async {
     //if (demoClassName == null) return null;
-    final libraryId = AssetId.resolve(library!.source.uri);
+    final libraryId = AssetId.resolve(library.source.uri);
     final extractedDemo =
         await extractDocumentation(demoClassName, libraryId, assetReader);
 
@@ -291,9 +306,9 @@ class GalleryInfoBuilder extends Builder {
       throw 'Error: Failed to extract demo information from: $demoClassName.';
     }
     return DemoInfo()
-      ..type = extractedDemo.name
-      ..name = extractedDemo.name
-      ..selector = extractedDemo.selector
+      ..type = extractedDemo.name ?? ''
+      ..name = extractedDemo.name ?? ''
+      ..selector = extractedDemo.selector ?? ''
       ..asset = libraryId.toString();
   }
 

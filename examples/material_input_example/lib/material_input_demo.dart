@@ -87,7 +87,7 @@ class MaterialInputDemoComponent {
   bool showAuto = false;
 
   @ViewChild('manualSelectInput')
-  late MaterialInputComponent manualSelectInput;
+  MaterialInputComponent? manualSelectInput;
 
   MaterialInputDemoComponent() {
     form = Control(
@@ -111,6 +111,6 @@ class MaterialInputDemoComponent {
   }
 
   void selectAllManualInput() {
-    manualSelectInput.selectAll();
+    manualSelectInput?.selectAll();
   }
 }

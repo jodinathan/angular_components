@@ -72,13 +72,15 @@ class GalleryDocumentationExtraction extends SimpleAstVisitor<DartDocInfo> {
             ?..annotation = propertyAnnotationNode.name.name
             ..deprecated = deprecatedAnnotationNode != null
             ..deprecatedMessage = deprecatedAnnotationNode?.arguments?.arguments
-                // Visit the first arg or null if no args.
-                .firstWhereOrNull((_) => true)
-                ?.accept(StringExtractor())
+                    // Visit the first arg or null if no args.
+                    .firstWhereOrNull((_) => true)
+                    ?.accept(StringExtractor()) ??
+                ''
             ..bindingAlias = propertyAnnotationNode.arguments?.arguments
-                // Visit the first arg or null if no args.
-                .firstWhereOrNull((_) => true)
-                ?.accept(StringExtractor())));
+                    // Visit the first arg or null if no args.
+                    .firstWhereOrNull((_) => true)
+                    ?.accept(StringExtractor()) ??
+                ''));
     }
 
     _info!.inputs = allProperties

@@ -34,7 +34,7 @@ class GalleryWebBuilder extends Builder {
   }
 
   Future<void> _generateIndexHtml(BuildStep buildStep) async {
-    final mustacheContext = {
+    final Map<String, String?> mustacheContext = {
       'direction': _direction,
       'galleryTitle': _galleryTitle
     };
@@ -44,11 +44,13 @@ class GalleryWebBuilder extends Builder {
   }
 
   Future<void> _generateMainDart(BuildStep buildStep) async {
-    final mustacheContext = {
+    var binding = _galleryBindingName != null && _galleryBindingImport != null;
+    print("Binding: $binding");
+
+    final Map<String, Object?> mustacheContext = {
       'galleryImportUri':
           'package:${buildStep.inputId.package}/gallery/gallery.template.dart',
-      'hasBinding':
-          _galleryBindingName != null && _galleryBindingImport != null,
+      'hasBinding': binding,
       'bindingName': _galleryBindingName,
       'bindingImport': _galleryBindingImport,
       'bugUrl': _bugUrl,
@@ -77,7 +79,7 @@ class HomeDartBuilder extends Builder {
   @override
   Future<void> build(BuildStep buildStep) async {
     final inputId = buildStep.inputId;
-    final mustacheContext = {
+    final Map<String, String> mustacheContext = {
       'htmlTemplateUrl':
           'package:${inputId.package}${inputId.path.replaceFirst('lib', '')}'
     };

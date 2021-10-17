@@ -16,7 +16,7 @@ import 'main.template.dart' as ng;
 
 Logger _logger = Logger("angular_dart_gallery");
 
-ComponentRef<app.GalleryComponent> gallery;
+ComponentRef<app.GalleryComponent>? gallery;
 
 void main() {
   Logger.root.onRecord.listen((x) => print("${x.level}: ${x.message}"));
@@ -30,12 +30,12 @@ void main() {
 /// before the reload. After this call, all invalidated modules will be
 /// reloaded.
 void onReloadStart() {
-  gallery.destroy();
+  gallery?.destroy();
 }
 
 @Injectable()
 HtmlElement materialContentElement(Document document) {
-  return document.querySelector('material-content');
+  return document.querySelector('material-content') as HtmlElement;
 }
 
 @GenerateInjector([

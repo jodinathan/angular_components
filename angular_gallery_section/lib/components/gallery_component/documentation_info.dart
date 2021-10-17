@@ -99,35 +99,35 @@ class DartDocInfo implements DocInfo {
 /// Documentation information for an @Input or @Output property of an Angular
 /// @Component or @Directive.
 class DartPropertyInfo {
-  String? annotation;
-  String? name;
-  String? bindingAlias;
-  String? type;
-  String? comment;
-  String? classPath;
-  bool? deprecated;
-  String? deprecatedMessage;
+  String annotation = '';
+  String name = '';
+  String bindingAlias = '';
+  String type = '';
+  String comment = '';
+  String classPath = '';
+  bool deprecated = false;
+  String deprecatedMessage = '';
 
   DartPropertyInfo(
-      [this.annotation,
-      this.name,
-      this.bindingAlias,
-      this.type,
-      this.comment,
-      this.classPath,
-      this.deprecated,
-      this.deprecatedMessage]);
+      [this.annotation = '',
+      this.name = '',
+      this.bindingAlias = '',
+      this.type = '',
+      this.comment = '',
+      this.classPath = '',
+      this.deprecated = false,
+      this.deprecatedMessage = '']);
 
   /// Constructs a new [DartPropertyInfo] from a decoded json map.
   DartPropertyInfo.fromJson(Map<String, dynamic> jsonMap) {
-    annotation = jsonMap['annotation'] as String?;
-    name = jsonMap['name'] as String?;
-    bindingAlias = jsonMap['bindingAlias'] as String?;
-    type = jsonMap['type'] as String?;
-    comment = jsonMap['comment'] as String?;
-    classPath = jsonMap['classPath'] as String?;
-    deprecated = jsonMap['deprecated'] as bool?;
-    deprecatedMessage = jsonMap['deprecatedMessage'] as String?;
+    annotation = jsonMap['annotation'] as String? ?? '';
+    name = jsonMap['name'] as String? ?? '';
+    bindingAlias = jsonMap['bindingAlias'] as String? ?? '';
+    type = jsonMap['type'] as String? ?? '';
+    comment = jsonMap['comment'] as String? ?? '';
+    classPath = jsonMap['classPath'] as String? ?? '';
+    deprecated = jsonMap['deprecated'] as bool? ?? false;
+    deprecatedMessage = jsonMap['deprecatedMessage'] as String? ?? '';
   }
 
   /// Returns a json encodeable representation of this [DartPropertyInfo].
@@ -145,19 +145,19 @@ class DartPropertyInfo {
 
 /// Documentation information for a single document, typically a markdown file.
 class MarkdownDocInfo implements DocInfo {
-  String? name;
-  String? path;
-  String? contents;
+  String name = '';
+  String path = '';
+  String contents = '';
 
   DocType get docType => DocType.markdownDocInfo;
 
-  MarkdownDocInfo([this.name, this.path, this.contents]);
+  MarkdownDocInfo([this.name = '', this.path = '', this.contents = '']);
 
   /// Constructs a new [MarkdownDocInfo] from a decoded json map.
   MarkdownDocInfo.fromJson(Map<String, dynamic> jsonMap) {
-    name = jsonMap['name'] as String?;
-    path = jsonMap['path'] as String?;
-    contents = jsonMap['contents'] as String?;
+    name = jsonMap['name'] as String? ?? '';
+    path = jsonMap['path'] as String? ?? '';
+    contents = jsonMap['contents'] as String? ?? '';
   }
 
   /// Returns a json encodeable representation of this [MarkdownDocInfo].
@@ -172,12 +172,12 @@ class MarkdownDocInfo implements DocInfo {
 /// Documentation information for a Sass file listed in an @GallerySectionConfig
 /// annotation.
 class SassDocInfo implements DocInfo {
-  final String? name;
-  final String? path;
-  final String? libraryDoc;
-  final Iterable<SassVariableInfo>? variables;
-  final Iterable<SassCallableInfo>? functions;
-  final Iterable<SassCallableInfo>? mixins;
+  String name = '';
+  String path = '';
+  String libraryDoc = '';
+  Iterable<SassVariableInfo> variables = [];
+  Iterable<SassCallableInfo> functions = [];
+  Iterable<SassCallableInfo> mixins = [];
 
   DocType get docType => DocType.sassDocInfo;
 
@@ -186,15 +186,18 @@ class SassDocInfo implements DocInfo {
 
   /// Constructs a new [SassDocInfo] from a decoded json map.
   SassDocInfo.fromJson(Map<String, dynamic> jsonMap)
-      : name = jsonMap['name'] as String?,
-        path = jsonMap['path'] as String?,
-        libraryDoc = jsonMap['libraryDoc'] as String?,
+      : name = jsonMap['name'] as String? ?? '',
+        path = jsonMap['path'] as String? ?? '',
+        libraryDoc = jsonMap['libraryDoc'] as String? ?? '',
         variables = (jsonMap['variables'] as Iterable?)
-            ?.map((element) => SassVariableInfo.fromJson(element)),
+                ?.map((element) => SassVariableInfo.fromJson(element)) ??
+            [],
         functions = (jsonMap['functions'] as Iterable?)
-            ?.map((element) => SassCallableInfo.fromJson(element)),
+                ?.map((element) => SassCallableInfo.fromJson(element)) ??
+            [],
         mixins = (jsonMap['mixins'] as Iterable?)
-            ?.map((element) => SassCallableInfo.fromJson(element));
+                ?.map((element) => SassCallableInfo.fromJson(element)) ??
+            [];
 
   /// Returns a json encodeable representation of this [SassDocInfo].
   Map<String, dynamic> toJson() => {
@@ -202,9 +205,9 @@ class SassDocInfo implements DocInfo {
         'name': name,
         'path': path,
         'libraryDoc': libraryDoc,
-        'variables': variables?.map((v) => v.toJson()).toList(),
-        'functions': functions?.map((f) => f.toJson()).toList(),
-        'mixins': mixins?.map((m) => m.toJson()).toList(),
+        'variables': variables.map((v) => v.toJson()).toList(),
+        'functions': functions.map((f) => f.toJson()).toList(),
+        'mixins': mixins.map((m) => m.toJson()).toList(),
       };
 }
 

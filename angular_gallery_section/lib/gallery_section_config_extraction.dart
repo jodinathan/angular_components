@@ -61,23 +61,23 @@ class _GallerySectionConfigVisitor extends SimpleAstVisitor<ConfigInfo> {
     final name = node.name.label.name;
     final expression = node.expression;
     if (name == 'displayName') {
-      config!.displayName = expression.accept(StringExtractor());
+      config?.displayName = expression.accept(StringExtractor()) ?? '';
     } else if (name == 'group') {
-      config!.group = expression.accept(StringExtractor());
+      config?.group = expression.accept(StringExtractor()) ?? '';
     } else if (name == 'docs') {
-      config!.docs = expression.accept(ListStringExtractor());
+      config?.docs = expression.accept(ListStringExtractor()) ?? [];
     } else if (name == 'demos') {
-      config!.demoClassNames = expression.accept(ListStringExtractor());
+      config?.demoClassNames = expression.accept(ListStringExtractor()) ?? [];
     } else if (name == 'mainDemo') {
-      config!.mainDemoName = expression.accept(StringExtractor());
+      config?.mainDemoName = expression.accept(StringExtractor()) ?? '';
     } else if (name == 'owners') {
-      config!.owners = expression.accept(ListStringExtractor());
+      config?.owners = expression.accept(ListStringExtractor()) ?? [];
     } else if (name == 'uxOwners') {
-      config!.uxOwners = expression.accept(ListStringExtractor());
+      config?.uxOwners = expression.accept(ListStringExtractor()) ?? [];
     } else if (name == 'relatedUrls') {
-      config!.relatedUrls = expression.accept(MapStringExtractor());
+      config?.relatedUrls = expression.accept(MapStringExtractor()) ?? {};
     } else if (name == 'showGeneratedDocs') {
-      config!.showGeneratedDocs = expression.accept(BoolExtractor());
+      config?.showGeneratedDocs = expression.accept(BoolExtractor()) ?? false;
     }
     return null;
   }
@@ -86,13 +86,13 @@ class _GallerySectionConfigVisitor extends SimpleAstVisitor<ConfigInfo> {
 /// Represents the values used to construct an @GallerySectionConfig annotation
 /// extracted as Strings.
 class ConfigInfo {
-  String? displayName;
-  String? group;
-  Iterable<String?>? docs;
-  Iterable<String?>? demoClassNames;
-  String? mainDemoName;
-  Iterable<String?>? owners;
-  Iterable<String?>? uxOwners;
-  Map<String?, String?>? relatedUrls;
-  bool? showGeneratedDocs = true;
+  String displayName = '';
+  String group = '';
+  Iterable<String> docs = [];
+  Iterable<String> demoClassNames = [];
+  String mainDemoName = '';
+  Iterable<String> owners = [];
+  Iterable<String> uxOwners = [];
+  Map<String, String> relatedUrls = {};
+  bool showGeneratedDocs = true;
 }

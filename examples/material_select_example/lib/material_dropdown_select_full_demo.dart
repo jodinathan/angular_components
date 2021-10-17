@@ -230,13 +230,13 @@ class MaterialDropdownSelectFullDemoComponent {
   }
 
   @ViewChild(MaterialSelectSearchboxComponent)
-  late MaterialSelectSearchboxComponent searchbox;
+  MaterialSelectSearchboxComponent? searchbox;
 
   void onDropdownVisibleChange(bool visible) {
     if (visible) {
       // TODO(google): Avoid using Timer.run.
       Timer.run(() {
-        searchbox.focus();
+        searchbox?.focus();
       });
     }
   }
