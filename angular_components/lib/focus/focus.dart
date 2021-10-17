@@ -19,7 +19,7 @@ export 'focus_interface.dart';
 /// A class for components to extend if their programmatic focus
 /// should simply put focus on root element.
 class RootFocusable implements Focusable, Disposable {
-  Element? _root;
+  Element _root;
   RootFocusable(this._root);
 
   @override
@@ -30,10 +30,10 @@ class RootFocusable implements Focusable, Disposable {
     // NOTE: even for elements with tab index unspecified it will return
     // tabIndex as "-1" and we have to set it to "-1"
     // to actually make it focusable.
-    if (_root!.tabIndex! < 0) {
-      _root!.tabIndex = -1;
+    if (_root.tabIndex < 0) {
+      _root.tabIndex = -1;
     }
-    _root!.focus();
+    _root.focus();
   }
 
   @override
@@ -44,12 +44,12 @@ class RootFocusable implements Focusable, Disposable {
 
 abstract class ProjectedFocus implements Focusable {
   Future< /* Focusable | ElementRef */ dynamic> get focusDelegate;
-  Focusable? _resolvedFocusable;
+  Focusable _resolvedFocusable;
 
   @override
   void focus() {
     if (_resolvedFocusable != null) {
-      _resolvedFocusable!.focus();
+      _resolvedFocusable.focus();
       return;
     }
     focusDelegate.then((delegate) {
@@ -59,7 +59,7 @@ abstract class ProjectedFocus implements Focusable {
       } else {
         _resolvedFocusable = RootFocusable(delegate);
       }
-      _resolvedFocusable!.focus();
+      _resolvedFocusable.focus();
     });
   }
 }
@@ -91,58 +91,42 @@ class FocusMoveEvent {
   /// Up or down arrow key was pressed.
   final bool upDown;
 
-  final bool _none;
-
-  bool get valid => !_none;
-
   /// Prevent Default action for occuring. When the `FocusMoveEvent` is created
   /// from a KeyboardEvent, this method delegates to the `preventDefault` method
   /// of the `KeyboardEvent`, allowing consumers of this event to control the
   /// underlying DOM event.
   void preventDefault() {
-    if (_preventDefaultDelegate != null) _preventDefaultDelegate!();
+    if (_preventDefaultDelegate != null) _preventDefaultDelegate();
   }
 
-  final Function? _preventDefaultDelegate;
+  final Function _preventDefaultDelegate;
 
   @visibleForTesting
   FocusMoveEvent(this.focusItem, this.offset, [this._preventDefaultDelegate])
       : home = false,
         end = false,
-        upDown = false,
-        _none = false;
+        upDown = false;
 
   @visibleForTesting
   FocusMoveEvent.homeKey(this.focusItem, [this._preventDefaultDelegate])
       : offset = 0,
         home = true,
         end = false,
-        upDown = false,
-        _none = false;
+        upDown = false;
 
   @visibleForTesting
   FocusMoveEvent.endKey(this.focusItem, [this._preventDefaultDelegate])
       : offset = 0,
         home = false,
         end = true,
-        upDown = false,
-        _none = false;
+        upDown = false;
 
   @visibleForTesting
   FocusMoveEvent.upDownKey(this.focusItem, this.offset,
       [this._preventDefaultDelegate])
       : home = false,
         end = false,
-        upDown = true,
-        _none = false;
-
-  @visibleForTesting
-  FocusMoveEvent.none(this.focusItem, this.offset,
-      [this._preventDefaultDelegate])
-      : home = false,
-        end = false,
-        upDown = false,
-        _none = true;
+        upDown = true;
 
   /// Builds a `FocusMoveEvent` instance from a keyboard event, iff the keycode
   /// is a next, previous, home or end key (i.e. up/down/left/right/home/end).
@@ -158,10 +142,7 @@ class FocusMoveEvent {
     if (_isEndKey(keyCode)) {
       return FocusMoveEvent.endKey(item, preventDefaultFn);
     }
-    if (!_isNextKey(keyCode) && !_isPrevKey(keyCode)) {
-      //return null;
-      return FocusMoveEvent.none(item, 0);
-    }
+    if (!_isNextKey(keyCode) && !_isPrevKey(keyCode)) return null;
 
     int offset = _isNextKey(keyCode) ? 1 : -1;
     if (keyCode == KeyCode.UP || keyCode == KeyCode.DOWN) {
@@ -190,13 +171,13 @@ class FocusMoveEvent {
 class AutoFocusDirective extends RootFocusable implements OnInit, OnDestroy {
   final _disposer = Disposer.oneShot();
 
-  late bool _autoFocus;
+  bool _autoFocus;
   // These fields are not final to support nulling them out for easier memory
   // leak detection.
-  Focusable? _focusable;
-  DomService? _domService;
-  ModalComponent? _modal;
-  PopupRef? _popupRef;
+  Focusable _focusable;
+  DomService _domService;
+  ModalComponent _modal;
+  PopupRef _popupRef;
 
   AutoFocusDirective(
       HtmlElement node,
@@ -212,17 +193,17 @@ class AutoFocusDirective extends RootFocusable implements OnInit, OnDestroy {
 
     if (_modal != null || _popupRef != null) {
       var isVisible = _popupRef != null
-          ? _popupRef!.isVisible
-          : _modal!.resolvedOverlayRef.isVisible;
+          ? _popupRef.isVisible
+          : _modal.resolvedOverlayRef.isVisible;
       _onModalOrPopupVisibleChanged(isVisible);
 
       var onVisibleChanged = _popupRef != null
-          ? _popupRef!.onVisibleChanged
-          : _modal!.resolvedOverlayRef.onVisibleChanged;
+          ? _popupRef.onVisibleChanged
+          : _modal.resolvedOverlayRef.onVisibleChanged;
       _disposer.addStreamSubscription(
           onVisibleChanged.listen(_onModalOrPopupVisibleChanged));
     } else {
-      _domService!.scheduleWrite(focus);
+      _domService.scheduleWrite(focus);
     }
   }
 
@@ -240,7 +221,7 @@ class AutoFocusDirective extends RootFocusable implements OnInit, OnDestroy {
     if (!_autoFocus) return;
 
     if (_focusable != null) {
-      _focusable!.focus();
+      _focusable.focus();
     } else {
       super.focus();
     }
@@ -257,7 +238,7 @@ class AutoFocusDirective extends RootFocusable implements OnInit, OnDestroy {
   }
 
   void _onModalOrPopupVisibleChanged(bool isVisible) {
-    if (isVisible) _domService!.scheduleWrite(focus);
+    if (isVisible) _domService.scheduleWrite(focus);
   }
 }
 

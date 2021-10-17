@@ -61,22 +61,22 @@ class MaterialInkTooltipComponent implements Tooltip {
   final TooltipController _tooltipController;
   final ChangeDetectorRef _changeDetector;
 
-  PopupSource? _tooltipSource;
-  PopupSource? get popupSource => _tooltipSource;
+  PopupSource _tooltipSource;
+  PopupSource get popupSource => _tooltipSource;
 
   /// Positions at which the tooltip should try to show.
   @Input()
-  List<RelativePosition>? positions = RelativePosition.AdjacentBottomEdge;
+  List<RelativePosition> positions = RelativePosition.AdjacentBottomEdge;
 
   // Proxy control of this tooltip via the tooltip controller.
-  Tooltip? _controllerProxy;
+  Tooltip _controllerProxy;
 
   bool _showPopup = false;
   bool get showPopup => _showPopup;
 
   /// Text content of the tooltip.
   @Input()
-  String? text;
+  String text;
 
   /// Classname applied to material-popup for use with mixins.
   ///

@@ -85,7 +85,7 @@ class KeyboardOnlyFocusIndicatorDirective {
   /// response to clicks on the button, which is undesirable. Using this
   /// function, the outline is hidden in response to button clicks but shown in
   /// response to keypresses on the button.
-  void focus([UIEvent? event]) {
+  void focus([UIEvent event]) {
     _domService.scheduleWrite(() {
       _element.focus();
     });

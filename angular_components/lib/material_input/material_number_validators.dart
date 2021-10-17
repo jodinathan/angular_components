@@ -21,7 +21,7 @@ class PositiveNumValidator implements Validator {
   bool enabled = true;
 
   @override
-  Map<String, dynamic>? validate(AbstractControl control) {
+  Map<String, dynamic> validate(AbstractControl control) {
     if (!enabled || control.value == null) {
       return null; // Handled by accessor validator
     }
@@ -52,7 +52,7 @@ class CheckNonNegativeValidator implements Validator {
   bool enabled = true;
 
   @override
-  Map<String, dynamic>? validate(AbstractControl control) {
+  Map<String, dynamic> validate(AbstractControl control) {
     if (!enabled || control.value == null) return null;
     assert(control.value is Comparable, 'Value needs to be comparable');
     if (control.value < 0) {
@@ -77,15 +77,15 @@ class CheckNonNegativeValidator implements Validator {
 class LowerBoundValidator implements Validator {
   final NumberFormat _numberFormat;
 
-  LowerBoundValidator(@Optional() NumberFormat? format)
+  LowerBoundValidator(@Optional() NumberFormat format)
       : _numberFormat = format ?? NumberFormat.decimalPattern();
 
   /// Smallest allowed value.
   @Input()
-  num? lowerBound;
+  num lowerBound;
 
   @override
-  Map<String, dynamic>? validate(AbstractControl control) {
+  Map<String, dynamic> validate(AbstractControl control) {
     if (control.value == null || lowerBound == null) return null;
     assert(control.value is Comparable, 'Value needs to be Comparable');
     if (control.value < lowerBound) {
@@ -114,15 +114,15 @@ class LowerBoundValidator implements Validator {
 class UpperBoundValidator implements Validator {
   final NumberFormat _numberFormat;
 
-  UpperBoundValidator(@Optional() NumberFormat? format)
+  UpperBoundValidator(@Optional() NumberFormat format)
       : _numberFormat = format ?? NumberFormat.decimalPattern();
 
   /// Largest allowed value.
   @Input()
-  num? upperBound;
+  num upperBound;
 
   @override
-  Map<String, dynamic>? validate(AbstractControl control) {
+  Map<String, dynamic> validate(AbstractControl control) {
     if (control.value == null) return null; // Handled by accessor validator
     assert(control.value is Comparable, 'Value needs to be Comparable');
     if (control.value > upperBound) {

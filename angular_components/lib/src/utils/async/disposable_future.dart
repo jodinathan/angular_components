@@ -21,7 +21,7 @@ class DisposableFuture<T> implements Future<T>, Disposable {
   /// Returns a disposable version of [stream.first].
   factory DisposableFuture.first(Stream<T> stream) {
     final completer = Completer<T>.sync();
-    late StreamSubscription<Object?> subscription;
+    StreamSubscription<Object> subscription;
     subscription = stream.listen((value) {
       subscription.cancel();
       completer.complete(value);
@@ -32,8 +32,8 @@ class DisposableFuture<T> implements Future<T>, Disposable {
   /// Returns a disposable version of [stream.last].
   factory DisposableFuture.last(Stream<T> stream) {
     final completer = Completer<T>.sync();
-    StreamSubscription<Object?> subscription;
-    T? lastValue;
+    StreamSubscription<Object> subscription;
+    T lastValue;
     subscription = stream.listen((value) {
       lastValue = value;
     }, onDone: () {
@@ -70,21 +70,19 @@ class DisposableFuture<T> implements Future<T>, Disposable {
 
   @override
   DisposableFuture<S> then<S>(FutureOr<S> onValue(T value),
-      {Function? onError}) {
+      {Function onError}) {
     return DisposableFuture(
         _delegateFuture.then<S>((v) {
           if (!_wasDisposed) {
             return onValue(v);
           }
-          // TODO: This logic need to reevaluated
-          // return null
-          return Future.error("Nothing to dispose");
+          return null;
         }, onError: onError),
         _disposeFn);
   }
 
   @override
-  Future<T> catchError(Function onError, {bool test(Object error)?}) {
+  Future<T> catchError(Function onError, {bool test(Object error)}) {
     return _delegateFuture.catchError(onError, test: test);
   }
 
@@ -101,8 +99,7 @@ class DisposableFuture<T> implements Future<T>, Disposable {
   Stream<T> asStream() => _delegateFuture.asStream();
 
   @override
-  Future<T> timeout(Duration timeLimit, {onTimeout()?}) {
-    return _delegateFuture.timeout(timeLimit,
-        onTimeout: onTimeout as FutureOr<T> Function()?);
+  Future<T> timeout(Duration timeLimit, {onTimeout()}) {
+    return _delegateFuture.timeout(timeLimit, onTimeout: onTimeout);
   }
 }

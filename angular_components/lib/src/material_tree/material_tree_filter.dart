@@ -27,18 +27,18 @@ class MaterialTreeFilterComponent {
   final MaterialTreeRoot _treeRoot;
 
   @ViewChild('materialInput')
-  late MaterialInputComponent materialInput;
+  MaterialInputComponent materialInput;
 
-  Filterable? _filterable;
+  Filterable _filterable;
   String _inputText = '';
 
   // A Future that represents the most recent filtering computation.
-  DisposableFuture? _lastFilterFuture;
+  DisposableFuture _lastFilterFuture;
 
   /// If created within a [MaterialTreeRoot], automatically setup.
   MaterialTreeFilterComponent(@Optional() this._treeRoot) {
-    if (_treeRoot.supportsFiltering == true) {
-      filterable = _treeRoot.options as Filterable?;
+    if (_treeRoot?.supportsFiltering == true) {
+      filterable = _treeRoot.options as Filterable;
     }
   }
 
@@ -53,14 +53,14 @@ class MaterialTreeFilterComponent {
 
   /// Any symbol to show at the leading edge of the input
   @Input()
-  String? leadingGlyph;
+  String leadingGlyph;
 
   /// Set a handle to a [Filterable] interface to use.
   @Input()
-  set filterable(Filterable? filterable) {
+  set filterable(Filterable filterable) {
     if (_filterable != filterable) {
       _filterable = filterable;
-      var query = filterable!.currentQuery;
+      var query = filterable.currentQuery;
       if (query != null) {
         _inputText = query.toString();
       }
@@ -91,11 +91,11 @@ class MaterialTreeFilterComponent {
   Stream get onFiltered => _onFilteredController.stream;
 
   @Input()
-  String? placeholder;
+  String placeholder;
 
   void _updateVisibleItems() {
     _lastFilterFuture?.dispose();
-    _lastFilterFuture = _filterable!.filter(_inputText);
+    _lastFilterFuture = _filterable.filter(_inputText);
     _treeRoot.isFiltered = _inputText.isNotEmpty;
     _onFilteredController.add(null);
   }

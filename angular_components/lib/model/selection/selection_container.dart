@@ -11,41 +11,41 @@ import 'package:angular_components/model/ui/has_factory.dart';
 abstract class SelectionContainer<T>
     implements
         HasRenderer<T>,
-        //HasComponentRenderer<RendersValue, Object>,
+        HasComponentRenderer<RendersValue, Object>,
         HasFactoryRenderer<RendersValue, T> {
   /// The selection model this container represents.
-  SelectionModel<T>? selection;
+  SelectionModel<T> selection;
 
   /// The available options for this container.
-  SelectionOptions<T>? options;
+  SelectionOptions<T> options;
 
   /// A simple function to render the an item to string.
   /// @override
   @override
-  ItemRenderer<T>? itemRenderer;
+  ItemRenderer<T> itemRenderer;
 
   /// Specifies the componentRenderer to use to determine the component for
   /// rendering an item.
-  //@override
-  //@Deprecated(
-  //    'Use factoryRenderer instead it provides more tree-shakeable code')
-  //ComponentRenderer? componentRenderer;
+  @override
+  @Deprecated(
+      'Use factoryRenderer instead it provides more tree-shakeable code')
+  ComponentRenderer componentRenderer;
 
   /// Specifies the factoryRenderer to use to determine the factory for
   /// rendering an item.
   @override
-  FactoryRenderer<RendersValue, T>? factoryRenderer;
+  FactoryRenderer<RendersValue, T> factoryRenderer;
 }
 
 /// A type of component which renders an item from a `SelectionModel`.
 abstract class SelectionItem<T> implements HasRenderer<T> {
   /// The selection model this item is a member of.
-  SelectionModel<T>? selection;
+  SelectionModel<T> selection;
 
   /// The value this component represents.
-  T? value;
+  T value;
 
   /// A simple function to render the item to string.
   @override
-  ItemRenderer<T>? itemRenderer;
+  ItemRenderer<T> itemRenderer;
 }

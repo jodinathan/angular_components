@@ -107,9 +107,9 @@ class MaterialIconTooltipComponent implements DeferredContentAware {
   MaterialIconTooltipComponent(
       AcxDarkTheme darkTheme,
       this.element,
-      @Attribute('icon') String? icon,
-      @Attribute('type') String? type,
-      @Attribute('size') String? size)
+      @Attribute('icon') String icon,
+      @Attribute('type') String type,
+      @Attribute('size') String size)
       : icon = icon ?? '${type ?? "help"}_outline',
         iconSize = size ?? 'medium' {
     assert(type == 'help' || type == 'info' || type == 'error' || type == null);
@@ -124,7 +124,7 @@ class MaterialIconTooltipComponent implements DeferredContentAware {
   }
 
   @ViewChild('tooltipRef')
-  TooltipBehavior? tooltipBehavior;
+  TooltipBehavior tooltipBehavior;
 
   @ViewChild(MaterialPaperTooltipComponent)
   set deferredContentAware(DeferredContentAware deferredContentAware) {

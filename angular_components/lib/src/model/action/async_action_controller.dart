@@ -34,7 +34,7 @@ class AsyncActionController<V> {
   bool _cancelled = false;
   bool _done = false;
 
-  AsyncAction<V>? get action {
+  AsyncAction<V> get action {
     if (_action == null) {
       _action = AsyncAction<V>(
           _executeCompleter.future,
@@ -48,7 +48,7 @@ class AsyncActionController<V> {
     return _action;
   }
 
-  AsyncAction<V>? _action;
+  AsyncAction<V> _action;
 
   /// Execute a closure either async or sync. The [Executor] is only called if
   /// all deferred cancels return false and only after all `executionDeferrals`
@@ -56,7 +56,7 @@ class AsyncActionController<V> {
   /// the [onDone] future, otherwise, the [onDone] future is completed with the
   /// result.
   Future<void> execute(dynamic Function() exec,
-      {dynamic Function()? onCancel, V? valueOnCancel}) {
+      {dynamic Function() onCancel, V valueOnCancel}) {
     // This function is very time-sensitive.
     // We are using explicit `Future`s to avoid breaking changes when the
     // behavior of `async` changes.
@@ -93,7 +93,7 @@ class AsyncActionController<V> {
               // The action should resolve [onDone] with [valueOnCancel] if
               // canceled, so, while we need to await the cancel result, we want
               // to throw it away.
-              _attachFuture(cancelRes.then(((_) => valueOnCancel!) as FutureOr<V> Function(dynamic)));
+              _attachFuture(cancelRes.then((_) => valueOnCancel));
             }
           }
           return null;
@@ -123,7 +123,7 @@ class AsyncActionController<V> {
     var execResult = exec();
     _done = true;
     if (execResult is Future) {
-      _attachFuture(execResult.then((value) => value as V));
+      _attachFuture(execResult);
     } else {
       _executeCompleter.complete(execResult);
     }

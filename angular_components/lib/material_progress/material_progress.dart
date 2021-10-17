@@ -76,7 +76,7 @@ class MaterialProgressComponent implements AfterViewInit, OnDestroy {
   bool get useFallbackAnimation =>
       indeterminate && (!_useFancyAnimation || !supportsAnimationApi);
 
-  String? get ariaValueNow => indeterminate == true ? null : '${activeProgress}';
+  String get ariaValueNow => indeterminate == true ? null : '${activeProgress}';
 
   String get ariaValue =>
       indeterminate ? _loadingValue : _activeProgressValue(activeProgress);
@@ -111,19 +111,19 @@ class MaterialProgressComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('primary', read: HtmlElement)
   set primary(HtmlElement value) {
-    _primaryIndicator = value as DivElement?;
+    _primaryIndicator = value;
   }
 
-  DivElement? _primaryIndicator;
-  Animation? _primaryAnimation;
+  DivElement _primaryIndicator;
+  Animation _primaryAnimation;
 
   @ViewChild('secondary', read: HtmlElement)
   set secondary(HtmlElement value) {
-    _secondaryIndicator = value as DivElement?;
+    _secondaryIndicator = value;
   }
 
-  DivElement? _secondaryIndicator;
-  Animation? _secondaryAnimation;
+  DivElement _secondaryIndicator;
+  Animation _secondaryAnimation;
 
   MaterialProgressComponent(
       @Attribute('disable-fancy-animation') String disableFancyAnimation,
@@ -185,8 +185,8 @@ class MaterialProgressComponent implements AfterViewInit, OnDestroy {
       {'transform': 'translateX(${width}px) scaleX(0.1)'},
     ];
     _primaryAnimation =
-        _primaryIndicator!.animate(primaryKeyframes, _indeterminateTiming);
+        _primaryIndicator.animate(primaryKeyframes, _indeterminateTiming);
     _secondaryAnimation =
-        _secondaryIndicator!.animate(secondaryKeyframes, _indeterminateTiming);
+        _secondaryIndicator.animate(secondaryKeyframes, _indeterminateTiming);
   }
 }
