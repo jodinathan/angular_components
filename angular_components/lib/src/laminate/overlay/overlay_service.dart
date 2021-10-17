@@ -53,7 +53,7 @@ class OverlayService {
   final OverlayDomRenderService _renderService;
 
   OverlayRef _createRef(HtmlElement pane, OverlayState state) => OverlayRef(
-      _renderService.applyState as Future<Object> Function(OverlayState, HtmlElement),
+      _renderService.applyState,
       _measurePane,
       _renderService.createPortalHost(pane),
       _renderService.containerElement,

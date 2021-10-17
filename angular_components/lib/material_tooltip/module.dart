@@ -30,12 +30,12 @@ const tooltipControllerBinding = FactoryProvider(
 
 // Shared [TooltipController] resource. Currently there is only one per
 // application.
-TooltipController? _singletonController;
+TooltipController _singletonController;
 
 @Injectable()
-TooltipController? createTooltipController(
-    @Optional() @SkipSelf() TooltipController? controller,
-    @Optional() Disposer? disposer) {
+TooltipController createTooltipController(
+    @Optional() @SkipSelf() TooltipController controller,
+    @Optional() Disposer disposer) {
   // If TooltipController was bound higher up the tree use that instance. This
   // allows an application to override the service at root.
   if (controller != null) return controller;

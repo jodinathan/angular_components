@@ -32,11 +32,11 @@ int _rippleIndex = 0;
 
 // If these were initialized here (and final), dart2js would wait to initialize
 // them until the first mousedown event, increasing latency.
-List<DivElement?>? _ripplePool;
-DivElement? _rippleTemplate;
-Map<String, double>? _opacityTiming;
-List<Map<String, double>>? _opacityKeyframes;
-Map<String, dynamic>? _transformTiming;
+List<DivElement> _ripplePool;
+DivElement _rippleTemplate;
+Map<String, double> _opacityTiming;
+List<Map<String, double>> _opacityKeyframes;
+Map<String, dynamic> _transformTiming;
 
 // This is outside of the class because it causes dart2js to inline this
 // function and use faster variable access patterns.
@@ -46,14 +46,14 @@ void _createRipple(
   final rect = container.getBoundingClientRect();
 
   // Create a ripple or grab one from the pool.
-  DivElement? ripple;
+  DivElement ripple;
   if (_numRipples < _maxRipples) {
-    ripple = _rippleTemplate!.clone(false) as DivElement;
-    _ripplePool![_rippleIndex] = ripple;
+    ripple = _rippleTemplate.clone(false) as DivElement;
+    _ripplePool[_rippleIndex] = ripple;
     _numRipples++;
   } else {
-    ripple = _ripplePool![_rippleIndex];
-    ripple!.remove();
+    ripple = _ripplePool[_rippleIndex];
+    ripple.remove();
   }
 
   if (++_rippleIndex == _maxRipples) _rippleIndex = 0;
@@ -95,8 +95,8 @@ void _applyAnimation(
     initialTransform = 'scale($minScale)';
     finalTransform = 'scale($maxScale)';
   } else {
-    final num offsetX = clientX - rect.left - _rippleRadius;
-    final num offsetY = clientY - rect.top - _rippleRadius;
+    final offsetX = clientX - rect.left - _rippleRadius;
+    final offsetY = clientY - rect.top - _rippleRadius;
     // The ripple drifts from the point of touch to the center of the container.
     final driftX = (containerWidth / 2 - _rippleRadius) - offsetX;
     final driftY = (containerHeight / 2 - _rippleRadius) - offsetY;
@@ -112,7 +112,7 @@ void _applyAnimation(
   ];
 
   ripple.style.cssText = 'top: $top; left: $left; transform: $finalTransform';
-  ripple.animate(_opacityKeyframes!, _opacityTiming);
+  ripple.animate(_opacityKeyframes, _opacityTiming);
   ripple.animate(transformKeyframes, _transformTiming);
 }
 
@@ -127,8 +127,8 @@ void _applyFallbackAnimation(
     top = 'calc(50% - ${_rippleRadius}px)';
     left = 'calc(50% - ${_rippleRadius}px)';
   } else {
-    final num offsetX = clientX - rect.left - _rippleRadius;
-    final num offsetY = clientY - rect.top - _rippleRadius;
+    final offsetX = clientX - rect.left - _rippleRadius;
+    final offsetY = clientY - rect.top - _rippleRadius;
     top = '${offsetY}px';
     left = '${offsetX}px';
   }
@@ -154,14 +154,13 @@ void _applyFallbackAnimation(
 )
 class MaterialRippleComponent implements OnDestroy {
   final HtmlElement _element;
-  EventListener? _onMouseDown;
-  EventListener? _onKeyDown;
+  EventListener _onMouseDown;
+  EventListener _onKeyDown;
 
   MaterialRippleComponent(this._element) {
     // These are initialized here instead of when they're declared because
     // dart2js would otherwise wait to initialize them until they are used.
-    _ripplePool ??=
-        List<DivElement?>.filled(_maxRipples, null, growable: false);
+    _ripplePool ??= List<DivElement>(_maxRipples);
     _opacityTiming ??= {
       'duration': 300.0,
     };
@@ -191,11 +190,11 @@ class MaterialRippleComponent implements OnDestroy {
       // This is inlined by dart2js so we aren't incurring an additional
       // function call here.
       final clientX = (e as MouseEvent).client.x;
-      final clientY = e.client.y;
-      _createRipple(clientX as int, clientY as int, _element, center);
+      final clientY = (e as MouseEvent).client.y;
+      _createRipple(clientX, clientY, _element, center);
     };
     _onKeyDown = (e) {
-      if (!isKeyboardTrigger(e as KeyboardEvent)) return;
+      if (!isKeyboardTrigger(e)) return;
       // Ripples created by a keypress are always centered.
       _createRipple(0, 0, _element, true);
     };
@@ -218,9 +217,9 @@ class MaterialRippleComponent implements OnDestroy {
   void ngOnDestroy() {
     _element.removeEventListener('mousedown', _onMouseDown);
     _element.removeEventListener('keydown', _onKeyDown);
-    _ripplePool!.forEach((ripple) {
+    _ripplePool.forEach((ripple) {
       if (ripple?.parent == _element) {
-        ripple!.remove();
+        ripple.remove();
       }
     });
   }

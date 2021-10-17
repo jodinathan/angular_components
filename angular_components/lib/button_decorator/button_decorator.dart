@@ -34,24 +34,24 @@ class ButtonDirective extends RootFocusable
   final _trigger = StreamController<UIEvent>.broadcast(sync: true);
 
   String _hostTabIndex = '0';
-  final String? _nonTabbableIndex;
+  final String _nonTabbableIndex;
   bool _shouldHandleSpaceKey;
 
-  ButtonDirective(Element element, @Attribute('role') String? role,
+  ButtonDirective(Element element, @Attribute('role') String role,
       {bool addTabIndexWhenNonTabbable = false, bool handleSpacePresses = true})
       : this.role = (role ?? 'button'),
         // Allow the subclass to define how the element should be made
         // untabbable.
         _nonTabbableIndex = addTabIndexWhenNonTabbable ? '-1' : null,
-        _shouldHandleSpaceKey = handleSpacePresses,
+        _shouldHandleSpaceKey = handleSpacePresses ?? true,
         super(element);
 
   /// Role of this component used for a11y.
   @Input()
-  String? role;
+  String role;
 
   @HostBinding('attr.role')
-  String? get ariaRole => role;
+  String get ariaRole => role;
 
   /// String value to be passed to aria-disabled.
   @HostBinding('attr.aria-disabled')
@@ -60,14 +60,14 @@ class ButtonDirective extends RootFocusable
   /// Is the component disabled.
   @HostBinding('class.is-disabled')
   @Input()
-  bool? disabled = false;
+  bool disabled = false;
 
   /// Is the component tabbable.
   @Input()
   bool tabbable = true;
 
-  String? get hostTabIndex =>
-      tabbable && !disabled! ? _hostTabIndex : _nonTabbableIndex;
+  String get hostTabIndex =>
+      tabbable && !disabled ? _hostTabIndex : _nonTabbableIndex;
 
   /// The tab index of the component.
   ///
@@ -80,14 +80,14 @@ class ButtonDirective extends RootFocusable
   /// Triggers if not disabled.
   @HostListener('click')
   void handleClick(MouseEvent mouseEvent) {
-    if (disabled!) return;
+    if (disabled) return;
     _trigger.add(mouseEvent);
   }
 
   /// Triggers on enter and space if not disabled.
   @HostListener('keypress')
   void handleKeyPress(KeyboardEvent keyboardEvent) {
-    if (disabled!) return;
+    if (disabled) return;
     if (isSpaceKey(keyboardEvent) && !_shouldHandleSpaceKey) return;
     int keyCode = keyboardEvent.keyCode;
     if (keyCode == KeyCode.ENTER || isSpaceKey(keyboardEvent)) {

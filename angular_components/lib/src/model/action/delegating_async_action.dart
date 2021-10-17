@@ -13,7 +13,7 @@ abstract class DelegatingAsyncAction<V> implements AsyncAction<V> {
   @override
   bool get cancelled => delegate.cancelled;
   @override
-  bool? get isDone => delegate.isDone;
+  bool get isDone => delegate.isDone;
   @override
   Future<V> get onDone => delegate.onDone;
   @override

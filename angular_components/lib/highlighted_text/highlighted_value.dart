@@ -23,7 +23,7 @@ class HighlightedValueComponent implements RendersValue {
   /// Value to pass to the highlighter to calculate text segments.
   @override
   @Input()
-  Object? value;
+  Object value;
 
   HighlightedValueComponent(this._highLighter);
 

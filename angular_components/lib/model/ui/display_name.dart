@@ -7,7 +7,7 @@ import 'package:angular_components/model/formatters/formatter.dart';
 
 /// Designates a model class which has a canonical _display name_ (label) field.
 abstract class HasUIDisplayName {
-  String? get uiDisplayName;
+  String get uiDisplayName;
 }
 
 /// Contains a value with ui label.

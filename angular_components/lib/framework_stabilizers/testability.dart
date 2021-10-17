@@ -60,7 +60,7 @@ abstract class AbstractTestability implements Testability {
 
   /// Execute the registered callbacks if the framework reports to be stable. If
   /// the framework is not stable, this is a noop.
-  void _runCallbacksIfStable({IsStableCallback? newCallback}) {
+  void _runCallbacksIfStable({IsStableCallback newCallback}) {
     // Run in root zone to stop blocking activity ends.
     Zone.root.run(() {
       if (!isStable) {

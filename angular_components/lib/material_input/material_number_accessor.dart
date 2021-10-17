@@ -37,8 +37,8 @@ const List<Type> materialNumberInputDirectives = [
 /// only sets the value of a [Control] if the input could be parsed.
 abstract class BaseMaterialNumberValueAccessor<T>
     extends BaseMaterialInputValueAccessor<T> {
-  final NumberFormat? _numberFormat;
-  late Stream _updateStream;
+  final NumberFormat _numberFormat;
+  Stream _updateStream;
 
   BaseMaterialNumberValueAccessor(
       MaterialInputComponent input,
@@ -64,7 +64,7 @@ abstract class BaseMaterialNumberValueAccessor<T>
     }
     if (blurFormat) {
       disposer.addStreamSubscription(input.onBlur.listen((_) {
-        //if (input == null) return; // Input is no longer valid
+        if (input == null) return; // Input is no longer valid
         final parsedNumber = parseNumber(input.inputText);
         // If the value parses, it's a number so format it as such.
         if (parsedNumber != null) {
@@ -75,11 +75,9 @@ abstract class BaseMaterialNumberValueAccessor<T>
   }
 
   @override
-  void writeValue(T? newValue) {
+  void writeValue(T newValue) {
     // Treat null as special as an invalid input will also parse as null.
-    if (newValue == null) {
-      super.writeValue(null);
-    }
+    if (newValue == null) super.writeValue(null);
     if (parseNumber(input.inputText) != newValue) {
       // If the numeric value of the current input text doesn't equal to the
       // new numeric value, update the input text accordingly.
@@ -90,8 +88,8 @@ abstract class BaseMaterialNumberValueAccessor<T>
   @override
   void registerOnChange(callback) {
     disposer.addStreamSubscription(_updateStream.listen((_) {
-      //if (input == null) return; // Input is no longer valid
-      final rawValue = input.inputText ?? '';
+      if (input == null) return; // Input is no longer valid
+      final rawValue = input.inputText;
       final value = parseNumber(rawValue);
       // Pass the rawValue and the num value. This allows validators to process
       // whichever one they would like.
@@ -100,12 +98,12 @@ abstract class BaseMaterialNumberValueAccessor<T>
   }
 
   /// Coerces the [String] value of the [MaterialInput] into type of [T].
-  T parseNumber(String? input);
+  T parseNumber(String input);
 
   /// Formats a value using provided [NumberFormat], falling back to
   /// [MaterialInputDefaultValueAccessor] formatValue if none provided.
   @override
-  String formatValue(T? value) {
+  String formatValue(T value) {
     if (value == null) return '';
     return _numberFormat?.format(value) ?? super.formatValue(value);
   }
@@ -128,7 +126,7 @@ abstract class BaseMaterialNumberValueAccessor<T>
   selector: 'material-input[type=int64]',
 )
 class MaterialInt64ValueAccessor
-    extends BaseMaterialNumberValueAccessor<Int64?> {
+    extends BaseMaterialNumberValueAccessor<Int64> {
   MaterialInt64ValueAccessor(
       BaseMaterialInput input,
       @Self() NgControl control,
@@ -138,7 +136,7 @@ class MaterialInt64ValueAccessor
       @Attribute('blurFormat') String blurFormat,
       @Optional() NumberFormat numberFormat)
       : super(
-            input as MaterialInputComponent,
+            input,
             control,
             attributeToBool(changeUpdateAttr, defaultValue: false),
             attributeToBool(keypressUpdateAttr, defaultValue: false),
@@ -150,7 +148,7 @@ class MaterialInt64ValueAccessor
         'You must supply a NumberFormat if using blurFormat');
   }
 
-  bool _checkValues(NumberFormat? numberFormat, bool blurFormat) {
+  bool _checkValues(NumberFormat numberFormat, bool blurFormat) {
     if (numberFormat != null) {
       print('Warning: numberFormat only works with num and will overflow '
           'if the number is larger than a native int, even when using '
@@ -161,7 +159,7 @@ class MaterialInt64ValueAccessor
   }
 
   @override
-  Int64? parseNumber(String? input) {
+  Int64 parseNumber(String input) {
     if (input == null || input.isEmpty) {
       return null;
     }
@@ -170,7 +168,7 @@ class MaterialInt64ValueAccessor
       // If using formatting, we must firsrt parse back to a non-formatted
       // String representation as Int64 cannot handle commas.
       if (_numberFormat != null) {
-        input = _numberFormat!.parse(input).toString();
+        input = _numberFormat.parse(input).toString();
       }
 
       return Int64.parseInt(input);
@@ -193,8 +191,7 @@ class MaterialInt64ValueAccessor
 @Directive(
   selector: 'material-input[type=number],material-input[type=percent]',
 )
-class MaterialNumberValueAccessor
-    extends BaseMaterialNumberValueAccessor<num?> {
+class MaterialNumberValueAccessor extends BaseMaterialNumberValueAccessor<num> {
   final bool _checkInteger;
 
   MaterialNumberValueAccessor(
@@ -204,10 +201,10 @@ class MaterialNumberValueAccessor
       @Attribute('keypressUpdate') String keypressUpdateAttr,
       @Attribute('checkInteger') String checkInteger,
       @Attribute('blurFormat') String blurFormat,
-      @Optional() NumberFormat? numberFormat)
+      @Optional() NumberFormat numberFormat)
       : this._checkInteger = attributeToBool(checkInteger, defaultValue: false),
         super(
-            input as MaterialInputComponent,
+            input,
             control,
             attributeToBool(changeUpdateAttr, defaultValue: false),
             attributeToBool(keypressUpdateAttr, defaultValue: false),
@@ -215,17 +212,17 @@ class MaterialNumberValueAccessor
             numberFormat ?? NumberFormat.decimalPattern());
 
   @override
-  num? parseNumber(String? input) {
+  num parseNumber(String input) {
     // NaN is a valid parsable entity for NumberFormat, but not a value a user
     // is expected to be able to input.
     if (input == null || input == 'NaN') return null;
 
     try {
-      if (_checkInteger && input.contains(_numberFormat!.symbols.DECIMAL_SEP)) {
+      if (_checkInteger && input.contains(_numberFormat.symbols.DECIMAL_SEP)) {
         // Invalid value no longer an integer
         return null;
       }
-      final value = _numberFormat!.parse(input);
+      final value = _numberFormat.parse(input);
       return _checkInteger ? value.toInt() : value;
     } on FormatException {
       return null;
@@ -243,7 +240,7 @@ class MaterialNumberValueAccessor
 class MaterialNumberValidator implements Validator {
   /// Validation that works in concert with the number accessor.
   @override
-  Map<String, dynamic>? validate(AbstractControl control) {
+  Map<String, dynamic> validate(AbstractControl control) {
     assert(control is Control);
     // If the control doesn't have a value, but had a value from the input then
     // it is considered an error. Producing error here as accessors can't easily
@@ -269,7 +266,7 @@ class MaterialNumberValidator implements Validator {
 class CheckIntegerValidator implements Validator {
   /// Validation that works in concert with the number accessor.
   @override
-  Map<String, dynamic>? validate(AbstractControl abstractControl) {
+  Map<String, dynamic> validate(AbstractControl abstractControl) {
     assert(abstractControl is Control, 'Can only be used with a Control');
     final control = abstractControl as Control;
     // Handled by accessor validator or value set by forms system

@@ -12,9 +12,9 @@ class _SingleSelectionModelImpl<T> extends Observable<ChangeRecord>
   @override
   final isSingleSelect = true;
 
-  Object? _selectedKey;
+  Object _selectedKey;
 
-  _SingleSelectionModelImpl(T? selectedValue, this._keyOf) {
+  _SingleSelectionModelImpl(T selectedValue, this._keyOf) {
     if (selectedValue != null) {
       _selectedKey = _keyOf(selectedValue);
       _selectedValues.add(selectedValue);
@@ -95,6 +95,6 @@ class _SingleSelectionModelImpl<T> extends Observable<ChangeRecord>
   Iterable<T> get selectedValues => _selectedValues;
 
   @override
-  T? get selectedValue =>
+  T get selectedValue =>
       _selectedValues.isEmpty ? null : _selectedValues.single;
 }

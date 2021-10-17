@@ -53,7 +53,7 @@ class MaterialChipComponent<T> extends RootFocusable implements HasRenderer<T> {
   /// Chips can be deselected from the model via user interaction unless
   /// `removable` is set to false.
   @Input()
-  SelectionModel<T?>? selectionModel;
+  SelectionModel<T> selectionModel;
 
   /// Whether the chip should show remove button, default to true.
   @Input()
@@ -72,14 +72,14 @@ class MaterialChipComponent<T> extends RootFocusable implements HasRenderer<T> {
   /// When provided, it is used to generate a label for the chip.
   @Input()
   @override
-  set itemRenderer(ItemRenderer<T>? value) {
+  set itemRenderer(ItemRenderer<T> value) {
     _itemRenderer = value;
     _genLabel();
   }
 
-  ItemRenderer<T>? _itemRenderer = nullRenderer;
+  ItemRenderer<T> _itemRenderer = nullRenderer;
   @override
-  ItemRenderer<T>? get itemRenderer => _itemRenderer;
+  ItemRenderer<T> get itemRenderer => _itemRenderer;
 
   /// Data model to render.
   ///
@@ -99,12 +99,12 @@ class MaterialChipComponent<T> extends RootFocusable implements HasRenderer<T> {
     if (_value == null) {
       _label = null;
     } else if (!identical(_itemRenderer, nullRenderer)) {
-      _label = itemRenderer!(_value);
+      _label = itemRenderer(_value);
     }
   }
 
-  String? _label;
-  String? get label => _label;
+  String _label;
+  String get label => _label;
 
   /// Event fired when the chip is removed which returns the value of the chip.
   @Output()
@@ -118,8 +118,8 @@ class MaterialChipComponent<T> extends RootFocusable implements HasRenderer<T> {
     event.stopPropagation();
   }
 
-  String? _uuid;
-  String? get uuid {
+  String _uuid;
+  String get uuid {
     if (_uuid == null) {
       _uuid = _idGenerator.nextId();
     }

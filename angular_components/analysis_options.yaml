@@ -2,7 +2,6 @@ include: package:lints/recommended.yaml
 
 analyzer:
   errors:
-    todo: ignore
     # Happen a lots with angular
     uri_has_not_been_generated: ignore
     ###############
@@ -24,7 +23,7 @@ analyzer:
     prefer_function_declarations_over_variables: ignore
     unnecessary_string_interpolations: ignore
     avoid_returning_null_for_void: ignore
-    # prefer_if_null_operators: ignore
+    prefer_if_null_operators: ignore
     overridden_fields: ignore
     prefer_for_elements_to_map_fromIterable: ignore
     prefer_spread_collections: ignore

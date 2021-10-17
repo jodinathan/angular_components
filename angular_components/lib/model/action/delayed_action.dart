@@ -12,8 +12,8 @@ typedef Callback = void Function();
 class DelayedAction {
   final Callback _callback;
   final Duration _duration;
-  Timer? _timer;
-  Completer<bool>? _completer;
+  Timer _timer;
+  Completer<bool> _completer;
 
   DelayedAction(this._duration, this._callback);
 
@@ -31,7 +31,7 @@ class DelayedAction {
       _completer = Completer<bool>();
       _timer = Timer(_duration, _wrappedCallback);
     }
-    return _completer!.future;
+    return _completer.future;
   }
 
   /// Cancels the timer.
