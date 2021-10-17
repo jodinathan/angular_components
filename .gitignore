@@ -22,12 +22,4 @@ doc/api/
 *.ipr
 *.iws
 
-# Vim
-*.yml~
-*.yaml~
-*.dart~
-
-# VsCode
-.vscode/
-!.vscode/settings.json
-.metals
+.vscode

@@ -36,7 +36,7 @@ class MenuItemGroup<T> extends LabeledList<T> {
   final itemsRole = 'menuitem';
 
   MenuItemGroup(List<T> items,
-      [String? label,
+      [String label,
       bool hasSeparator = true,
       bool isCollapsible = false,
       bool isExpanded = true])
@@ -46,31 +46,31 @@ class MenuItemGroup<T> extends LabeledList<T> {
         super.withLabel(List<T>.unmodifiable(items), label);
 
   /// True when this component explicitly specifies a separator.
-  bool? get hasSeparator => _hasSeparator.value;
+  bool get hasSeparator => _hasSeparator.value;
 
-  set hasSeparator(bool? value) {
+  set hasSeparator(bool value) {
     _hasSeparator.value = value;
   }
 
   /// True when this component can be collapsed.
-  bool? get isCollapsible => _isCollapsible.value;
+  bool get isCollapsible => _isCollapsible.value;
 
-  set isCollapsible(bool? value) {
+  set isCollapsible(bool value) {
     _isCollapsible.value = value;
   }
 
   /// Change stream of collapsible changes.
-  Stream<bool?> get onCollapsibleChange => _isCollapsible.stream;
+  Stream<bool> get onCollapsibleChange => _isCollapsible.stream;
 
   /// True when the component is collapsed.
-  bool? get isExpanded => _isExpanded.value;
+  bool get isExpanded => _isExpanded.value;
 
-  set isExpanded(bool? value) {
+  set isExpanded(bool value) {
     _isExpanded.value = value;
   }
 
   /// Change stream of the expansion state.
-  Stream<bool?> get onExpandedChange => _isExpanded.stream;
+  Stream<bool> get onExpandedChange => _isExpanded.stream;
 }
 
 /// Represents a tree-based collection of menu items.
@@ -83,24 +83,24 @@ class MenuModel<T> implements HasIcon, AcceptsWidth {
   final List<MenuItemGroup<T>> itemGroups;
 
   /// Icon for the menu, can be displayed in the element opening the menu.
-  final Icon? icon;
+  final Icon icon;
   @override
-  Icon? get uiIcon => icon;
+  Icon get uiIcon => icon;
   bool get hasIcon => icon != null;
 
   /// Tooltip for the menu, can be shown in the element opening the menu.
-  final String? tooltipText;
+  final String tooltipText;
 
   /// True if the menu has a tooltip.
   bool get hasTooltip => isNotEmpty(tooltipText);
 
-  int? _width;
+  int _width;
 
   /// Creates a menu model with the given menu groups list.
   ///
   /// If [icon] is given, it will appear on the button that opens the menu.
   MenuModel(List<MenuItemGroup<T>> itemGroups,
-      {this.icon, int? width, this.tooltipText})
+      {this.icon, int width, this.tooltipText})
       : itemGroups = List<MenuItemGroup<T>>.unmodifiable(itemGroups) {
     this.width = width;
   }
@@ -114,7 +114,7 @@ class MenuModel<T> implements HasIcon, AcceptsWidth {
   /// Selects 1 of 5 predefined width values.
   ///
   /// See [AcceptsWidth.width] for more details. Null by default.
-  int? get width => _width;
+  int get width => _width;
 
   @override
   set width(val) {
@@ -122,7 +122,7 @@ class MenuModel<T> implements HasIcon, AcceptsWidth {
       _width = null;
     } else {
       _width = getInt(val);
-      assert(_width! >= 0 && _width! <= 5);
+      assert(_width >= 0 && _width <= 5);
     }
   }
 }
@@ -140,41 +140,41 @@ class MenuModel<T> implements HasIcon, AcceptsWidth {
 ///     new MenuItem(label, tooltip: tooltip,
 ///                  action:action, icon:icon, subMenu:subMenu);
 class MenuItem<T> with MenuItemMixin implements HasUIDisplayName, HasIcon {
-  final String? label;
-  final String? secondaryLabel;
-  final String? tooltip;
-  final String? ariaLabel;
+  final String label;
+  final String secondaryLabel;
+  final String tooltip;
+  final String ariaLabel;
 
   /// A superscript annotation that is shown to the right of the label.
   ///
   /// Note that this annotation cannot be one of the [itemSuffixes] because
   /// [itemSuffixes] are right aligned in the menu, while this should be left
   /// aligned close to the label.
-  final String? labelAnnotation;
-  final MenuModel<T>? subMenu;
+  final String labelAnnotation;
+  final MenuModel<T> subMenu;
 
   // This should be final as all the other state in this class, but needs
   // to first migrate clients.
-  ActionWithContext? _actionWithContext;
+  ActionWithContext _actionWithContext;
 
   /// Action to perform when user select an item in the menu.
-  ActionWithContext? get actionWithContext => _actionWithContext;
+  ActionWithContext get actionWithContext => _actionWithContext;
   @Deprecated('This should be final.')
-  set actionWithContext(ActionWithContext? value) {
+  set actionWithContext(ActionWithContext value) {
     _actionWithContext = value;
-    _action = () => value!(null);
+    _action = () => value(null);
   }
 
-  MenuAction? _action;
+  MenuAction _action;
 
   @Deprecated('Use actionWithContext')
-  MenuAction? get action => _action;
-  set action(MenuAction? value) {
+  MenuAction get action => _action;
+  set action(MenuAction value) {
     _action = value;
-    _actionWithContext = (_) => value!();
+    _actionWithContext = (_) => value();
   }
 
-  final Icon? icon;
+  final Icon icon;
 
   /// List of rendered suffixes for this menu item.
   final ObservableList<MenuItemAffix> itemSuffixes;
@@ -204,20 +204,20 @@ class MenuItem<T> with MenuItemMixin implements HasUIDisplayName, HasIcon {
   MenuItem(this.label,
       {this.enabled = true,
       this.tooltip,
-      @Deprecated('Use ActionWithContext') MenuAction? action,
-      ActionWithContext? actionWithContext,
+      @Deprecated('Use ActionWithContext') MenuAction action,
+      ActionWithContext actionWithContext,
       this.icon,
       this.labelAnnotation,
-      Iterable<String>? cssClasses,
-      MenuItemAffix? itemSuffix,
-      ObservableList<MenuItemAffix>? itemSuffixes,
+      Iterable<String> cssClasses,
+      MenuItemAffix itemSuffix,
+      ObservableList<MenuItemAffix> itemSuffixes,
       this.subMenu,
       this.secondaryLabel,
-      String? ariaLabel})
+      String ariaLabel})
       : itemSuffixes = itemSuffixes ??
             ObservableList<MenuItemAffix>.from(
                 Optional.fromNullable(itemSuffix)),
-        cssClasses = BuiltList<String>((cssClasses ?? const <String>[])),
+        cssClasses = BuiltList<String>(cssClasses ?? const []),
         ariaLabel = ariaLabel ?? label {
     assert(itemSuffix == null || itemSuffixes == null,
         'Only one of itemSuffix or itemSuffixes should be provided');
@@ -243,12 +243,12 @@ class MenuItem<T> with MenuItemMixin implements HasUIDisplayName, HasIcon {
 
 /// Required members to use [MenuItemMixin].
 abstract class _MenuItemBase {
-  ActionWithContext? get actionWithContext;
-  Icon? get icon;
-  String? get label;
-  String? get secondaryLabel;
-  String? get tooltip;
-  MenuModel? get subMenu;
+  ActionWithContext get actionWithContext;
+  Icon get icon;
+  String get label;
+  String get secondaryLabel;
+  String get tooltip;
+  MenuModel get subMenu;
 }
 
 /// Action triggered by interaction with the menu.
@@ -263,9 +263,9 @@ typedef ActionWithContext = void Function(dynamic context);
 abstract class MenuItemMixin implements _MenuItemBase {
   bool get hasIcon => icon != null;
 
-  String? get uiDisplayName => label;
+  String get uiDisplayName => label;
 
-  Icon? get uiIcon => icon;
+  Icon get uiIcon => icon;
 
   bool get hasSubMenu => subMenu != null;
 
@@ -292,7 +292,7 @@ class ActiveMenuItemModel<T> extends ActiveItemModel<T> {
   final bool _filterOutUnselectableItems;
 
   ActiveMenuItemModel(IdGenerator idGenerator,
-      {MenuModel<T>? menu, bool filterOutUnselectableItems = false})
+      {MenuModel<T> menu, bool filterOutUnselectableItems = false})
       : _filterOutUnselectableItems = filterOutUnselectableItems,
         super(idGenerator,
             items: _createEnabledItemGroupList(
@@ -301,7 +301,7 @@ class ActiveMenuItemModel<T> extends ActiveItemModel<T> {
 
   set menu(MenuModel<T> menu) {
     super.items = _createEnabledItemGroupList(
-        menu.itemGroups, _filterOutUnselectableItems);
+        menu?.itemGroups, _filterOutUnselectableItems);
   }
 
   @override
@@ -311,7 +311,7 @@ class ActiveMenuItemModel<T> extends ActiveItemModel<T> {
   }
 
   static CombinedList<T> _createEnabledItemGroupList<T>(
-      List<List<T>>? menuGroups, bool filterOutUnselectableItems) {
+      List<List<T>> menuGroups, bool filterOutUnselectableItems) {
     if (menuGroups == null) return CombinedList<T>([]);
 
     if (!filterOutUnselectableItems) return CombinedList<T>(menuGroups);

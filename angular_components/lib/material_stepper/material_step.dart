@@ -30,7 +30,7 @@ class StepDirective extends TemplatePortal {
 
   /// Name shown as the title.
   @Input()
-  late String name;
+  String name;
 
   /// Whether the step is optional. Optional steps have an extra label denoting
   /// that they're optional and should be skip-able. Default is false.
@@ -40,7 +40,7 @@ class StepDirective extends TemplatePortal {
   /// Summary text shown when the step is completed in a vertical default-sized
   /// stepper. For other steppers, this doesn't apply.
   @Input()
-  String? completeSummary;
+  String completeSummary;
 
   /// Whether the buttons should be hidden on this step.
   @Input()
@@ -78,10 +78,10 @@ class StepDirective extends TemplatePortal {
   bool busy = false;
   bool isLast = false;
   bool isSelectable = false;
-  int? index;
+  int index;
 
   /// Optional summary directive associated with this step.
-  SummaryDirective? summaryDirective;
+  SummaryDirective summaryDirective;
 
   StepDirective(TemplateRef ref, ViewContainerRef viewContainerRef)
       : super(ref, viewContainerRef);

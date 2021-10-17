@@ -62,12 +62,12 @@ class MaterialDateTimePickerComponent implements HasDisabled {
   /// latest date time which makes sense in your domain context. e.g., for apps
   /// which analyse historical data, this could be the current date time.
   @Input()
-  DateTime? maxDateTime;
+  DateTime maxDateTime;
   Date get maxDate =>
-      Date(maxDateTime!.year, maxDateTime!.month, maxDateTime!.day);
+      Date(maxDateTime.year, maxDateTime.month, maxDateTime.day);
 
   /// Returns maximum time for time picker when selected date is maximum date.
-  DateTime? get maxTime {
+  DateTime get maxTime {
     if (_sameDate(_date, maxDateTime)) {
       return cloneDateTime(maxDateTime);
     }
@@ -80,12 +80,12 @@ class MaterialDateTimePickerComponent implements HasDisabled {
   /// time which makes sense in your domain context. e.g., the earliest date
   /// time for which data is available for analysis.
   @Input()
-  DateTime? minDateTime;
+  DateTime minDateTime;
   Date get minDate =>
-      Date(minDateTime!.year, minDateTime!.month, minDateTime!.day);
+      Date(minDateTime.year, minDateTime.month, minDateTime.day);
 
   /// Returns minimum time for time picker when selected date is minimum date.
-  DateTime? get minTime {
+  DateTime get minTime {
     if (_sameDate(_date, minDateTime)) {
       return cloneDateTime(minDateTime);
     }
@@ -94,11 +94,11 @@ class MaterialDateTimePickerComponent implements HasDisabled {
 
   /// Increment of time dropdown options in minutes, passed on to time picker.
   @Input()
-  int? increment;
+  int increment;
 
   /// Whether changing the selected date and time should be disabled.
   @Input()
-  bool? disabled = false;
+  bool disabled = false;
 
   /// Whether the date and time entry is required.
   ///
@@ -119,11 +119,11 @@ class MaterialDateTimePickerComponent implements HasDisabled {
     dateTime = _utc ? _dateTime?.toUtc() : _dateTime?.toLocal();
   }
 
-  final _dateTimeController = StreamController<DateTime?>.broadcast();
+  final _dateTimeController = StreamController<DateTime>.broadcast();
 
   /// Publishes events when the selected [dateTime] changes.
   @Output()
-  Stream<DateTime?> get dateTimeChange => _dateTimeController.stream;
+  Stream<DateTime> get dateTimeChange => _dateTimeController.stream;
 
   /// The [dateTime] setter, which is only called programmatically,
   /// propagates changes to the others.
@@ -141,16 +141,16 @@ class MaterialDateTimePickerComponent implements HasDisabled {
   /// necessary for these values not to be perfectly in sync since otherwise,
   /// the first time the user entered invalid data, he would be trapped, unable
   /// to enter valid data in both pickers at once.
-  DateTime? _dateTime;
+  DateTime _dateTime;
 
-  DateTime? get dateTime => _dateTime;
+  DateTime get dateTime => _dateTime;
 
   /// The selected date time.
   @Input()
-  set dateTime(DateTime? value) {
+  set dateTime(DateTime value) {
     if (value != _dateTime) {
       _dateTime = value;
-      _date = (_dateTime == null ? null : Date.fromTime(_dateTime!));
+      _date = (_dateTime == null ? null : Date.fromTime(_dateTime));
       _time = cloneDateTime(_dateTime);
     }
   }
@@ -162,11 +162,11 @@ class MaterialDateTimePickerComponent implements HasDisabled {
     maxDateTime = DateTime(year + 10, DateTime.december, 31, 23, 59);
   }
 
-  Date? _date;
+  Date _date;
 
   /// The selected date or null if the date picker has invalid input.
-  Date? get date => _date;
-  set date(Date? value) {
+  Date get date => _date;
+  set date(Date value) {
     if (value != _date) {
       _date = value;
       if (_date != null && _time == null) {
@@ -174,18 +174,18 @@ class MaterialDateTimePickerComponent implements HasDisabled {
         if (_sameDate(_date, minDateTime)) {
           _time = cloneDateTime(minDateTime);
         } else {
-          _time = _utc ? DateTime.utc(_date!.year) : DateTime(_date!.year);
+          _time = _utc ? DateTime.utc(_date.year) : DateTime(_date.year);
         }
       }
       _updateDateTimeAndNotify();
     }
   }
 
-  DateTime? _time;
+  DateTime _time;
 
   /// The selected time or null if the user blanks it out.
-  DateTime? get time => _time;
-  set time(DateTime? value) {
+  DateTime get time => _time;
+  set time(DateTime value) {
     if (value != _time) {
       _time = value;
       _updateDateTimeAndNotify();
@@ -194,7 +194,7 @@ class MaterialDateTimePickerComponent implements HasDisabled {
 
   /// Sets [dateTime] to now if it's null.
   void setTimeToNowIfUnset() {
-    if (!disabled! && _time == null) {
+    if (!disabled && _time == null) {
       DateTime now = _clock.now();
       _time = now;
       _date = Date(now.year, now.month, now.day);
@@ -208,9 +208,9 @@ class MaterialDateTimePickerComponent implements HasDisabled {
     _dateTime = _date != null && _time != null
         ? (utc
             ? DateTime.utc(
-                _date!.year, _date!.month, _date!.day, _time!.hour, _time!.minute)
+                _date.year, _date.month, _date.day, _time.hour, _time.minute)
             : DateTime(
-                _date!.year, _date!.month, _date!.day, _time!.hour, _time!.minute))
+                _date.year, _date.month, _date.day, _time.hour, _time.minute))
         : null;
 
     if (_dateTime != null || !required) {
@@ -219,7 +219,7 @@ class MaterialDateTimePickerComponent implements HasDisabled {
   }
 
   /// Checks whether [toCompare] has the same date as [date] ignoring the time.
-  static bool _sameDate(Date? date, DateTime? toCompare) {
+  static bool _sameDate(Date date, DateTime toCompare) {
     if (date == null || toCompare == null) {
       return false;
     }
@@ -228,7 +228,7 @@ class MaterialDateTimePickerComponent implements HasDisabled {
         date.day == toCompare.day);
   }
 
-  static DateTime? cloneDateTime(DateTime? dateTime) {
+  static DateTime cloneDateTime(DateTime dateTime) {
     return dateTime != null
         ? DateTime.fromMillisecondsSinceEpoch(dateTime.millisecondsSinceEpoch,
             isUtc: dateTime.isUtc)

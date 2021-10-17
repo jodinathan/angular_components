@@ -20,12 +20,12 @@ class FocusActivableItemDirective extends RootFocusable
   /// Key to assign to the focusable item.
   @Input('focusActivableItem')
   @override
-  String? key;
+  String key;
 
   FocusActivableItemDirective(HtmlElement root) : super(root);
 }
 
 /// A focusable component with a matching [key].
 abstract class FocusableActivateItem implements Focusable {
-  String? get key;
+  String get key;
 }

@@ -71,11 +71,11 @@ class MaterialFabComponent extends MaterialButtonBase {
 
   @visibleForTemplate
   @HostBinding('attr.disabled')
-  String? get hostDisabled => disabled! ? '' : null;
+  String get hostDisabled => disabled ? '' : null;
 
   @visibleForTemplate
   @HostBinding('attr.raised')
-  String? get hostRaised => raised ? '' : null;
+  String get hostRaised => raised ? '' : null;
 
   @visibleForTemplate
   @HostBinding('class.is-focused')
