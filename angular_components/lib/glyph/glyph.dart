@@ -73,18 +73,18 @@ class GlyphComponent {
 
   bool get _isIconModel => icon is Icon;
 
-  String? get iconName => _isIconModel ? icon.name : icon;
+  String get iconName => _isIconModel ? icon.name : icon;
 
   /// The icon font to use. Default (and only) is **material-icons-extended**.
-  String? _iconSet;
+  String _iconSet;
 
-  String? get iconSet => _iconSet == null ? _materialIconsExtended : _iconSet;
+  String get iconSet => _iconSet == null ? _materialIconsExtended : _iconSet;
 
   /// The set of icons to use. Only allowed value currently is
   /// `material-icons-extended`.
   ///
   @Input()
-  set iconSet(String? value) {
+  set iconSet(String value) {
     assert(value == null || value == _materialIconsExtended);
     _iconSet = value;
   }

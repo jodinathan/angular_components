@@ -62,24 +62,24 @@ abstract class Modal {
   /// Attempts to close the modal.
   ///
   /// Returns a future that completes with `true` if it succeeds.
-  Future<bool>? close();
+  Future<bool> close();
 
   /// Events that fires before making [visible] `false`.
   ///
   /// See [AsyncAction] for the API for deferring or cancelling the event.\
   @Output('close')
-  Stream<AsyncAction<dynamic>?> get onClose;
+  Stream<AsyncAction<dynamic>> get onClose;
 
   /// Attempts to open the modal.
   ///
   /// Returns a future that completes with `true` if it succeeds.
-  Future<bool>? open();
+  Future<bool> open();
 
   /// Events that fire before making [visible] `true`.
   ///
   /// See [AsyncAction] for the API for deferring or cancelling the event.
   @Output('open')
-  Stream<AsyncAction<dynamic>?> get onOpen;
+  Stream<AsyncAction<dynamic>> get onOpen;
 
   /// A stream of click events on the modal.
   ///
@@ -162,18 +162,17 @@ abstract class Modal {
 class ModalComponent
     implements DeferredContentAware, Modal, AfterViewInit, OnDestroy {
   final Element _element;
-  final Modal? _parentModal;
-  final GlobalModalStack? _stack;
+  final Modal _parentModal;
+  final GlobalModalStack _stack;
   final DomService _domService;
 
   @override
-  Stream<AsyncAction<dynamic>?> get onOpen => _onOpen.stream;
-  final _onOpen = StreamController<AsyncAction<dynamic>?>.broadcast(sync: true);
+  Stream<AsyncAction<dynamic>> get onOpen => _onOpen.stream;
+  final _onOpen = StreamController<AsyncAction<dynamic>>.broadcast(sync: true);
 
   @override
-  Stream<AsyncAction<dynamic>?> get onClose => _onClose.stream;
-  final _onClose =
-      StreamController<AsyncAction<dynamic>?>.broadcast(sync: true);
+  Stream<AsyncAction<dynamic>> get onClose => _onClose.stream;
+  final _onClose = StreamController<AsyncAction<dynamic>>.broadcast(sync: true);
 
   @override
   Stream<bool> get onVisibleChanged => _onVisibleChanged.stream;
@@ -185,7 +184,7 @@ class ModalComponent
   bool _isHidden = false;
   bool _isVisible = false;
   final OverlayRef _resolvedOverlayRef;
-  Element? _lastFocusedElement;
+  Element _lastFocusedElement;
 
   /// Whether to return focus to the last focused element before the modal
   /// opened.
@@ -194,8 +193,8 @@ class ModalComponent
   @Input()
   bool restoreFocus = true;
 
-  Future<bool>? _pendingOpen;
-  Future<bool>? _pendingClose;
+  Future<bool> _pendingOpen;
+  Future<bool> _pendingClose;
 
   ModalComponent(OverlayService overlayService, this._element, this._domService,
       @Optional() @SkipSelf() this._parentModal, @Optional() this._stack)
@@ -245,7 +244,7 @@ class ModalComponent
   OverlayRef get resolvedOverlayRef => _resolvedOverlayRef;
 
   @HostBinding('attr.pane-id')
-  String? get uniquePaneId => _resolvedOverlayRef.uniqueId;
+  String get uniquePaneId => _resolvedOverlayRef?.uniqueId;
 
   // Make the overlay hosting this modal visible.
   //
@@ -254,9 +253,9 @@ class ModalComponent
     if (!temporary) {
       _saveFocus();
       if (_stack != null) {
-        _stack?.onModalOpened(this);
+        _stack.onModalOpened(this);
       } else if (_parentModal != null) {
-        _parentModal?.hidden = true;
+        _parentModal.hidden = true;
       }
     }
     _resolvedOverlayRef.setVisible(true);
@@ -269,9 +268,9 @@ class ModalComponent
     if (!temporary) {
       _restoreFocus();
       if (_stack != null) {
-        _stack?.onModalClosed(this);
+        _stack.onModalClosed(this);
       } else if (_parentModal != null) {
-        _parentModal?.hidden = false;
+        _parentModal.hidden = false;
       }
     }
     _resolvedOverlayRef.setVisible(false);
@@ -283,7 +282,7 @@ class ModalComponent
 
   void _restoreFocus() {
     if (_lastFocusedElement == null) return;
-    if (_stack != null && _stack!.length > 1 || _parentModal != null) return;
+    if (_stack != null && _stack.length > 1 || _parentModal != null) return;
     final elementToFocus = _lastFocusedElement;
     _domService.scheduleWrite(() {
       // Only restore focus if the current active element is inside this overlay
@@ -296,17 +295,17 @@ class ModalComponent
               document.activeElement == document.body)) {
         // Note that if the [elementToFocus] is no longer in the document,
         // the body element will be focused instead.
-        elementToFocus!.focus();
+        elementToFocus.focus();
       }
     });
   }
 
   @override
-  Future<bool>? open() {
+  Future<bool> open() {
     if (_pendingOpen == null) {
       final controller = AsyncActionController<dynamic>();
       controller.execute(_showModalOverlay);
-      _pendingOpen = controller.action!.onDone.then((completed) {
+      _pendingOpen = controller.action.onDone.then((completed) {
         _pendingOpen = null;
         return completed;
       });
@@ -316,11 +315,11 @@ class ModalComponent
   }
 
   @override
-  Future<bool>? close() {
+  Future<bool> close() {
     if (_pendingClose == null) {
       final controller = AsyncActionController<dynamic>();
       controller.execute(_hideModalOverlay);
-      _pendingClose = controller.action!.onDone.then((completed) {
+      _pendingClose = controller.action.onDone.then((completed) {
         _pendingClose = null;
         return completed;
       });

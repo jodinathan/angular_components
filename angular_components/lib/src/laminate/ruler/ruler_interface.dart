@@ -46,32 +46,32 @@ abstract class Ruler<E> {
   ///
   /// **NOTE**: All of these properties are *cleared* before updating.
   Future<void> update(E element,
-      {List<String>? cssClasses,
-      Visibility? visibility,
-      Position? position,
-      num? width,
-      num? height,
-      num? left,
-      num? top,
-      num? right,
-      num? bottom,
-      num? zIndex,
+      {List<String> cssClasses,
+      Visibility visibility,
+      Position position,
+      num width,
+      num height,
+      num left,
+      num top,
+      num right,
+      num bottom,
+      num zIndex,
       bool useCssTransform = true});
 
   /// Updates position and dimension based properties on [element].
   ///
   /// **NOTE**: All of these properties are *cleared* before updating.
   void updateSync(E element,
-      {List<String>? cssClasses,
-      Visibility? visibility,
-      Position? position,
-      num? width,
-      num? height,
-      num? left,
-      num? top,
-      num? right,
-      num? bottom,
-      num? zIndex,
+      {List<String> cssClasses,
+      Visibility visibility,
+      Position position,
+      num width,
+      num height,
+      num left,
+      num top,
+      num right,
+      num bottom,
+      num zIndex,
       bool useCssTransform = true});
 }
 
@@ -94,7 +94,7 @@ abstract class RulerBase<E> implements Ruler<E> {
   /// Override with an implementation of [DomService.onLayoutChanged].
   ///
   /// The stream should fire within a DOM read queue.
-  Stream<DomService>? get onLayoutChanged;
+  Stream<DomService> get onLayoutChanged;
 
   /// Override with an implementation of [DomService.onRead].
   Future<void> onRead();
@@ -120,18 +120,18 @@ abstract class RulerBase<E> implements Ruler<E> {
   void clearCssPropertiesSync(E element);
 
   /// Synchronously write [element].style[propertyName] = [propertyValue].
-  void setCssPropertySync(E element, String? propertyName, String? propertyValue);
+  void setCssPropertySync(E element, String propertyName, String propertyValue);
 
   @override
   Stream<Rectangle> track(E element) {
-    late StreamController<Rectangle> controller;
-    late StreamSubscription<dynamic> subscription;
+    StreamController<Rectangle> controller;
+    StreamSubscription<dynamic> subscription;
     controller = StreamController<Rectangle>(
         sync: true,
         onListen: () {
           // Get an initial measure of the element prior to onLayoutChanged.
           measure(element).then(controller.add);
-          subscription = onLayoutChanged!.listen((_) {
+          subscription = onLayoutChanged.listen((_) {
             controller.add(measureSync(element));
           }, onDone: () {
             controller.close();
@@ -165,16 +165,16 @@ abstract class RulerBase<E> implements Ruler<E> {
 
   @override
   Future<void> update(E element,
-      {List<String>? cssClasses,
-      Visibility? visibility,
-      Position? position,
-      num? width,
-      num? height,
-      num? left,
-      num? top,
-      num? right,
-      num? bottom,
-      num? zIndex,
+      {List<String> cssClasses,
+      Visibility visibility,
+      Position position,
+      num width,
+      num height,
+      num left,
+      num top,
+      num right,
+      num bottom,
+      num zIndex,
       bool useCssTransform = true}) {
     void doSyncUpdate() {
       updateSync(element,
@@ -199,16 +199,16 @@ abstract class RulerBase<E> implements Ruler<E> {
   }
 
   void updateSync(E element,
-      {List<String>? cssClasses,
-      Visibility? visibility,
-      Position? position,
-      num? width,
-      num? height,
-      num? left,
-      num? top,
-      num? right,
-      num? bottom,
-      num? zIndex,
+      {List<String> cssClasses,
+      Visibility visibility,
+      Position position,
+      num width,
+      num height,
+      num left,
+      num top,
+      num right,
+      num bottom,
+      num zIndex,
       bool useCssTransform = true}) {
     // TODO(google): Consider another format for dimensions.
     SetPropertyFn setProperty = (name, value) {
@@ -221,7 +221,7 @@ abstract class RulerBase<E> implements Ruler<E> {
       visibility.apply(setProperty);
     }
     if (cssClasses != null) {
-      var lastCssClasses = _addedCssClasses[element!];
+      var lastCssClasses = _addedCssClasses[element];
       if (lastCssClasses != null) {
         removeCssClassesSync(element, lastCssClasses);
       }

@@ -21,22 +21,21 @@ typedef OptionGroupMapper<T> = List<OptionGroup<T>> Function(Iterable<T> items);
 
 /// A collection of options with an optional label.
 class OptionGroup<T> extends LabeledList<T> {
-  String? get emptyLabel => _emptyLabelFcn != null ? _emptyLabelFcn!() : null;
+  String get emptyLabel => _emptyLabelFcn != null ? _emptyLabelFcn() : null;
 
-  LabelFunction? _emptyLabelFcn;
+  LabelFunction _emptyLabelFcn;
 
   bool get hasEmptyLabel => _emptyLabelFcn != null;
 
-  OptionGroup(List<T> items, [LabelFunction? labelFcn])
-      : super(items, labelFcn);
+  OptionGroup(List<T> items, [LabelFunction labelFcn]) : super(items, labelFcn);
 
   OptionGroup.withLabelFunction(List<T> items,
-      [LabelFunction? labelFcn, this._emptyLabelFcn])
+      [LabelFunction labelFcn, this._emptyLabelFcn])
       : super.withLabelFunction(items, labelFcn);
 
   /// An option group with a label is recommended when multiple option groups
   /// exist in a selection list.
-  OptionGroup.withLabel(List<T> items, [String? label, String? emptyLabel])
+  OptionGroup.withLabel(List<T> items, [String label, String emptyLabel])
       : _emptyLabelFcn = emptyLabel != null ? (() => emptyLabel) : null,
         super.withLabel(items, label);
 
@@ -64,7 +63,7 @@ abstract class GroupedOptions<T> implements Disposable {
   set optionGroups(List<OptionGroup<T>> value);
 
   /// All options flattened in one list.
-  List<T>? get optionsList;
+  List<T> get optionsList;
 
   /// Dispose when the the options come from a stream.
   @override
@@ -85,8 +84,8 @@ class SelectionOptions<T> extends GroupedOptions<T>
   final _controller =
       StreamController<List<OptionGroup<T>>>.broadcast(sync: true);
 
-  List<T> _flattenedList = [];
-  List<OptionGroup<T>> _optionGroups = [];
+  List<T> _flattenedList;
+  List<OptionGroup<T>> _optionGroups;
 
   /// Creates an instance with the given option groups.
   SelectionOptions(List<OptionGroup<T>> optionGroups) {
@@ -95,7 +94,7 @@ class SelectionOptions<T> extends GroupedOptions<T>
 
   /// Creates an instance from a list of options.
   // TODO(google): Rename this to withOptions.
-  SelectionOptions.fromList(List<T> options, {String? label})
+  SelectionOptions.fromList(List<T> options, {String label})
       : this(<OptionGroup<T>>[OptionGroup<T>.withLabel(options, label)]);
 
   /// Creates an instance with the given option groups.
@@ -128,10 +127,9 @@ class SelectionOptions<T> extends GroupedOptions<T>
     var oldValue = _optionGroups;
     if (oldValue != value) {
       _optionGroups = value;
-      //_flattenedList = _optionGroups != null
-      //    ? _optionGroups.expand((i) => i).toList()
-      //    : <T>[];
-      _flattenedList = _optionGroups.expand((i) => i).toList();
+      _flattenedList = _optionGroups != null
+          ? _optionGroups.expand((i) => i).toList()
+          : <T>[];
       _controller.add(_optionGroups);
     }
   }

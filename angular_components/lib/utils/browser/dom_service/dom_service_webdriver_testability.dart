@@ -5,9 +5,9 @@
 import 'package:angular_components/framework_stabilizers/testability.dart';
 import 'package:angular_components/utils/browser/dom_service/dom_service.dart';
 
-Testability createDomServiceWebdriverTestability(DomService? domService) {
+Testability createDomServiceWebdriverTestability(DomService domService) {
   if (testabilitiesEnabled) {
-    return DomServiceWebdriverTestability._(domService!);
+    return DomServiceWebdriverTestability._(domService);
   }
   return NullTestability();
 }
@@ -18,7 +18,7 @@ class DomServiceWebdriverTestability extends AbstractTestability {
   final DomService _domService;
 
   DomServiceWebdriverTestability._(this._domService) {
-    _domService.onQueuesProcessed!.listen((_) => checkStable());
+    _domService.onQueuesProcessed.listen((_) => checkStable());
   }
 
   @override

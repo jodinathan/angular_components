@@ -19,26 +19,26 @@ typedef StreamControllerFactory<T> = StreamController<T> Function();
 class LazyStreamController<T> implements StreamController<T> {
   final StreamControllerFactory<T> _streamControllerFactory;
 
-  StreamController<T>? _streamController;
+  StreamController<T> _streamController;
 
   /// Creates a new [LazyStreamController] that will be a non-broadcast
   /// controller.
   factory LazyStreamController(
-      {void onListen()?, void onCancel()?, bool sync = false}) {
+      {void onListen(), void onCancel(), bool sync = false}) {
     return LazyStreamController._(() => StreamController<T>(
         onListen: onListen, onCancel: onCancel, sync: sync));
   }
 
   /// Creates a new [LazyStreamController] that will be a broadcast controller.
   factory LazyStreamController.broadcast(
-      {void onListen()?, void onCancel()?, bool sync = false}) {
+      {void onListen(), void onCancel(), bool sync = false}) {
     return LazyStreamController._(() => StreamController<T>.broadcast(
         onListen: onListen, onCancel: onCancel, sync: sync));
   }
 
   LazyStreamController._(this._streamControllerFactory);
 
-  StreamController<T>? _initializeLazy() {
+  StreamController<T> _initializeLazy() {
     if (_streamController == null) {
       _streamController = _streamControllerFactory();
     }
@@ -47,84 +47,84 @@ class LazyStreamController<T> implements StreamController<T> {
 
   @override
   bool get isClosed {
-    return _streamController != null ? _streamController!.isClosed : false;
+    return _streamController != null ? _streamController.isClosed : false;
   }
 
   @override
   bool get hasListener {
-    return _streamController != null ? _streamController!.hasListener : false;
+    return _streamController != null ? _streamController.hasListener : false;
   }
 
   @override
   bool get isPaused {
-    return _streamController != null ? _streamController!.isPaused : false;
+    return _streamController != null ? _streamController.isPaused : false;
   }
 
   @override
   void add(T event) {
     if (_streamController != null) {
-      _streamController!.add(event);
+      _streamController.add(event);
     }
   }
 
   @override
-  void addError(Object error, [StackTrace? stackTrace]) {
+  void addError(Object error, [StackTrace stackTrace]) {
     if (_streamController != null) {
-      _streamController!.addError(error, stackTrace);
+      _streamController.addError(error, stackTrace);
     }
   }
 
   @override
-  Future<Object?> addStream(Stream<T> source, {bool? cancelOnError = true}) {
-    return _initializeLazy()!.addStream(source, cancelOnError: cancelOnError);
+  Future<Object> addStream(Stream<T> source, {bool cancelOnError = true}) {
+    return _initializeLazy().addStream(source, cancelOnError: cancelOnError);
   }
 
   @override
   Future<dynamic> close() {
     if (_streamController != null) {
-      return _streamController!.close();
+      return _streamController.close();
     }
     return Future<dynamic>.value();
   }
 
   @override
-  Future<Object?> get done => _initializeLazy()!.done;
+  Future<Object> get done => _initializeLazy().done;
 
   @override
-  StreamSink<T> get sink => _initializeLazy()!.sink;
+  StreamSink<T> get sink => _initializeLazy().sink;
 
   @override
-  Stream<T> get stream => _initializeLazy()!.stream;
+  Stream<T> get stream => _initializeLazy().stream;
 
   @override
-  set onListen(void onListenHandler()?) {
-    _initializeLazy()!.onListen = onListenHandler;
+  set onListen(void onListenHandler()) {
+    _initializeLazy().onListen = onListenHandler;
   }
 
   @override
-  ControllerCallback? get onListen => _initializeLazy()!.onListen;
+  ControllerCallback get onListen => _initializeLazy().onListen;
 
   @override
-  set onPause(void onPauseHandler()?) {
-    _initializeLazy()!.onPause = onPauseHandler;
+  set onPause(void onPauseHandler()) {
+    _initializeLazy().onPause = onPauseHandler;
   }
 
   @override
-  ControllerCallback? get onPause => _initializeLazy()!.onPause;
+  ControllerCallback get onPause => _initializeLazy().onPause;
 
   @override
-  set onResume(void onResumeHandler()?) {
-    _initializeLazy()!.onResume = onResumeHandler;
+  set onResume(void onResumeHandler()) {
+    _initializeLazy().onResume = onResumeHandler;
   }
 
   @override
-  ControllerCallback? get onResume => _initializeLazy()!.onResume;
+  ControllerCallback get onResume => _initializeLazy().onResume;
 
   @override
-  set onCancel(void onCancelHandler()?) {
-    _initializeLazy()!.onCancel = onCancelHandler;
+  set onCancel(void onCancelHandler()) {
+    _initializeLazy().onCancel = onCancelHandler;
   }
 
   @override
-  ControllerCallback? get onCancel => _initializeLazy()!.onCancel;
+  ControllerCallback get onCancel => _initializeLazy().onCancel;
 }

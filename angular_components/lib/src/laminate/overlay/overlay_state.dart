@@ -52,97 +52,97 @@ abstract class OverlayState {
       OverlayState(captureEvents: true, top: 0, bottom: 0, left: 0, right: 0);
 
   const factory OverlayState(
-      {bool? captureEvents,
-      num? left,
-      num? top,
-      num? right,
-      num? bottom,
-      num? width,
-      num? minWidth,
-      num? height,
-      int? zIndex,
-      Position? position,
-      Visibility? visibility}) = _ImmutableOverlayState;
+      {bool captureEvents,
+      num left,
+      num top,
+      num right,
+      num bottom,
+      num width,
+      num minWidth,
+      num height,
+      int zIndex,
+      Position position,
+      Visibility visibility}) = _ImmutableOverlayState;
 
   /// Whether to capture mouse and touch events on the pane itself.
   ///
   /// In most use cases, this should be kept to false. Some components like
   /// dialogs may wish to make this "true" in order to prevent interacting with
   /// the rest of the application when the pane is active.
-  bool? get captureEvents;
+  bool get captureEvents;
 
   /// The left position relative to the container viewport.
-  num? get left;
+  num get left;
 
   /// The top position relative to the container viewport.
-  num? get top;
+  num get top;
 
   /// The right position relative to the container viewport.
-  num? get right;
+  num get right;
 
   /// The bottom position relative to the container viewport.
-  num? get bottom;
+  num get bottom;
 
   /// The width of the pane.
   ///
   /// Can be set as 0 to signify full width.
-  num? get width;
+  num get width;
 
   /// The minimum width of the pane.
-  num? get minWidth;
+  num get minWidth;
 
   /// The height of the pane.
   ///
   /// Can be set as 0 to signify full height.
-  num? get height;
+  num get height;
 
   /// If the overlay should be visible.
-  Visibility? get visibility;
+  Visibility get visibility;
 
   /// A stream updated once per microtask queue when any property has changed.
   Stream<Null> get onUpdate;
 
   /// ZIndex of the pane.
-  int? get zIndex;
+  int get zIndex;
 
   /// The positioning method to use for this state.
-  Position? get position;
+  Position get position;
 }
 
 /// The state of an overlay pane.
 class _ImmutableOverlayState implements OverlayState {
   @override
-  final bool? captureEvents;
+  final bool captureEvents;
 
   @override
-  final num? left;
+  final num left;
 
   @override
-  final num? top;
+  final num top;
 
   @override
-  final num? right;
+  final num right;
 
   @override
-  final num? bottom;
+  final num bottom;
 
   @override
-  final num? width;
+  final num width;
 
   @override
-  final num? minWidth;
+  final num minWidth;
 
   @override
-  final num? height;
+  final num height;
 
   @override
-  final Visibility? visibility;
+  final Visibility visibility;
 
   @override
-  final int? zIndex;
+  final int zIndex;
 
   @override
-  final Position? position;
+  final Position position;
 
   const _ImmutableOverlayState(
       {this.captureEvents = false,
@@ -191,20 +191,20 @@ class MutableOverlayState implements OverlayState {
   // Fires a single notification once per microtask queue.
   final _asyncScheduler = AsyncUpdateScheduler();
 
-  bool? _captureEvents;
-  num? _left;
-  num? _top;
-  num? _right;
-  num? _bottom;
-  num? _width;
-  num? _minWidth;
-  num? _height;
-  int? _zIndex;
-  Visibility? _visibility;
-  Position? _position;
+  bool _captureEvents;
+  num _left;
+  num _top;
+  num _right;
+  num _bottom;
+  num _width;
+  num _minWidth;
+  num _height;
+  int _zIndex;
+  Visibility _visibility;
+  Position _position;
 
   /// Creates a mutable state by copying values from [other].
-  factory MutableOverlayState.from(OverlayState? other) {
+  factory MutableOverlayState.from(OverlayState other) {
     if (other == null) return MutableOverlayState();
     if (other is MutableOverlayState) return other;
     return MutableOverlayState(
@@ -222,17 +222,17 @@ class MutableOverlayState implements OverlayState {
   }
 
   MutableOverlayState(
-      {bool? captureEvents = false,
-      num? left,
-      num? top,
-      num? right,
-      num? bottom,
-      num? width,
-      num? minWidth,
-      num? height,
-      int? zIndex,
-      Visibility? visibility = Visibility.None,
-      Position? position}) {
+      {bool captureEvents = false,
+      num left,
+      num top,
+      num right,
+      num bottom,
+      num width,
+      num minWidth,
+      num height,
+      int zIndex,
+      Visibility visibility = Visibility.None,
+      Position position}) {
     _captureEvents = captureEvents;
     _left = left;
     _top = top;
@@ -255,8 +255,8 @@ class MutableOverlayState implements OverlayState {
   Stream<Null> get onUpdate => _asyncScheduler.onUpdate;
 
   @override
-  bool? get captureEvents => _captureEvents;
-  set captureEvents(bool? captureEvents) {
+  bool get captureEvents => _captureEvents;
+  set captureEvents(bool captureEvents) {
     if (_captureEvents != captureEvents) {
       _captureEvents = captureEvents;
       _asyncScheduler.scheduleUpdate();
@@ -264,8 +264,8 @@ class MutableOverlayState implements OverlayState {
   }
 
   @override
-  num? get left => _left;
-  set left(num? left) {
+  num get left => _left;
+  set left(num left) {
     if (_left != left) {
       _left = left;
       _asyncScheduler.scheduleUpdate();
@@ -273,8 +273,8 @@ class MutableOverlayState implements OverlayState {
   }
 
   @override
-  num? get top => _top;
-  set top(num? top) {
+  num get top => _top;
+  set top(num top) {
     if (_top != top) {
       _top = top;
       _asyncScheduler.scheduleUpdate();
@@ -282,8 +282,8 @@ class MutableOverlayState implements OverlayState {
   }
 
   @override
-  num? get right => _right;
-  set right(num? right) {
+  num get right => _right;
+  set right(num right) {
     if (_right != right) {
       _right = right;
       _asyncScheduler.scheduleUpdate();
@@ -291,8 +291,8 @@ class MutableOverlayState implements OverlayState {
   }
 
   @override
-  num? get bottom => _bottom;
-  set bottom(num? bottom) {
+  num get bottom => _bottom;
+  set bottom(num bottom) {
     if (_bottom != bottom) {
       _bottom = bottom;
       _asyncScheduler.scheduleUpdate();
@@ -300,8 +300,8 @@ class MutableOverlayState implements OverlayState {
   }
 
   @override
-  num? get width => _width;
-  set width(num? width) {
+  num get width => _width;
+  set width(num width) {
     if (_width != width) {
       _width = width;
       _asyncScheduler.scheduleUpdate();
@@ -309,8 +309,8 @@ class MutableOverlayState implements OverlayState {
   }
 
   @override
-  num? get minWidth => _minWidth;
-  set minWidth(num? minWidth) {
+  num get minWidth => _minWidth;
+  set minWidth(num minWidth) {
     if (_minWidth != minWidth) {
       _minWidth = minWidth;
       _asyncScheduler.scheduleUpdate();
@@ -318,8 +318,8 @@ class MutableOverlayState implements OverlayState {
   }
 
   @override
-  num? get height => _height;
-  set height(num? height) {
+  num get height => _height;
+  set height(num height) {
     if (_height != height) {
       _height = height;
       _asyncScheduler.scheduleUpdate();
@@ -327,8 +327,8 @@ class MutableOverlayState implements OverlayState {
   }
 
   @override
-  int? get zIndex => _zIndex;
-  set zIndex(int? zIndex) {
+  int get zIndex => _zIndex;
+  set zIndex(int zIndex) {
     if (_zIndex != zIndex) {
       _zIndex = zIndex;
       _asyncScheduler.scheduleUpdate();
@@ -336,8 +336,8 @@ class MutableOverlayState implements OverlayState {
   }
 
   @override
-  Visibility? get visibility => _visibility;
-  set visibility(Visibility? visibility) {
+  Visibility get visibility => _visibility;
+  set visibility(Visibility visibility) {
     if (_visibility != visibility) {
       _visibility = visibility;
       _asyncScheduler.scheduleUpdate();
@@ -345,8 +345,8 @@ class MutableOverlayState implements OverlayState {
   }
 
   @override
-  Position? get position => _position;
-  set position(Position? position) {
+  Position get position => _position;
+  set position(Position position) {
     if (_position != position) {
       _position = position;
       _asyncScheduler.scheduleUpdate();

@@ -62,7 +62,7 @@ class MaterialTreeDropdownComponent<T>
   ];
 
   // Popup positioning to use when filtering is disabled.
-  static const List<Object> _popupPositionsInline =
+  static const List<RelativePosition> _popupPositionsInline =
       RelativePosition.InlinePositions;
 
   static const String _DEFAULT_PLACEHOLDER = 'Select';
@@ -71,10 +71,10 @@ class MaterialTreeDropdownComponent<T>
   bool _expandAll = false;
   String _placeholder = _DEFAULT_PLACEHOLDER;
   bool _visible = false;
-  List<Object> _customPopupPositions = [];
+  List<RelativePosition> _customPopupPositions;
 
   @ViewChild(MaterialTreeFilterComponent)
-  MaterialTreeFilterComponent? materialTreeFilterComponent;
+  MaterialTreeFilterComponent materialTreeFilterComponent;
 
   /// Fired when the dropdown's visibility changes.
   @Output()
@@ -119,13 +119,13 @@ class MaterialTreeDropdownComponent<T>
   /// Function to convert the selected value to a string to be displayed as the
   /// button text.
   @Input()
-  ItemRenderer? labelRenderer;
+  ItemRenderer labelRenderer;
 
   bool get showFilterInsideButton =>
       supportsFiltering && !showFilterInsidePopup;
 
-  Filterable? get filterableOptions => options is Filterable
-      ? options as Filterable?
+  Filterable get filterableOptions => options is Filterable
+      ? options as Filterable
       : throw StateError(
           'The SelectionOptions provided should implement Filterable');
 
@@ -138,13 +138,10 @@ class MaterialTreeDropdownComponent<T>
   /// If a value has been selected for a single-select dropdown, this will
   /// render the selected value with [labelRenderer], [itemRenderer], or
   /// [defaultItemRenderer] in that order of preference.
-  String? get placeholder {
-    if (selection != null) {
-      if (selection is! MultiSelectionModel && selection!.isNotEmpty) {
-        return (labelRenderer ??
-            (itemRenderer as String? Function(dynamic)? ??
-                defaultItemRenderer))(selection!.selectedValues.first);
-      }
+  String get placeholder {
+    if (selection is! MultiSelectionModel && selection.isNotEmpty) {
+      return (labelRenderer ?? (itemRenderer ?? defaultItemRenderer))(
+          selection.selectedValues.first);
     }
     return _placeholder;
   }
@@ -158,45 +155,45 @@ class MaterialTreeDropdownComponent<T>
     selection = SelectionModel<T>.empty();
   }
 
-  //@Deprecated('Use [factoryRenderer] instead')
-  //@Input()
-  //@override
-  //set componentRenderer(ComponentRenderer? value) {
-  // super.componentRenderer = value;
-  //}
+  @Deprecated('Use [factoryRenderer] instead')
+  @Input()
+  @override
+  set componentRenderer(ComponentRenderer value) {
+    super.componentRenderer = value;
+  }
 
   /// Specifies the factoryRenderer to use to determine the factory for
   /// rendering an item.
   @Input()
   @override
-  set factoryRenderer(FactoryRenderer<RendersValue, T>? value) {
+  set factoryRenderer(FactoryRenderer<RendersValue, T> value) {
     super.factoryRenderer = value;
   }
 
   /// A simple function to render the item to string.
   @Input()
   @override
-  set itemRenderer(ItemRenderer<T>? value) {
+  set itemRenderer(ItemRenderer<T> value) {
     super.itemRenderer = value;
   }
 
   /// The available options for this contianer.
   @Input()
   @override
-  set options(SelectionOptions<T>? value) {
+  set options(SelectionOptions<T> value) {
     super.options = value;
   }
 
   /// The selection model this container represents.
   @Input()
   @override
-  set selection(SelectionModel<T>? value) {
+  set selection(SelectionModel<T> value) {
     super.selection = value;
   }
 
   /// Placeholder to be used for the dropdown text when nothing is selected.
   @Input()
-  set placeholder(String? placeholder) {
+  set placeholder(String placeholder) {
     _placeholder = placeholder ?? _DEFAULT_PLACEHOLDER;
   }
 
@@ -205,21 +202,18 @@ class MaterialTreeDropdownComponent<T>
   /// If left unset or if explicitly set to null, [_defaultPopupPositions] will
   /// be used. See [MaterialPopupComponent] for more information.
   @Input()
-  set popupPositions(List<Object> positions) {
+  set popupPositions(List<RelativePosition> positions) {
     _customPopupPositions = positions;
   }
 
-  List<Object> /*RelativePosition | List<RelativePosition>*/ get popupPositions =>
-      _customPopupPositions.isEmpty
-          ? _defaultPopupPositions
-          : _customPopupPositions;
-  //_customPopupPositions ?? _defaultPopupPositions;
+  List /*RelativePosition | List<RelativePosition>*/ get popupPositions =>
+      _customPopupPositions ?? _defaultPopupPositions;
 
   /// Default positions to uses when [_customPopupPositions] is null.
   ///
   /// Returns offset positioning when the filter is enabled and inline
   /// positioning when the filter is disabled.
-  List<Object> /*RelativePosition | List<RelativePosition>*/
+  List /*RelativePosition | List<RelativePosition>*/
       get _defaultPopupPositions => showFilterInsideButton
           ? _popupPositionsOffset
           : _popupPositionsInline;

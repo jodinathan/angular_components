@@ -33,18 +33,18 @@ class MaterialTooltipDirective extends TooltipTarget
   final String _popupClassName;
   final Window _window;
 
-  String? _lastText;
+  String _lastText;
   bool _isInitialized = false;
-  Tooltip? _tooltip;
+  Tooltip _tooltip;
   bool _canShow = true;
   bool _isShown = false;
-  MaterialInkTooltipComponent? _inkTooltip;
-  late DelayedAction _delayedActivate;
+  MaterialInkTooltipComponent _inkTooltip;
+  DelayedAction _delayedActivate;
   HtmlElement element;
-  late bool inLongPress;
+  bool inLongPress;
   bool _hostListenersAttached = false;
 
-  ComponentRef? _componentRef;
+  ComponentRef _componentRef;
 
   MaterialTooltipDirective(
       DomPopupSourceFactory domPopupSourceFactory,
@@ -58,7 +58,7 @@ class MaterialTooltipDirective extends TooltipTarget
       : _popupClassName =
             constructEncapsulatedCss(tooltipClass, element.classes),
         super(domPopupSourceFactory, viewContainerRef, element,
-            initAriaAttributes) {
+            initAriaAttributes ?? 'false') {
     inLongPress = false;
     _delayedActivate = DelayedAction(tooltipShowDelay, _activate);
   }
@@ -132,15 +132,15 @@ class MaterialTooltipDirective extends TooltipTarget
         ng.MaterialInkTooltipComponentNgFactory, viewContainerRef);
 
     // Track the tooltip as `_inkTooltip` so we can set the text later.
-    _inkTooltip = _componentRef!.instance;
-    _disposer.addDisposable(_componentRef!.destroy);
+    _inkTooltip = _componentRef.instance;
+    _disposer.addDisposable(_componentRef.destroy);
 
     _inkTooltip
-      ?..popupClassName = _popupClassName
+      ..popupClassName = _popupClassName
       ..text = _lastText
       ..tooltipRef = this;
     if (positions != null) {
-      _inkTooltip!.positions = positions;
+      _inkTooltip.positions = positions;
     }
   }
 
@@ -156,7 +156,7 @@ class MaterialTooltipDirective extends TooltipTarget
 
   void _activate() {
     _changeDetector.markForCheck();
-    _tooltip!.activate();
+    _tooltip.activate();
   }
 
   /// The text to show in the tooltip.
@@ -183,7 +183,7 @@ class MaterialTooltipDirective extends TooltipTarget
 
   /// Positions that the tooltip should try to show.
   @Input('tooltipPositions')
-  List<RelativePosition>? positions;
+  List<RelativePosition> positions;
 
   @override
   void ngOnInit() {

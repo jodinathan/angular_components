@@ -37,18 +37,18 @@ class ScorecardBarDirective implements OnInit, OnDestroy, AfterViewChecked {
   final HtmlElement _element;
   final DomService _domService;
 
-  late bool _isRtl;
-  late bool _isVertical;
-  int? _clientSize;
-  int? _scrollSize;
-  int? _scrollingMove;
+  bool _isRtl;
+  bool _isVertical;
+  int _clientSize;
+  int _scrollSize;
+  int _scrollingMove;
   int _transform = 0;
   int _buttonSize = 0;
 
   ScorecardBarDirective(
     this._domService,
     this._element,
-    @Optional() @Inject(rtlToken) bool? isRtl,
+    @Optional() @Inject(rtlToken) bool isRtl,
   ) {
     _isRtl = isRtl ?? false;
   }
@@ -58,7 +58,7 @@ class ScorecardBarDirective implements OnInit, OnDestroy, AfterViewChecked {
     _disposer.addDisposable(_domService.scheduleRead(_readElement));
     _disposer.addDisposable(_domService.trackLayoutChange(
         () => currentClientSize.toString() + ' ' + currentScrollSize.toString(),
-        (dynamic _) {
+        (_) {
       _readElement(windowResize: true);
       _refreshController.add(true);
     }, runInAngularZone: true));
@@ -89,32 +89,31 @@ class ScorecardBarDirective implements OnInit, OnDestroy, AfterViewChecked {
   /// Scoreboard is considered scrollable if the client size is less than the
   /// scroll size.
   bool get isScrollable =>
-      _clientSize != null && _scrollSize != null && _clientSize! < _scrollSize!;
+      _clientSize != null && _scrollSize != null && _clientSize < _scrollSize;
 
   /// Whether the scoreboard is at its starting scroll state.
   bool get atStart => _transform == 0;
 
   /// Whether the scoreboard is at its end scroll state.
   bool get atEnd => _clientSize != null
-      ? _transform.abs() + _clientSize! >= _scrollSize!
+      ? _transform.abs() + _clientSize >= _scrollSize
       : false;
 
   /// Whether the scoreboard will reach its starting scroll state in at most one
   /// backwards movement.
-  bool get nearStart => _transform.abs() - _scrollingMove! <= 0;
+  bool get nearStart => _transform.abs() - _scrollingMove <= 0;
 
   /// Whether the scoreboard will reach its ending scroll state in at most one
   /// forwards movement.
   bool get nearEnd => _clientSize != null
-      ? _transform.abs() + _clientSize! + _scrollingMove! >= _scrollSize!
+      ? _transform.abs() + _clientSize + _scrollingMove >= _scrollSize
       : false;
 
   /// The current size of the client.
   ///
   /// Depends upon orientation of scrollbar.
-  int get currentClientSize => _isVertical
-      ? _element.parent!.clientHeight
-      : _element.parent!.clientWidth;
+  int get currentClientSize =>
+      _isVertical ? _element.parent.clientHeight : _element.parent.clientWidth;
 
   /// The current size of the scrollbar.
   ///
@@ -142,12 +141,8 @@ class ScorecardBarDirective implements OnInit, OnDestroy, AfterViewChecked {
       _readElement();
       var newValue = _scrollingMove;
       assert(_buttonSize > 0);
-      if (atEnd) {
-        if (newValue != null) {
-          newValue -= _buttonSize;
-        }
-      }
-      if (_transform.abs() - newValue! < 0) {
+      if (atEnd) newValue -= _buttonSize;
+      if (_transform.abs() - newValue < 0) {
         newValue = _transform.abs();
       }
       if (_isVertical || !_isRtl) {
@@ -168,13 +163,9 @@ class ScorecardBarDirective implements OnInit, OnDestroy, AfterViewChecked {
       _readElement();
       var newValue = _scrollingMove;
       assert(_buttonSize > 0);
-      if (atStart) {
-        if (newValue != null) {
-          newValue -= _buttonSize;
-        }
-      }
-      if (_scrollSize! + _transform < newValue! + _clientSize!) {
-        newValue = _scrollSize! + _transform - _clientSize!;
+      if (atStart) newValue -= _buttonSize;
+      if (_scrollSize + _transform < newValue + _clientSize) {
+        newValue = _scrollSize + _transform - _clientSize;
       }
       if (_isVertical || !_isRtl) {
         _transform -= newValue;
@@ -218,14 +209,14 @@ class ScorecardBarDirective implements OnInit, OnDestroy, AfterViewChecked {
 
     _getButtonSize();
 
-    if (_element.children.isNotEmpty && _scrollSize! > 0) {
+    if (_element.children.isNotEmpty && _scrollSize > 0) {
       // Find the average size of the cards. This assumes cards are of uniform
       // size (as required in ACUX specs).
-      var avg = _scrollSize! / _element.children.length;
-      if (_clientSize! < avg) {
+      var avg = _scrollSize / _element.children.length;
+      if (_clientSize < avg) {
         _scrollingMove = _clientSize;
       } else {
-        var temp = ((_clientSize! - _buttonSize * 2) / avg).floor();
+        var temp = ((_clientSize - _buttonSize * 2) / avg).floor();
         _scrollingMove = (temp * avg).floor();
       }
     } else {
@@ -238,7 +229,7 @@ class ScorecardBarDirective implements OnInit, OnDestroy, AfterViewChecked {
   void _getButtonSize() {
     // Get scroll button size.
     if (_buttonSize == 0) {
-      final buttons = _element.parent!.querySelectorAll('.scroll-button');
+      final buttons = _element.parent.querySelectorAll('.scroll-button');
       for (var button in buttons) {
         var dimension = _isVertical ? 'height' : 'width';
         var size = button.getComputedStyle().getPropertyValue(dimension);

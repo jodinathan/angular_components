@@ -32,7 +32,7 @@ const darkThemeClass = 'acx-theme-dark';
 class AcxDarkTheme {
   final bool isDarkTheme;
 
-  AcxDarkTheme(@Inject(darkThemeToken) @Optional() bool? dark)
+  AcxDarkTheme(@Inject(darkThemeToken) @Optional() bool dark)
       : isDarkTheme = dark ?? false;
 
   void theme(HtmlElement element) {

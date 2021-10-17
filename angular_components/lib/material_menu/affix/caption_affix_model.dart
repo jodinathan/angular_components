@@ -13,20 +13,20 @@ class CaptionAffix extends BaseMenuItemAffixModel {
   @override
   final IconVisibility visibility;
 
-  final String? text;
+  final String text;
 
   @override
-  final String? cssClass;
+  final String cssClass;
 
   @override
-  ComponentFactory<BaseAffixComponent>? get componentFactory =>
+  ComponentFactory<BaseAffixComponent> get componentFactory =>
       ng.CaptionAffixComponentNgFactory;
 
   const CaptionAffix(
       {this.text, this.visibility = IconVisibility.visible, this.cssClass});
 
   const CaptionAffix.forShortcut(
-      {String? text, IconVisibility visibility = IconVisibility.visible})
+      {String text, IconVisibility visibility = IconVisibility.visible})
       : this(text: text, visibility: visibility, cssClass: 'shortcut');
 
   @override
