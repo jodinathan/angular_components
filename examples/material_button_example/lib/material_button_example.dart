@@ -30,7 +30,7 @@ class MaterialButtonGalleryConfig {}
     MaterialIconComponent,
   ],
   templateUrl: 'material_button_example.html',
-  styleUrls: ['material_button_example.scss.css'],
+  styleUrls: ['material_button_example.css'],
   preserveWhitespace: true,
 )
 class MaterialButtonExample {
