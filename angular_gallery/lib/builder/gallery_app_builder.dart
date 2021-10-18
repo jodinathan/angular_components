@@ -46,6 +46,8 @@ class GalleryWebBuilder extends Builder {
   Future<void> _generateMainDart(BuildStep buildStep) async {
     final mustacheContext = {
       'galleryImportUri':
+          'package:${buildStep.inputId.package}/gallery/gallery.dart',
+      'galleryImportTemplateUri':
           'package:${buildStep.inputId.package}/gallery/gallery.template.dart',
       'hasBinding':
           _galleryBindingName != null && _galleryBindingImport != null,

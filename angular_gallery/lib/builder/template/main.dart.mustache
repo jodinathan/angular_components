@@ -7,7 +7,8 @@ import 'package:angular_components/laminate/popup/module.dart';
 import 'package:angular_components/laminate/overlay/module.dart';
 import 'package:angular_components/material_datepicker/module.dart';
 import 'package:angular_gallery/gallery/gallery_tokens.dart';
-import '{{{ galleryImportUri }}}' as app;
+import '{{{ galleryImportUri }}}';
+import '{{{ galleryImportTemplateUri }}}' as app;
 {{# hasBinding }}
 import '{{{ bindingImport }}}' as binding;
 {{/ hasBinding }}
@@ -16,7 +17,7 @@ import 'main.template.dart' as ng;
 
 Logger _logger = Logger("angular_dart_gallery");
 
-ComponentRef<app.GalleryComponent> gallery;
+ComponentRef<GalleryComponent> gallery;
 
 void main() {
   Logger.root.onRecord.listen((x) => print("${x.level}: ${x.message}"));
