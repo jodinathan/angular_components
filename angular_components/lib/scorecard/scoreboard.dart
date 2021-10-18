@@ -108,7 +108,7 @@ class ScoreboardComponent implements OnInit, OnDestroy {
   }
 
   @ViewChild(ScorecardBarDirective)
-  set scorecardBar(ScorecardBarDirective value) {
+  set scorecardBar(ScorecardBarDirective? value) {
     _scorecardBar = value;
     _disposer.addDisposable(
         _scorecardBar!.refreshStream.listen((_) => _refreshArrows()));

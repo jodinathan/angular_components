@@ -20,7 +20,7 @@ class GalleryInfo {
   final List<Demo> demos;
 
   // Component example to include at the top of the gallery section.
-  final Demo mainDemo;
+  final Demo? mainDemo;
 
   /// A list of owners for the components in this section.
   final List<String> owners;

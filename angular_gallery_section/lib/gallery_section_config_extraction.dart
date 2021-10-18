@@ -14,7 +14,7 @@ import 'src/common_extractors.dart';
 /// Extracts the information from @GallerySectionConfig annotations.
 ///
 /// The asset identified by [assetId] will be read using [assetReader].
-Future<Iterable<ConfigInfo>> extractGallerySectionConfigs(
+Future<Iterable<ConfigInfo?>?> extractGallerySectionConfigs(
         AssetId assetId, AssetReader assetReader) async =>
     parseString(
       content: await assetReader.readAsString(assetId),
@@ -23,7 +23,7 @@ Future<Iterable<ConfigInfo>> extractGallerySectionConfigs(
 /// [AstVisitor] to extract multiple @GallerySectionConfig annotations, and
 /// the parameters they are constructed with.
 class GallerySectionConfigExtraction
-    extends SimpleAstVisitor<Iterable<ConfigInfo>> {
+    extends SimpleAstVisitor<Iterable<ConfigInfo?>> {
   @override
   visitCompilationUnit(CompilationUnit node) => node.declarations
       .map((delcaration) => delcaration.accept(_GallerySectionConfigVisitor()))
@@ -35,7 +35,7 @@ class GallerySectionConfigExtraction
 ///
 /// For use by a [GallerySectionConfigExtraction].
 class _GallerySectionConfigVisitor extends SimpleAstVisitor<ConfigInfo> {
-  ConfigInfo config;
+  ConfigInfo? config;
 
   @override
   visitClassDeclaration(ClassDeclaration node) {
@@ -50,7 +50,7 @@ class _GallerySectionConfigVisitor extends SimpleAstVisitor<ConfigInfo> {
 
   @override
   visitAnnotation(Annotation node) {
-    final args = node?.arguments?.arguments;
+    final args = node.arguments?.arguments;
     if (args == null) return null;
     args.accept(this);
     return null;
@@ -61,23 +61,23 @@ class _GallerySectionConfigVisitor extends SimpleAstVisitor<ConfigInfo> {
     final name = node.name.label.name;
     final expression = node.expression;
     if (name == 'displayName') {
-      config.displayName = expression.accept(StringExtractor());
+      config?.displayName = expression.accept(StringExtractor()) ?? '';
     } else if (name == 'group') {
-      config.group = expression.accept(StringExtractor());
+      config?.group = expression.accept(StringExtractor()) ?? '';
     } else if (name == 'docs') {
-      config.docs = expression.accept(ListStringExtractor());
+      config?.docs = expression.accept(ListStringExtractor()) ?? [];
     } else if (name == 'demos') {
-      config.demoClassNames = expression.accept(ListStringExtractor());
+      config?.demoClassNames = expression.accept(ListStringExtractor()) ?? [];
     } else if (name == 'mainDemo') {
-      config.mainDemoName = expression.accept(StringExtractor());
+      config?.mainDemoName = expression.accept(StringExtractor()) ?? '';
     } else if (name == 'owners') {
-      config.owners = expression.accept(ListStringExtractor());
+      config?.owners = expression.accept(ListStringExtractor()) ?? [];
     } else if (name == 'uxOwners') {
-      config.uxOwners = expression.accept(ListStringExtractor());
+      config?.uxOwners = expression.accept(ListStringExtractor()) ?? [];
     } else if (name == 'relatedUrls') {
-      config.relatedUrls = expression.accept(MapStringExtractor());
+      config?.relatedUrls = expression.accept(MapStringExtractor()) ?? {};
     } else if (name == 'showGeneratedDocs') {
-      config.showGeneratedDocs = expression.accept(BoolExtractor());
+      config?.showGeneratedDocs = expression.accept(BoolExtractor()) ?? false;
     }
     return null;
   }
@@ -86,13 +86,13 @@ class _GallerySectionConfigVisitor extends SimpleAstVisitor<ConfigInfo> {
 /// Represents the values used to construct an @GallerySectionConfig annotation
 /// extracted as Strings.
 class ConfigInfo {
-  String displayName;
-  String group;
-  Iterable<String> docs;
-  Iterable<String> demoClassNames;
-  String mainDemoName;
-  Iterable<String> owners;
-  Iterable<String> uxOwners;
-  Map<String, String> relatedUrls;
+  String displayName = '';
+  String group = '';
+  Iterable<String> docs = [];
+  Iterable<String> demoClassNames = [];
+  String mainDemoName = '';
+  Iterable<String> owners = [];
+  Iterable<String> uxOwners = [];
+  Map<String, String> relatedUrls = {};
   bool showGeneratedDocs = true;
 }

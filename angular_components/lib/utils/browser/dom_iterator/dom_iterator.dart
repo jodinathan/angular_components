@@ -13,7 +13,7 @@ import 'dart:html';
 ///
 /// Right now wrapped traversal is supported only if bounded to the scope.
 /// wrapped traversal will stop if it hits starting element
-class DomTreeIterator implements Iterator<Element?> {
+class DomTreeIterator implements Iterator<Element> {
   final bool _reverse;
   final bool _wraps;
   final Element? _startingElement;
@@ -27,7 +27,7 @@ class DomTreeIterator implements Iterator<Element?> {
   /// [wraps] : if set to true, will not stop at the end of scope,
   ///   but instead will wrap through beginning and will end upon hitting
   ///   the starting element instead.
-  DomTreeIterator(element,
+  DomTreeIterator(Element? element,
       {bool reverse = false, Element? scope, bool wraps = false})
       : _element = element,
         _startingElement = element,
@@ -55,7 +55,7 @@ class DomTreeIterator implements Iterator<Element?> {
 
   /// get current element
   @override
-  Element? get current => _element;
+  Element get current => _element!;
 
   /// move to the next element, return false if no more elements there
   @override

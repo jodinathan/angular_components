@@ -15,5 +15,5 @@ import 'package:angular_components/utils/browser/window/module.dart';
 )
 class MaterialTimePickerDemoComponent {
   DateTime time = DateTime.now();
-  DateTime optionalTime;
+  DateTime? optionalTime;
 }

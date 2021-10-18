@@ -65,11 +65,11 @@ class MaterialPopupExample {
 
   final positions = SelectionOptions.fromList(positionMap.keys.toList());
 
-  static String positionLabel(RelativePosition position) {
+  static String? positionLabel(RelativePosition position) {
     return positionMap[position];
   }
 
-  String get ddLabel => positionLabel(_popupPositions.first);
+  String? get ddLabel => positionLabel(_popupPositions.first);
 }
 
 final positionMap = <RelativePosition, String>{

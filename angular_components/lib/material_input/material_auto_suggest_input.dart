@@ -853,7 +853,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   }
 
   @ViewChild(MaterialInputComponent)
-  set input(MaterialInputComponent input) {
+  set input(MaterialInputComponent? input) {
     _input = input;
     if (_focusPending) {
       _focusPending = false;

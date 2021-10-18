@@ -50,7 +50,7 @@ const String _sub = '__SUB__';
 /// brackets with a code element.
 /// Example: [Foo] -> <code>Foo</code>
 /// TODO(google) Revisit this after dartdoc issue is resolved.
-Node dartDocLinkResolver(String text, [_]) =>
+Node? dartDocLinkResolver(String text, [_]) =>
     text.isEmpty ? null : Element.text('code', text);
 
 /// An inline Markdown syntax extension for g3doc-style shortlinks.
@@ -69,8 +69,8 @@ class G3docLinkSyntax extends InlineSyntax {
 
   @override
   bool onMatch(InlineParser parser, Match match) {
-    var text = match[0];
-    var id = match[1];
+    var text = match[0]!;
+    var id = match[1]!;
     var url = substitution.replaceFirst(_sub, id);
     var anchor = Element.text('a', text);
     anchor.attributes['href'] = url;
@@ -98,10 +98,10 @@ class WrappedG3docLinkSyntax extends InlineSyntax {
 
   @override
   bool onMatch(InlineParser parser, Match match) {
-    var leftText = match[1];
-    var linkText = match[2];
-    var id = match[3];
-    var rightText = match[4];
+    var leftText = match[1]!;
+    var linkText = match[2]!;
+    var id = match[3]!;
+    var rightText = match[4]!;
     var url = substitution.replaceFirst(_sub, id);
     var anchor = Element.text('a', linkText);
     anchor.attributes['href'] = url;

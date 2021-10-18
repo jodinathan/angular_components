@@ -55,7 +55,7 @@ class MaterialTreeViewMoreDemoComponent {
   final SelectionModel singleSelection = SelectionModel.single();
 
   @ViewChild(MaterialTreeComponent)
-  MaterialTreeComponent materialTree;
+  MaterialTreeComponent? materialTree;
 }
 
 @Injectable()
@@ -65,7 +65,8 @@ class ExpandFirstRootRenderingOptions extends MaterialTreeRenderingOptions {
 
   @override
   int maxInitialOptionsShown(OptionGroup optionGroup, int index) =>
-      index == 0 ? 2 : null;
+      index == 0 ? 2 : 0;
+  //index == 0 ? 2 : null;
 }
 
 @Directive(

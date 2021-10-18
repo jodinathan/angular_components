@@ -60,19 +60,23 @@ import 'gallery_route_library.dart';
 ])
 class GalleryComponent implements HighlightProvider {
   final HighlightAssistant _highlightAssistant = HighlightAssistant();
-  final ItemRenderer<dynamic> _highlightRenderer =
-      (item) => item is _Example ? item.displayName : item?.toString();
+  //final ItemRenderer<dynamic> _highlightRenderer =
+  //    (item) => item is _Example ? item.displayName : item?.toString();
+  String? _highlightRenderer(item) {
+    return item is _Example ? item.displayName : item.toString();
+  }
+
   final List<RouteDefinition> routes = galleryRoutes;
   final FocusIndicatorController focusIndicatorController;
-  StringSelectionOptions<_Example> exampleOptions;
+  late StringSelectionOptions<_Example> exampleOptions;
   String _breadcrumb = '';
 
   GalleryComponent(this.focusIndicatorController, Router router) {
     router.stream.listen((newRoute) {
         var example = newRoute.path;
         if (example.startsWith('/')) example = example.substring(1);
-        _breadcrumb = breadcrumbs[example];
-        querySelector('material-content').scrollTop = 0;
+        _breadcrumb = breadcrumbs[example] ?? '';
+        querySelector('material-content')?.scrollTop = 0;
       });
     final groups = Multimap<String, _Example>.fromIterable(allExamples,
         key: (e) => e.group);
@@ -91,23 +95,23 @@ class GalleryComponent implements HighlightProvider {
 
   String get breadcrumb => _breadcrumb;
 
-  bool get hasBreadcrumb => _breadcrumb?.isNotEmpty ?? false;
+  bool get hasBreadcrumb => _breadcrumb.isNotEmpty; // ?? false;
 
   @override
-  List<HighlightedTextSegment> highlightOption(Object item) {
+  List<HighlightedTextSegment> highlightOption(Object? item) {
     if (item is _Example) {
       return _highlightAssistant.highlightOption(
-          exampleOptions.currentQuery, item, _highlightRenderer);
+          exampleOptions.currentQuery as String? ?? '', item, _highlightRenderer);
     } else {
-      return [HighlightedTextSegment(item?.toString(), false)];
+      return [HighlightedTextSegment(item.toString(), false)];
     }
   }
 }
 
 final breadcrumbs = {
-  {{# examples }}
+{{# examples }}
   '{{ name }}': '{{#group}}{{{ group }}} > {{/group}}{{{displayName}}}',
-  {{/ examples }}
+{{/ examples }}
 };
 
 /// The list of examples found by the gallery generator.

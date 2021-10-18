@@ -6,7 +6,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:build/build.dart';
-import 'package:mustache/mustache.dart' show Template;
+import 'package:mustache_template/mustache.dart' show Template;
 import 'package:path/path.dart' as p;
 import 'package:angular_gallery_section/resolved_config.dart';
 import 'package:angular_gallery_section/components/gallery_component/documentation_info.dart';
@@ -50,10 +50,11 @@ class ComponentApiBuilder extends Builder {
     for (final config in configs) {
       // If multiple components are defined in a demo file, we would end up with
       // duplicate imports, so de dup them.
-      dedupedImports.addAll(config.demos.map((demo) => demo.import));
+
+      dedupedImports.addAll(config.demos.cast().map((d) => d!.import));
 
       if (config.mainDemo != null) {
-        dedupedImports.add(config.mainDemo.import);
+        dedupedImports.add(config.mainDemo!.import);
       }
 
       context['apiComponents'].add({
@@ -70,20 +71,18 @@ class ComponentApiBuilder extends Builder {
           'dartImport': config.mainDemo?.import,
           'examplePath': config.mainDemo?.path,
         },
-        'docs': config.docs?.map((doc) {
-              var jsonMap = doc.toJson();
-              // Add flags to identify the DocInfo constuctor to use later.
-              jsonMap['dartDoc'] = doc.docType == DocType.dartDocInfo;
-              jsonMap['markdownDoc'] = doc.docType == DocType.markdownDocInfo;
-              jsonMap['sassDoc'] = doc.docType == DocType.sassDocInfo;
-              return jsonMap;
-            })?.toList() ??
-            [],
+        'docs': config.docs.map((doc) {
+          var jsonMap = doc.toJson();
+          // Add flags to identify the DocInfo constuctor to use later.
+          jsonMap['dartDoc'] = doc.docType == DocType.dartDocInfo;
+          jsonMap['markdownDoc'] = doc.docType == DocType.markdownDocInfo;
+          jsonMap['sassDoc'] = doc.docType == DocType.sassDocInfo;
+          return jsonMap;
+        }).toList(),
         'owners': config.owners,
         'uxOwners': config.uxOwners,
-        'relatedUrls': config.relatedUrls?.entries
-                ?.map((entry) => {'key': entry.key, 'value': entry.value}) ??
-            [],
+        'relatedUrls': config.relatedUrls.entries
+            .map((entry) => {'key': entry.key, 'value': entry.value}),
         'showGeneratedDocs': config.showGeneratedDocs,
       });
     }

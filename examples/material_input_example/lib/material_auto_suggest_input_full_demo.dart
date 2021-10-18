@@ -139,10 +139,10 @@ class MaterialAutoSuggestInputFullDemoComponent {
   // information. https://github.com/angulardart/angular/issues/68
   ItemRenderer<dynamic /* List<int>*/ > get itemRenderer => _numberNameRenderer;
 
-  FactoryRenderer get factoryRenderer =>
+  FactoryRenderer? get factoryRenderer =>
       useFactoryRenderer ? (_) => demo.ExampleRendererComponentNgFactory : null;
 
-  FactoryRenderer get labelFactory => useLabelFactory
+  FactoryRenderer? get labelFactory => useLabelFactory
       ? (_) => demo.ExampleLabelRendererComponentNgFactory
       : null;
 
@@ -174,7 +174,7 @@ class MaterialAutoSuggestInputFullDemoComponent {
   directives: [MaterialIconComponent],
 )
 class ExampleRendererComponent implements RendersValue {
-  String displayValue = '';
+  String? displayValue = '';
 
   @override
   @Input()
@@ -197,7 +197,7 @@ class ExampleRendererComponent implements RendersValue {
   directives: [MaterialIconComponent],
 )
 class ExampleLabelRendererComponent implements RendersValue {
-  String displayValue = '';
+  String? displayValue = '';
 
   @override
   @Input()
@@ -210,8 +210,8 @@ class ExampleSelectionOptions extends StringSelectionOptions<List<int>>
     implements Selectable<List<int>> {
   ExampleSelectionOptions(List<List<int>> options) : super(options);
   ExampleSelectionOptions.withOptionGroups(List<OptionGroup> optionGroups,
-      {ItemRenderer<List<int>> toFilterableString})
-      : super.withOptionGroups(optionGroups,
+      {ItemRenderer<List<int>>? toFilterableString})
+      : super.withOptionGroups(optionGroups as List<OptionGroup<List<int>>>,
             toFilterableString: toFilterableString);
   @override
   SelectableOption getSelectable(List<int> item) {

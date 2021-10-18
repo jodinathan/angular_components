@@ -95,9 +95,9 @@ class MaterialChipsDemoComponent {
   }
 
   // Cheap function to convert int (from 0 to 8) to a Roman numeral.
-  static String arabicToRoman(int number) {
+  static String arabicToRoman(int? number) {
     if (number == 0) return '';
-    if (number >= 5) return 'V${arabicToRoman(number - 5)}';
+    if (number! >= 5) return 'V${arabicToRoman(number - 5)}';
     if (number == 4) return 'IV';
     return 'I${arabicToRoman(number - 1)}';
   }

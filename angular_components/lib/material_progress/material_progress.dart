@@ -76,7 +76,8 @@ class MaterialProgressComponent implements AfterViewInit, OnDestroy {
   bool get useFallbackAnimation =>
       indeterminate && (!_useFancyAnimation || !supportsAnimationApi);
 
-  String? get ariaValueNow => indeterminate == true ? null : '${activeProgress}';
+  String? get ariaValueNow =>
+      indeterminate == true ? null : '${activeProgress}';
 
   String get ariaValue =>
       indeterminate ? _loadingValue : _activeProgressValue(activeProgress);
@@ -110,7 +111,7 @@ class MaterialProgressComponent implements AfterViewInit, OnDestroy {
   double _calcRatio(int value) => (value.clamp(min, max) - min) / (max - min);
 
   @ViewChild('primary', read: HtmlElement)
-  set primary(HtmlElement value) {
+  set primary(HtmlElement? value) {
     _primaryIndicator = value as DivElement?;
   }
 
@@ -118,7 +119,7 @@ class MaterialProgressComponent implements AfterViewInit, OnDestroy {
   Animation? _primaryAnimation;
 
   @ViewChild('secondary', read: HtmlElement)
-  set secondary(HtmlElement value) {
+  set secondary(HtmlElement? value) {
     _secondaryIndicator = value as DivElement?;
   }
 

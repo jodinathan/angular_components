@@ -29,7 +29,7 @@ class MaterialExpansionPanelAutoDismiss implements OnDestroy {
   /// The root node that all spawned elements will belong to.
   ///
   /// E.g. modal, dialog, popups.
-  final Element _overlayContainerToken;
+  final Element? _overlayContainerToken;
   final HtmlElement _element;
 
   late StreamController<Event> _clicksOutsideController;
@@ -46,7 +46,7 @@ class MaterialExpansionPanelAutoDismiss implements OnDestroy {
           _mouseUpListener = document.onMouseUp.listen(_onMouseUp);
         },
         onCancel: () {
-          _mouseUpListener!.cancel();
+          _mouseUpListener?.cancel();
           _mouseUpListener = null;
         });
   }

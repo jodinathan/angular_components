@@ -67,8 +67,8 @@ class MaterialMenuDemoComponent implements OnDestroy {
 
   factory MaterialMenuDemoComponent() {
     var colorSelection = SelectionModel<String>.single();
-    var makeColorMenuItem = (String color,
-            {MenuModel<MenuItem> subMenu, String secondaryLabel}) =>
+    ColorMenuItem Function(String, {String secondaryLabel, MenuModel<MenuItem<dynamic>> subMenu}) makeColorMenuItem = (String color,
+            {MenuModel<MenuItem>? subMenu, String? secondaryLabel}) =>
         ColorMenuItem(color, colorSelection,
             subMenu: subMenu, secondaryLabel: secondaryLabel);
     var menuModel = MenuModel<ColorMenuItem>([
@@ -290,10 +290,10 @@ class MaterialMenuDemoComponent implements OnDestroy {
 
 class ColorMenuItem extends MenuItem<ColorMenuItem> {
   ColorMenuItem(String label, SelectionModel selection,
-      {Icon icon, MenuModel<MenuItem> subMenu, String secondaryLabel})
+      {Icon? icon, MenuModel<MenuItem>? subMenu, String? secondaryLabel})
       : super(label,
             icon: icon,
-            subMenu: subMenu,
+            subMenu: subMenu as MenuModel<ColorMenuItem>?,
             secondaryLabel: secondaryLabel, actionWithContext: (ctx) {
           selection.select(label);
         });

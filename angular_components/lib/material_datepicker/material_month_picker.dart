@@ -168,11 +168,13 @@ class MaterialMonthPickerComponent
     HtmlElement? start;
     HtmlElement? end;
 
-    start = _container!.querySelector(_monthSelector(selection.start!)) as HtmlElement?;
+    start = _container!.querySelector(_monthSelector(selection.start!))
+        as HtmlElement?;
     if (start == null) return;
     start.classes.addAll(const ['boundary', 'start']);
 
-    end = _container!.querySelector(_monthSelector(selection.end!)) as HtmlElement?;
+    end = _container!.querySelector(_monthSelector(selection.end!))
+        as HtmlElement?;
     if (end == null) return;
     end.classes.addAll(const ['boundary', 'end']);
 
@@ -194,7 +196,8 @@ class MaterialMonthPickerComponent
     for (HtmlElement? year = startContainer.nextElementSibling as HtmlElement?;
         year != null && year != endContainer.nextElementSibling;
         year = year.nextElementSibling as HtmlElement?) {
-      _highlightElements(year.firstChild as HtmlElement?, end.nextElementSibling as HtmlElement?);
+      _highlightElements(year.firstChild as HtmlElement?,
+          end.nextElementSibling as HtmlElement?);
     }
   }
 
@@ -213,10 +216,13 @@ class MaterialMonthPickerComponent
   }
 
   void _renderHover() {
-    HtmlElement? element = _container!.querySelector('.month.hover') as HtmlElement?;
+    HtmlElement? element =
+        _container!.querySelector('.month.hover') as HtmlElement?;
     if (element != null) element.classes.remove('hover');
     if (_model.value!.preview != null) {
-      element = _container!.querySelector(_monthSelector(_model.value!.preview!)) as HtmlElement?;
+      element =
+          _container!.querySelector(_monthSelector(_model.value!.preview!))
+              as HtmlElement?;
       if (element != null) element.classes.add('hover');
     }
   }
@@ -246,7 +252,8 @@ class MaterialMonthPickerComponent
   CalendarListener _inputListener = CalendarListener.noop();
   StreamSubscription? _calendarStream;
 
-  MaterialMonthPickerComponent(@Optional() @Inject(datepickerClock) Clock? clock,
+  MaterialMonthPickerComponent(
+      @Optional() @Inject(datepickerClock) Clock? clock,
       @Attribute('mode') String mode) {
     clock ??= Clock();
 
@@ -263,9 +270,9 @@ class MaterialMonthPickerComponent
   }
 
   @ViewChild('container')
-  set container(Element container) {
+  set container(Element? container) {
     _container = container as HtmlElement?;
-    _scroller = container.parent as HtmlElement?;
+    _scroller = container?.parent as HtmlElement?;
   }
 
   @override
@@ -317,14 +324,16 @@ class MaterialMonthPickerComponent
     HtmlElement? element;
     for (var i = 1; i < minDate!.month; i++) {
       element =
-          _container!.querySelector(_monthSelector(Date(minDate!.year, i, 1))) as HtmlElement?;
+          _container!.querySelector(_monthSelector(Date(minDate!.year, i, 1)))
+              as HtmlElement?;
       element!.classes.add('disabled');
     }
 
     // Disable all months after maxDate.
     for (var i = maxDate!.month + 1; i <= 12; i++) {
       element =
-          _container!.querySelector(_monthSelector(Date(maxDate!.year, i, 1))) as HtmlElement?;
+          _container!.querySelector(_monthSelector(Date(maxDate!.year, i, 1)))
+              as HtmlElement?;
       element!.classes.add('disabled');
     }
   }

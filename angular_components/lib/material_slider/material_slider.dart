@@ -167,7 +167,7 @@ class MaterialSliderComponent implements AfterChanges, HasDisabled {
   }
 
   @ViewChild('container')
-  late Element container;
+  Element? container;
 
   /// Whether the current user locale is RTL.
   bool get isRtl => Bidi.isRtlLanguage(Intl.defaultLocale ?? '');
@@ -181,10 +181,13 @@ class MaterialSliderComponent implements AfterChanges, HasDisabled {
   /// Updates the current value to reflect the given slider position, if needed.
   void _setValueToMousePosition(int position) {
     _domService.scheduleRead(() {
-      final containerWidth = container.clientWidth;
+      if (container == null) {
+        return;
+      }
+      final containerWidth = container!.clientWidth;
       if (containerWidth == 0) return;
       final containerLeft =
-          container.getBoundingClientRect().left + window.scrollX;
+          container!.getBoundingClientRect().left + window.scrollX;
       final fractionOfTrackLtr = (position - containerLeft) / containerWidth;
       final fractionOfTrack =
           isRtl ? 1.0 - fractionOfTrackLtr : fractionOfTrackLtr;

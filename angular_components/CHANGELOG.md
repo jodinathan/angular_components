@@ -3,7 +3,15 @@
 ## 2.0.0
 
 * Migrated using `dart migrate`
-* `Denomination` class throws ArguementError for incorrect suffix
+* `Denomination` class throws ArgumentError for incorrect suffix
+* Migrated `angular_gallery`
+* Migrated `angular_gallery_section`
+* Mirgated `examples`
+* Replaced `pkg:mustache` with `pkg:mustache_template`
+* Removed deprecated `componentRenderer`
+* Fixed parameters of method with `@ViewChild` annotation to nullable
+* Fixed parameters of component factory with `@Optional` annotation to nullable
+* Fixed parameters of component factory without `@Optional` annotation to non-nullable
 
 ## 1.0.3
 

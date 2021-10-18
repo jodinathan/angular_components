@@ -4,10 +4,11 @@
 
 import 'package:angular/angular.dart';
 import 'package:angular_components/material_tree/material_tree.dart';
-import 'material_tree_component_renderer.template.dart';
 import 'material_tree_demo_options.dart' as data;
 import 'package:angular_components/model/selection/selection_options.dart';
 import 'package:angular_components/model/ui/has_factory.dart';
+
+import 'material_tree_component_renderer.template.dart' as tree;
 
 /// An example that renders a [MaterialTreeComponent] with nested options.
 ///
@@ -42,9 +43,9 @@ import 'package:angular_components/model/ui/has_factory.dart';
 )
 class MaterialTreeNestedComponentRenderingComponent {
   final SelectionOptions nestedOptions = data.nestedOptions;
-  FactoryRenderer sampleComponentFactory =
-      (_) => ComponentRendererExampleNgFactory;
+  FactoryRenderer? sampleComponentFactory =
+      (_) => tree.ComponentRendererExampleNgFactory;
 
   @ViewChild(MaterialTreeComponent)
-  MaterialTreeComponent materialTree;
+  MaterialTreeComponent? materialTree;
 }

@@ -9,41 +9,41 @@
 class GallerySectionConfig {
   /// The name of the component which is being demonstrated, to be listed in a
   /// gallery's navigation menu.
-  final String displayName;
+  final String? displayName;
 
   /// The name of the navigation group this component belongs to.
-  final String group;
+  final String? group;
 
   /// A list of resources to pull documentation from this can be dart documents
   /// from classes or functions, or an asset id of markdown files.
   ///
   /// Specify docs in the order that they should be displayed. Asset id must be
   /// a String of the form 'package|path/to/asset.md'.
-  final List<dynamic /* Type | Function | String*/ > docs;
+  final List<dynamic /* Type | Function | String*/ >? docs;
 
   /// A list of example component classes to include in the section.
   ///
   /// Specify demos in the order that they should be displayed.
-  final List<Type> demos;
+  final List<Type>? demos;
 
   /// A main example component class to include at the top of the section.
   ///
   /// This should be used for a focused demo and more detailed examples should
   /// be added in the demos section.
-  final Type mainDemo;
+  final Type? mainDemo;
 
   /// A list of owners for the components in this section.
-  final List<String> owners;
+  final List<String>? owners;
 
   /// A list of UX owners for the components in this section.
-  final List<String> uxOwners;
+  final List<String>? uxOwners;
 
   /// Titles and urls of related documents.
-  final Map<String, String> relatedUrls;
+  final Map<String, String>? relatedUrls;
 
   /// True if automatically generated documentation for inputs and outputs
   /// should be displayed.
-  final bool showGeneratedDocs;
+  final bool? showGeneratedDocs;
 
   const GallerySectionConfig(
       {this.displayName,

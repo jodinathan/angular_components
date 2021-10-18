@@ -69,7 +69,7 @@ import 'package:quiver/core.dart' as qc show Optional;
 )
 class MenuItemGroupsComponent
     implements AfterViewInit, Focusable, OnInit, OnDestroy {
-  final IdGenerator _idGenerator;
+  final IdGenerator? _idGenerator;
   final ChangeDetectorRef _changeDetector;
   final _disposer = Disposer.oneShot();
 
@@ -90,7 +90,7 @@ class MenuItemGroupsComponent
   MenuModel? _menu;
 
   @ViewChildren(FocusableActivateItem)
-  late List<FocusableActivateItem> focusableItems;
+  List<FocusableActivateItem>? focusableItems;
 
   List<RelativePosition> get preferredSubMenuPositions =>
       _preferredSubMenuPositions;
@@ -158,7 +158,7 @@ class MenuItemGroupsComponent
   final MenuRoot _menuRoot;
 
   /// The parent popup handle if any.
-  DropdownHandle _dropdownHandle;
+  DropdownHandle? _dropdownHandle;
 
   /// The delayed action to open the [_hoveredItem] submenu on mouse hover.
   late DelayedAction _subMenuOpener;
@@ -213,8 +213,8 @@ class MenuItemGroupsComponent
   factory MenuItemGroupsComponent(
           MenuRoot menuRoot,
           ChangeDetectorRef changeDetector,
-          @Optional() DropdownHandle dropdownHandle,
-          @Optional() IdGenerator idGenerator) =>
+          @Optional() DropdownHandle? dropdownHandle,
+          @Optional() IdGenerator? idGenerator) =>
       MenuItemGroupsComponent._(
           dropdownHandle, menuRoot, changeDetector, idGenerator);
   //idGenerator ?? SequentialIdGenerator.fromUUID());
@@ -314,7 +314,7 @@ class MenuItemGroupsComponent
         break;
       case KeyCode.LEFT:
         if (_closeOnPressLeft) {
-          _dropdownHandle.close();
+          _dropdownHandle?.close();
         }
         break;
       default:
@@ -373,7 +373,7 @@ class MenuItemGroupsComponent
   /// or through click.
   void handleSelectItemTrigger(
       MenuItem item, MenuItemGroup group, UIEvent event) {
-    if (item == null || !item.enabled) return;
+    if (!item.enabled) return;
 
     if (item.hasSubMenu) {
       _openSubMenu(item, isOpenedByKeyboard: event is KeyboardEvent);
@@ -480,8 +480,8 @@ class MenuItemGroupsComponent
   }
 
   void _createActiveMenuModelIfNone() {
-    if ((menu != null) && (activeModel == null)) {
-      activeModel = ActiveMenuItemModel(_idGenerator,
+    if (menu != null && _idGenerator != null) {
+      activeModel = ActiveMenuItemModel(_idGenerator!,
           menu: menu, filterOutUnselectableItems: true);
       if (activateLastItemOnInit) {
         activeModel.activateLast();
@@ -510,10 +510,12 @@ class MenuItemGroupsComponent
   void _focusActiveItem() {
     if (activeModel.activeItem == null) return;
 
-    for (var item in focusableItems) {
-      if (item.key == activeModel.activeId) {
-        item.focus();
-        break;
+    if (focusableItems != null) {
+      for (var item in focusableItems!) {
+        if (item.key == activeModel.activeId) {
+          item.focus();
+          break;
+        }
       }
     }
 

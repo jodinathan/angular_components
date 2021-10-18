@@ -12,12 +12,13 @@ import 'package:angular_gallery_section/g3doc_markdown.dart';
 import 'package:angular_gallery_section/visitors/path_utils.dart' as path_utils;
 import 'package:build/build.dart';
 
+import 'package:collection/collection.dart' show IterableExtension;
 import 'src/common_extractors.dart';
 
 /// Extracts a [DartDocInfo] from [assetId] for the identifier [name].
 ///
 /// Will read [assetId] with [assetReader].
-Future<DartDocInfo> extractDocumentation(
+Future<DartDocInfo?> extractDocumentation(
         String name, AssetId assetId, AssetReader assetReader) async =>
     parseString(content: await assetReader.readAsString(assetId)).unit.accept(
         GalleryDocumentationExtraction(
@@ -32,12 +33,12 @@ class GalleryDocumentationExtraction extends SimpleAstVisitor<DartDocInfo> {
   static final outputAnnotation = 'Output';
   final String _name;
   final String _filePath;
-  DartDocInfo _info;
+  DartDocInfo? _info;
 
   GalleryDocumentationExtraction(this._name, this._filePath);
 
   @override
-  DartDocInfo visitCompilationUnit(CompilationUnit node) {
+  DartDocInfo? visitCompilationUnit(CompilationUnit node) {
     for (final declaration in node.declarations) {
       final info = declaration.accept(this);
       if (info != null) return info;
@@ -46,17 +47,17 @@ class GalleryDocumentationExtraction extends SimpleAstVisitor<DartDocInfo> {
   }
 
   @override
-  DartDocInfo visitClassDeclaration(ClassDeclaration node) =>
+  DartDocInfo? visitClassDeclaration(ClassDeclaration node) =>
       _visitClassOrMixinDeclaration(node);
 
   @override
-  DartDocInfo visitMixinDeclaration(MixinDeclaration node) =>
+  DartDocInfo? visitMixinDeclaration(MixinDeclaration node) =>
       _visitClassOrMixinDeclaration(node);
 
-  DartDocInfo _visitClassOrMixinDeclaration(ClassOrMixinDeclaration node) {
+  DartDocInfo? _visitClassOrMixinDeclaration(ClassOrMixinDeclaration node) {
     if (_extractDocumentation(node) == null) return null;
 
-    var allProperties = <DartPropertyInfo>[];
+    var allProperties = <DartPropertyInfo?>[];
     var propertyVisitor = _AllMemberDocsExtraction(_filePath);
     for (Declaration member in node.members) {
       // Must collect the annotations early because class fields don't have
@@ -67,23 +68,25 @@ class GalleryDocumentationExtraction extends SimpleAstVisitor<DartDocInfo> {
       if (propertyAnnotationNode == null) continue;
 
       allProperties
-          .addAll(member.accept(propertyVisitor).map((property) => property
-            ..annotation = propertyAnnotationNode.name.name
+          .addAll(member.accept(propertyVisitor)!.map((property) => property
+            ?..annotation = propertyAnnotationNode.name.name
             ..deprecated = deprecatedAnnotationNode != null
             ..deprecatedMessage = deprecatedAnnotationNode?.arguments?.arguments
-                // Visit the first arg or null if no args.
-                ?.firstWhere((_) => true, orElse: () => null)
-                ?.accept(StringExtractor())
+                    // Visit the first arg or null if no args.
+                    .firstWhereOrNull((_) => true)
+                    ?.accept(StringExtractor()) ??
+                ''
             ..bindingAlias = propertyAnnotationNode.arguments?.arguments
-                // Visit the first arg or null if no args.
-                ?.firstWhere((_) => true, orElse: () => null)
-                ?.accept(StringExtractor())));
+                    // Visit the first arg or null if no args.
+                    .firstWhereOrNull((_) => true)
+                    ?.accept(StringExtractor()) ??
+                ''));
     }
 
-    _info.inputs = allProperties
-        .where((property) => property.annotation == inputAnnotation);
-    _info.outputs = allProperties
-        .where((property) => property.annotation == outputAnnotation);
+    _info!.inputs = allProperties
+        .where((property) => property!.annotation == inputAnnotation);
+    _info!.outputs = allProperties
+        .where((property) => property!.annotation == outputAnnotation);
     return _info;
   }
 
@@ -93,7 +96,7 @@ class GalleryDocumentationExtraction extends SimpleAstVisitor<DartDocInfo> {
 
   @override
   visitAnnotation(Annotation node) {
-    final args = node?.arguments?.arguments;
+    final args = node.arguments?.arguments;
     if (args == null) return null;
 
     args.accept(this);
@@ -105,15 +108,15 @@ class GalleryDocumentationExtraction extends SimpleAstVisitor<DartDocInfo> {
     final name = node.name.label.name;
     final expression = node.expression;
     if (name == 'selector') {
-      _info.selector = expression.accept(StringExtractor());
+      _info!.selector = expression.accept(StringExtractor());
     } else if (name == 'exportAs') {
-      _info.exportAs = expression.accept(StringExtractor());
+      _info!.exportAs = expression.accept(StringExtractor());
     }
     return null;
   }
 
   /// Collect information needed for documentation from [node].
-  DartDocInfo _extractDocumentation(NamedCompilationUnitMember node) {
+  DartDocInfo? _extractDocumentation(NamedCompilationUnitMember node) {
     if (node.name.name != _name) return null;
 
     final deprecatedAnnotationNode = _deprecatedAnnotation(node);
@@ -122,13 +125,12 @@ class GalleryDocumentationExtraction extends SimpleAstVisitor<DartDocInfo> {
       ..deprecated = deprecatedAnnotationNode != null
       ..deprecatedMessage = deprecatedAnnotationNode?.arguments?.arguments
           // Visit the first arg or null if no args.
-          ?.firstWhere((_) => true, orElse: () => null)
+          .firstWhereOrNull((_) => true)
           ?.accept(StringExtractor())
       ..comment = g3docMarkdownToHtml(parseComment(node.documentationComment))
       ..path = _filePath;
     node.metadata
-        .firstWhere((annotation) => _isAngularDirective(annotation),
-            orElse: () => null)
+        .firstWhereOrNull((annotation) => _isAngularDirective(annotation))
         ?.accept(this);
     return _info;
   }
@@ -149,15 +151,13 @@ class GalleryDocumentationExtraction extends SimpleAstVisitor<DartDocInfo> {
 
   /// Returns the first Angular property (@Input or @Output) annotation found
   /// on [node] or null if there are none.
-  Annotation _angularPropertyAnnotation(Declaration node) =>
-      node?.metadata?.firstWhere((annotation) => _isAngularProperty(annotation),
-          orElse: () => null);
+  Annotation? _angularPropertyAnnotation(Declaration node) => node.metadata
+      .firstWhereOrNull((annotation) => _isAngularProperty(annotation));
 
   /// Returns the first deprecated annotation found on [node] or null if there
   /// are none.
-  Annotation _deprecatedAnnotation(Declaration node) =>
-      node?.metadata?.firstWhere((annotation) => _isDeprecated(annotation),
-          orElse: () => null);
+  Annotation? _deprecatedAnnotation(Declaration node) =>
+      node.metadata.firstWhereOrNull((annotation) => _isDeprecated(annotation));
 }
 
 /// A visitor that extracts a [DartPropertyInfo] for every @Input and @Output
@@ -166,7 +166,7 @@ class GalleryDocumentationExtraction extends SimpleAstVisitor<DartDocInfo> {
 /// Only passes [_filePath] through the the individual extractor each
 /// [DartPropertyInfo].
 class _AllMemberDocsExtraction
-    extends SimpleAstVisitor<Iterable<DartPropertyInfo>> {
+    extends SimpleAstVisitor<Iterable<DartPropertyInfo?>> {
   final _MemberDocExtraction _propertyVisitor;
 
   _AllMemberDocsExtraction(_filePath)
@@ -220,7 +220,7 @@ final RegExp _multiLineCommentLineStart = RegExp(r'^[ \t]*\* ?(.*)');
 
 /// Pulls the raw text out of a comment (i.e. removes the comment
 /// characters).
-String parseComment(Comment commentNode) {
+String parseComment(Comment? commentNode) {
   if (commentNode == null) {
     return '';
   }
@@ -229,15 +229,15 @@ String parseComment(Comment commentNode) {
   if (commentNode.tokens
       .every((t) => _singleLineCommentStart.hasMatch(t.lexeme))) {
     return commentNode.tokens
-        .map((t) => _singleLineCommentStart.firstMatch(t.lexeme)[1])
+        .map((t) => _singleLineCommentStart.firstMatch(t.lexeme)![1])
         .join('\n');
   }
 
   // Handle /* */-style comments
   String comment = commentNode.tokens.single.lexeme;
-  Match match = _multiLineCommentStartEnd.firstMatch(comment);
+  Match? match = _multiLineCommentStartEnd.firstMatch(comment);
   if (match != null) {
-    comment = match[1];
+    comment = match[1]!;
     var sb = StringBuffer();
     List<String> lines = comment.split('\n');
     for (int index = 0; index < lines.length; index++) {

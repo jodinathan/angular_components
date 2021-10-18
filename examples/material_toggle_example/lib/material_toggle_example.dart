@@ -21,7 +21,7 @@ class MaterialToggleExampleComponent {
   bool btEnabled = false;
   bool deviceVisible = false;
 
-  bool basicState;
+  bool? basicState;
 
   String get btnToggleLabel =>
       'Tap to turn Bluetooth ${btEnabled ? 'OFF' : 'ON'}.';

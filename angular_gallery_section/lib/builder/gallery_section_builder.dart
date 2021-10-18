@@ -7,7 +7,7 @@ import 'dart:convert';
 
 import 'package:build/build.dart';
 import 'package:glob/glob.dart';
-import 'package:mustache/mustache.dart' show Template;
+import 'package:mustache_template/mustache.dart' show Template;
 import 'package:angular_gallery_section/resolved_config.dart';
 import 'package:angular_gallery_section/visitors/path_utils.dart';
 
@@ -52,8 +52,9 @@ class GallerySectionBuilder extends Builder {
           'className': '${info.classSafeName}Api',
           'selector': '${info.selectorSafeName}-api'
         });
-        if (info.mainDemo != null) {
-          mergedMainDemo[info.mainDemo.name] = info.mainDemo.selector;
+        var mainDemo = info.mainDemo;
+        if (mainDemo != null) {
+          mergedMainDemo[mainDemo.name] = mainDemo.selector;
         }
       }
       api['docs'] = docs;

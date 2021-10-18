@@ -55,7 +55,7 @@ class MenuPopupComponent extends Object with FocusableMixin, MenuPopupWrapper {
   MenuPopupComponent(this.element);
 
   @ViewChild(MenuItemGroupsComponent)
-  set menuItemGroups(MenuItemGroupsComponent groups) {
+  set menuItemGroups(MenuItemGroupsComponent? groups) {
     focusable = groups;
   }
 }

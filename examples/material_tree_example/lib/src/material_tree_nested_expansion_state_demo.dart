@@ -56,8 +56,8 @@ class MaterialTreeNestedExpandDemoComponent {
   final multiSelection = SelectionModel<data.CategoryNode>.multi();
   final ItemRenderer<data.CategoryNode> nameRenderer = (node) => node.name;
 
-  String itemRenderer(item) => nameRenderer(item);
+  String? itemRenderer(item) => nameRenderer(item);
 
   @ViewChild(MaterialTreeComponent)
-  MaterialTreeComponent materialTree;
+  MaterialTreeComponent? materialTree;
 }

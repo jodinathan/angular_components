@@ -195,7 +195,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   MaterialDropdownSelectComponent(
       @Optional() IdGenerator? idGenerator,
       @Optional() @SkipSelf() this._popupSizeDelegate,
-      @Optional() @Inject(rtlToken) bool rtl,
+      @Optional() @Inject(rtlToken) bool? rtl,
       @Attribute('popupClass') String popupClass,
       @Attribute('buttonAriaRole') this.buttonAriaRole,
       this._changeDetector,
@@ -209,7 +209,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   }
 
   @ViewChild(DropdownButtonComponent)
-  late DropdownButtonComponent dropdownButton;
+  DropdownButtonComponent? dropdownButton;
 
   // The id of the currently selected item, or the first item if none are
   // selected.
@@ -440,7 +440,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
       }
       if (isSingleSelect) {
         close();
-        dropdownButton.focus();
+        dropdownButton?.focus();
       }
     }
   }

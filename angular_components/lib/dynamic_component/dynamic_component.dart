@@ -25,7 +25,7 @@ class DynamicComponent implements OnDestroy, AfterChanges {
   bool _loadDeferred = false;
 
   @ViewChild('marker', read: ViewContainerRef)
-  set viewContainerRef(ViewContainerRef value) {
+  set viewContainerRef(ViewContainerRef? value) {
     _viewContainerRef = value;
     if (_loadDeferred) {
       _initialize();
@@ -112,25 +112,25 @@ class DynamicComponent implements OnDestroy, AfterChanges {
           _componentFactory!, _viewContainerRef!);
       _onLoadController.add(_childComponent);
       _updateChildComponent();
-    // } else if (_componentType != null) {
-    //   // TODO(google): Remove this code once componentType is no longer used.
-    //   Type loadType = _componentType;
-    //   _slowComponentLoader
-    //       .loadNextToLocation(loadType, _viewContainerRef)
-    //       .then((ComponentRef componentRef) {
-    //     if (loadType != _componentType) {
-    //       // During the load time, the component type has changed,
-    //       // and the type we just loaded is no longer valid.
-    //       componentRef.destroy();
-    //       return;
-    //     }
-    //     if (_childComponent != null) {
-    //       throw 'Attempting to overwrite a dynamic component';
-    //     }
-    //     _childComponent = componentRef;
-    //     _onLoadController.add(componentRef);
-    //     _updateChildComponent();
-    //   });
+      // } else if (_componentType != null) {
+      //   // TODO(google): Remove this code once componentType is no longer used.
+      //   Type loadType = _componentType;
+      //   _slowComponentLoader
+      //       .loadNextToLocation(loadType, _viewContainerRef)
+      //       .then((ComponentRef componentRef) {
+      //     if (loadType != _componentType) {
+      //       // During the load time, the component type has changed,
+      //       // and the type we just loaded is no longer valid.
+      //       componentRef.destroy();
+      //       return;
+      //     }
+      //     if (_childComponent != null) {
+      //       throw 'Attempting to overwrite a dynamic component';
+      //     }
+      //     _childComponent = componentRef;
+      //     _onLoadController.add(componentRef);
+      //     _updateChildComponent();
+      //   });
     }
   }
 

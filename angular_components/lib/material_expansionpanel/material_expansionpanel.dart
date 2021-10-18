@@ -99,8 +99,8 @@ class MaterialExpansionPanel
       this._ngZone,
       this._changeDetector,
       this._domService,
-      @Attribute('shouldExpandOnLeft') String expandOnLeft,
-      @Attribute('forceContentWhenClosed') String forceContent)
+      @Attribute('shouldExpandOnLeft') String? expandOnLeft,
+      @Attribute('forceContentWhenClosed') String? forceContent)
       : shouldExpandOnLeft = expandOnLeft != null,
         forceContentWhenClosed = forceContent != null;
 
@@ -119,11 +119,11 @@ class MaterialExpansionPanel
   /// Sets the focus child so that we can focus on it when the panel opens.
   @ContentChild('focusOnOpen')
   @Input('focusOnOpen')
-  set focusOnOpenChild(dynamic element) {
+  set focusOnOpenChild(Element? element) {
     if (element is Focusable) {
-      _focusOnOpenChild = element;
-    } else if (element is ElementRef) {
-      _focusOnOpenChild = RootFocusable(element.nativeElement);
+      _focusOnOpenChild = element as Focusable?;
+    } else if (element is Element) {
+      _focusOnOpenChild = RootFocusable(element);
     } else {
       assert(
           element == null,
@@ -132,22 +132,24 @@ class MaterialExpansionPanel
     }
   }
 
-  late HtmlElement _mainPanel;
+  HtmlElement? _mainPanel;
   @ViewChild('mainPanel')
-  set mainPanel(HtmlElement mainPanel) {
+  set mainPanel(HtmlElement? mainPanel) {
     _mainPanel = mainPanel;
     _ngZone.runOutsideAngular(() {
-      _disposer.addStreamSubscription(_mainPanel.onTransitionEnd
-          .where((e) => e.eventPhase == Event.AT_TARGET)
-          .listen((_) {
-        // Clear height override so it will match the active child's height.
-        _mainPanel.style.height = '';
-        // If we just finished closing, let deferred content stop rendering
-        // the panel body.
-        if (!isExpanded!) {
-          _ngZone.run(() => _contentVisible.add(false));
-        }
-      }));
+      if (_mainPanel != null) {
+        _disposer.addStreamSubscription(_mainPanel!.onTransitionEnd
+            .where((e) => e.eventPhase == Event.AT_TARGET)
+            .listen((_) {
+          // Clear height override so it will match the active child's height.
+          _mainPanel?.style.height = '';
+          // If we just finished closing, let deferred content stop rendering
+          // the panel body.
+          if (!isExpanded!) {
+            _ngZone.run(() => _contentVisible.add(false));
+          }
+        }));
+      }
     });
 
     final transitionCheck = DisposableCallback(() {
@@ -165,23 +167,25 @@ class MaterialExpansionPanel
     _disposer.addDisposable(transitionCheck);
   }
 
-  late HtmlElement _headerPanel;
+  HtmlElement? _headerPanel;
   @ViewChild('headerPanel')
-  set headerPanel(HtmlElement headerPanel) {
+  set headerPanel(HtmlElement? headerPanel) {
     _headerPanel = headerPanel;
-    _ngZone.runOutsideAngular(() {
-      _disposer.addStreamSubscription(_headerPanel.onTransitionEnd
-          .where((e) => e.eventPhase == Event.AT_TARGET)
-          .listen((_) {
-        // Clear height override so it will match the active child's height.
-        _headerPanel.style.height = '';
-      }));
-    });
+    if (_headerPanel != null) {
+      _ngZone.runOutsideAngular(() {
+        _disposer.addStreamSubscription(_headerPanel!.onTransitionEnd
+            .where((e) => e.eventPhase == Event.AT_TARGET)
+            .listen((_) {
+          // Clear height override so it will match the active child's height.
+          _headerPanel?.style.height = '';
+        }));
+      });
+    }
   }
 
   HtmlElement? _mainContent;
   @ViewChild('mainContent')
-  set mainContent(HtmlElement mainContent) {
+  set mainContent(HtmlElement? mainContent) {
     _mainContent = mainContent;
     if (_mainContent == null) return;
     _completeExpandedPanelHeightReadsIfPossible();
@@ -198,19 +202,19 @@ class MaterialExpansionPanel
     }
   }
 
-  late HtmlElement _headerContent;
+  HtmlElement? _headerContent;
   @ViewChild('headerContent')
-  set headerContent(HtmlElement headerContent) =>
+  set headerContent(HtmlElement? headerContent) =>
       _headerContent = headerContent;
 
   HtmlElement? _actionContent;
   @ViewChild('action')
-  set actionContent(HtmlElement headerContent) =>
+  set actionContent(HtmlElement? headerContent) =>
       _actionContent = headerContent;
 
   HtmlElement? _contentWrapper;
   @ViewChild('contentWrapper')
-  set contentWrapper(HtmlElement contentWrapper) {
+  set contentWrapper(HtmlElement? contentWrapper) {
     _contentWrapper = contentWrapper;
     _completeExpandedPanelHeightReadsIfPossible();
   }
@@ -303,7 +307,8 @@ class MaterialExpansionPanel
     _groupAriaLabel = groupAriaLabel;
   }
 
-  String? get groupAriaLabel => _groupAriaLabel == null ? name : _groupAriaLabel;
+  String? get groupAriaLabel =>
+      _groupAriaLabel == null ? name : _groupAriaLabel;
 
   /// Level of the heading.
   ///
@@ -466,7 +471,7 @@ class MaterialExpansionPanel
   /// [hideExpandedHeader] is set to `true`.
   ButtonDirective? _expandCollapseButton;
   @ViewChild('expandCollapseButton', read: ButtonDirective)
-  set expandCollapse(ButtonDirective button) {
+  set expandCollapse(ButtonDirective? button) {
     _expandCollapseButton = button;
   }
 
@@ -482,7 +487,7 @@ class MaterialExpansionPanel
   @HostListener('keydown')
   void keydown(KeyboardEvent event) {
     var focusEvent = FocusMoveEvent.fromKeyboardEvent(this, event);
-    if (focusEvent != null) {
+    if (focusEvent.valid) {
       _focusMoveCtrl.add(focusEvent);
     }
   }
@@ -586,30 +591,31 @@ class MaterialExpansionPanel
   /// or collapsing.
   void _transitionHeightChange(bool expand) {
     // Make current height explicit as a starting point for animation.
-    _mainPanel.style.height = '${_mainPanel.scrollHeight}px';
+    if (_mainPanel == null) return;
+    _mainPanel?.style.height = '${_mainPanel?.scrollHeight}px';
 
     // On next frame, set target height for animation.
     if (expand) {
       _readExpandedPanelHeight().then((expandedPanelHeight) {
-        _mainPanel.style.height = expandedPanelHeight;
+        _mainPanel?.style.height = expandedPanelHeight;
       });
     } else {
-      _domService.nextFrame!.then((_) => _mainPanel.style.height = '');
+      _domService.nextFrame!.then((_) => _mainPanel?.style.height = '');
     }
 
     // If the header has to disappear, animate that transition as well
     if (hideExpandedHeader) {
       // Make current height explicit as a starting point for animation.
-      _headerPanel.style.height = '${_headerPanel.scrollHeight}px';
+      _headerPanel?.style.height = '${_headerPanel?.scrollHeight}px';
 
       // On next frame, set target height for animation.
       if (expand) {
         _domService.nextFrame!.then((_) {
-          _headerPanel.style.height = '';
+          _headerPanel?.style.height = '';
         });
       } else {
         _readExpandedHeaderHeight().then((expandedHeaderHeight) {
-          _headerPanel.style.height = expandedHeaderHeight;
+          _headerPanel?.style.height = expandedHeaderHeight;
         });
       }
     }
@@ -651,9 +657,9 @@ class MaterialExpansionPanel
   }
 
   bool get _mainPanelHasHeightTransition {
-    final mainPanelStyle = _mainPanel.getComputedStyle();
+    final mainPanelStyle = _mainPanel?.getComputedStyle();
     // Do our best to make sure that onTransitionEnd will fire later.
-    return mainPanelStyle.transition.contains('height');
+    return mainPanelStyle?.transition.contains('height') ?? false;
   }
 
   /// Reads the DOM state to calculate the height of the header in its
@@ -664,14 +670,14 @@ class MaterialExpansionPanel
     final completeExpandedHeight = Completer<String>();
 
     _domService.scheduleRead(() {
-      final contentHeight =
-          max(_headerContent.scrollHeight, _actionContent?.scrollHeight ?? 0);
+      final contentHeight = max<int>(
+          _headerContent?.scrollHeight ?? 0, _actionContent?.scrollHeight ?? 0);
       var expandedHeaderHeight = '';
 
-      final headerPanelStyle = _headerPanel.getComputedStyle();
+      final headerPanelStyle = _headerPanel?.getComputedStyle();
       // Do our best to make sure that onTransitionEnd will fire later.
-      final hasHeightTransition =
-          contentHeight > 0 && headerPanelStyle.transition.contains('height');
+      final hasHeightTransition = contentHeight > 0 &&
+          headerPanelStyle?.transition.contains('height') == true;
 
       if (hasHeightTransition) expandedHeaderHeight = '${contentHeight}px';
 

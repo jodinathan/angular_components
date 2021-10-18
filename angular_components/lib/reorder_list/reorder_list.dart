@@ -95,7 +95,7 @@ class ReorderListComponent implements OnDestroy {
   bool multiSelect = false;
 
   // Reorderable items in the list; keys are the handles, values are the items
-  late Map<HtmlElement?, HtmlElement?> _items;
+  late Map<HtmlElement, HtmlElement> _items;
   // Map of active drag&drop event subscriptions.
   late Map<HtmlElement, List<StreamSubscription>> _subscriptions;
   // Map of active onDrag subscriptions,
@@ -105,7 +105,7 @@ class ReorderListComponent implements OnDestroy {
   // Current top transform value for each element during reorder.
   late List<int> _curTransformY;
   // Height or width of each content item at the time reorder starts.
-  late List<int?> _itemSizes;
+  late List<int> _itemSizes;
   // Flag to ensure that drop index is not updated when drop area is outside
   // content-area.
   bool _reorderActive = false;
@@ -119,7 +119,7 @@ class ReorderListComponent implements OnDestroy {
   int? _pivotItemIndex;
 
   @ViewChild('placeholder')
-  late HtmlElement placeholder;
+  HtmlElement? placeholder;
 
   ReorderListComponent(this._ngZone) {
     _subscriptions = <HtmlElement, List<StreamSubscription>>{};
@@ -187,14 +187,14 @@ class ReorderListComponent implements OnDestroy {
         offset = -8000;
       } else if (_moveSourceIndex < i && i <= toIndex) {
         // Remove item delta.
-        offset -= _itemSizes[_moveSourceIndex]!;
+        offset -= _itemSizes[_moveSourceIndex];
       } else if (toIndex <= i && i < _moveSourceIndex) {
         // insert item delta.
-        offset += _itemSizes[_moveSourceIndex]!;
+        offset += _itemSizes[_moveSourceIndex];
       }
       if ((i != _moveSourceIndex && i < toIndex) ||
           (i == toIndex && toIndex > _moveSourceIndex)) {
-        upperStackSize += _itemSizes[i]!;
+        upperStackSize += _itemSizes[i];
       }
       if (offset != _curTransformY[i]) {
         _curTransformY[i] = offset;
@@ -224,8 +224,8 @@ class ReorderListComponent implements OnDestroy {
 
     final draggedElement = _items[_dragSourceElement];
     if (verticalItems) {
-      placeholder.style
-        ..height = "${draggedElement!.borderEdge.height}px"
+      placeholder?.style
+        ?..height = "${draggedElement!.borderEdge.height}px"
         ..width = "${draggedElement.borderEdge.width}px"
         ..top = "${upperStackSize}px";
     } else {
@@ -236,8 +236,8 @@ class ReorderListComponent implements OnDestroy {
           ? e.offset.left
           : e.offset.right - draggedElement!.borderEdge.width;
 
-      placeholder.style
-        ..height = "${draggedElement!.borderEdge.height}px"
+      placeholder?.style
+        ?..height = "${draggedElement!.borderEdge.height}px"
         ..width = "${draggedElement.borderEdge.width}px"
         ..top = "${e.offset.top}px"
         ..left = "${left}px";
@@ -311,13 +311,13 @@ class ReorderListComponent implements OnDestroy {
     _subscriptions.remove(element);
 
     if (_dragSubscriptions[element] != null) {
-      _dragSubscriptions[element]!.cancel();
+      _dragSubscriptions[element]?.cancel();
     }
     _dragSubscriptions.remove(element);
   }
 
-  List<HtmlElement?> get _handleElements => _items.keys.toList();
-  List<HtmlElement?> get _reorderElements => _items.values.toList();
+  List<HtmlElement> get _handleElements => _items.keys.toList();
+  List<HtmlElement> get _reorderElements => _items.values.toList();
 
   void _onDragStart(MouseEvent e) {
     // If multiSelect is enabled, clear the selection and replace with the
@@ -331,15 +331,17 @@ class ReorderListComponent implements OnDestroy {
       }
     }
     _dragSourceElement = e.currentTarget as HtmlElement?;
-    _dragSourceElement!.classes.add('reorder-list-dragging-active');
+    _dragSourceElement?.classes.add('reorder-list-dragging-active');
     // Initialize all transforms.
     var contents = _reorderElements;
     int childCount = contents.length;
-    _moveSourceIndex = _handleElements.indexOf(_dragSourceElement);
+    if (_dragSourceElement != null) {
+      _moveSourceIndex = _handleElements.indexOf(_dragSourceElement!);
+    }
     _curTransformY = List<int>.filled(childCount, 0);
-    _itemSizes = List<int?>.filled(childCount, null, growable: false);
+    _itemSizes = List<int>.filled(childCount, 0, growable: false);
     for (int i = 0; i < childCount; i++) {
-      _itemSizes[i] = _computeItemSize(contents[i]!);
+      _itemSizes[i] = _computeItemSize(contents[i]);
     }
     _reorderActive = true;
     _currentMoveIndex = _moveSourceIndex;
@@ -386,7 +388,7 @@ class ReorderListComponent implements OnDestroy {
       }
 
       int newIndex = _getNewIndex(e.keyCode, index);
-      _reorderElements[newIndex]!.focus();
+      _reorderElements[newIndex].focus();
 
       e.preventDefault();
       e.stopPropagation();
@@ -405,7 +407,7 @@ class ReorderListComponent implements OnDestroy {
         _ngZone.onEventDone.first.then((_) {
           // TODO(google): Add support for multiselect keyboard actions.
           // At the moment, only moves the last selected item.
-          var element = _reorderElements[newIndex]!;
+          var element = _reorderElements[newIndex];
           if (multiSelect) {
             _clearSelection();
             element.classes.add(itemSelectedCssClass);
@@ -458,9 +460,9 @@ class ReorderListComponent implements OnDestroy {
     // Wait for digest and focus new element
     _ngZone.onEventDone.first.then((_) {
       if (index < _reorderElements.length) {
-        _reorderElements[index]!.focus();
+        _reorderElements[index].focus();
       } else if (_reorderElements.isNotEmpty) {
-        _reorderElements[_reorderElements.length - 1]!.focus();
+        _reorderElements[_reorderElements.length - 1].focus();
       }
     });
   }
@@ -500,7 +502,7 @@ class ReorderListComponent implements OnDestroy {
     _clearSelection();
     var allElements = _reorderElements;
     for (var index in indexes) {
-      allElements[index]!.classes.add(itemSelectedCssClass);
+      allElements[index].classes.add(itemSelectedCssClass);
       _selectedElementIndexes.add(index);
     }
   }
@@ -508,7 +510,7 @@ class ReorderListComponent implements OnDestroy {
   void _clearSelection() {
     var allElements = _reorderElements;
     for (var index in _selectedElementIndexes) {
-      allElements[index]!.classes.remove(itemSelectedCssClass);
+      allElements[index].classes.remove(itemSelectedCssClass);
     }
     _selectedElementIndexes.clear();
   }
@@ -640,11 +642,11 @@ class ReorderItemDirective {
   static const hostTabIndex = 0;
 
   final HtmlElement element;
-  final ReorderHandleProvider _handleProvider;
+  final ReorderHandleProvider? _handleProvider;
   HtmlElement? _handleElement;
 
   HtmlElement? get _reorderHandle =>
-      _handleElement ?? _handleProvider.reorderHandle.element;
+      _handleElement ?? _handleProvider?.reorderHandle.element;
 
   /// The [HtmlElement] to be used as the drag handle.
   ///

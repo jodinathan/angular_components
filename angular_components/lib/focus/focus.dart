@@ -194,7 +194,7 @@ class AutoFocusDirective extends RootFocusable implements OnInit, OnDestroy {
   // These fields are not final to support nulling them out for easier memory
   // leak detection.
   Focusable? _focusable;
-  DomService? _domService;
+  DomService _domService;
   ModalComponent? _modal;
   PopupRef? _popupRef;
 
@@ -222,7 +222,7 @@ class AutoFocusDirective extends RootFocusable implements OnInit, OnDestroy {
       _disposer.addStreamSubscription(
           onVisibleChanged.listen(_onModalOrPopupVisibleChanged));
     } else {
-      _domService!.scheduleWrite(focus);
+      _domService.scheduleWrite(focus);
     }
   }
 
@@ -251,13 +251,13 @@ class AutoFocusDirective extends RootFocusable implements OnInit, OnDestroy {
     super.dispose();
     _disposer.dispose();
     _focusable = null;
-    _domService = null;
+    //_domService = null;
     _modal = null;
     _popupRef = null;
   }
 
   void _onModalOrPopupVisibleChanged(bool isVisible) {
-    if (isVisible) _domService!.scheduleWrite(focus);
+    if (isVisible) _domService.scheduleWrite(focus);
   }
 }
 

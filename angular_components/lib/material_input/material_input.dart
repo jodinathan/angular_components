@@ -84,7 +84,7 @@ class MaterialInputComponent extends BaseSingleLineInputComponent
   MaterialInputComponent(
       @Attribute('type') String type,
       @Attribute('multiple') String multiple,
-      @Self() @Optional() NgControl cd,
+      @Self() @Optional() NgControl? cd,
       ChangeDetectorRef changeDetector,
       DeferredValidator validator)
       : super(type, multiple, cd, changeDetector, validator);

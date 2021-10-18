@@ -16,7 +16,7 @@ import 'package:angular_components/model/date/date.dart';
 )
 class DateInputDemoComponent {
   Date requiredDate = Date.today();
-  Date optionalDate;
+  Date? optionalDate;
 
   Date get today => Date.today();
 

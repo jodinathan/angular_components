@@ -23,5 +23,5 @@ import 'package:angular/angular.dart';
 class ReferenceDirective {
   final Element? elementRef;
 
-  ReferenceDirective(this.elementRef);
+  ReferenceDirective(@Optional() this.elementRef);
 }

@@ -31,13 +31,13 @@ class DelayedContentComponent implements OnInit {
   bool resolved = true;
 
   @Input()
-  int delay;
+  int? delay;
 
   @override
   void ngOnInit() {
     if (delay != null) {
       resolved = false;
-      Timer(Duration(seconds: delay), _resolve);
+      Timer(Duration(seconds: delay!), _resolve);
     } else {
       resolved = true;
     }

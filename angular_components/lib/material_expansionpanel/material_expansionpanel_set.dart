@@ -37,8 +37,8 @@ class MaterialExpansionPanelSet implements OnDestroy {
   late List<MaterialExpansionPanel> _panels;
 
   @ContentChildren(MaterialExpansionPanel, descendants: false)
-  set panels(List<MaterialExpansionPanel> panels) {
-    _panels = panels;
+  set panels(List<MaterialExpansionPanel>? panels) {
+    _panels = panels ?? [];
     _onPanelsChange();
   }
 

@@ -33,5 +33,5 @@ class MaterialTreeDropdownMultiDemoComponent {
   final SelectionModel multiSelection = SelectionModel.multi();
 
   @ViewChild(MaterialTreeDropdownComponent)
-  MaterialTreeDropdownComponent materialTreeDropdownComponent;
+  MaterialTreeDropdownComponent? materialTreeDropdownComponent;
 }

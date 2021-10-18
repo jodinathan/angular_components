@@ -54,7 +54,7 @@ class MaterialRadioExample {
     Option("good", false, true), // disabled
     Option("awesome", false, false)
   ];
-  Option selected;
+  late Option selected;
   String get ex2SelectedValue => selected.label;
 
   MaterialRadioExample() {

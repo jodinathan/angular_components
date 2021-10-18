@@ -79,7 +79,7 @@ final SelectionOptions filterableNestedOptions =
 
 /// An example implementation of [SelectionOptions] with [Parent].
 class _NestedSelectionOptions<T> extends SelectionOptions<T>
-    implements Parent<T, List<OptionGroup<T>>> {
+    implements Parent<T, List<OptionGroup<T>>?> {
   final Map<T, List<OptionGroup<T>>> _children;
 
   _NestedSelectionOptions(List<OptionGroup<T>> options, this._children)
@@ -89,8 +89,8 @@ class _NestedSelectionOptions<T> extends SelectionOptions<T>
   bool hasChildren(T item) => _children.containsKey(item);
 
   @override
-  DisposableFuture<List<OptionGroup<T>>> childrenOf(T parent, [_]) {
-    return DisposableFuture<List<OptionGroup<T>>>.fromValue(_children[parent]);
+  DisposableFuture<List<OptionGroup<T>>?> childrenOf(T parent, [_]) {
+    return DisposableFuture<List<OptionGroup<T>>?>.fromValue(_children[parent]);
   }
 }
 
@@ -100,9 +100,9 @@ class _NestedFilterableSelectionOptions<T extends String>
   int currentLimit = -1;
 
   @override
-  String currentQuery;
+  String? currentQuery;
 
-  List<OptionGroup<T>> _unfilteredOptionGroups;
+  List<OptionGroup<T>>? _unfilteredOptionGroups;
 
   _NestedFilterableSelectionOptions(
       List<OptionGroup<T>> options, Map<T, List<OptionGroup<T>>> children)
@@ -111,10 +111,10 @@ class _NestedFilterableSelectionOptions<T extends String>
   }
 
   @override
-  DisposableFuture<bool> filter(Object filterQuery, {int limit = -1}) {
+  DisposableFuture<bool> filter(Object? filterQuery, {int? limit = -1}) {
     var filteredResults = <OptionGroup<T>>[];
-    for (var optionGroup in _unfilteredOptionGroups) {
-      var resultOptionGroup = _filterGroup(filterQuery, optionGroup);
+    for (var optionGroup in _unfilteredOptionGroups!) {
+      var resultOptionGroup = _filterGroup(filterQuery as String?, optionGroup);
       if (resultOptionGroup != null) {
         filteredResults.add(resultOptionGroup);
       }
@@ -123,10 +123,10 @@ class _NestedFilterableSelectionOptions<T extends String>
     return DisposableFuture.fromValue(true);
   }
 
-  OptionGroup<T> _filterGroup(String filterQuery, OptionGroup<T> group) {
+  OptionGroup<T>? _filterGroup(String? filterQuery, OptionGroup<T> group) {
     var options = <T>[];
     for (var option in group) {
-      if (option.toLowerCase().startsWith(filterQuery.toLowerCase())) {
+      if (option.toLowerCase().startsWith(filterQuery!.toLowerCase())) {
         options.add(option);
       }
     }
@@ -139,7 +139,7 @@ class _NestedFilterableSelectionOptions<T extends String>
     if (currentQuery != null) {
       filter(currentQuery, limit: currentLimit);
     } else {
-      super.optionGroups = _unfilteredOptionGroups;
+      super.optionGroups = _unfilteredOptionGroups!;
     }
   }
 }

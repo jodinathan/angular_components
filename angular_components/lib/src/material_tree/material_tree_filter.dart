@@ -24,10 +24,10 @@ class MaterialTreeFilterComponent {
       StreamController.broadcast(sync: true);
   final StreamController _onFilteredController =
       StreamController.broadcast(sync: true);
-  final MaterialTreeRoot _treeRoot;
+  final MaterialTreeRoot? _treeRoot;
 
   @ViewChild('materialInput')
-  late MaterialInputComponent materialInput;
+  MaterialInputComponent? materialInput;
 
   Filterable? _filterable;
   String _inputText = '';
@@ -37,8 +37,8 @@ class MaterialTreeFilterComponent {
 
   /// If created within a [MaterialTreeRoot], automatically setup.
   MaterialTreeFilterComponent(@Optional() this._treeRoot) {
-    if (_treeRoot.supportsFiltering == true) {
-      filterable = _treeRoot.options as Filterable?;
+    if (_treeRoot?.supportsFiltering == true) {
+      filterable = _treeRoot?.options as Filterable?;
     }
   }
 
@@ -76,7 +76,7 @@ class MaterialTreeFilterComponent {
   }
 
   void focus() {
-    materialInput.focus();
+    materialInput?.focus();
   }
 
   void clear() {
@@ -96,7 +96,7 @@ class MaterialTreeFilterComponent {
   void _updateVisibleItems() {
     _lastFilterFuture?.dispose();
     _lastFilterFuture = _filterable!.filter(_inputText);
-    _treeRoot.isFiltered = _inputText.isNotEmpty;
+    _treeRoot?.isFiltered = _inputText.isNotEmpty;
     _onFilteredController.add(null);
   }
 }

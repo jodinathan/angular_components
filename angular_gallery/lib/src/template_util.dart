@@ -5,7 +5,7 @@
 import 'dart:async';
 
 import 'package:build/build.dart';
-import 'package:mustache/mustache.dart';
+import 'package:mustache_template/mustache.dart';
 
 /// Writes a [newAssetId] via the provided [buildStep].
 ///
@@ -15,7 +15,12 @@ import 'package:mustache/mustache.dart';
 Future<void> writeAsset(BuildStep buildStep, String templatePath,
     Map<String, dynamic> mustacheContext, AssetId newAssetId) async {
   final templateId = AssetId('angular_gallery', templatePath);
-  final mustacheTemplate = Template(await buildStep.readAsString(templateId));
-  await buildStep.writeAsString(
-      newAssetId, mustacheTemplate.renderString(mustacheContext));
+  final String template = await buildStep.readAsString(templateId);
+  final mustacheTemplate = Template(template, lenient: true);
+
+  var output = mustacheTemplate.renderString(mustacheContext);
+  // For debugging
+  //print(output);
+
+  await buildStep.writeAsString(newAssetId, output);
 }
