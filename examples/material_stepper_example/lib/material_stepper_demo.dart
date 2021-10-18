@@ -11,6 +11,7 @@ import 'package:angular_components/material_stepper/material_stepper.dart';
 import 'package:angular_components/model/action/async_action.dart';
 import 'package:angular_gallery_section/annotation/gallery_section_config.dart';
 import 'package:angular_components/utils/angular/scroll_host/angular_2.dart';
+import 'package:angular_components/button_decorator/button_decorator.dart';
 
 @GallerySectionConfig(
   displayName: 'Material Stepper',
@@ -27,6 +28,7 @@ class MaterialStepperGalleryConfig {}
     MaterialStepperComponent,
     StepDirective,
     SummaryDirective,
+    ButtonDirective,
     MaterialButtonComponent,
     NgFor,
   ],

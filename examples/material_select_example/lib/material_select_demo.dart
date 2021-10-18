@@ -15,7 +15,7 @@ import 'package:angular_components/model/ui/display_name.dart';
 @Component(
   selector: 'material-select-demo',
   directives: [
-    displayNameRendererDirective,
+    DisplayNameRendererDirective,
     FocusItemDirective,
     FocusListDirective,
     MaterialSelectComponent,

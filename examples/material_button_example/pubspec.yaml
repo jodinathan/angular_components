@@ -16,4 +16,3 @@ dependencies:
 dependency_overrides:
   angular_components:
     path: ../../angular_components
-  sass_builder: ^2.1.3

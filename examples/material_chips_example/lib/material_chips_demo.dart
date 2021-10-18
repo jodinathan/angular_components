@@ -30,7 +30,7 @@ class MaterialChipsExamples {}
   styleUrls: ['material_chips_demo.scss.css'],
   directives: [
     ButtonDirective,
-    displayNameRendererDirective,
+    DisplayNameRendererDirective,
     MaterialIconComponent,
     MaterialButtonComponent,
     MaterialChipComponent,
