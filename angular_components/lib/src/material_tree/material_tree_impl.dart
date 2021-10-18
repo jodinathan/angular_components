@@ -30,6 +30,7 @@ import 'material_tree_root.dart';
 /// To customize, specify an [itemRenderer] and/or [factoryRenderer].
 @Component(
   selector: 'material-tree',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   directives: [
     MaterialTreeGroupComponent,
     MaterialTreeGroupFlatCheckComponent,

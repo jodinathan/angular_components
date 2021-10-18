@@ -172,7 +172,7 @@
                   label="Type an URL here"
                   type="url"
                   ngModel
-                  (urlValueChange)="urlValue=$event">
+                  (change)="urlValue=$event">
   </material-input>
   <p>URL input is: {{urlValue}}</p>
   <br>

@@ -12,6 +12,9 @@
 * Fixed parameters of method with `@ViewChild` annotation to nullable
 * Fixed parameters of component factory with `@Optional` annotation to nullable
 * Fixed parameters of component factory without `@Optional` annotation to non-nullable
+* Added `ChangeDetectionStrategy.OnPush` to `material_tree_dropdown`
+* Added `ChangeDetectionStrategy.OnPush` to `material_tree_filter`
+* Added `ChangeDetectionStrategy.OnPush` to `material_tree_impl`
 
 ## 1.0.3
 
