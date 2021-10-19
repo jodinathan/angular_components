@@ -132,10 +132,10 @@ class MaterialInt64ValueAccessor
   MaterialInt64ValueAccessor(
       BaseMaterialInput input,
       @Self() NgControl control,
-      @Attribute('changeUpdate') String changeUpdateAttr,
-      @Attribute('keypressUpdate') String keypressUpdateAttr,
-      @Attribute('checkInteger') String checkInteger,
-      @Attribute('blurFormat') String blurFormat,
+      @Attribute('changeUpdate') String? changeUpdateAttr,
+      @Attribute('keypressUpdate') String? keypressUpdateAttr,
+      @Attribute('checkInteger') String? checkInteger,
+      @Attribute('blurFormat') String? blurFormat,
       @Optional() NumberFormat? numberFormat)
       : super(
             input as MaterialInputComponent,
@@ -200,10 +200,10 @@ class MaterialNumberValueAccessor
   MaterialNumberValueAccessor(
       BaseMaterialInput input,
       @Self() NgControl control,
-      @Attribute('changeUpdate') String changeUpdateAttr,
-      @Attribute('keypressUpdate') String keypressUpdateAttr,
-      @Attribute('checkInteger') String checkInteger,
-      @Attribute('blurFormat') String blurFormat,
+      @Attribute('changeUpdate') String? changeUpdateAttr,
+      @Attribute('keypressUpdate') String? keypressUpdateAttr,
+      @Attribute('checkInteger') String? checkInteger,
+      @Attribute('blurFormat') String? blurFormat,
       @Optional() NumberFormat? numberFormat)
       : this._checkInteger = attributeToBool(checkInteger, defaultValue: false),
         super(

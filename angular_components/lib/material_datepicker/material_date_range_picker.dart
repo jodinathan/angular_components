@@ -403,7 +403,7 @@ class MaterialDateRangePickerComponent
       @Optional() @Inject(datepickerClock) Clock? clock,
       Clock legacyClock,
       @Optional() DatepickerConfig? config,
-      @Attribute('popupClass') String popupClass,
+      @Attribute('popupClass') String? popupClass,
       @Optional() @SkipSelf() this._popupSizeProvider,
       HtmlElement element,
       this._domService,

@@ -288,7 +288,7 @@ class MaterialDatepickerComponent
 
   MaterialDatepickerComponent(
       HtmlElement element,
-      @Attribute('popupClass') String popupClass,
+      @Attribute('popupClass') String? popupClass,
       @Optional() @Inject(datepickerClock) Clock? clock)
       : popupClassName = constructEncapsulatedCss(popupClass, element.classes) {
     clock ??= Clock();

@@ -13,7 +13,7 @@
       <div label *ngIf="searchbox.inputText.isNotEmpty">Search Results</div>
       <ng-container *ngFor="let exampleGroup of exampleOptions.optionGroups">
         <div group *ngIf="exampleGroup.isNotEmpty">
-          <div label *ngIf="exampleGroup.uiDisplayName.isNotEmpty">
+          <div label *ngIf="exampleGroup.uiDisplayName != null">
             {{exampleGroup.uiDisplayName}}
           </div>
           <material-list-item *ngFor="let example of exampleGroup"

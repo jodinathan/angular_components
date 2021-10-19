@@ -84,9 +84,11 @@ class GalleryDocumentationExtraction extends SimpleAstVisitor<DartDocInfo> {
     }
 
     _info!.inputs = allProperties
-        .where((property) => property!.annotation == inputAnnotation);
+        .where((property) => property!.annotation == inputAnnotation)
+        .cast();
     _info!.outputs = allProperties
-        .where((property) => property!.annotation == outputAnnotation);
+        .where((property) => property!.annotation == outputAnnotation)
+        .cast();
     return _info;
   }
 

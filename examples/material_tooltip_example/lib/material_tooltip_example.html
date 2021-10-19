@@ -7,9 +7,9 @@
 <section>
   <h2>Ink tooltip</h2>
   <div class="demo-section">
-    <div class="demo-container" row>
-      <div column>
-        <div flex>
+    <div class="demo-container row" >
+      <div class="column">
+        <div class="flex">
           <div>
             <material-icon
                 icon="print"
@@ -34,7 +34,7 @@
             <br>
           </div>
         </div>
-        <div flex>
+        <div class="flex">
           <material-icon
               icon="print"
               class="demo-glyph"
@@ -58,13 +58,13 @@
           <br>
         </div>
       </div>
-      <div flex>
+      <div class="flex">
         <p class="caption">
           Tooltips on Icons.
         </p>
       </div>
     </div>
-    <div class="demo-container" column>
+    <div class="demo-container column" >
       <div>
         <material-button
             materialTooltip="Saves the document"
@@ -72,17 +72,17 @@
           Save
         </material-button>
       </div>
-      <div flex>
+      <div class="flex">
         <p class="caption">
           Tooltip on a button.
         </p>
       </div>
     </div>
-    <div class="demo-container" column>
+    <div class="demo-containe column" >
       <div>
         <a href="#" [materialTooltip]="longString">opportunities</a>
       </div>
-      <div flex>
+      <div class="flex">
         <p class="caption">
           Long tooltip on a link.
         </p>
@@ -90,8 +90,8 @@
     </div>
   </div>
   <div class="demo-section">
-    <div class="demo-container" column>
-      <div flex>
+    <div class="demo-container column" >
+      <div class="flex">
         <div>
           <span tabIndex="0" tooltipTarget #ref="tooltipTarget">
             Explicitly declare a tooltip component
@@ -101,13 +101,13 @@
           </material-tooltip-text>
         </div>
       </div>
-      <div flex>
+      <div class="flex">
         <p class="caption">
           Custom tooltip on some text.
         </p>
       </div>
     </div>
-    <div class="knob-container" column>
+    <div class="knob-container column" >
       <p><em>
         Use this configuration sparingly, as the tooltip text is intended for
         simple strings.
@@ -119,8 +119,8 @@
 <section>
   <h2>Card Tooltip</h2>
   <div class="demo-section">
-    <div class="demo-container" column>
-      <div flex>
+    <div class="demo-container column" >
+      <div class="flex">
         <div>
           <p>
             A simple sentence about something.
@@ -139,7 +139,7 @@
           </material-tooltip-card>
         </div>
       </div>
-      <div flex>
+      <div class="flex">
         <div>
           <p>
             Clickable tooltip. Target will open immediately on clicks and keyboard events.
@@ -159,7 +159,7 @@
           </material-tooltip-card>
         </div>
       </div>
-      <div flex>
+      <div class="flex">
         <p class="caption">
           Paper-based Tooltip on a help icon.
         </p>
@@ -168,8 +168,8 @@
   </div>
 
   <div class="demo-section">
-    <div class="demo-container" column>
-      <div flex>
+    <div class="demo-container column" >
+      <div class="flex">
         <div>
           <p>
             A Tooltip target with deferred content.
@@ -190,7 +190,7 @@
           </material-tooltip-card>
         </div>
       </div>
-      <div flex>
+      <div class="flex">
         <p class="caption">
           Use <strong>DeferredContentDirective</strong> inside
           <code>material-tooltip-card</code> to create your content
@@ -204,8 +204,8 @@
 <section>
   <h2>Icon Tooltip</h2>
   <div class="demo-section">
-    <div class="demo-container" column>
-      <div flex>
+    <div class="demo-container column" >
+      <div class="flex">
         <div>
           <material-input label="A dummy input to start a focus cycle." type="text">
 
@@ -245,8 +245,8 @@
 <section>
   <h2>Tooltip Source</h2>
   <div class="demo-section">
-    <div class="demo-container" column>
-      <div flex>
+    <div class="demo-container column" >
+      <div class="flex">
         <div>
           <p>
             Use a tooltipSource to control a popup.

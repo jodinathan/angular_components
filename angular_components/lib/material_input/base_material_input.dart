@@ -709,7 +709,7 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
   @Input()
   String? inputAriaControls;
 
-  BaseSingleLineInputComponent(String? type, String multiple, NgControl? cd,
+  BaseSingleLineInputComponent(String? type, String? multiple, NgControl? cd,
       this._changeDetector, DeferredValidator validator)
       : super(cd, _changeDetector, validator) {
     if (type == null) {

@@ -33,7 +33,7 @@ class ButtonDirective extends RootFocusable
 
   final _trigger = StreamController<UIEvent>.broadcast(sync: true);
 
-  String _hostTabIndex = '0';
+  String? _hostTabIndex = '0';
   final String? _nonTabbableIndex;
   bool _shouldHandleSpaceKey;
 
@@ -55,7 +55,7 @@ class ButtonDirective extends RootFocusable
 
   /// String value to be passed to aria-disabled.
   @HostBinding('attr.aria-disabled')
-  String get disabledStr => '$disabled';
+  String? get disabledStr => '$disabled';
 
   /// Is the component disabled.
   @HostBinding('class.is-disabled')
@@ -64,16 +64,20 @@ class ButtonDirective extends RootFocusable
 
   /// Is the component tabbable.
   @Input()
-  bool tabbable = true;
+  bool? tabbable = true;
 
-  String? get hostTabIndex =>
-      tabbable && !disabled! ? _hostTabIndex : _nonTabbableIndex;
+  String? get hostTabIndex {
+    var tab = tabbable ?? true;
+    var dis = disabled ?? false;
+
+    return tab && !dis ? _hostTabIndex : _nonTabbableIndex;
+  }
 
   /// The tab index of the component.
   ///
   /// The value is used if [tabbable] is `true` and [disabled] is `false`.
   @Input()
-  set tabindex(String value) {
+  set tabindex(String? value) {
     _hostTabIndex = value;
   }
 

@@ -154,7 +154,7 @@ class MaterialTreeDropdownComponent<T>
   final bool optimizeForDropdown = true;
 
   MaterialTreeDropdownComponent(this._domService,
-      @Attribute('popupClass') String popupClass, HtmlElement element)
+      @Attribute('popupClass') String? popupClass, HtmlElement element)
       : popupClassName = constructEncapsulatedCss(popupClass, element.classes) {
     selection = SelectionModel<T>.empty();
   }

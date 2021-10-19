@@ -42,7 +42,7 @@ class PopupSourceDirective
       this._element,
       @Optional() this._referenceDirective,
       @Optional() this._focusable,
-      @Attribute('initPopupAriaAttributes') String initAriaAttributes)
+      @Attribute('initPopupAriaAttributes') String? initAriaAttributes)
       : _initAriaAttributes =
             attributeToBool(initAriaAttributes, defaultValue: true);
 

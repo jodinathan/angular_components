@@ -50,8 +50,8 @@ class DartDocInfo implements DocInfo {
   String? exportAs;
   String? path;
   String? comment;
-  Iterable<DartPropertyInfo?>? inputs;
-  Iterable<DartPropertyInfo?>? outputs;
+  Iterable<DartPropertyInfo>? inputs;
+  Iterable<DartPropertyInfo>? outputs;
 
   DocType get docType => DocType.dartDocInfo;
 
@@ -91,8 +91,8 @@ class DartDocInfo implements DocInfo {
         'exportAs': exportAs,
         'path': path,
         'comment': comment,
-        'inputs': inputs?.map((p) => p!.toJson()).toList(),
-        'outputs': outputs?.map((p) => p!.toJson()).toList(),
+        'inputs': inputs?.map((p) => p.toJson()).toList(),
+        'outputs': outputs?.map((p) => p.toJson()).toList(),
       };
 }
 

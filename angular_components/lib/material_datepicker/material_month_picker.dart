@@ -254,7 +254,7 @@ class MaterialMonthPickerComponent
 
   MaterialMonthPickerComponent(
       @Optional() @Inject(datepickerClock) Clock? clock,
-      @Attribute('mode') String mode) {
+      @Attribute('mode') String? mode) {
     clock ??= Clock();
 
     // Init minDate and maxDate to sensible defaults
@@ -264,7 +264,7 @@ class MaterialMonthPickerComponent
 
     _today = Date.today(clock);
 
-    if (mode.isNotEmpty) {
+    if (mode != null && mode.isNotEmpty) {
       _mode = fuzzyParseEnum(CalendarSelectionMode.values, mode);
     }
   }

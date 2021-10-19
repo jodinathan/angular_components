@@ -93,5 +93,5 @@ class SassDocComponent extends DocumentationComponent {
 
   /// The documentation to display.
   @Input()
-  SassDocInfo? doc;
+  late SassDocInfo doc;
 }

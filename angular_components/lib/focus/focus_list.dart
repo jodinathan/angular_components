@@ -37,7 +37,7 @@ class FocusListDirective implements OnDestroy {
   int get _length => _children.length;
 
   FocusListDirective(this._ngZone, @Attribute('role') String? role,
-      @Attribute('ignoreUpAndDown') String ignoreUpAndDown)
+      @Attribute('ignoreUpAndDown') String? ignoreUpAndDown)
       : this.role = role ?? 'list',
         this.ignoreUpAndDown = attributeToBool(ignoreUpAndDown);
 

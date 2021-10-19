@@ -84,7 +84,7 @@ class MaterialInkTooltipComponent implements Tooltip {
   String popupClassName;
 
   MaterialInkTooltipComponent(this._tooltipController, this._changeDetector,
-      HtmlElement hostElement, @Attribute('tooltipClass') String tooltipClass)
+      HtmlElement hostElement, @Attribute('tooltipClass') String? tooltipClass)
       : popupClassName =
             constructEncapsulatedCss(tooltipClass, hostElement.classes);
 

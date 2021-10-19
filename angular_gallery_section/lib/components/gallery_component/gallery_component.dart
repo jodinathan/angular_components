@@ -65,7 +65,7 @@ class GalleryComponent {
 /// Relies on syntax highlighting from highlight.js
 /// https://github.com/highlightjs/highlight.js which must be loaded in the page
 /// first.
-String? applyHighlighting(String htmlFragment) {
+String applyHighlighting(String htmlFragment) {
   // Create a temporary document containing the fragment.
   final fragment = DocumentFragment.html(htmlFragment,
       treeSanitizer: _NullNodeTreeSanitizer());
@@ -75,7 +75,7 @@ String? applyHighlighting(String htmlFragment) {
       .querySelectorAll('pre code')
       .forEach((block) => highlightBlock(block));
 
-  return fragment.innerHtml;
+  return fragment.innerHtml ?? '';
 }
 
 @JS('hljs.highlightBlock')

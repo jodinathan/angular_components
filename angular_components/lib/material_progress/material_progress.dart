@@ -127,7 +127,7 @@ class MaterialProgressComponent implements AfterViewInit, OnDestroy {
   Animation? _secondaryAnimation;
 
   MaterialProgressComponent(
-      @Attribute('disable-fancy-animation') String disableFancyAnimation,
+      @Attribute('disable-fancy-animation') String? disableFancyAnimation,
       this._changeDetector,
       this._element)
       : _useFancyAnimation = disableFancyAnimation == null;

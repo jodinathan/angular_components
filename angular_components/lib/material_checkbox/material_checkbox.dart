@@ -67,9 +67,11 @@ class MaterialCheckboxComponent
       this._root,
       this._changeDetector,
       @Self() @Optional() NgControl? cd,
-      @Attribute('tabindex') String hostTabIndex,
+      @Attribute('tabindex') String? hostTabIndex,
       @Attribute('role') String? role)
-      : _defaultTabIndex = hostTabIndex.isNotEmpty ? hostTabIndex : '0',
+      : _defaultTabIndex = (hostTabIndex != null && hostTabIndex.isNotEmpty)
+            ? hostTabIndex
+            : '0',
         //hostTabIndex.isNotEmpty ?? false ? hostTabIndex : '0',
         this.role = role ?? 'checkbox' {
     // When NgControl is present on the host element, the component

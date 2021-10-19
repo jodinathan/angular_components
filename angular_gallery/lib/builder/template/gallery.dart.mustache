@@ -138,6 +138,10 @@ class _Example {
   /// A list of component names related to this example.
   final List<String> relatedComponents;
 
+  String get uiDisplayName => displayName;
+
+  bool get hasDisplayName => displayName.isNotEmpty;
+
   const _Example(
       this.link, this.displayName, this.group, this.relatedComponents);
 }

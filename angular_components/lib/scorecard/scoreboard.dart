@@ -66,7 +66,7 @@ class ScoreboardComponent implements OnInit, OnDestroy {
   String get forwardIconType => isVertical ? 'expand_more' : chevronForward;
 
   ScoreboardComponent(
-      @Attribute('enableUniformWidths') String enableUniformWidths,
+      @Attribute('enableUniformWidths') String? enableUniformWidths,
       this._domService,
       this._changeDetector) {
     _enableUniformWidths = enableUniformWidths != 'false'; // Defaults to true
