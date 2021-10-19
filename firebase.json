@@ -1,0 +1,17 @@
+{
+  "hosting": {
+    "public": "examples/angular_components_example/build",
+    "target": "gallery",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

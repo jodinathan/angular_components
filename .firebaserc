@@ -1,0 +1,17 @@
+{
+  "projects": {
+    "default": "angulardart-community"
+  },
+  "targets": {
+    "angulardart-community": {
+      "hosting": {
+        "main": [
+          "www.angulardart.xyz"
+        ],
+        "gallery": [
+          "angulardart-gallery"
+        ]
+      }
+    }
+  }
+}
