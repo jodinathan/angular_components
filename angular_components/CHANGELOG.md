@@ -12,7 +12,7 @@
 * Changed parameters of method with `@ViewChild` annotation to be nullable
 * Changed parameters of component factory with `@Optional` annotation to be nullable
 * Changed parameters of component factory without `@Optional` annotation be non-nullable
-* Changed parameters of component construct without `@Attribute` annotation to be nullable
+* Changed parameters of component constructor with `@Attribute` annotation to be nullable
 * Added `ChangeDetectionStrategy.OnPush` to `material_tree_dropdown`
 * Added `ChangeDetectionStrategy.OnPush` to `material_tree_filter`
 * Added `ChangeDetectionStrategy.OnPush` to `material_tree_impl`
