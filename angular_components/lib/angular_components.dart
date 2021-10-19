@@ -228,7 +228,7 @@ const List<dynamic> materialDirectives = [
   DateRangeEditorComponent,
   DateRangeInputComponent,
   DeferredContentDirective,
-  displayNameRendererDirective,
+  DisplayNameRendererDirective,
   DropdownSelectValueAccessor,
   DropdownButtonComponent,
   DropdownMenuComponent,

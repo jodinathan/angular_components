@@ -33,20 +33,20 @@
     }
   }
 
-  [row] {
+  .row {
     flex-direction: row;
   }
 
-  [column] {
+  .column {
     flex-direction: column;
   }
 
-  [flex] {
+  .flex {
     display: flex;
     flex: 1;
   }
 
-  [inline-flex] {
+  .inline-flex {
     display: inline-flex;
     flex: 1;
   }
