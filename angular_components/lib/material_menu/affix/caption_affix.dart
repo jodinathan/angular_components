@@ -24,7 +24,7 @@ class CaptionAffixComponent implements BaseAffixComponent<CaptionAffix?> {
 
   /// No-op, not used by this component.
   @override
-  bool? disabled;
+  bool disabled = false;
 
   CaptionAffixComponent(this._cdRef);
 

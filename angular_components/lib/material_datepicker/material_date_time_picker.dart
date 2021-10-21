@@ -98,7 +98,7 @@ class MaterialDateTimePickerComponent implements HasDisabled {
 
   /// Whether changing the selected date and time should be disabled.
   @Input()
-  bool? disabled = false;
+  bool disabled = false;
 
   /// Whether the date and time entry is required.
   ///
@@ -194,7 +194,7 @@ class MaterialDateTimePickerComponent implements HasDisabled {
 
   /// Sets [dateTime] to now if it's null.
   void setTimeToNowIfUnset() {
-    if (!disabled! && _time == null) {
+    if (!disabled && _time == null) {
       DateTime now = _clock.now();
       _time = now;
       _date = Date(now.year, now.month, now.day);
@@ -207,10 +207,10 @@ class MaterialDateTimePickerComponent implements HasDisabled {
   void _updateDateTimeAndNotify() {
     _dateTime = _date != null && _time != null
         ? (utc
-            ? DateTime.utc(
-                _date!.year, _date!.month, _date!.day, _time!.hour, _time!.minute)
-            : DateTime(
-                _date!.year, _date!.month, _date!.day, _time!.hour, _time!.minute))
+            ? DateTime.utc(_date!.year, _date!.month, _date!.day, _time!.hour,
+                _time!.minute)
+            : DateTime(_date!.year, _date!.month, _date!.day, _time!.hour,
+                _time!.minute))
         : null;
 
     if (_dateTime != null || !required) {

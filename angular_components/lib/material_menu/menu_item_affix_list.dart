@@ -44,18 +44,18 @@ class MenuItemAffixListComponent implements HasDisabled, OnDestroy {
   @visibleForTemplate
   ViewContainerRef? viewRef;
 
-  bool? _disabled = false;
+  bool _disabled = false;
 
   MenuItemAffixListComponent(this._cdRef);
 
   @Input()
   set disabled(bool? disabled) {
-    _disabled = disabled;
+    _disabled = disabled ?? false;
 
     _updateItemProperties();
   }
 
-  bool? get disabled => _disabled;
+  bool get disabled => _disabled;
 
   /// Observable list of affix items.
   @Input()

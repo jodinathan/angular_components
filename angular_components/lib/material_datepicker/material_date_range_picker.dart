@@ -244,15 +244,15 @@ class MaterialDateRangePickerComponent
   /// Whether changing the selected date range should be disabled.
   @Input()
   set disabled(bool? value) {
-    _disabled = value;
+    _disabled = value ?? false;
     // Hide popup if visible.
-    if (_popupVisible && disabled!) close();
+    if (_popupVisible && disabled) close();
   }
 
-  bool? _disabled = false;
+  bool _disabled = false;
 
   @HostBinding('class.disabled')
-  bool? get disabled => _disabled;
+  bool get disabled => _disabled;
 
   /// Dates earlier than `minDate` cannot be chosen.
   ///
@@ -471,7 +471,7 @@ class MaterialDateRangePickerComponent
 
   /// Open the datepicker popup.
   void open() {
-    if (_popupVisible || disabled!) return;
+    if (_popupVisible || disabled) return;
 
     _popupVisible = true;
     _onPopupVisible.add(true);

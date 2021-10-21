@@ -65,8 +65,8 @@ class OverlayDomRenderService {
   final DomRuler _domRuler;
   final DomService _domService;
   final AcxImperativeViewUtils _imperativeViewUtils;
-  final bool _useDomSynchronously;
-  final bool _useRepositionLoop;
+  late bool _useDomSynchronously;
+  late bool _useRepositionLoop;
   final ZIndexer _zIndexer;
 
   /// Track the last z-index used by an overlay. When updating an overlay,
@@ -85,9 +85,21 @@ class OverlayDomRenderService {
       this._domRuler,
       this._domService,
       this._imperativeViewUtils,
-      @Inject(overlaySyncDom) this._useDomSynchronously,
-      @Inject(overlayRepositionLoop) this._useRepositionLoop,
+      @Inject(overlaySyncDom) Object useDomSynchronously,
+      @Inject(overlayRepositionLoop) Object useRepositionLoop,
       this._zIndexer) {
+    if (useDomSynchronously is bool) {
+      _useDomSynchronously = useDomSynchronously;
+    } else {
+      _useDomSynchronously = false;
+    }
+
+    if (useRepositionLoop is bool) {
+      _useRepositionLoop = useRepositionLoop;
+    } else {
+      useRepositionLoop = false;
+    }
+
     containerElement.attributes['name'] = _containerName;
     styleConfig.registerStyles();
     _lastZIndex = _zIndexer.peek();

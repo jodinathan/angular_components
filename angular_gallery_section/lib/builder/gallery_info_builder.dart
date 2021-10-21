@@ -42,7 +42,13 @@ class GalleryInfoBuilder extends Builder {
         extractedConfigs, await buildStep.inputLibrary, buildStep);
 
     var newAssetId = inputId.changeExtension('.gallery_info.json');
-    await buildStep.writeAsString(newAssetId, jsonEncode(resolvedConfigs));
+    var jsonData = jsonEncode(resolvedConfigs);
+
+    print("=== Start (json data) ===");
+    print(jsonData);
+    print("=== End ===");
+
+    await buildStep.writeAsString(newAssetId, jsonData);
   }
 
   @override
@@ -228,8 +234,8 @@ class GalleryInfoBuilder extends Builder {
     outputs.sort((a, b) => Comparable.compare(a.name, b.name));
 
     // Assign the merged and sorted properties to the leaf class docs.
-    docs!.inputs = inputs;
-    docs.outputs = outputs;
+    docs?.inputs = inputs;
+    docs?.outputs = outputs;
 
     return docs;
   }

@@ -76,7 +76,7 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
 
   @HostBinding('class.disabled')
   @override
-  bool? get disabled => super.disabled;
+  bool get disabled => super.disabled;
 
   /// Whether the item should be hidden.
   ///
@@ -173,15 +173,15 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
     return null;
   }
 
-  SelectionModel<T>? _selection;
+  SelectionModel<T> _selection = SelectionModel.empty();
 
   @override
-  SelectionModel<T>? get selection => _selection;
+  SelectionModel<T> get selection => _selection;
 
   /// Selection model to update with changes.
   @Input()
   @override
-  set selection(SelectionModel<T>? sel) {
+  set selection(SelectionModel<T> sel) {
     _selection = sel;
     _supportsMultiSelect = sel is MultiSelectionModel<T>;
 
@@ -189,7 +189,7 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
     // direction to support onpush components that use this component. There may
     // be other mutable state that needs to trigger change detection.
     _selectionChangeStreamSub?.cancel();
-    _selectionChangeStreamSub = sel?.selectionChanges.listen((_) {
+    _selectionChangeStreamSub = sel.selectionChanges.listen((_) {
       _cdRef.markForCheck();
     });
   }
@@ -221,7 +221,7 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
 
   bool get _isMarkedSelected => selected;
   bool get _isSelectedInSelectionModel =>
-      value != null && (_selection?.isSelected(value!) ?? false);
+      value != null && (_selection.isSelected(value!));
 
   void handleActivate(UIEvent e) {
     var hasCheckbox = supportsMultiSelect && !hideCheckbox;
@@ -237,11 +237,11 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
         return;
       }
     }
-    if (_selectOnActivate && _selection != null && value != null) {
-      if (!_selection!.isSelected(value!)) {
-        _selection!.select(value!);
+    if (_selectOnActivate && value != null) {
+      if (!_selection.isSelected(value!)) {
+        _selection.select(value!);
       } else if (_deselectOnActivate) {
-        _selection!.deselect(value!);
+        _selection.deselect(value!);
       }
     }
   }

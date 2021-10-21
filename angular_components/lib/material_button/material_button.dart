@@ -97,14 +97,13 @@ class MaterialButtonComponent extends MaterialButtonBase {
   MaterialButtonComponent(HtmlElement element, AcxDarkTheme darktheme,
       this._changeDetector, @Attribute('role') String? role)
       : super(element, role) {
-    if (_changeDetector == null) throw Exception('Expecting change detector');
+    //if (_changeDetector == null) throw Exception('Expecting change detector');
     darktheme.themeElement(element);
   }
 
   @HostBinding('attr.disabled')
   @visibleForTemplate
-  String? get hostDisabled =>
-      disabled != null && disabled! ? "" : null; //disabled! ? "" : null;
+  String? get hostDisabled => disabled ? "" : null; //disabled! ? "" : null;
 
   @HostBinding('attr.raised')
   @visibleForTemplate

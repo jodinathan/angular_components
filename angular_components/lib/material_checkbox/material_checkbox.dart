@@ -122,19 +122,19 @@ class MaterialCheckboxComponent
   ///
   /// `true` will go to checked and `false` will go to unchecked.
   @Input()
-  bool indeterminateToChecked = false;
+  bool? indeterminateToChecked = false;
 
   /// Whether the checkbox should not respond to events, and have a style that
   /// suggests that interaction is not allowed.
   @HostBinding('class.disabled')
   @HostBinding('attr.aria-disabled')
   @Input()
-  bool? disabled = false;
+  bool disabled = false;
 
   // Current tab index.
   @HostBinding('attr.tabindex')
   @visibleForTemplate
-  String get tabIndex => disabled! ? "-1" : _defaultTabIndex;
+  String get tabIndex => disabled ? "-1" : _defaultTabIndex;
 
   /// Current state of the checkbox. This is user set-able state, via
   /// [toggleChecked()], so when checked, the [indeterminate] state gets
@@ -142,9 +142,9 @@ class MaterialCheckboxComponent
   ///
   /// `true` is CHECKED and `false` is not.
   @Input()
-  set checked(bool newValue) {
+  set checked(bool? newValue) {
     if (_checked == newValue) return;
-    _setStates(checked: newValue);
+    _setStates(checked: newValue ?? false);
   }
 
   /// Whether button is checked.
@@ -153,7 +153,7 @@ class MaterialCheckboxComponent
 
   /// Whether the checkbox can be changed by user interaction.
   @Input()
-  bool readOnly = false;
+  bool? readOnly = false;
 
   var _focused = false;
   var _isKeyboardEvent = false;
@@ -269,20 +269,21 @@ class MaterialCheckboxComponent
   /// on state [indeterminateToChecked].
   @visibleForTesting
   void toggleChecked() {
-    if (disabled! || readOnly) return;
+    if (disabled) return;
+    if (readOnly == null || readOnly!) return;
     if (!indeterminate && !checked) {
       _setStates(checked: true);
     } else if (checked) {
       _setStates();
     } else {
       assert(indeterminate);
-      _setStates(checked: indeterminateToChecked);
+      _setStates(checked: indeterminateToChecked ?? false);
     }
   }
 
   @override
   void focus() {
-    if (disabled!) return;
+    if (disabled) return;
 
     // Set to true so that the focus indicator is rendered.
     _isKeyboardEvent = true;
@@ -301,7 +302,7 @@ class MaterialCheckboxComponent
   @HostListener('click')
   @visibleForTemplate
   void handleClick(MouseEvent mouseEvent) {
-    if (disabled!) return;
+    if (disabled) return;
     _isKeyboardEvent = false;
     toggleChecked();
   }
@@ -310,7 +311,7 @@ class MaterialCheckboxComponent
   @visibleForTemplate
   void handleMouseDown(MouseEvent mouseEvent) {
     // This removes the text selection behavior of mousedown.
-    if (readOnly) {
+    if (readOnly != null && readOnly!) {
       mouseEvent.preventDefault();
     }
   }
@@ -318,7 +319,7 @@ class MaterialCheckboxComponent
   @HostListener('keypress')
   @visibleForTemplate
   void handleKeyPress(KeyboardEvent event) {
-    if (disabled!) return;
+    if (disabled) return;
     if (event.target != _root) return;
     if (isSpaceKey(event)) {
       // Required to prevent window from scrolling.

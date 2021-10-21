@@ -395,7 +395,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
 
   @override
   set selection(SelectionModel<T>? selection) {
-    super.selection = selection;
+    super.selection = selection ?? SelectionModel.empty();
     activeModel.activateFirstItemByDefault =
         (isSingleSelect && accessibleItemActivation) ||
             (isMultiSelect && !accessibleItemActivation);
@@ -475,11 +475,11 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   }
 
   /// The suggestions that match the current input text.
-  List<OptionGroup>? get visibleSuggestionGroups => options!.optionGroups;
+  List<OptionGroup>? get visibleSuggestionGroups => options.optionGroups;
 
-  bool get hasOptions => options!.optionsList.isNotEmpty;
+  bool get hasOptions => options.optionsList.isNotEmpty;
 
-  bool get showLoadingSpinner => loading && options!.optionsList.isEmpty;
+  bool get showLoadingSpinner => loading && options.optionsList.isEmpty;
 
 /*
   @Deprecated('Use labelFactory instead.')
@@ -535,7 +535,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   @Output()
   Stream<bool> get showPopupChange => _showPopupController.stream;
 
-  bool get showPopup => _showPopup && !disabled!;
+  bool get showPopup => _showPopup && !disabled;
 
   /// Used to control the visibility of the suggestion popup.
   @Input()
@@ -558,7 +558,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
 
   bool get showEmptyPlaceholder =>
       emptyPlaceholder.isNotEmpty &&
-      options!.optionsList.isEmpty &&
+      options.optionsList.isEmpty &&
       !showLoadingSpinner;
 
   List<RelativePosition> get popupPositions => _popupPositions;
@@ -601,7 +601,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
       // clear the text upon selection, indicating that the selection is bound
       // to the text.
       if (inputText != itemRenderer!(_lastSelectedItem as T)) {
-        selection?.deselect(_lastSelectedItem as T);
+        selection.deselect(_lastSelectedItem as T);
         _lastSelectedItem = null;
       }
     }
@@ -697,16 +697,16 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
       {bool textChanging = false, bool popupOpening = false}) {
     if (!showPopup) return;
 
-    if (selection == null) {
+    if (selection.isEmpty) {
       activeModel.activate(null);
     } else if (accessibleItemActivation) {
       if (popupOpening) {
         // The first value in selection.selectedValues is not necessarily the
         // first option in the suggestions list.
-        T? firstSelection = selection!.selectedValues.isEmpty
+        T? firstSelection = selection.selectedValues.isEmpty
             ? null
-            : options!.optionsList
-                .firstWhereOrNull((opt) => selection!.isSelected(opt));
+            : options.optionsList
+                .firstWhereOrNull((opt) => selection.isSelected(opt));
         if (firstSelection == null) {
           activeModel.activateFirst();
         } else {
@@ -779,14 +779,12 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
     if (isSingleSelect) {
       showPopup = false;
     }
-    if (selection != null) {
-      if (!selection!.isSelected(item)) {
-        if (!isOptionDisabled(item)) {
-          selection?.select(item);
-        }
-      } else if (deselectOnActivate) {
-        selection?.deselect(item);
+    if (!selection.isSelected(item)) {
+      if (!isOptionDisabled(item)) {
+        selection.select(item);
       }
+    } else if (deselectOnActivate) {
+      selection.deselect(item);
     }
   }
 
@@ -939,7 +937,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   }
 
   @override
-  void onDisabledChanged(bool isDisabled) {
-    disabled = isDisabled;
+  void onDisabledChanged(bool? isDisabled) {
+    disabled = isDisabled ?? false;
   }
 }

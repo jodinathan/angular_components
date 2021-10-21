@@ -34,9 +34,12 @@ class ComponentApiBuilder extends Builder {
     final newAssetId = AssetId(inputId.package,
         inputId.path.replaceFirst('.gallery_info.json', '.api.dart'));
 
-    var result = mustacheTemplate.renderString(mustacheContext);
+    var renderedData = mustacheTemplate.renderString(mustacheContext);
+    print("=== Start(examples.api.dart) ===");
+    print(renderedData);
+    print("=== End ===");
 
-    await buildStep.writeAsString(newAssetId, result);
+    await buildStep.writeAsString(newAssetId, renderedData);
   }
 
   @override

@@ -5,7 +5,6 @@
 import 'dart:html';
 
 import 'package:angular/angular.dart';
-import 'package:meta/meta.dart';
 import 'package:angular_components/laminate/overlay/constants.dart';
 import 'package:angular_components/src/laminate/overlay/overlay_service.dart';
 import 'package:angular_components/src/laminate/overlay/render/overlay_dom_render_service.dart';
@@ -48,9 +47,14 @@ HtmlElement createAcxOverlayContainer(HtmlElement parent,
 /// Either finds, or creates an "acx-overlay-container" div at the end of body.
 @Injectable()
 HtmlElement getDefaultContainer(
-    @Inject(overlayContainerName) String name,
-    @Inject(overlayContainerParent) HtmlElement parent,
-    @Optional() @SkipSelf() @Inject(overlayContainerToken) container) {
+    @Inject(overlayContainerName)
+        String name,
+    @Inject(overlayContainerParent)
+        HtmlElement parent,
+    @Optional()
+    @SkipSelf()
+    @Inject(overlayContainerToken)
+        HtmlElement? container) {
   if (container != null) return container;
   return createAcxOverlayContainer(parent,
       id: overlayDefaultContainerId, name: name);
@@ -58,7 +62,10 @@ HtmlElement getDefaultContainer(
 
 @Injectable()
 String getDefaultContainerName(
-    @Optional() @SkipSelf() @Inject(overlayContainerName) containerName) {
+    @Optional()
+    @SkipSelf()
+    @Inject(overlayContainerName)
+        String? containerName) {
   return containerName ?? 'default';
 }
 
@@ -72,8 +79,12 @@ HtmlElement getDebugContainer(@Inject(overlayContainerName) String name,
 }
 
 @Injectable()
-HtmlElement getOverlayContainerParent(Document document,
-    @Optional() @SkipSelf() @Inject(overlayContainerParent) containerParent) {
+HtmlElement getOverlayContainerParent(
+    Document document,
+    @Optional()
+    @SkipSelf()
+    @Inject(overlayContainerParent)
+        HtmlElement? containerParent) {
   return containerParent ?? document.querySelector('body') as HtmlElement;
 }
 

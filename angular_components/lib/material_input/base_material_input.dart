@@ -57,7 +57,7 @@ class BaseMaterialInput extends FocusableMixin
 
   bool _required = false;
   bool _showHintOnlyOnFocus = false;
-  bool? _disabled = false;
+  bool _disabled = false;
 
   /// Enable native validation (e.g. for type="url").
   bool useNativeValidation = true;
@@ -292,12 +292,12 @@ class BaseMaterialInput extends FocusableMixin
   @Input()
   bool floatingLabel = false;
 
-  bool? get disabled => _disabled;
+  bool get disabled => _disabled;
 
   /// Whether or not this input is disabled (readonly input.)
   @Input()
   set disabled(bool? disabled) {
-    _disabled = disabled;
+    _disabled = disabled ?? false;
     _changeDetector.markForCheck();
   }
 
@@ -603,7 +603,7 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
   ///
   /// Used to prevent focus/blur events on disabled inputs that caused weird
   /// behavior of floating label, input validations, etc.
-  int get inputTabIndex => disabled! ? -1 : 0;
+  int get inputTabIndex => disabled ? -1 : 0;
 
   bool get hasLeadingText => isNotEmpty(leadingText);
   String? get leadingText => _leadingText;
@@ -666,8 +666,8 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
   ///
   /// Default value is `false`.
   @Input()
-  set rightAlign(bool value) {
-    _rightAlign = value;
+  set rightAlign(bool? value) {
+    _rightAlign = value ?? false;
     // Possibly set by a directive and not a template. So default change
     // detection doesn't work without calling markForCheck.
     _changeDetector.markForCheck();
@@ -739,12 +739,14 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
   }
 
   @visibleForTemplate
-  void handleChange(Event event, InputElement element) {
-    inputChange(
-      element.value,
-      element.validity.valid,
-      element.validationMessage,
-    );
-    event.stopPropagation();
+  void handleChange(Event? event, InputElement? element) {
+    if (element != null) {
+      inputChange(
+        element.value,
+        element.validity.valid,
+        element.validationMessage,
+      );
+    }
+    event?.stopPropagation();
   }
 }

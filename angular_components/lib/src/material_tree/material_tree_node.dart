@@ -162,7 +162,7 @@ class MaterialTreeNode<T> {
       !hasChildren(option);
 
   /// Returns whether [option] is selected.
-  bool isSelected(T option) => _root.selection?.isSelected(option) ?? false;
+  bool isSelected(T option) => _root.selection.isSelected(option);
 
   /// Returns any child groups of [option] that are loaded.
   Iterable<OptionGroup>? getChildGroups(option) => _expandedNodes[option];
@@ -221,9 +221,9 @@ class MaterialTreeNode<T> {
   bool setSelectionState(T option, bool state) {
     if (isSelected(option) == state) return state;
     if (!state) {
-      return !(_root.selection?.deselect(option) ?? false);
+      return !(_root.selection.deselect(option));
     } else {
-      return _root.selection?.select(option) ?? false;
+      return _root.selection.select(option);
     }
   }
 
@@ -243,9 +243,9 @@ class MaterialTreeNode<T> {
       }
 
       if (isSelection) {
-        _root.selection?.select(node);
+        _root.selection.select(node);
       } else {
-        _root.selection?.deselect(node);
+        _root.selection.deselect(node);
       }
 
       if (node == firstNode || node == lastNode) {
