@@ -128,7 +128,7 @@ h2 {
 // highlighting by highlight.js.
 ::ng-deep code:not(.hljs) {
   border: 1px $mat-gray-100 solid;
-  padding: $mat-grid-type / 4 $mat-grid-type / 2;
+  padding: $mat-grid-type * 0.25 $mat-grid-type * 0.5;
 }
 
 :not(.demo) ::ng-deep li:not(:last-of-type) {
