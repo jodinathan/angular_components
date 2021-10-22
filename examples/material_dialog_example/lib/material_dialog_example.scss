@@ -95,7 +95,7 @@ material-button[raised] {
       }
 
       h1 {
-        margin: $mat-grid-type / 2 0 0;
+        margin: $mat-grid-type * 0.5 0 0;
       }
     }
   }
