@@ -3,8 +3,8 @@ name: Dart CI
 on:
   push:
     branches:
-      - compatible
-      # - dev
+      - dev
+      - master
   pull_request:
 
 defaults:

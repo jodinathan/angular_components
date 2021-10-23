@@ -5,7 +5,7 @@ name: Deploy to Firebase Hosting on merge
 'on':
   push:
     branches:
-      - compatible
+      - master
 
 defaults:
   run:
@@ -19,10 +19,8 @@ jobs:
 
       - name: Setup Dart SDK
         uses: dart-lang/setup-dart@v1.3
-      - name: Setup webdev
-        run: dart pub global activate webdev
         
-      - run: dart pub get && webdev build --release
+      - run: dart pub get && dart run build_runner build -o build --release
         working-directory: examples/angular_components_example
 
       - uses: FirebaseExtended/action-hosting-deploy@v0

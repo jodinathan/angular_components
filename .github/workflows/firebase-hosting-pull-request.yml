@@ -17,10 +17,8 @@ jobs:
 
       - name: Setup Dart SDK
         uses: dart-lang/setup-dart@v1.3
-      - name: Setup webdev
-        run: dart pub global activate webdev
 
-      - run: dart pub get && webdev build
+      - run: dart pub get && dart run build_runner build -o build
         working-directory: examples/angular_components_example
 
       - uses: FirebaseExtended/action-hosting-deploy@v0
