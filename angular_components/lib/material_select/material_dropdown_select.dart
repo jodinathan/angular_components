@@ -111,7 +111,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   ///
   /// If not provided, will use the default role for [DropdownButtonComponent]:
   /// 'button'.
-  final String buttonAriaRole;
+  final String? buttonAriaRole;
 
   /// The id of an element that describes the selection in the dropdown button.
   ///
@@ -188,7 +188,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
 
   @override
   set disabled(bool? value) {
-    super.disabled = value;
+    super.disabled = value ?? false;
     _disabledChanged = true;
   }
 
@@ -196,7 +196,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
       @Optional() IdGenerator? idGenerator,
       @Optional() @SkipSelf() this._popupSizeDelegate,
       @Optional() @Inject(rtlToken) bool? rtl,
-      @Attribute('popupClass') String popupClass,
+      @Attribute('popupClass') String? popupClass,
       @Attribute('buttonAriaRole') this.buttonAriaRole,
       this._changeDetector,
       HtmlElement element)
@@ -213,16 +213,14 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
 
   // The id of the currently selected item, or the first item if none are
   // selected.
-  String? get ariaActiveDescendant {
+  String get ariaActiveDescendant {
     if (!visible) return '';
 
-    if (_ariaActiveDescendant != null) return _ariaActiveDescendant;
-
-    if (options != null) {
-      return activeModel.activeId;
+    if (_ariaActiveDescendant != null) {
+      return _ariaActiveDescendant!;
     }
 
-    return '';
+    return activeModel.activeId ?? '';
   }
 
   /// The id of the active element of the dropdown.
@@ -238,12 +236,12 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   @Input()
   bool listAutoFocus = true;
 
-  //@Input()
-  //@override
-  //@Deprecated('Use factoryRenderer it allows for more tree-shakable code.')
-  //set componentRenderer(ComponentRenderer? value) {
-  //  super.componentRenderer = value;
-  //}
+  @Input()
+  @override
+  @Deprecated('Use factoryRenderer it allows for more tree-shakable code.')
+  set componentRenderer(ComponentRenderer? value) {
+    super.componentRenderer = value;
+  }
 
   /// Function that returns a component factory to render the Item.
   ///
@@ -264,7 +262,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   /// Width of the dropdown/list, default none, valid values are 0-5.
   @Input()
   @override
-  set width(value) {
+  set width(dynamic value) {
     super.width = value;
   }
 
@@ -296,7 +294,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   }
 
   @override
-  set options(SelectionOptions<T>? newOptions) {
+  set options(SelectionOptions<T> newOptions) {
     _changeDetector.markForCheck();
     super.options = newOptions;
 
@@ -304,7 +302,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
     _setInitialActiveItem();
 
     _optionsListener?.cancel();
-    _optionsListener = options?.stream.listen((_) {
+    _optionsListener = options.stream.listen((_) {
       _changeDetector.markForCheck();
       _updateActiveModel();
       _setInitialActiveItem();
@@ -332,13 +330,13 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   }
 
   @override
-  set selection(SelectionModel<T>? newSelection) {
+  set selection(SelectionModel<T> newSelection) {
     _changeDetector.markForCheck();
     super.selection = newSelection;
     _setInitialActiveItem();
 
     _selectionListener?.cancel();
-    _selectionListener = selection?.selectionChanges.listen((changes) {
+    _selectionListener = selection.selectionChanges.listen((changes) {
       _changeDetector.markForCheck();
       // Update active item if new items are selected.
       var added =
@@ -351,7 +349,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   }
 
   void _updateActiveModel() {
-    var items = List<dynamic>.from(options?.optionsList ?? []);
+    var items = List<dynamic>.from(options.optionsList);
     if (showDeselectItem) {
       items.insert(0, deselectLabel);
     }
@@ -359,14 +357,14 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   }
 
   void _setInitialActiveItem({bool allowDeactivate = true}) {
-    if (selection == null || selection!.selectedValues.isEmpty) {
+    if (selection.selectedValues.isEmpty) {
       if (allowDeactivate) activeModel.activate(null);
     } else if (activeModel.activeItem == null ||
         (showDeselectItem && activeModel.activeItem == deselectLabel) ||
-        !selection!.isSelected(activeModel.activeItem)) {
+        !selection.isSelected(activeModel.activeItem)) {
       // If the current active item is not selected, activate the first selected
       // item.
-      activeModel.activate(selection!.selectedValues.first);
+      activeModel.activate(selection.selectedValues.first);
     }
     if (activateFirstOption && activeModel.activeItem == null) {
       activeModel.activateFirst();
@@ -374,16 +372,16 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   }
 
   void _handleNavigationKey(KeyboardEvent event, Function activateFunction) {
-    if (disabled!) return;
+    if (disabled) return;
     event.preventDefault();
     activateFunction();
     // Only select if the popup is not visible.
-    if (!visible && selection != null && isSingleSelect) {
+    if (!visible && isSingleSelect) {
       var item = activeModel.activeItem;
       if (item == deselectLabel) {
         deselectCurrentSelection();
       } else if (item != null && !isOptionDisabled(item)) {
-        selection?.select(item);
+        selection.select(item);
       }
     }
     if (!visible) {
@@ -422,20 +420,20 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   }
 
   void _handleKeyboardTrigger() {
-    if (disabled!) return;
+    if (disabled) return;
     if (!visible) {
       open();
     } else {
       var item = activeModel.activeItem;
-      if (item != null && selection != null) {
+      if (item != null) {
         if (item == deselectLabel) {
           deselectCurrentSelection();
-        } else if (!selection!.isSelected(item)) {
+        } else if (!selection.isSelected(item)) {
           if (!isOptionDisabled(item)) {
-            selection!.select(item);
+            selection.select(item);
           }
         } else if (deselectOnActivate) {
-          selection!.deselect(item);
+          selection.deselect(item);
         }
       }
       if (isSingleSelect) {
@@ -460,22 +458,22 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   void handleClick(UIEvent event) {
     // Ignore keyboard events caught by button decorator.
     if (event is! MouseEvent) return;
-    if (!disabled!) toggle();
+    if (!disabled) toggle();
   }
 
   @override
   void handleCharCodeKey(KeyboardEvent event) {
-    if (itemRenderer != null && options != null && !disabled!) {
+    if (itemRenderer != null && !disabled) {
       // Don't activate or select if the widget is disabled.
       // Don't select if the selection model is multi-select.
-      activateOnKeyPress(activeModel, event.charCode, options!, itemRenderer,
+      activateOnKeyPress(activeModel, event.charCode, options, itemRenderer,
           !visible && isSingleSelect ? selection : null);
     }
   }
 
   @override
   void ngAfterChanges() {
-    if (_disabledChanged && disabled!) {
+    if (_disabledChanged && disabled) {
       close();
     }
     _disabledChanged = false;
@@ -535,13 +533,11 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   bool get showDeselectItem =>
       !isMultiSelect && deselectLabel?.isNotEmpty == true;
 
-  bool get isDeselectItemSelected => selection?.isEmpty ?? true;
+  bool get isDeselectItemSelected => selection.isEmpty;
 
   void deselectCurrentSelection() {
-    if (selection != null) {
-      if (selection!.isNotEmpty) {
-        selection!.deselect(selection!.selectedValues.single);
-      }
+    if (selection.isNotEmpty) {
+      selection.deselect(selection.selectedValues.single);
     }
   }
 }

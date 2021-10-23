@@ -430,7 +430,7 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
                 _presetSelection.select(alternative);
               },
               itemRenderer: _renderAlternativePreset,
-              tooltip: isValid ? null : rangeDisabledTooltip,
+              tooltip: isValid ? '' : rangeDisabledTooltip,
               selectableState: isValid
                   ? SelectableOption.Selectable
                   : SelectableOption.Disabled));
@@ -449,7 +449,7 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
             onRangeClicked(null, preset.range);
           },
           itemRenderer: _renderPreset,
-          tooltip: isValid ? null : rangeDisabledTooltip,
+          tooltip: isValid ? '' : rangeDisabledTooltip,
           selectableState:
               isValid ? SelectableOption.Selectable : SelectableOption.Disabled,
           subMenu: subMenu));

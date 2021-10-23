@@ -68,7 +68,7 @@ class MaterialMenuComponent extends Object
 
   /// Whether the menu is disabled or not.
   @Input()
-  bool? disabled = false;
+  bool disabled = false;
 
   /// Whether the menu is tabbable or not.
   @Input()
@@ -101,7 +101,7 @@ class MaterialMenuComponent extends Object
   }
 
   Focusable? get _focusTarget =>
-      disabled! ? null : (isExpanded ? _menuPopup : _button);
+      disabled ? null : (isExpanded ? _menuPopup : _button);
 
   @override
   void ngAfterViewInit() {

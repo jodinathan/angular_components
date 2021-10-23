@@ -103,13 +103,13 @@ class MaterialFabMenuComponent extends Object
 
   bool get isFabEnabled => _viewModel?.isFabEnabled ?? false;
 
-  String? get glyph => _viewModel?.glyph;
+  String get glyph => _viewModel?.glyph ?? '';
 
-  String? get ariaLabel => _viewModel?.ariaLabel;
+  String get ariaLabel => _viewModel?.ariaLabel ?? '';
 
-  String? get tooltip => _viewModel?.tooltip;
+  String get tooltip => _viewModel?.tooltip ?? '';
 
-  bool get hasTooltip => tooltip?.isNotEmpty ?? false;
+  bool get hasTooltip => tooltip.isNotEmpty;
 
   bool get hasMenu => _viewModel?.hasMenu ?? false;
 
@@ -219,28 +219,29 @@ class MaterialFabMenuModel {
   Stream<Change<bool?>> get onShowPopupChange => _showPopup.changes;
 
   /// True if the [menuItem] exists and has at least one item.
-  bool get hasMenu => menuItem.subMenu?.itemGroups.isNotEmpty ?? false;
+  bool get hasMenu => menuItem.subMenu.itemGroups.isNotEmpty;
 
   /// True if the FAB has a menu and at least one menu item has an icon.
   bool get hasIcons =>
       hasMenu &&
-      menuItem.subMenu!.itemGroups
+      menuItem.subMenu.itemGroups
           .any((itemGroup) => itemGroup.any((item) => item.hasIcon));
 
   /// True if the FAB menu should be shown.
-  bool? get showPopup => _showPopup.value;
+  bool get showPopup => _showPopup.value ?? false;
 
   /// True if FAB is in an enabled state - can be clicked and triggered.
   bool get isFabEnabled => menuItem.enabled;
 
   /// Name of glyph displayed within FAB circle.
-  String? get glyph => menuItem.icon?.name;
+  String get glyph => menuItem.icon.name ?? '';
 
-  String? get ariaLabel => menuItem.label;
+  String get ariaLabel => menuItem.label;
 
-  String? get tooltip => menuItem.tooltip ?? menuItem.label;
+  String get tooltip =>
+      menuItem.tooltip.isEmpty ? menuItem.label : menuItem.tooltip;
 
-  bool? get isFabHidden => hasMenu ? _showPopup.value : false;
+  bool get isFabHidden => hasMenu ? _showPopup.value ?? false : false;
 
   /// If the FAB has a sub-menu, then open the sub-menu popup, otherwise only
   /// trigger the action callback on the FAB menu item model.

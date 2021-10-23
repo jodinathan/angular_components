@@ -49,7 +49,7 @@ class IconAffixComponent implements BaseAffixComponent<IconAffix?> {
 
   IconAffix? _viewModel;
 
-  bool? _disabled = false;
+  bool _disabled = false;
 
   IconAffixComponent(this._cdRef, @Optional() this._menuRoot);
 
@@ -75,17 +75,17 @@ class IconAffixComponent implements BaseAffixComponent<IconAffix?> {
   }
 
   @override
-  bool? get disabled => _disabled;
+  bool get disabled => _disabled;
 
   @override
-  set disabled(value) {
-    _disabled = value;
+  set disabled(bool? value) {
+    _disabled = value ?? false;
     _cdRef.markForCheck();
   }
 
   @visibleForTemplate
   void handleActionIconTrigger(Event event) {
-    if (disabled!) return;
+    if (disabled) return;
 
     if (_viewModel!.hasAction) {
       _viewModel!.triggerShortcutAction();

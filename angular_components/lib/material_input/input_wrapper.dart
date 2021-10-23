@@ -24,7 +24,7 @@ class MaterialInputWrapper implements HasDisabled {
 
   /// Whether this input is disabled.
   @Input()
-  bool? disabled = false;
+  bool disabled = false;
 
   /// Whether to display error, hint text, and character counter panel.
   @Input()

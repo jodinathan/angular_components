@@ -106,7 +106,7 @@ class MaterialPopupComponent extends Object
   final DomService _domService;
   PopupHierarchy? _hierarchy;
 
-  final List<RelativePosition> _defaultPreferredPositions;
+  final List<RelativePosition> _defaultPreferredPositions = [];
   RelativePosition? _alignmentPosition;
 
   OverlayRef? _overlayRef;
@@ -135,7 +135,7 @@ class MaterialPopupComponent extends Object
 
   // The top/bottom/left/right boundaries for the popup within the viewport
   // rect.
-  final Box _viewportBoundaries;
+  Box _viewportBoundaries = Box();
 
   // The window.resize event is throttled because it can occur at a high
   // frequency (> 20 times per second).
@@ -153,7 +153,7 @@ class MaterialPopupComponent extends Object
   bool _isOpening = false;
 
   // Variables for the requestAnimationFrame reposition loop.
-  final bool _useRepositionLoop;
+  bool _useRepositionLoop = false;
   Rectangle? _initialSourceDimensions;
   int _repositionOffsetX = 0;
   int _repositionOffsetY = 0;
@@ -170,11 +170,15 @@ class MaterialPopupComponent extends Object
   @Input()
   int z = 2;
 
+  String get zElevation => z.toString();
+
   /// The CSS transform origin based on configuration.
   String? get transformOrigin => _alignmentPosition?.animationOrigin;
 
-  int? get zIndex => _zIndex;
+  String? get zIndex => _zIndex?.toString();
+
   int? _zIndex;
+
   final ZIndexer _zIndexer;
 
   /// Direction of popup scaling.
@@ -250,25 +254,43 @@ class MaterialPopupComponent extends Object
   String? ariaLabel;
 
   MaterialPopupComponent(
-      @Optional() @SkipSelf() this._hierarchy,
-      @Optional() @SkipSelf() MaterialPopupComponent? parentPopup,
-      @Attribute('role') String? role,
+      @Optional()
+      @SkipSelf()
+          this._hierarchy,
+      @Optional()
+      @SkipSelf()
+          MaterialPopupComponent? parentPopup,
+      @Attribute('role')
+          String? role,
       this._ngZone,
       this._overlayService,
       this._domService,
       this._zIndexer,
-      @Inject(defaultPopupPositions) this._defaultPreferredPositions,
-      @Inject(overlayRepositionLoop) this._useRepositionLoop,
-      @Inject(overlayViewportBoundaries) this._viewportBoundaries,
-      @Optional() this._popupSizeProvider,
+      @Inject(defaultPopupPositions)
+          Iterable<RelativePosition> _defaultPreferredPositions,
+      @Inject(overlayRepositionLoop)
+          Object useRepositionLoop,
+      @Inject(overlayViewportBoundaries)
+          Object viewportBoundaries,
+      @Optional()
+          this._popupSizeProvider,
       this._changeDetector,
       this._viewContainer,
       this.elementRef)
       : this.role = role ?? 'dialog' {
     // Close popup if parent closes.
+
     if (parentPopup != null) {
       _disposer
           .addStreamSubscription(parentPopup.onClose.listen((_) => close()));
+    }
+
+    if (useRepositionLoop is bool) {
+      _useRepositionLoop = useRepositionLoop;
+    }
+
+    if (viewportBoundaries is Box) {
+      _viewportBoundaries = viewportBoundaries;
     }
 
     // Create the PopupRef for the ACX focus library.
@@ -377,17 +399,19 @@ class MaterialPopupComponent extends Object
   Element? get container => _overlayRef?.overlayElement;
 
   @override
-  set source(PopupSource source) {
-    super.source = source;
+  set source(PopupSource? source) {
+    if (source != null) {
+      super.source = source;
 
-    // Set the popup ID on the source for ARIA attributes.
-    source.popupId = uniqueId;
+      // Set the popup ID on the source for ARIA attributes.
+      source.popupId = uniqueId;
 
-    // This component supports direct control over the [PopupRef] by way
-    // of the Toggle library. Here, we register the [PopupRef] as a
-    // [Toggleable] iff [source] uses the library.
-    if (source is Toggler) {
-      (source as Toggler).toggleable = _DeferredToggleable(this);
+      // This component supports direct control over the [PopupRef] by way
+      // of the Toggle library. Here, we register the [PopupRef] as a
+      // [Toggleable] iff [source] uses the library.
+      if (source is Toggler) {
+        (source as Toggler).toggleable = _DeferredToggleable(this);
+      }
     }
   }
 

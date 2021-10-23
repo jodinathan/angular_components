@@ -150,7 +150,7 @@ class ScorecardComponent extends KeyboardOnlyFocusIndicatorDirective {
   }
 
   @HostBinding('attr.tabindex')
-  int? get hostTabIndex => selectable ? 0 : null;
+  String? get hostTabIndex => selectable ? "0" : null;
 
   @HostBinding('attr.role')
   String? get hostRole => selectable ? "button" : null;

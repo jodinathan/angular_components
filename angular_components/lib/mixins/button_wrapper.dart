@@ -19,7 +19,7 @@ class MaterialButtonWrapper implements HasDisabled {
 
   /// Whether the button is disabled.
   @Input()
-  bool? disabled = false;
+  bool disabled = false;
 
   /// Icon to be used with the button. (Optional)
   @Input()

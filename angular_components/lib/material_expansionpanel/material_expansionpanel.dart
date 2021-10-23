@@ -119,9 +119,9 @@ class MaterialExpansionPanel
   /// Sets the focus child so that we can focus on it when the panel opens.
   @ContentChild('focusOnOpen')
   @Input('focusOnOpen')
-  set focusOnOpenChild(Element? element) {
+  set focusOnOpenChild(Object? element) {
     if (element is Focusable) {
-      _focusOnOpenChild = element as Focusable?;
+      _focusOnOpenChild = element;
     } else if (element is Element) {
       _focusOnOpenChild = RootFocusable(element);
     } else {
@@ -262,14 +262,14 @@ class MaterialExpansionPanel
     _changeDetector.markForCheck();
   }
 
-  bool? _disabled = false;
-  bool? get disabled => _disabled;
+  bool _disabled = false;
+  bool get disabled => _disabled;
 
   /// If true, the panel will remain in the collapsed state with no way to
   /// expand it, or if expanded by default, it will stay in expanded state.
   @Input()
   set disabled(bool? value) {
-    _disabled = value;
+    _disabled = value ?? false;
     _changeDetector.markForCheck();
   }
 
@@ -307,8 +307,7 @@ class MaterialExpansionPanel
     _groupAriaLabel = groupAriaLabel;
   }
 
-  String? get groupAriaLabel =>
-      _groupAriaLabel == null ? name : _groupAriaLabel;
+  String? get groupAriaLabel => _groupAriaLabel ?? name;
 
   /// Level of the heading.
   ///
@@ -346,7 +345,7 @@ class MaterialExpansionPanel
     if (alwaysHideExpandIcon) return false;
     return (hasCustomExpandIcon && isExpanded!)
         ? alwaysShowExpandIcon
-        : !disabled!;
+        : !disabled;
   }
 
   bool get shouldFlipExpandIcon => hasCustomExpandIcon ? false : !isExpanded!;
@@ -354,7 +353,7 @@ class MaterialExpansionPanel
   bool get shouldShowHiddenHeaderExpandIcon =>
       hasCustomExpandIcon || alwaysHideExpandIcon
           ? false
-          : (hideExpandedHeader && !disabled!);
+          : (hideExpandedHeader && !disabled);
 
   /// Option to set if widget should show save/cancel buttons `true` by default.
   @Input()
@@ -390,7 +389,7 @@ class MaterialExpansionPanel
       : _namedPanelMsg(groupAriaLabel!);
 
   String? get headerMsg {
-    if (disabled! || _groupAriaLabel != null) {
+    if (disabled || _groupAriaLabel != null) {
       return groupAriaLabel;
     } else {
       return isExpanded! ? closePanelMsg : openPanelMsg;
@@ -499,12 +498,12 @@ class MaterialExpansionPanel
   }
 
   Future<bool> expand({bool byUserAction = true}) {
-    if (disabled! && byUserAction) return Future.value(false);
+    if (disabled && byUserAction) return Future.value(false);
     return changeState(true, byUserAction, _openController);
   }
 
   Future<bool> collapse({bool byUserAction = true}) {
-    if (disabled! && byUserAction) return Future.value(false);
+    if (disabled && byUserAction) return Future.value(false);
     return changeState(false, byUserAction, _closeController);
   }
 

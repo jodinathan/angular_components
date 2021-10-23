@@ -57,7 +57,7 @@ class BaseMaterialInput extends FocusableMixin
 
   bool _required = false;
   bool _showHintOnlyOnFocus = false;
-  bool? _disabled = false;
+  bool _disabled = false;
 
   /// Enable native validation (e.g. for type="url").
   bool useNativeValidation = true;
@@ -177,10 +177,11 @@ class BaseMaterialInput extends FocusableMixin
   int _inputTextLength = 0;
   int get inputTextLength => _inputTextLength;
 
-  String? _inputText = '';
-  String? get inputText => _inputText;
+  String _inputText = '';
+
+  String get inputText => _inputText;
   set inputText(String? value) {
-    _inputText = value;
+    _inputText = value ?? '';
     updateInputTextLength();
     _changeDetector.markForCheck();
   }
@@ -210,13 +211,9 @@ class BaseMaterialInput extends FocusableMixin
   }
 
   void updateInputTextLength() {
-    if (_inputText == null) {
-      _inputTextLength = 0;
-    } else {
-      _inputTextLength = _characterCounter != null
-          ? _characterCounter!(_inputText)
-          : _inputText!.length;
-    }
+    _inputTextLength = _characterCounter != null
+        ? _characterCounter!(_inputText)
+        : _inputText.length;
   }
 
   /// Display character count even if maxCount is null.
@@ -292,12 +289,12 @@ class BaseMaterialInput extends FocusableMixin
   @Input()
   bool floatingLabel = false;
 
-  bool? get disabled => _disabled;
+  bool get disabled => _disabled;
 
   /// Whether or not this input is disabled (readonly input.)
   @Input()
   set disabled(bool? disabled) {
-    _disabled = disabled;
+    _disabled = disabled ?? false;
     _changeDetector.markForCheck();
   }
 
@@ -379,7 +376,7 @@ class BaseMaterialInput extends FocusableMixin
     return _isLocallyValid(false) != null;
   }
 
-  bool get hasVisibleText => inputText?.isNotEmpty ?? false;
+  bool get hasVisibleText => inputText.isNotEmpty;
 
   bool get labelVisible => floatingLabelVisible || !hasVisibleText;
 
@@ -603,7 +600,7 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
   ///
   /// Used to prevent focus/blur events on disabled inputs that caused weird
   /// behavior of floating label, input validations, etc.
-  int get inputTabIndex => disabled! ? -1 : 0;
+  int get inputTabIndex => disabled ? -1 : 0;
 
   bool get hasLeadingText => isNotEmpty(leadingText);
   String? get leadingText => _leadingText;
@@ -666,8 +663,8 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
   ///
   /// Default value is `false`.
   @Input()
-  set rightAlign(bool value) {
-    _rightAlign = value;
+  set rightAlign(bool? value) {
+    _rightAlign = value ?? false;
     // Possibly set by a directive and not a template. So default change
     // detection doesn't work without calling markForCheck.
     _changeDetector.markForCheck();
@@ -739,12 +736,14 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
   }
 
   @visibleForTemplate
-  void handleChange(Event event, InputElement element) {
-    inputChange(
-      element.value,
-      element.validity.valid,
-      element.validationMessage,
-    );
-    event.stopPropagation();
+  void handleChange(Event? event, InputElement? element) {
+    if (element != null) {
+      inputChange(
+        element.value,
+        element.validity.valid,
+        element.validationMessage,
+      );
+    }
+    event?.stopPropagation();
   }
 }

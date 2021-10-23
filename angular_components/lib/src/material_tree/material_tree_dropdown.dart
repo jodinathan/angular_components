@@ -140,13 +140,12 @@ class MaterialTreeDropdownComponent<T>
   /// render the selected value with [labelRenderer], [itemRenderer], or
   /// [defaultItemRenderer] in that order of preference.
   String? get placeholder {
-    if (selection != null) {
-      if (selection is! MultiSelectionModel && selection!.isNotEmpty) {
-        return (labelRenderer ??
-            (itemRenderer as String? Function(dynamic)? ??
-                defaultItemRenderer))(selection!.selectedValues.first);
-      }
+    if (selection is! MultiSelectionModel && selection.isNotEmpty) {
+      return (labelRenderer ??
+          (itemRenderer as String? Function(dynamic)? ??
+              defaultItemRenderer))(selection.selectedValues.first);
     }
+
     return _placeholder;
   }
 
@@ -159,12 +158,12 @@ class MaterialTreeDropdownComponent<T>
     selection = SelectionModel<T>.empty();
   }
 
-  //@Deprecated('Use [factoryRenderer] instead')
-  //@Input()
-  //@override
-  //set componentRenderer(ComponentRenderer? value) {
-  // super.componentRenderer = value;
-  //}
+  @Deprecated('Use [factoryRenderer] instead')
+  @Input()
+  @override
+  set componentRenderer(ComponentRenderer? value) {
+    super.componentRenderer = value;
+  }
 
   /// Specifies the factoryRenderer to use to determine the factory for
   /// rendering an item.
@@ -184,14 +183,14 @@ class MaterialTreeDropdownComponent<T>
   /// The available options for this contianer.
   @Input()
   @override
-  set options(SelectionOptions<T>? value) {
+  set options(SelectionOptions<T> value) {
     super.options = value;
   }
 
   /// The selection model this container represents.
   @Input()
   @override
-  set selection(SelectionModel<T>? value) {
+  set selection(SelectionModel<T> value) {
     super.selection = value;
   }
 

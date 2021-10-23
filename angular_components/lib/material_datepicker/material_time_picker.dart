@@ -114,7 +114,7 @@ class MaterialTimePickerComponent extends KeyboardHandlerMixin
 
   /// Whether changing the selected time should be disabled.
   @Input()
-  bool? disabled = false;
+  bool disabled = false;
 
   /// Whether the time entry is required.
   ///
@@ -153,7 +153,7 @@ class MaterialTimePickerComponent extends KeyboardHandlerMixin
   @Input()
   set popupVisible(bool visible) {
     // Show popup only if not disabled
-    _popupVisible = visible && !disabled!;
+    _popupVisible = visible && !disabled;
     _popupVisibleController.add(_popupVisible);
   }
 
@@ -241,7 +241,7 @@ class MaterialTimePickerComponent extends KeyboardHandlerMixin
 
   /// Sets [time] to now if it's null.
   void setTimeToNowIfUnset() {
-    if (!disabled! && time == null) {
+    if (!disabled && time == null) {
       time = _withEpochDate(_clock.now());
     }
   }

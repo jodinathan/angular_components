@@ -67,7 +67,7 @@ class MaterialSelectComponent<T> extends MaterialSelectBase<T>
   /// The [SelectionOptions] instance providing options to render.
   @Input()
   @override
-  set options(SelectionOptions<T>? value) {
+  set options(SelectionOptions<T> value) {
     super.options = value;
   }
 
@@ -86,12 +86,12 @@ class MaterialSelectComponent<T> extends MaterialSelectBase<T>
   @Input()
   String? ariaDescribedBy;
 
-  //@Deprecated('Use factoryRenderer instead it is more tree-shakable')
-  //@Input()
-  //@override
-  //set componentRenderer(ComponentRenderer? value) {
-  //  super.componentRenderer = value;
-  //}
+  @Deprecated('Use factoryRenderer instead it is more tree-shakable')
+  @Input()
+  @override
+  set componentRenderer(ComponentRenderer? value) {
+    super.componentRenderer = value;
+  }
 
   /// Used to create a [ComponentFactory] that must override [RendersValue]
   /// from a given option allowing for a more expressive option.
@@ -104,13 +104,13 @@ class MaterialSelectComponent<T> extends MaterialSelectBase<T>
   /// The [SelectionModel] for this container.
   @Input()
   @override
-  set selection(SelectionModel<T>? value) {
+  set selection(SelectionModel<T> value) {
     super.selection = value;
     _refreshItems();
   }
 
   @override
-  SelectionModel<T>? get selection => super.selection;
+  SelectionModel<T> get selection => super.selection;
 
   /// If selectionOptions implements Selectable, it is called to decided
   /// whether an item is disabled.
@@ -127,7 +127,7 @@ class MaterialSelectComponent<T> extends MaterialSelectBase<T>
   ///
   /// Defaults to false.
   @Input()
-  bool? disabled = false;
+  bool disabled = false;
 
   @HostBinding('attr.aria-disabled')
   String get disabledStr => '$disabled';
@@ -170,21 +170,17 @@ class MaterialSelectComponent<T> extends MaterialSelectBase<T>
 
   @override
   void ngOnInit() {
-    if (!_listAutoFocus || options == null) return;
+    if (!_listAutoFocus) return;
 
-    if (selection != null) {
-      _autoFocusIndex = selection!.isNotEmpty
-          ? options!.optionsList.indexOf(selection!.selectedValues.first)
-          : 0;
-    }
+    _autoFocusIndex = selection.isNotEmpty
+        ? options.optionsList.indexOf(selection.selectedValues.first)
+        : 0;
   }
 
   void _refreshItems() {
     if (_selectItems == null) return;
-    if (selection != null) {
-      for (SelectionItem<T> item in _selectItems!) {
-        item.selection = selection;
-      }
+    for (SelectionItem<T> item in _selectItems!) {
+      item.selection = selection;
     }
     if (itemRenderer != null) {
       for (SelectionItem<T> item in _selectItems!) {

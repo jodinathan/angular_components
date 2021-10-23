@@ -48,7 +48,7 @@ class OverlayService {
   static const _defaultState = OverlayState();
   static final _logger = Logger('OverlayService');
 
-  final bool _useDomSynchronously;
+  late bool _useDomSynchronously;
   final NgZone _ngZone;
   final OverlayDomRenderService _renderService;
 
@@ -70,7 +70,7 @@ class OverlayService {
 
   OverlayService(
       this._ngZone,
-      @Inject(overlaySyncDom) this._useDomSynchronously,
+      @Inject(overlaySyncDom) Object useDomSynchronously,
       this._renderService,
       @SkipSelf() @Optional() OverlayService? existingInstance) {
     assert(() {
@@ -82,5 +82,8 @@ class OverlayService {
       }
       return true;
     }());
+    if (useDomSynchronously is bool) {
+      this._useDomSynchronously = useDomSynchronously;
+    }
   }
 }

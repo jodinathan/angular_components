@@ -53,7 +53,7 @@ class MaterialChipComponent<T> extends RootFocusable implements HasRenderer<T> {
   /// Chips can be deselected from the model via user interaction unless
   /// `removable` is set to false.
   @Input()
-  SelectionModel<T?>? selectionModel;
+  SelectionModel<T>? selectionModel;
 
   /// Whether the chip should show remove button, default to true.
   @Input()
@@ -86,7 +86,7 @@ class MaterialChipComponent<T> extends RootFocusable implements HasRenderer<T> {
   /// Provide your own label in the content of the chip, or provide an
   /// [ItemRenderer].
   @Input()
-  set value(val) {
+  set value(dynamic val) {
     _value = val;
     _genLabel();
   }

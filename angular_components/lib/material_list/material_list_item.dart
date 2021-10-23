@@ -50,13 +50,13 @@ class MaterialListItemComponent extends ButtonDirective implements OnDestroy {
 
   @HostBinding('class.disabled')
   @override
-  bool? get disabled => super.disabled;
+  bool get disabled => super.disabled;
 
   /// Disables the trigger and gives item a disabled style.
   // Overridden just to give a better doc-comment;
   @override
   @Input()
-  set disabled(bool? value) => super.disabled = value;
+  set disabled(bool? value) => super.disabled = value ?? false;
 
   /// Whether the encompassing dropdown should close on selection of
   /// this item.

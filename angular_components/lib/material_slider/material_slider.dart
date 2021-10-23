@@ -49,7 +49,7 @@ class MaterialSliderComponent implements AfterChanges, HasDisabled {
   @HostBinding('class.is-disabled')
   @HostBinding('attr.aria-disabled')
   @Input()
-  bool? disabled = false;
+  bool disabled = false;
 
   bool _isTwoSided = false;
 
@@ -223,7 +223,7 @@ class MaterialSliderComponent implements AfterChanges, HasDisabled {
 
   /// Handles mouse down events on either slider knob or the slider track.
   void mouseDown(MouseEvent event) {
-    if (disabled!) return;
+    if (disabled) return;
     if (event.button != 0) return;
     event.preventDefault();
     _setValueToMousePosition(event.page.x as int);
@@ -245,7 +245,7 @@ class MaterialSliderComponent implements AfterChanges, HasDisabled {
 
   /// Handles touch start events on either slider knob.
   void touchStart(TouchEvent event) {
-    if (disabled!) return;
+    if (disabled) return;
     event.preventDefault();
     final touch = event.targetTouches!.first;
     _setValueToMousePosition(touch.page.x as int);
@@ -270,7 +270,7 @@ class MaterialSliderComponent implements AfterChanges, HasDisabled {
   ///
   /// [isLeftKnob] true indicates that the event ocurred on the left knob.
   void knobKeyDown(KeyboardEvent event, {bool isLeftKnobPressed = false}) {
-    if (disabled!) return;
+    if (disabled) return;
     var currValue = isLeftKnobPressed ? leftValue : value;
     var newValue = currValue;
     final bigStepSize = ((max - min) / 10.0).ceil();

@@ -60,17 +60,14 @@ class ButtonDirective extends RootFocusable
   /// Is the component disabled.
   @HostBinding('class.is-disabled')
   @Input()
-  bool? disabled = false;
+  bool disabled = false;
 
   /// Is the component tabbable.
   @Input()
-  bool? tabbable = true;
+  bool tabbable = true;
 
   String? get hostTabIndex {
-    var tab = tabbable ?? true;
-    var dis = disabled ?? false;
-
-    return tab && !dis ? _hostTabIndex : _nonTabbableIndex;
+    return tabbable && !disabled ? _hostTabIndex : _nonTabbableIndex;
   }
 
   /// The tab index of the component.
@@ -84,14 +81,14 @@ class ButtonDirective extends RootFocusable
   /// Triggers if not disabled.
   @HostListener('click')
   void handleClick(MouseEvent mouseEvent) {
-    if (disabled!) return;
+    if (disabled) return;
     _trigger.add(mouseEvent);
   }
 
   /// Triggers on enter and space if not disabled.
   @HostListener('keypress')
   void handleKeyPress(KeyboardEvent keyboardEvent) {
-    if (disabled!) return;
+    if (disabled) return;
     if (isSpaceKey(keyboardEvent) && !_shouldHandleSpaceKey) return;
     int keyCode = keyboardEvent.keyCode;
     if (keyCode == KeyCode.ENTER || isSpaceKey(keyboardEvent)) {
