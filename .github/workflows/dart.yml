@@ -1,9 +1,9 @@
-# Created with package:mono_repo v5.0.2
+# Created with package:mono_repo v5.0.4
 name: Dart CI
 on:
   push:
     branches:
-      - dev
+      - main
       - master
   pull_request:
   schedule:
@@ -27,13 +27,13 @@ jobs:
           restore-keys: |
             os:ubuntu-latest;pub-cache-hosted
             os:ubuntu-latest
-      - uses: dart-lang/setup-dart@v1.2
+      - uses: dart-lang/setup-dart@v1.3
         with:
           sdk: stable
       - id: checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
       - name: mono_repo self validate
-        run: dart pub global activate mono_repo 5.0.2
+        run: dart pub global activate mono_repo 5.0.4
       - name: mono_repo self validate
         run: dart pub global run mono_repo generate --validate
   job_002:
@@ -50,11 +50,11 @@ jobs:
             os:ubuntu-latest;pub-cache-hosted;dart:2.14.2
             os:ubuntu-latest;pub-cache-hosted
             os:ubuntu-latest
-      - uses: dart-lang/setup-dart@v1.2
+      - uses: dart-lang/setup-dart@v1.3
         with:
           sdk: "2.14.2"
       - id: checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
       - id: angular_components_pub_upgrade
         name: angular_components; dart pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
@@ -99,11 +99,11 @@ jobs:
             os:ubuntu-latest;pub-cache-hosted;dart:dev
             os:ubuntu-latest;pub-cache-hosted
             os:ubuntu-latest
-      - uses: dart-lang/setup-dart@v1.2
+      - uses: dart-lang/setup-dart@v1.3
         with:
           sdk: dev
       - id: checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
       - id: angular_components_pub_upgrade
         name: angular_components; dart pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
@@ -134,11 +134,11 @@ jobs:
             os:ubuntu-latest;pub-cache-hosted;dart:dev
             os:ubuntu-latest;pub-cache-hosted
             os:ubuntu-latest
-      - uses: dart-lang/setup-dart@v1.2
+      - uses: dart-lang/setup-dart@v1.3
         with:
           sdk: dev
       - id: checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
       - id: angular_gallery_pub_upgrade
         name: angular_gallery; dart pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
@@ -182,11 +182,11 @@ jobs:
             os:ubuntu-latest;pub-cache-hosted;dart:2.14.2
             os:ubuntu-latest;pub-cache-hosted
             os:ubuntu-latest
-      - uses: dart-lang/setup-dart@v1.2
+      - uses: dart-lang/setup-dart@v1.3
         with:
           sdk: "2.14.2"
       - id: checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
       - id: examples_app_layout_example_pub_upgrade
         name: examples/app_layout_example; dart pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
@@ -315,11 +315,11 @@ jobs:
             os:ubuntu-latest;pub-cache-hosted;dart:dev
             os:ubuntu-latest;pub-cache-hosted
             os:ubuntu-latest
-      - uses: dart-lang/setup-dart@v1.2
+      - uses: dart-lang/setup-dart@v1.3
         with:
           sdk: dev
       - id: checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
       - id: examples_app_layout_example_pub_upgrade
         name: examples/app_layout_example; dart pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
@@ -483,11 +483,11 @@ jobs:
             os:ubuntu-latest;pub-cache-hosted;dart:dev
             os:ubuntu-latest;pub-cache-hosted
             os:ubuntu-latest
-      - uses: dart-lang/setup-dart@v1.2
+      - uses: dart-lang/setup-dart@v1.3
         with:
           sdk: dev
       - id: checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
       - id: examples_material_input_example_pub_upgrade
         name: examples/material_input_example; dart pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
@@ -517,11 +517,11 @@ jobs:
             os:ubuntu-latest;pub-cache-hosted;dart:dev
             os:ubuntu-latest;pub-cache-hosted
             os:ubuntu-latest
-      - uses: dart-lang/setup-dart@v1.2
+      - uses: dart-lang/setup-dart@v1.3
         with:
           sdk: dev
       - id: checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
       - id: examples_material_menu_example_pub_upgrade
         name: examples/material_menu_example; dart pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
@@ -555,11 +555,11 @@ jobs:
             os:ubuntu-latest;pub-cache-hosted;dart:2.14.2
             os:ubuntu-latest;pub-cache-hosted
             os:ubuntu-latest
-      - uses: dart-lang/setup-dart@v1.2
+      - uses: dart-lang/setup-dart@v1.3
         with:
           sdk: "2.14.2"
       - id: checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
       - id: examples_material_popup_example_pub_upgrade
         name: examples/material_popup_example; dart pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
@@ -683,11 +683,11 @@ jobs:
             os:ubuntu-latest;pub-cache-hosted;dart:dev
             os:ubuntu-latest;pub-cache-hosted
             os:ubuntu-latest
-      - uses: dart-lang/setup-dart@v1.2
+      - uses: dart-lang/setup-dart@v1.3
         with:
           sdk: dev
       - id: checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
       - id: examples_material_popup_example_pub_upgrade
         name: examples/material_popup_example; dart pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
@@ -855,11 +855,11 @@ jobs:
             os:ubuntu-latest;pub-cache-hosted;dart:dev
             os:ubuntu-latest;pub-cache-hosted
             os:ubuntu-latest
-      - uses: dart-lang/setup-dart@v1.2
+      - uses: dart-lang/setup-dart@v1.3
         with:
           sdk: dev
       - id: checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
       - id: examples_material_select_example_pub_upgrade
         name: examples/material_select_example; dart pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
@@ -902,11 +902,11 @@ jobs:
             os:ubuntu-latest;pub-cache-hosted;dart:2.14.2
             os:ubuntu-latest;pub-cache-hosted
             os:ubuntu-latest
-      - uses: dart-lang/setup-dart@v1.2
+      - uses: dart-lang/setup-dart@v1.3
         with:
           sdk: "2.14.2"
       - id: checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
       - id: angular_components_pub_upgrade
         name: angular_components; dart pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
@@ -947,11 +947,11 @@ jobs:
             os:ubuntu-latest;pub-cache-hosted;dart:dev
             os:ubuntu-latest;pub-cache-hosted
             os:ubuntu-latest
-      - uses: dart-lang/setup-dart@v1.2
+      - uses: dart-lang/setup-dart@v1.3
         with:
           sdk: dev
       - id: checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
       - id: angular_components_pub_upgrade
         name: angular_components; dart pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
@@ -992,11 +992,11 @@ jobs:
             os:ubuntu-latest;pub-cache-hosted;dart:2.14.2
             os:ubuntu-latest;pub-cache-hosted
             os:ubuntu-latest
-      - uses: dart-lang/setup-dart@v1.2
+      - uses: dart-lang/setup-dart@v1.3
         with:
           sdk: "2.14.2"
       - id: checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
       - id: examples_angular_components_example_pub_upgrade
         name: examples/angular_components_example; dart pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
@@ -1039,11 +1039,11 @@ jobs:
             os:ubuntu-latest;pub-cache-hosted;dart:dev
             os:ubuntu-latest;pub-cache-hosted
             os:ubuntu-latest
-      - uses: dart-lang/setup-dart@v1.2
+      - uses: dart-lang/setup-dart@v1.3
         with:
           sdk: dev
       - id: checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
       - id: examples_angular_components_example_pub_upgrade
         name: examples/angular_components_example; dart pub upgrade
         if: "always() && steps.checkout.conclusion == 'success'"
