@@ -5,4 +5,4 @@
 import 'package:angular/angular.dart';
 
 /// Sets dark mode for components which support it.
-const darkThemeToken = OpaqueToken('acxDarkTheme');
+const darkThemeToken = OpaqueToken<bool>('acxDarkTheme');
