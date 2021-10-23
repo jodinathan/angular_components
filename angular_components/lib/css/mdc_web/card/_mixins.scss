@@ -19,6 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
+@use "sass:math";
 
 @import "../elevation/mixins";
 @import "../featuretargeting/functions";
@@ -315,7 +316,7 @@
   &::before {
     @include mdc-feature-targets($feat-structure) {
       // This clever trick brought to you by: http://www.mademyday.de/css-height-equals-width-with-pure-css.html
-      margin-top: percentage($y / $x);
+      margin-top: percentage(math.div($y , $x));
     }
   }
 }

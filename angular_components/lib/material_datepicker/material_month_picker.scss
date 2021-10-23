@@ -1,6 +1,7 @@
 // Copyright (c) 2016, the Dart project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+@use "sass:math";
 
 @import 'constants';
 @import 'package:angular_components/css/material/material';
@@ -141,7 +142,7 @@ $top-layer-index: 0;
       left: $cal-highlight-margin;
       right: $cal-highlight-margin;
       bottom: $cal-highlight-margin;
-      border-radius: $month-height / 2;
+      border-radius: math.div($month-height , 2);
       z-index: $mid-layer-index;
     }
 

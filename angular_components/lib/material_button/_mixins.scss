@@ -1,6 +1,7 @@
 // Copyright (c) 2016, the Dart project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+@use "sass:math";
 
 @import 'package:angular_components/css/material/material';
 @import 'package:angular_components/css/material/shadow';
@@ -199,7 +200,7 @@ $button-disabled-background-dark: rgba(255, 255, 255, $mat-divider-opacity);
 }
 
 @mixin fab-size($size) {
-  border-radius: $size / 2;
+  border-radius: math.div($size , 2);
 
   .content {
     height: $size;
@@ -226,7 +227,7 @@ $button-disabled-background-dark: rgba(255, 255, 255, $mat-divider-opacity);
 
 // Allow customized size and icon-size on fab button.
 @mixin fab-custom-size($size, $icon-size: $fab-icon-size) {
-  border-radius: $size / 2;
+  border-radius: math.div($size , 2);
 
   ::ng-deep {
     .content.content {

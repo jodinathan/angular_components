@@ -21,7 +21,7 @@ import 'package:angular_gallery_section/annotation/gallery_section_config.dart';
     'package:angular_components/material_select/material_dropdown_select.md',
     MaterialDropdownSelectComponent,
     DropdownButtonComponent,
-    displayNameRendererDirective
+    DisplayNameRendererDirective
   ],
   demos: [
     MaterialSelectDemoComponent,

@@ -1,11 +1,12 @@
 // Copyright (c) 2016, the Dart project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+@use "sass:math";
 
 @import 'package:angular_components/css/material/material';
 
 $chip-height: $mat-grid * 4;
-$chip-border-radius: $chip-height / 2;
+$chip-border-radius: math.div($chip-height , 2);
 
 $main-bg-color: $mat-grey-300;
 
@@ -19,7 +20,7 @@ $emphasis-bg-color: $mat-blue-500;
   align-items: center;
   border-radius: $chip-border-radius;
   height: $chip-height;
-  margin: $mat-grid / 2;
+  margin: math.div($mat-grid , 2);
   overflow: hidden;
 }
 
@@ -34,7 +35,7 @@ $delete-icon-size: 19px;
 // Increased clickable area to match the spec.
 // https://material.io/guidelines/components/chips.html#chips-specs
 $clickable-size: 25px;
-$delete-icon-padding: ($clickable-size - $delete-icon-size) / 2;
+$delete-icon-padding: math.div(($clickable-size - $delete-icon-size) , 2);
 
 .left-icon {
   // make it easy to use either <svg> or <material-icon>
