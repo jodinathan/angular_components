@@ -44,9 +44,9 @@ class GalleryInfoBuilder extends Builder {
     var newAssetId = inputId.changeExtension('.gallery_info.json');
     var jsonData = jsonEncode(resolvedConfigs);
 
-    print("=== Start (json data) ===");
-    print(jsonData);
-    print("=== End ===");
+    //print("=== Start (json data) ===");
+    //print(jsonData);
+    //print("=== End ===");
 
     await buildStep.writeAsString(newAssetId, jsonData);
   }

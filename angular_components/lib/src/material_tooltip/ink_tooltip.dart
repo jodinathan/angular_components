@@ -66,7 +66,7 @@ class MaterialInkTooltipComponent implements Tooltip {
 
   /// Positions at which the tooltip should try to show.
   @Input()
-  List<RelativePosition>? positions = RelativePosition.AdjacentBottomEdge;
+  List<RelativePosition> positions = RelativePosition.AdjacentBottomEdge;
 
   // Proxy control of this tooltip via the tooltip controller.
   Tooltip? _controllerProxy;

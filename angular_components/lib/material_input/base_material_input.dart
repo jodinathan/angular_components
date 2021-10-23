@@ -177,10 +177,11 @@ class BaseMaterialInput extends FocusableMixin
   int _inputTextLength = 0;
   int get inputTextLength => _inputTextLength;
 
-  String? _inputText = '';
-  String? get inputText => _inputText;
+  String _inputText = '';
+
+  String get inputText => _inputText;
   set inputText(String? value) {
-    _inputText = value;
+    _inputText = value ?? '';
     updateInputTextLength();
     _changeDetector.markForCheck();
   }
@@ -210,13 +211,9 @@ class BaseMaterialInput extends FocusableMixin
   }
 
   void updateInputTextLength() {
-    if (_inputText == null) {
-      _inputTextLength = 0;
-    } else {
-      _inputTextLength = _characterCounter != null
-          ? _characterCounter!(_inputText)
-          : _inputText!.length;
-    }
+    _inputTextLength = _characterCounter != null
+        ? _characterCounter!(_inputText)
+        : _inputText.length;
   }
 
   /// Display character count even if maxCount is null.
@@ -379,7 +376,7 @@ class BaseMaterialInput extends FocusableMixin
     return _isLocallyValid(false) != null;
   }
 
-  bool get hasVisibleText => inputText?.isNotEmpty ?? false;
+  bool get hasVisibleText => inputText.isNotEmpty;
 
   bool get labelVisible => floatingLabelVisible || !hasVisibleText;
 

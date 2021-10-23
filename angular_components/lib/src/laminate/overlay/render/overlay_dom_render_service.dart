@@ -60,8 +60,8 @@ class OverlayDomRenderService {
   static const _defaultConfig = OverlayState();
   static const _paneClassName = 'pane';
 
-  final HtmlElement containerElement;
-  final String _containerName;
+  late HtmlElement containerElement;
+  late String _containerName;
   final DomRuler _domRuler;
   final DomService _domService;
   final AcxImperativeViewUtils _imperativeViewUtils;
@@ -80,14 +80,26 @@ class OverlayDomRenderService {
 
   OverlayDomRenderService(
       OverlayStyleConfig styleConfig,
-      @Inject(overlayContainerToken) this.containerElement,
-      @Inject(overlayContainerName) this._containerName,
+      @Inject(overlayContainerToken) Object container,
+      @Inject(overlayContainerName) Object containerName,
       this._domRuler,
       this._domService,
       this._imperativeViewUtils,
       @Inject(overlaySyncDom) Object useDomSynchronously,
       @Inject(overlayRepositionLoop) Object useRepositionLoop,
       this._zIndexer) {
+    if (container is HtmlElement) {
+      containerElement = container;
+    } else {
+      throw ArgumentError("containerElement is not of type HTMLElement");
+    }
+
+    if (containerName is String) {
+      _containerName = containerName;
+    } else {
+      throw ArgumentError("containerName is not of type String");
+    }
+
     if (useDomSynchronously is bool) {
       _useDomSynchronously = useDomSynchronously;
     } else {

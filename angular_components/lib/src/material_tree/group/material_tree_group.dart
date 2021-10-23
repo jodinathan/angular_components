@@ -88,14 +88,14 @@ class MaterialTreeGroupComponent<T> extends MaterialTreeNode<T?>
     }
   }
 
-  OptionGroup? _visibleGroup;
+  OptionGroup _visibleGroup = OptionGroup([]);
 
   /// The current visible options group.
   ///
   /// This is the same as [group] when [maxInitialOptionsShown] is not set,
   /// otherwise it contains the first [maxInitialOptionsShown] options from
   /// [group].
-  OptionGroup? get visibleGroup => _visibleGroup;
+  OptionGroup get visibleGroup => _visibleGroup;
 
   /// The constant padding for every row.
   final String fixedPadding;

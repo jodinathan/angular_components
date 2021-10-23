@@ -108,7 +108,7 @@ class MaterialStepperComponent {
     return _stepTo(index);
   }
 
-  void stepForward(Event event, StepDirective step) {
+  void stepForward(Event event, StepDirective? step) {
     // Prevent event from propagating up to the stepper.  This
     // is necessary for a vertical default sized stepper with
     // all jumps allowed, so that the stepper doesn't jump back
@@ -117,18 +117,18 @@ class MaterialStepperComponent {
     event.stopPropagation();
 
     AsyncActionController<bool> ctrl = AsyncActionController<bool>();
-    step.requestStepContinue(ctrl.action!);
+    step?.requestStepContinue(ctrl.action!);
     ctrl.execute(() {
-      activeStep!.complete = true;
-      if (activeStep!.isLast) {
+      activeStep?.complete = true;
+      if (activeStep != null && activeStep!.isLast) {
         stepperDone = true;
         return true;
       }
-      return _stepTo(activeStepIndex! + 1);
+      return _stepTo((activeStepIndex ?? 0) + 1);
     });
   }
 
-  void stepBackward(Event event, StepDirective step) {
+  void stepBackward(Event event, StepDirective? step) {
     // Prevent event from propagating up to the stepper.  This
     // is necessary for a vertical default sized stepper with
     // all jumps allowed, so that the stepper doesn't jump back
@@ -137,10 +137,10 @@ class MaterialStepperComponent {
     event.stopPropagation();
 
     AsyncActionController<bool> ctrl = AsyncActionController<bool>();
-    step.requestStepCancel(ctrl.action!);
+    step?.requestStepCancel(ctrl.action!);
     ctrl.execute(() {
-      activeStep!.complete = false;
-      return _stepTo(activeStepIndex! - 1);
+      activeStep?.complete = false;
+      return _stepTo((activeStepIndex ?? 1) - 1);
     });
   }
 

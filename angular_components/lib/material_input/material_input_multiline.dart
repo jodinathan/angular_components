@@ -103,7 +103,7 @@ class MaterialMultilineInputComponent extends BaseMaterialInput
   Element? get elementRef => popupSourceEl;
 
   /// Text used to size the multiline textarea.
-  String get mirrorText => (inputText ?? '') + '\n';
+  String get mirrorText => (inputText) + '\n';
 
   @ViewChild('lineHeightMeasure')
   set lineHeightMeasure(Element? value) {

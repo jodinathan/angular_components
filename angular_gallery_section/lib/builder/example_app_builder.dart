@@ -31,9 +31,9 @@ class ExampleAppBuilder extends Builder {
 
     var renderedData = mustacheTemplate.renderString(mustacheContext);
 
-    print("=== Start(index.html) ===");
-    print(renderedData);
-    print("=== End ===");
+    //print("=== Start(index.html) ===");
+    //print(renderedData);
+    //print("=== End ===");
 
     await buildStep.writeAsString(newAssetId, renderedData);
   }

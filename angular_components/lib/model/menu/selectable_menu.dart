@@ -91,16 +91,16 @@ class SelectableMenuItem<ItemType> extends PropertyChangeNotifier
   final bool shouldSelectOnItemClick;
 
   @override
-  final Icon? icon;
+  final Icon icon;
 
   @override
-  final MenuModel? subMenu;
+  final MenuModel subMenu;
 
   @override
-  final String? tooltip;
+  final String tooltip;
 
   @override
-  final String? labelAnnotation;
+  final String labelAnnotation;
 
   @override
   final ObservableList<MenuItemAffix> itemSuffixes;
@@ -109,7 +109,7 @@ class SelectableMenuItem<ItemType> extends PropertyChangeNotifier
   final BuiltList<String> cssClasses;
 
   @override
-  final String? secondaryLabel;
+  final String secondaryLabel;
 
   /// The constructor for a selectable [MenuItem].
   ///
@@ -126,11 +126,11 @@ class SelectableMenuItem<ItemType> extends PropertyChangeNotifier
   SelectableMenuItem(
       {required this.value,
       this.itemRenderer = defaultItemRenderer,
-      this.icon,
-      this.subMenu,
-      this.tooltip,
-      this.secondaryLabel,
-      this.labelAnnotation,
+      Icon? icon,
+      MenuModel? subMenu,
+      this.tooltip = '',
+      this.secondaryLabel = '',
+      this.labelAnnotation = '',
       Iterable<String>? cssClasses,
       MenuAction? action,
       ActionWithContext? actionWithContext,
@@ -139,6 +139,8 @@ class SelectableMenuItem<ItemType> extends PropertyChangeNotifier
       MenuItemAffix? itemSuffix,
       ObservableList<MenuItemAffix>? itemSuffixes})
       : _selectableState = selectableState,
+        this.subMenu = subMenu ?? MenuModel.flat([]),
+        this.icon = icon ?? Icon.blank(),
         shouldSelectOnItemClick = shouldSelectOnItemClick ?? subMenu == null,
         itemSuffixes = itemSuffixes ??
             ObservableList<MenuItemAffix>.from(
@@ -161,16 +163,16 @@ class SelectableMenuItem<ItemType> extends PropertyChangeNotifier
   }
 
   @override
-  String? get label => itemRenderer(value);
+  String get label => itemRenderer(value) ?? '';
 
   @override
-  String? get ariaLabel => label;
+  String get ariaLabel => label;
 
   @override
-  bool get hasIcon => icon != null;
+  bool get hasIcon => icon != Icon.blank();
 
   @override
-  bool get hasSubMenu => subMenu != null;
+  bool get hasSubMenu => subMenu.itemGroups.isNotEmpty;
 
   @override
   bool get showTooltip => isNotEmpty(tooltip);
@@ -179,7 +181,7 @@ class SelectableMenuItem<ItemType> extends PropertyChangeNotifier
   Icon? get uiIcon => icon;
 
   @override
-  String? get uiDisplayName => label;
+  String get uiDisplayName => label;
 
   @override
   bool get enabled => selectableState == SelectableOption.Selectable;
@@ -215,7 +217,7 @@ class SelectableMenuItem<ItemType> extends PropertyChangeNotifier
   }
 
   @override
-  bool get hasSecondaryLabel => secondaryLabel != null;
+  bool get hasSecondaryLabel => secondaryLabel.isNotEmpty;
 
   /// Display state of this menu item.
   SelectableOption get selectableState => _selectableState;

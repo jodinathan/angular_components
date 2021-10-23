@@ -78,9 +78,9 @@ class GallerySectionBuilder extends Builder {
 
     var renderedData = mustacheTemplate.renderString(mustacheContext);
 
-    print("=== Start(lib/gallery_section.dart) ===");
-    print(renderedData);
-    print("=== End ===");
+    //print("=== Start(lib/gallery_section.dart) ===");
+    //print(renderedData);
+    //print("=== End ===");
 
     await buildStep.writeAsString(newAssetId, renderedData);
   }

@@ -80,14 +80,14 @@ class MenuItemGroupsComponent
   /// IMPORTANT: The menu model must be immutable. This component won't reflect
   /// any changes to the model's internal state
   @Input()
-  set menu(MenuModel? menu) {
+  set menu(MenuModel menu) {
     _menu = menu;
     _updateItemsAriaCheckedState(menu);
-    menu?.itemGroups.forEach(_listenForSelectionChanges);
+    menu.itemGroups.forEach(_listenForSelectionChanges);
   }
 
-  MenuModel? get menu => _menu;
-  MenuModel? _menu;
+  MenuModel get menu => _menu;
+  MenuModel _menu = MenuModel.flat([]);
 
   @ViewChildren(FocusableActivateItem)
   List<FocusableActivateItem>? focusableItems;
@@ -97,7 +97,7 @@ class MenuItemGroupsComponent
 
   List<RelativePosition> get tooltipPositions => _tooltipPositions;
 
-  int get width => menu?.width ?? 0;
+  int get width => menu.width;
 
   /// Whether the popup should be closed on left key press.
   ///
@@ -350,8 +350,8 @@ class MenuItemGroupsComponent
     Element? element = target;
     while (element != null) {
       if (element.attributes['role'] == 'menuitem') {
-        MenuItemGroup group = menu!
-            .itemGroups[int.parse(element.attributes['data-group-index']!)];
+        MenuItemGroup group =
+            menu.itemGroups[int.parse(element.attributes['data-group-index']!)];
         MenuItem item =
             group[int.parse(element.attributes['data-item-index']!)];
         return item;
@@ -397,8 +397,8 @@ class MenuItemGroupsComponent
 
   /// Toggle the expansion of the group if it's collapsible.
   void toggleExpansionIfCollapsible(MenuItemGroup group) {
-    if (group.isCollapsible!) {
-      group.isExpanded = !group.isExpanded!;
+    if (group.isCollapsible) {
+      group.isExpanded = !group.isExpanded;
     }
   }
 
@@ -480,7 +480,7 @@ class MenuItemGroupsComponent
   }
 
   void _createActiveMenuModelIfNone() {
-    if (menu != null && _idGenerator != null) {
+    if (_idGenerator != null) {
       activeModel = ActiveMenuItemModel(_idGenerator!,
           menu: menu, filterOutUnselectableItems: true);
       if (activateLastItemOnInit) {
@@ -520,8 +520,8 @@ class MenuItemGroupsComponent
     }
 
     // If the group containing the active item is collapsed, expand it.
-    for (final group in menu!.itemGroups) {
-      if (group.contains(activeModel.activeItem) && group.isCollapsible!) {
+    for (final group in menu.itemGroups) {
+      if (group.contains(activeModel.activeItem) && group.isCollapsible) {
         group.isExpanded = true;
         break;
       }
@@ -595,13 +595,13 @@ class MenuItemGroupsComponent
 
   /// Whether any children in an item's submenu are selected.
   bool _anyChildrenSelected(MenuItemGroup group, MenuItem item) =>
-      item.subMenu!.itemGroups.any((g) =>
+      item.subMenu.itemGroups.any((g) =>
           g is MenuItemGroupWithSelection &&
           g.any((i) => _isSelected(g.selectionModel, i)));
 
   /// Whether all children in an item's submenu are selected.
   bool _everyChildrenSelected(MenuItemGroup group, MenuItem item) =>
-      item.subMenu!.itemGroups.every((g) =>
+      item.subMenu.itemGroups.every((g) =>
           g is MenuItemGroupWithSelection &&
           g.every((i) => _isSelected(g.selectionModel, i)));
 }

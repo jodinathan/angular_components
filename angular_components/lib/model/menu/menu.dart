@@ -46,27 +46,27 @@ class MenuItemGroup<T> extends LabeledList<T> {
         super.withLabel(List<T>.unmodifiable(items), label);
 
   /// True when this component explicitly specifies a separator.
-  bool? get hasSeparator => _hasSeparator.value;
+  bool get hasSeparator => _hasSeparator.value ?? false;
 
   set hasSeparator(bool? value) {
-    _hasSeparator.value = value;
+    _hasSeparator.value = value ?? false;
   }
 
   /// True when this component can be collapsed.
-  bool? get isCollapsible => _isCollapsible.value;
+  bool get isCollapsible => _isCollapsible.value ?? false;
 
   set isCollapsible(bool? value) {
-    _isCollapsible.value = value;
+    _isCollapsible.value = value ?? false;
   }
 
   /// Change stream of collapsible changes.
   Stream<bool?> get onCollapsibleChange => _isCollapsible.stream;
 
   /// True when the component is collapsed.
-  bool? get isExpanded => _isExpanded.value;
+  bool get isExpanded => _isExpanded.value ?? false;
 
   set isExpanded(bool? value) {
-    _isExpanded.value = value;
+    _isExpanded.value = value ?? false;
   }
 
   /// Change stream of the expansion state.
@@ -83,46 +83,48 @@ class MenuModel<T> implements HasIcon, AcceptsWidth {
   final List<MenuItemGroup<T>> itemGroups;
 
   /// Icon for the menu, can be displayed in the element opening the menu.
-  final Icon? icon;
+  final Icon icon;
   @override
   Icon? get uiIcon => icon;
   bool get hasIcon => icon != null;
 
   /// Tooltip for the menu, can be shown in the element opening the menu.
-  final String? tooltipText;
+  final String tooltipText;
 
   /// True if the menu has a tooltip.
   bool get hasTooltip => isNotEmpty(tooltipText);
 
-  int? _width;
+  int _width = 0;
 
   /// Creates a menu model with the given menu groups list.
   ///
   /// If [icon] is given, it will appear on the button that opens the menu.
   MenuModel(List<MenuItemGroup<T>> itemGroups,
-      {this.icon, int? width, this.tooltipText})
-      : itemGroups = List<MenuItemGroup<T>>.unmodifiable(itemGroups) {
+      {Icon? icon, int? width, this.tooltipText = ''})
+      : itemGroups = List<MenuItemGroup<T>>.unmodifiable(itemGroups),
+        this.icon = icon ?? Icon.blank() {
     this.width = width;
   }
 
   /// Creates a simple menu model that contains no sub-menus.
-  MenuModel.flat(List<T> items, {this.icon, width, this.tooltipText})
-      : itemGroups = [MenuItemGroup<T>(items)] {
+  MenuModel.flat(List<T> items, {Icon? icon, width, this.tooltipText = ''})
+      : itemGroups = [MenuItemGroup<T>(items)],
+        this.icon = icon ?? Icon.blank() {
     this.width = width;
   }
 
   /// Selects 1 of 5 predefined width values.
   ///
   /// See [AcceptsWidth.width] for more details. Null by default.
-  int? get width => _width;
+  int get width => _width;
 
   @override
-  set width(val) {
+  set width(dynamic val) {
     if (val == null) {
-      _width = null;
+      _width = 0;
     } else {
       _width = getInt(val);
-      assert(_width! >= 0 && _width! <= 5);
+      assert(_width >= 0 && _width <= 5);
     }
   }
 }
@@ -140,18 +142,18 @@ class MenuModel<T> implements HasIcon, AcceptsWidth {
 ///     new MenuItem(label, tooltip: tooltip,
 ///                  action:action, icon:icon, subMenu:subMenu);
 class MenuItem<T> with MenuItemMixin implements HasUIDisplayName, HasIcon {
-  final String? label;
-  final String? secondaryLabel;
-  final String? tooltip;
-  final String? ariaLabel;
+  final String label;
+  final String secondaryLabel;
+  final String tooltip;
+  final String ariaLabel;
 
   /// A superscript annotation that is shown to the right of the label.
   ///
   /// Note that this annotation cannot be one of the [itemSuffixes] because
   /// [itemSuffixes] are right aligned in the menu, while this should be left
   /// aligned close to the label.
-  final String? labelAnnotation;
-  final MenuModel<T>? subMenu;
+  final String labelAnnotation;
+  final MenuModel<T> subMenu;
 
   // This should be final as all the other state in this class, but needs
   // to first migrate clients.
@@ -174,7 +176,7 @@ class MenuItem<T> with MenuItemMixin implements HasUIDisplayName, HasIcon {
     _actionWithContext = (_) => value!();
   }
 
-  final Icon? icon;
+  final Icon icon;
 
   /// List of rendered suffixes for this menu item.
   final ObservableList<MenuItemAffix> itemSuffixes;
@@ -203,26 +205,29 @@ class MenuItem<T> with MenuItemMixin implements HasUIDisplayName, HasIcon {
   ///     [itemSuffixes] is also passed in, [itemSuffixes] takes precedence.
   MenuItem(this.label,
       {this.enabled = true,
-      this.tooltip,
+      this.tooltip = '',
       @Deprecated('Use ActionWithContext') MenuAction? action,
       ActionWithContext? actionWithContext,
-      this.icon,
-      this.labelAnnotation,
+      Icon? icon,
+      this.labelAnnotation = '',
       Iterable<String>? cssClasses,
       MenuItemAffix? itemSuffix,
       ObservableList<MenuItemAffix>? itemSuffixes,
-      this.subMenu,
-      this.secondaryLabel,
+      MenuModel<T>? subMenu,
+      this.secondaryLabel = '',
       String? ariaLabel})
       : itemSuffixes = itemSuffixes ??
             ObservableList<MenuItemAffix>.from(
                 Optional.fromNullable(itemSuffix)),
         cssClasses = BuiltList<String>((cssClasses ?? const <String>[])),
+        this.subMenu = subMenu ?? MenuModel.flat([]),
+        this.icon = icon ?? Icon.blank(),
         ariaLabel = ariaLabel ?? label {
     assert(itemSuffix == null || itemSuffixes == null,
         'Only one of itemSuffix or itemSuffixes should be provided');
     assert(action == null || actionWithContext == null,
         'Only one of action or actionWithContext should be provided');
+
     if (action != null) {
       this.action = action;
     } else if (actionWithContext != null) {
@@ -244,11 +249,11 @@ class MenuItem<T> with MenuItemMixin implements HasUIDisplayName, HasIcon {
 /// Required members to use [MenuItemMixin].
 abstract class _MenuItemBase {
   ActionWithContext? get actionWithContext;
-  Icon? get icon;
-  String? get label;
-  String? get secondaryLabel;
-  String? get tooltip;
-  MenuModel? get subMenu;
+  Icon get icon;
+  String get label;
+  String get secondaryLabel;
+  String get tooltip;
+  MenuModel get subMenu;
 }
 
 /// Action triggered by interaction with the menu.
@@ -261,15 +266,15 @@ typedef ActionWithContext = void Function(dynamic context);
 
 /// Mixin to implement trivial getters on [MenuItem].
 abstract class MenuItemMixin implements _MenuItemBase {
-  bool get hasIcon => icon != null;
+  bool get hasIcon => icon != Icon.blank();
 
-  String? get uiDisplayName => label;
+  String get uiDisplayName => label;
 
   Icon? get uiIcon => icon;
 
-  bool get hasSubMenu => subMenu != null;
+  bool get hasSubMenu => subMenu.itemGroups.isNotEmpty;
 
-  bool get hasSecondaryLabel => secondaryLabel != null;
+  bool get hasSecondaryLabel => secondaryLabel.isNotEmpty;
 
   bool get showTooltip => isNotEmpty(tooltip);
 }

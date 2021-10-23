@@ -119,9 +119,9 @@ class MaterialExpansionPanel
   /// Sets the focus child so that we can focus on it when the panel opens.
   @ContentChild('focusOnOpen')
   @Input('focusOnOpen')
-  set focusOnOpenChild(Element? element) {
+  set focusOnOpenChild(Object? element) {
     if (element is Focusable) {
-      _focusOnOpenChild = element as Focusable?;
+      _focusOnOpenChild = element;
     } else if (element is Element) {
       _focusOnOpenChild = RootFocusable(element);
     } else {

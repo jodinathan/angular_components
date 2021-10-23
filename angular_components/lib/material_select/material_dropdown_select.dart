@@ -111,7 +111,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   ///
   /// If not provided, will use the default role for [DropdownButtonComponent]:
   /// 'button'.
-  final String buttonAriaRole;
+  final String? buttonAriaRole;
 
   /// The id of an element that describes the selection in the dropdown button.
   ///
@@ -196,7 +196,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
       @Optional() IdGenerator? idGenerator,
       @Optional() @SkipSelf() this._popupSizeDelegate,
       @Optional() @Inject(rtlToken) bool? rtl,
-      @Attribute('popupClass') String popupClass,
+      @Attribute('popupClass') String? popupClass,
       @Attribute('buttonAriaRole') this.buttonAriaRole,
       this._changeDetector,
       HtmlElement element)
@@ -236,12 +236,12 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   @Input()
   bool listAutoFocus = true;
 
-  //@Input()
-  //@override
-  //@Deprecated('Use factoryRenderer it allows for more tree-shakable code.')
-  //set componentRenderer(ComponentRenderer? value) {
-  //  super.componentRenderer = value;
-  //}
+  @Input()
+  @override
+  @Deprecated('Use factoryRenderer it allows for more tree-shakable code.')
+  set componentRenderer(ComponentRenderer? value) {
+    super.componentRenderer = value;
+  }
 
   /// Function that returns a component factory to render the Item.
   ///
@@ -262,7 +262,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   /// Width of the dropdown/list, default none, valid values are 0-5.
   @Input()
   @override
-  set width(value) {
+  set width(dynamic value) {
     super.width = value;
   }
 

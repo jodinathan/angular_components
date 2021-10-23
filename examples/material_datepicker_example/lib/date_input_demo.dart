@@ -20,7 +20,8 @@ class DateInputDemoComponent {
 
   Date get today => Date.today();
 
-  String formatDate(Date date) => date == null ? '(null)' : date.toString();
+  String formatDate(Date date) =>
+      date.toString(); //date == null ? '(null)' : date.toString();
 
   void resetToToday() {
     requiredDate = today;

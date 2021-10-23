@@ -35,9 +35,9 @@ class ComponentApiBuilder extends Builder {
         inputId.path.replaceFirst('.gallery_info.json', '.api.dart'));
 
     var renderedData = mustacheTemplate.renderString(mustacheContext);
-    print("=== Start(examples.api.dart) ===");
-    print(renderedData);
-    print("=== End ===");
+    //print("=== Start(examples.api.dart) ===");
+    //print(renderedData);
+    //print("=== End ===");
 
     await buildStep.writeAsString(newAssetId, renderedData);
   }

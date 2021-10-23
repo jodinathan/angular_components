@@ -43,9 +43,9 @@ class GallerySectionSummaryBuilder extends Builder {
         AssetId(inputId.package, 'lib/gallery_section_summary.json');
 
     var jsonData = jsonEncode(summaries);
-    print("=== Start (lib/gallery_section_summary.json) ===");
-    print(jsonData);
-    print("=== End ===");
+    //  print("=== Start (lib/gallery_section_summary.json) ===");
+    //  print(jsonData);
+    //  print("=== End ===");
 
     await buildStep.writeAsString(newAssetId, jsonData);
   }

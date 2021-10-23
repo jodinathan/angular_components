@@ -140,7 +140,7 @@ class MaterialTooltipDirective extends TooltipTarget
       ..text = _lastText
       ..tooltipRef = this;
     if (positions != null) {
-      _inkTooltip!.positions = positions;
+      _inkTooltip?.positions = positions ?? [];
     }
   }
 

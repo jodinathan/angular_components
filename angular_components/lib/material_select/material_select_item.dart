@@ -46,7 +46,7 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
         OnDestroy,
         SelectionItem<T>,
         HasRenderer<T>,
-        //HasComponentRenderer,
+        HasComponentRenderer,
         HasFactoryRenderer<RendersValue, T> {
   @HostBinding('class')
   static const hostClass = 'item';
@@ -117,13 +117,11 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
   @override
   ItemRenderer<T>? itemRenderer = nullRenderer;
 
-  /*
   @Input()
   @override
   @Deprecated('Use factoryrenderer instead as it will produce more '
       'tree-shakeable code.')
   ComponentRenderer? componentRenderer;
-  */
 
   /// Returns a [ComponentFactory] for dynamic component loader to use to render
   /// an item.
@@ -205,8 +203,8 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
   bool closeOnActivate = true;
 
   // TODO(google): Remove after migration from ComponentRenderer is complete
-  //Type? get componentType =>
-  //    componentRenderer != null ? componentRenderer!(value) : null;
+  Type? get componentType =>
+      componentRenderer != null ? componentRenderer!(value) : null;
 
   ComponentFactory? get componentFactory =>
       factoryRenderer != null ? factoryRenderer!(value) : null;
