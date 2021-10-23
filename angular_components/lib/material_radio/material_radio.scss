@@ -1,6 +1,7 @@
 // Copyright (c) 2016, the Dart project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+@use "sass:math";
 
 @import 'package:angular_components/css/material/material';
 
@@ -63,7 +64,7 @@ $ripple-top: -$mat-grid;
   &.focus::after,
   .ripple {
     $size: $mat-grid * 5;
-    border-radius: $size / 2;
+    border-radius: math.div($size , 2);
     height: $size;
     left: $ripple-left;
     position: absolute;

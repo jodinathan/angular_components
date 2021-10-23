@@ -9,8 +9,12 @@ import 'package:angular_components/model/ui/has_renderer.dart';
 /// Add this directive to any [SelectionContainer] or [SelectionItem]
 /// component to render [HasUIDisplayName] objects.
 @Directive(selector: '[displayNameRenderer]')
-void displayNameRendererDirective(HasRenderer hasRenderer) {
-  if (hasRenderer != null) hasRenderer.itemRenderer = _displayNameRenderer;
+class DisplayNameRendererDirective {
+  final HasRenderer hasRenderer;
+
+  DisplayNameRendererDirective(this.hasRenderer) {
+    hasRenderer.itemRenderer = _displayNameRenderer;
+  }
 }
 
 final _displayNameRenderer =

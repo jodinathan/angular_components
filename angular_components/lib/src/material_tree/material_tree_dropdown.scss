@@ -1,6 +1,7 @@
 // Copyright (c) 2016, the Dart project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+@use "sass:math";
 
 @import 'package:angular_components/css/material/material';
 @import 'package:angular_components/material_list/mixins';
@@ -49,7 +50,7 @@ $icon-size: $mat-grid * 3;
   // We can do it ourselves, assuming we know the height of the icon ahead of
   // time. We have to bump it up an extra pixel to account for the 1px of
   // padding-bottom on the button div.
-  top: calc(50% - #{$icon-size / 2 + 1px});
+  top: calc(50% - #{math.div($icon-size , 2) + 1px});
 }
 
 .search-box {

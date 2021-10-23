@@ -1,6 +1,7 @@
 // Copyright (c) 2016, the Dart project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+@use "sass:math";
 
 @import 'package:angular_components/css/material/material';
 @import 'package:angular_components/css/material/shadow';
@@ -16,7 +17,7 @@ $button-size: $mat-grid * 2.5;
 $bar-height: $mat-grid * 1.75;
 $vertical-space: $mat-grid * .25;
 $focus-size: $button-size * 2;
-$margin-nudge: $button-size / 2;
+$margin-nudge: math.div($button-size , 2);
 
 :host {
   display: inline-block;
