@@ -42,28 +42,28 @@
                     orientation="horizontal"
                     size="mini">
     <template step name="Step A Title"
-              [optional] = "true"
+              [optional]="true"
               [hideButtons]="true">
       <div class="step-a">
         <h1>Content A</h1>
         This step has a custom continue button
         <br>
-        <material-button raised buttonDecorator
+        <material-button raised
                          class="custom-toggle-button"
                          (trigger)="toggleContinue()">
           Toggle continue Button
         </material-button>
       </div>
-        <span [style.display]="showButton ? '' : 'none'">
-          <material-button raised buttonDecorator
-                           class="custom-continue-button"
-                           (trigger)="stepper1.stepForward($event, stepper1.activeStep)">
-              Custom Continue Button
-          </material-button>
-        </span>
+      <span [style.display]="showButton ? '' : 'none'">
+        <material-button raised
+                         class="custom-continue-button"
+                         (trigger)="stepper1.stepForward($event, stepper1.activeStep)">
+          Custom Continue Button
+        </material-button>
+      </span>
     </template>
     <template step name="Step B Title"
-              [optional] = "true"
+              [optional]="true"
               (cancel)="validDelayedCheck($event)">
       <div class="step-b">
         <h1>Content B</h1>
@@ -83,13 +83,13 @@
   <material-stepper legalJumps="none"
                     orientation="horizontal">
     <template step name="Step A Title"
-              [optional] = "true">
+              [optional]="true">
       <div class="step-a">
         <h1>Content A</h1>
       </div>
     </template>
     <template step name="Step B Title"
-              [optional] = "true"
+              [optional]="true"
               (cancel)="validDelayedCheck($event)">
       <div class="step-b">
         <h1>Content B</h1>
@@ -114,7 +114,7 @@
               completeSummary="Step A Title completed.">
       <div class="step-a">
         <h1>Content A</h1>
-        This step has a complete summary.  Click `continue` to see it.
+        This step has a complete summary. Click `continue` to see it.
       </div>
     </template>
     <template step name="Step B Title">

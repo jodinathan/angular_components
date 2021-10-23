@@ -32,3 +32,7 @@ doc/api/
 
 ## Misc ##
 .metals/
+.vscode
+
+# Firebase related
+.firebase/

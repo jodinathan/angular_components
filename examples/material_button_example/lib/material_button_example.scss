@@ -49,7 +49,7 @@ h2 {
   margin: 20px;
 }
 
-[card] {
+.card {
   display: inline-flex;
   flex: 1;
   flex-direction: column;
@@ -63,6 +63,6 @@ h2 {
   background: $mat-grey-800;
 }
 
-[flex] {
+.flex {
   justify-content: space-between;
 }

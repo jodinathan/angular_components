@@ -3,14 +3,14 @@
 # Only run externally during presubmits on Travis.
 
 set -ev
-PROTOC_PLUGIN_VERSION="19.0.1"
+PROTOC_PLUGIN_VERSION="20.0.0"
 PROTOC_VERSION="3.13.0"
 
 if type protoc > /dev/null; then
   echo "protoc already installed."
 
   # Activate dart protoc plugin.
-  pub global activate protoc_plugin $PROTOC_PLUGIN_VERSION
+  dart pub global activate protoc_plugin $PROTOC_PLUGIN_VERSION
   exit 0
 fi
 
@@ -26,4 +26,4 @@ popd
 $HOME/protoc/bin/protoc --version
 
 # Activate dart protoc plugin.
-pub global activate protoc_plugin $PROTOC_PLUGIN_VERSION
+dart pub global activate protoc_plugin $PROTOC_PLUGIN_VERSION

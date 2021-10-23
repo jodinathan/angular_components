@@ -22,11 +22,6 @@ class GalleryInfo {
   // Component example to include at the top of the gallery section.
   final Demo mainDemo;
 
-  /// The embed URLs for benchmark charts to display in this section.
-  ///
-  /// The charts are displayed in the order they are specified here.
-  final List<String> benchmarks;
-
   /// A list of owners for the components in this section.
   final List<String> owners;
 
@@ -44,7 +39,6 @@ class GalleryInfo {
       {this.docs = const [],
       this.demos = const [],
       this.mainDemo,
-      this.benchmarks = const [],
       this.owners = const [],
       this.uxOwners = const [],
       this.relatedUrls = const {},

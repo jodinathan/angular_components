@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+@use "sass:math";
+
 /// Styles provided to more easily layout an application.
 /// This includes:
 ///   material-drawer (persistent and permanent)
@@ -14,7 +16,7 @@
 $mat-toolbar-mobile-breakpoint: 599px;
 $mat-drawer-border: 1px solid $mat-border-light;
 // Desktop spec calls for 24px margins have each element contribute half.
-$mat-desktop-drawer-margin: 3 * $mat-grid / 2;
+$mat-desktop-drawer-margin: 3 * math.div($mat-grid , 2);
 // Mobile spec calls for 16px margins have each element contribute half.
 $mat-mobile-drawer-margin: $mat-grid;
 

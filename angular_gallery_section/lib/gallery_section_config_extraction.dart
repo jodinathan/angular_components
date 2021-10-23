@@ -70,8 +70,6 @@ class _GallerySectionConfigVisitor extends SimpleAstVisitor<ConfigInfo> {
       config.demoClassNames = expression.accept(ListStringExtractor());
     } else if (name == 'mainDemo') {
       config.mainDemoName = expression.accept(StringExtractor());
-    } else if (name == 'benchmarks') {
-      config.benchmarks = expression.accept(ListStringExtractor());
     } else if (name == 'owners') {
       config.owners = expression.accept(ListStringExtractor());
     } else if (name == 'uxOwners') {
@@ -93,7 +91,6 @@ class ConfigInfo {
   Iterable<String> docs;
   Iterable<String> demoClassNames;
   String mainDemoName;
-  Iterable<String> benchmarks;
   Iterable<String> owners;
   Iterable<String> uxOwners;
   Map<String, String> relatedUrls;

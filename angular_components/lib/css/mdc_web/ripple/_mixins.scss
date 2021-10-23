@@ -19,6 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 //
+@use "sass:math";
 
 @import "../animation/functions";
 @import "../animation/variables";
@@ -412,9 +413,9 @@
   #{$ripple-target}::before,
   #{$ripple-target}::after {
     @include mdc-feature-targets($feat-struture) {
-      top: calc(50% - #{$radius / 2});
+      top: calc(50% - #{math.div($radius , 2)});
       /* @noflip */
-      left: calc(50% - #{$radius / 2});
+      left: calc(50% - #{math.div($radius , 2)});
       width: $radius;
       height: $radius;
     }
@@ -424,9 +425,9 @@
     #{$ripple-target}::before,
     #{$ripple-target}::after {
       @include mdc-feature-targets($feat-struture) {
-        top: var(--mdc-ripple-top, calc(50% - #{$radius / 2}));
+        top: var(--mdc-ripple-top, calc(50% - #{math.div($radius , 2)}));
         /* @noflip */
-        left: var(--mdc-ripple-left, calc(50% - #{$radius / 2}));
+        left: var(--mdc-ripple-left, calc(50% - #{math.div($radius , 2)}));
         width: var(--mdc-ripple-fg-size, $radius);
         height: var(--mdc-ripple-fg-size, $radius);
       }

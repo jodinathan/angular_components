@@ -1,6 +1,7 @@
 // Copyright (c) 2016, the Dart project authors.  Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
+@use "sass:math";
 
 
 // Grid
@@ -76,7 +77,7 @@ $mat-grid-type: 4px;
   background-repeat: no-repeat;
   background-size: $icon-size $icon-size;
   height: $background-size;
-  padding: (($background-size - $icon-size) / 2);
+  padding: (math.div(($background-size - $icon-size) , 2));
   width: $background-size;
 }
 
@@ -145,7 +146,7 @@ $mat-grid-type: 4px;
   width: $button-size;
 
   @if $circle {
-    border-radius: $button-size / 2;
+    border-radius: math.div($button-size , 2);
   }
 
   // Light theme - default
