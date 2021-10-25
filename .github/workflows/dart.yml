@@ -1040,7 +1040,6 @@ jobs:
             os:ubuntu-latest;pub-cache-hosted
             os:ubuntu-latest
       - uses: dart-lang/setup-dart@v1.3
-<<<<<<< HEAD
         with:
           sdk: dev
       - id: checkout
@@ -1073,12 +1072,3 @@ jobs:
       - job_011
       - job_012
       - job_013
-=======
-      - uses: actions/checkout@v2.3.4
-      - name: Install mono_repo
-        run: dart pub global activate mono_repo
-      - name: Fetch dependencies
-        run: dart pub global run mono_repo pub get
-      - name: Analyze files
-        run: dart analyze
->>>>>>> origin/master
