@@ -58,7 +58,6 @@ typedef _InputChangeCallback = String Function(String inputText);
     ExistingProvider(SelectionContainer, MaterialAutoSuggestInputComponent),
     ExistingProvider(HighlightProvider, MaterialAutoSuggestInputComponent),
     ExistingProvider(DropdownHandle, MaterialAutoSuggestInputComponent),
-    ExistingProvider(HasComponentRenderer, MaterialAutoSuggestInputComponent),
     ExistingProvider(HasFactoryRenderer, MaterialAutoSuggestInputComponent),
     ExistingProvider(Focusable, MaterialAutoSuggestInputComponent),
     ExistingProvider(PopupSizeProvider, MaterialAutoSuggestInputComponent),
@@ -107,7 +106,6 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
         OnInit,
         OnDestroy,
         HasRenderer<T>,
-        HasComponentRenderer<RendersValue, Object>,
         HasFactoryRenderer<RendersValue, T>,
         DropdownHandle,
         PopupSizeProvider {
@@ -320,14 +318,6 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   @Input()
   set itemRenderer(ItemRenderer<T> value) => super.itemRenderer = value;
 
-  // Override renderer here to just add the @Input annotation and keep the
-  // angular dependency out of models.
-  @override
-  @Input()
-  @Deprecated('Use factoryRenderer instead as it is tree shakeable.')
-  set componentRenderer(ComponentRenderer value) =>
-      super.componentRenderer = value;
-
   /// [FactoryRenderer] used to display the item.
   @override
   @Input()
@@ -474,17 +464,12 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
 
   bool get showLoadingSpinner => loading && options.optionsList.isEmpty;
 
-  @Deprecated('Use labelFactory instead.')
-  @Input()
-  ComponentRenderer labelRenderer;
-
   /// Custom factory for rendering suggestion labels.
   @Input()
   FactoryRenderer labelFactory;
 
   // Whether a custom label render is used.
-  bool get hasCustomLabelRenderer =>
-      labelRenderer != null || labelFactory != null;
+  bool get hasCustomLabelRenderer => labelFactory != null;
 
   /// An option is disabled if the options implements Selectable, but the [item]
   /// is not selectable.
@@ -506,16 +491,8 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   bool highlightOptions = true;
 
   @override
-  ComponentRenderer get componentRenderer => highlightOptions &&
-          super.componentRenderer == null &&
-          super.factoryRenderer == null
-      ? highlightComponentRenderer
-      : super.componentRenderer;
-
-  @override
   FactoryRenderer<RendersValue, T> get factoryRenderer => highlightOptions &&
-          super.factoryRenderer == null &&
-          super.componentRenderer == null
+          super.factoryRenderer == null
       ? highlightFactoryRenderer
       : super.factoryRenderer;
 

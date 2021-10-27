@@ -262,17 +262,13 @@ class MaterialTreeNode<T> {
   // TODO(google): Rename this is to control whether to use dynamic component
   // loader.
   bool get useComponentRenderer =>
-      _root.factoryRenderer != null || _root.componentRenderer != null;
+      _root.factoryRenderer != null;
 
   /// Whether to use a simple text formatter to render an option.
   bool get useItemRenderer => !useComponentRenderer;
 
   /// Whether to show the selection state within a dropdown.
   bool get showSelectionState => isMultiSelect || !_root.optimizeForDropdown;
-
-  /// Converts [T] into a component type (requires [useComponentRenderer]).
-  Type getComponentType(option) =>
-      _root.componentRenderer != null ? _root.componentRenderer(option) : null;
 
   /// Converts [T] into a component factory (requires [factoryRenderer]).
   ComponentFactory getComponentFactory(option) =>

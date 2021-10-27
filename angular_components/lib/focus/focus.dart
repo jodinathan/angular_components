@@ -43,7 +43,7 @@ class RootFocusable implements Focusable, Disposable {
 }
 
 abstract class ProjectedFocus implements Focusable {
-  Future< /* Focusable | ElementRef */ dynamic> get focusDelegate;
+  Future< /* Focusable | Element */ dynamic> get focusDelegate;
   Focusable _resolvedFocusable;
 
   @override

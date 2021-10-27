@@ -155,13 +155,6 @@ class MaterialTreeDropdownComponent<T>
     selection = SelectionModel<T>.empty();
   }
 
-  @Deprecated('Use [factoryRenderer] instead')
-  @Input()
-  @override
-  set componentRenderer(ComponentRenderer value) {
-    super.componentRenderer = value;
-  }
-
   /// Specifies the factoryRenderer to use to determine the factory for
   /// rendering an item.
   @Input()
