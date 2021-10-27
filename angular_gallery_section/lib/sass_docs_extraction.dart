@@ -25,8 +25,7 @@ Future<SassDocInfo> extractSassDocs(
 
   final first = stylesheet.children.firstWhereOrNull((_) => true);
   if (first is SilentComment) {
-    final second =
-        stylesheet.children.skip(1).firstWhereOrNull((_) => true);
+    final second = stylesheet.children.skip(1).firstWhereOrNull((_) => true);
     if (second is! VariableDeclaration &&
         second is! FunctionRule &&
         second is! MixinRule) {
@@ -57,13 +56,13 @@ Future<SassDocInfo> extractSassDocs(
 /// Skips arguments when their names starts with an underscore.
 SassCallableInfo _extractCallable(CallableDeclaration callable) {
   final args = callable.arguments.arguments
-      .map((arg) => SassArgumentInfo(arg.name, arg.defaultValue?.toString()));
+      .map((arg) => SassArgumentInfo(arg.name, arg.defaultValue.toString()));
   var restArg = callable.arguments.restArgument;
   restArg = restArg != null && !restArg.startsWith('_') ? restArg : null;
   return SassCallableInfo(
       callable.name,
-      args.where((arg) => !arg.name!.startsWith('_')),
-      restArg,
+      args.where((arg) => !arg.name.startsWith('_')),
+      restArg ?? '',
       _formatComment(callable.comment));
 }
 

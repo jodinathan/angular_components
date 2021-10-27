@@ -15,7 +15,7 @@ const documentationComponentDirectives = [
 
 class DocumentationComponent {
   @Input()
-  bool? showGeneratedDocs;
+  bool showGeneratedDocs = false;
 
   final _sanitizedHtml = <String, SafeHtml>{};
 
@@ -52,7 +52,15 @@ class DartDocComponent extends DocumentationComponent {
 
   /// The documentation to display.
   @Input()
-  DartDocInfo? doc;
+  set doc(DocInfo d) {
+    if (d is DartDocInfo) {
+      _doc = d;
+    }
+  }
+
+  DartDocInfo get doc => _doc;
+
+  DartDocInfo _doc = DartDocInfo.fromJson({});
 }
 
 /// Displays a single piece of documentation.
@@ -70,7 +78,15 @@ class MarkdownDocComponent extends DocumentationComponent {
 
   /// The documentation to display.
   @Input()
-  MarkdownDocInfo? doc;
+  set doc(DocInfo d) {
+    if (d is MarkdownDocInfo) {
+      _doc = d;
+    }
+  }
+
+  MarkdownDocInfo get doc => _doc;
+
+  MarkdownDocInfo _doc = MarkdownDocInfo.fromJson({});
 }
 
 /// Displays documentation for Sass files in the gallery application.
@@ -93,5 +109,13 @@ class SassDocComponent extends DocumentationComponent {
 
   /// The documentation to display.
   @Input()
-  late SassDocInfo doc;
+  set doc(DocInfo d) {
+    if (d is SassDocInfo) {
+      _doc = d;
+    }
+  }
+
+  SassDocInfo get doc => _doc;
+
+  SassDocInfo _doc = SassDocInfo.fromJson({});
 }

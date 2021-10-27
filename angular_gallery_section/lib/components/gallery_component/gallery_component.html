@@ -36,7 +36,7 @@
 </section>
 
 <section *ngIf="model.mainDemo != null" class="demo">
-  <dynamic-component [componentFactory]="model.mainDemo.demoFactory"></dynamic-component>
+  <dynamic-component [componentFactory]="model.mainDemo!.demoFactory"></dynamic-component>
 </section>
 
 <section class="toc" *ngIf="showToc">
@@ -82,5 +82,7 @@
     {{demo.name}}
     <a [href]="getCodeSearchLink(demo.path)" target="_blank">Source Code</a>
   </h2>
-  <dynamic-component [componentFactory]="demo.demoFactory"></dynamic-component>
+  <ng-container *ngIf="demo != null">
+    <dynamic-component [componentFactory]="demo.demoFactory"></dynamic-component>
+  </ng-container>
 </section>

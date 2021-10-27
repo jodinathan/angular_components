@@ -204,24 +204,20 @@ class GalleryInfoBuilder extends Builder {
       // to the defining LibraryElement. NOTE: Collecting the types like this
       // diverges from the behavior of DartDoc which always uses the getter type
       // when they are different.
-      docs?.inputs?.forEach((input) {
-        if (input != null) {
-          var inputName = input.name;
-          //if (inputName != null) {
-          mergedInputs[inputName] = input
-            ..type = _setterType(inputName, classElement);
-          //}
-        }
+      docs?.inputs.forEach((input) {
+        var inputName = input.name;
+        //if (inputName != null) {
+        mergedInputs[inputName] = input
+          ..type = _setterType(inputName, classElement);
+        //}
       });
 
-      docs?.outputs?.forEach((output) {
-        if (output != null) {
-          var outputName = output.name;
-          //if (outputName != null) {
-          mergedOutputs[outputName] = output
-            ..type = _getterType(outputName, classElement);
-          //}
-        }
+      docs?.outputs.forEach((output) {
+        var outputName = output.name;
+        //if (outputName != null) {
+        mergedOutputs[outputName] = output
+          ..type = _getterType(outputName, classElement);
+        //}
       });
     }
 
@@ -312,9 +308,9 @@ class GalleryInfoBuilder extends Builder {
       throw 'Error: Failed to extract demo information from: $demoClassName.';
     }
     return DemoInfo()
-      ..type = extractedDemo.name ?? ''
-      ..name = extractedDemo.name ?? ''
-      ..selector = extractedDemo.selector ?? ''
+      ..type = extractedDemo.name
+      ..name = extractedDemo.name
+      ..selector = extractedDemo.selector
       ..asset = libraryId.toString();
   }
 

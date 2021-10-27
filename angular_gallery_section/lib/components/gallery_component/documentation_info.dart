@@ -9,8 +9,8 @@ enum DocType { dartDocInfo, markdownDocInfo, sassDocInfo }
 
 /// Base class for all documentation models in the gallery app.
 abstract class DocInfo {
-  String? get name;
-  String? get path;
+  String get name;
+  String get path;
   DocType get docType;
 
   /// Constructs a new [DocInfo] from a decoded json map.
@@ -43,42 +43,44 @@ abstract class DocInfo {
 ///
 /// Contains information for the Angular API of a @Component or @Directive.
 class DartDocInfo implements DocInfo {
-  String? name;
-  bool? deprecated;
-  String? deprecatedMessage;
-  String? selector;
-  String? exportAs;
-  String? path;
-  String? comment;
-  Iterable<DartPropertyInfo>? inputs;
-  Iterable<DartPropertyInfo>? outputs;
+  late String name;
+  late bool deprecated;
+  late String deprecatedMessage;
+  late String selector;
+  late String exportAs;
+  late String path;
+  late String comment;
+  late Iterable<DartPropertyInfo> inputs;
+  late Iterable<DartPropertyInfo> outputs;
 
   DocType get docType => DocType.dartDocInfo;
 
   DartDocInfo(
-      [this.name,
-      this.deprecated,
-      this.deprecatedMessage,
-      this.selector,
-      this.exportAs,
-      this.path,
-      this.comment,
-      this.inputs,
-      this.outputs]);
+      [this.name = '',
+      this.deprecated = false,
+      this.deprecatedMessage = '',
+      this.selector = '',
+      this.exportAs = '',
+      this.path = '',
+      this.comment = '',
+      this.inputs = const [],
+      this.outputs = const []]);
 
   /// Constructs a new [DartDocInfo] from a decoded json map.
   DartDocInfo.fromJson(Map<String, dynamic> jsonMap) {
-    name = jsonMap['name'] as String?;
-    deprecated = jsonMap['deprecated'] as bool?;
-    deprecatedMessage = jsonMap['deprecatedMessage'] as String?;
-    selector = jsonMap['selector'] as String?;
-    exportAs = jsonMap['exportAs'] as String?;
-    path = jsonMap['path'] as String?;
-    comment = jsonMap['comment'] as String?;
+    name = jsonMap['name'] as String? ?? '';
+    deprecated = jsonMap['deprecated'] as bool? ?? false;
+    deprecatedMessage = jsonMap['deprecatedMessage'] as String? ?? '';
+    selector = jsonMap['selector'] as String? ?? '';
+    exportAs = jsonMap['exportAs'] as String? ?? '';
+    path = jsonMap['path'] as String? ?? '';
+    comment = jsonMap['comment'] as String? ?? '';
     inputs = (jsonMap['inputs'] as Iterable?)
-        ?.map((element) => DartPropertyInfo.fromJson(element));
+            ?.map((element) => DartPropertyInfo.fromJson(element)) ??
+        [];
     outputs = (jsonMap['outputs'] as Iterable?)
-        ?.map((element) => DartPropertyInfo.fromJson(element));
+            ?.map((element) => DartPropertyInfo.fromJson(element)) ??
+        [];
   }
 
   /// Returns a json encodeable representation of this [DartDocInfo].
@@ -91,8 +93,8 @@ class DartDocInfo implements DocInfo {
         'exportAs': exportAs,
         'path': path,
         'comment': comment,
-        'inputs': inputs?.map((p) => p.toJson()).toList(),
-        'outputs': outputs?.map((p) => p.toJson()).toList(),
+        'inputs': inputs.map((p) => p.toJson()).toList(),
+        'outputs': outputs.map((p) => p.toJson()).toList(),
       };
 }
 
@@ -213,17 +215,17 @@ class SassDocInfo implements DocInfo {
 
 /// Documentation information for a Sass variable.
 class SassVariableInfo {
-  final String? name;
-  final String? expression;
-  final String? comment;
+  final String name;
+  final String expression;
+  final String comment;
 
   SassVariableInfo(this.name, this.expression, this.comment);
 
   /// Constructs a new [SassVariableInfo] from a decoded json map.
   SassVariableInfo.fromJson(Map<String, dynamic> jsonMap)
-      : name = jsonMap['name'] as String?,
-        expression = jsonMap['expression'] as String?,
-        comment = jsonMap['comment'] as String?;
+      : name = jsonMap['name'] as String? ?? '',
+        expression = jsonMap['expression'] as String? ?? '',
+        comment = jsonMap['comment'] as String? ?? '';
 
   /// Returns a json encodeable representation of this [SassVariableInfo].
   Map<String, dynamic> toJson() => {
@@ -235,25 +237,26 @@ class SassVariableInfo {
 
 /// Documentation information for a Sass callable (function or mixin).
 class SassCallableInfo {
-  final String? name;
-  final Iterable<SassArgumentInfo>? arguments;
-  final String? restArgument;
-  final String? comment;
+  final String name;
+  final Iterable<SassArgumentInfo> arguments;
+  final String restArgument;
+  final String comment;
 
   SassCallableInfo(this.name, this.arguments, this.restArgument, this.comment);
 
   /// Constructs a new [SassCallableInfo] from a decoded json map.
   SassCallableInfo.fromJson(Map<String, dynamic> jsonMap)
-      : name = jsonMap['name'] as String?,
+      : name = jsonMap['name'] as String? ?? '',
         arguments = (jsonMap['arguments'] as Iterable?)
-            ?.map((element) => SassArgumentInfo.fromJson(element)),
+                ?.map((element) => SassArgumentInfo.fromJson(element)) ??
+            [],
         restArgument = jsonMap['restArgument'],
-        comment = jsonMap['comment'] as String?;
+        comment = jsonMap['comment'] as String? ?? '';
 
   /// Returns a json encodeable representation of this [SassCallableInfo].
   Map<String, dynamic> toJson() => {
         'name': name,
-        'arguments': arguments?.map((arg) => arg.toJson()).toList(),
+        'arguments': arguments.map((arg) => arg.toJson()).toList(),
         'restArgument': restArgument,
         'comment': comment,
       };
@@ -262,13 +265,13 @@ class SassCallableInfo {
   ///
   /// Includes the name and arguments including a rest arg.
   String? get signature {
-    if (arguments == null || arguments!.isEmpty) return name;
-    var args = arguments!
-        .map((a) => a.defaultValue == null || a.defaultValue!.isEmpty
+    if (arguments.isEmpty) return name;
+    var args = arguments
+        .map((a) => a.defaultValue.isEmpty
             ? '\$${a.name}'
             : '\$${a.name}: ${a.defaultValue}')
         .join(', ');
-    if (restArgument != null && restArgument!.isNotEmpty) {
+    if (restArgument.isNotEmpty) {
       args = '$args, \$$restArgument...';
     }
     return '$name( $args )';
@@ -277,15 +280,15 @@ class SassCallableInfo {
 
 /// Documentation information for a Sass callable's argument.
 class SassArgumentInfo {
-  final String? name;
-  final String? defaultValue;
+  final String name;
+  final String defaultValue;
 
   SassArgumentInfo(this.name, this.defaultValue);
 
   /// Constructs a new [SassArgumentInfo] from a decoded json map.
   SassArgumentInfo.fromJson(Map<String, dynamic> jsonMap)
-      : name = jsonMap['name'] as String?,
-        defaultValue = jsonMap['defaultValue'] as String?;
+      : name = jsonMap['name'] as String? ?? '',
+        defaultValue = jsonMap['defaultValue'] as String? ?? '';
 
   /// Returns a json encodeable representation of this [SassArgumentInfo].
   Map<String, dynamic> toJson() => {
