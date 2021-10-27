@@ -59,15 +59,11 @@ class InputDemoValidator implements Validator {
     if (inputText.isEmpty) return null;
 
     if (inputText.contains('0')) {
-      return {
-        materialInputErrorKey: 'Input contains 0'
-      };
+      return {materialInputErrorKey: 'Input contains 0'};
     }
 
     if (inputText.length < 5) {
-      return
-        {materialInputErrorKey: 'Input should be at least 5 characters.'
-        };
+      return {materialInputErrorKey: 'Input should be at least 5 characters.'};
     }
 
     return null;

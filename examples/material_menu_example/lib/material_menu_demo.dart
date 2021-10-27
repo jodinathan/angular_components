@@ -221,8 +221,7 @@ class MaterialMenuDemoComponent implements OnDestroy {
                     actionWithContext: (_) => window.alert('almost new!')),
                 MenuItem('Used',
                     actionWithContext: (_) => window.alert('used!')),
-                MenuItem('New',
-                    actionWithContext: (_) => window.alert('new!')),
+                MenuItem('New', actionWithContext: (_) => window.alert('new!')),
               ])
             ])),
         MenuItem('Advertise',
