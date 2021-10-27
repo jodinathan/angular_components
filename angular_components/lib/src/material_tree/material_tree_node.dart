@@ -13,6 +13,7 @@ import 'package:angular_components/model/selection/selection_options.dart';
 import 'package:angular_components/model/ui/has_factory.dart';
 import 'package:angular_components/utils/async/async.dart';
 import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:meta/meta.dart';
 
 /// Returns whether [option] should be shown as expandable.
 typedef IsExpandable<T> = bool Function(T option);
@@ -261,8 +262,7 @@ class MaterialTreeNode<T> {
   /// Whether to use a dynamic component to render an option.
   // TODO(google): Rename this is to control whether to use dynamic component
   // loader.
-  bool get useComponentRenderer =>
-      _root.factoryRenderer != null;
+  bool get useComponentRenderer => _root.factoryRenderer != null;
 
   /// Whether to use a simple text formatter to render an option.
   bool get useItemRenderer => !useComponentRenderer;
@@ -283,6 +283,7 @@ class MaterialTreeNode<T> {
   /// Cleans up the node. Disposes subscriptions to [MaterialTreeExpandState].
   ///
   /// Currently a no-op if T doesn't implement [MaterialTreeExpandState].
+  @mustCallSuper
   void onDestroy() {
     _disposer.dispose();
     // Cause a NPE if we attempt to use the disposer after being destroyed

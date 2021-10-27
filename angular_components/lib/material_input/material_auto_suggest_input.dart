@@ -491,10 +491,10 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   bool highlightOptions = true;
 
   @override
-  FactoryRenderer<RendersValue, T> get factoryRenderer => highlightOptions &&
-          super.factoryRenderer == null
-      ? highlightFactoryRenderer
-      : super.factoryRenderer;
+  FactoryRenderer<RendersValue, T> get factoryRenderer =>
+      highlightOptions && super.factoryRenderer == null
+          ? highlightFactoryRenderer
+          : super.factoryRenderer;
 
   final _showPopupController = StreamController<bool>.broadcast(sync: true);
 

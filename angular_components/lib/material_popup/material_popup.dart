@@ -855,8 +855,8 @@ class _DeferredToggleable extends Toggleable {
 //
 // TODO(google): This belongs as a utility not inlined here.
 Stream<List<T>> _mergeStreams<T>(List<Stream<T>> streams) {
-  var streamSubscriptions = List<StreamSubscription<T>>
-      .filled(streams.length, null);
+  var streamSubscriptions =
+      List<StreamSubscription<T>>.filled(streams.length, null);
   var cachedResults = List<T>.filled(streams.length, null);
   StreamController<List<T>> streamController;
   streamController = StreamController<List<T>>.broadcast(

@@ -49,7 +49,7 @@ abstract class HighlightAssistantMixin<T>
 
   ItemRenderer<T> get _highlightRenderer {
     if (factoryRenderer == null ||
-            factoryRenderer == highlightFactoryRenderer) {
+        factoryRenderer == highlightFactoryRenderer) {
       return itemRenderer ?? defaultItemRenderer;
     }
     return defaultItemRenderer;

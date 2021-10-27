@@ -161,9 +161,9 @@ class MaterialFabMenuComponent extends Object
 
   void trigger(Event event) {
     _trigger(
-      activateFirstItem: event is KeyboardEvent || _isLikelyScreenReader(event),
-      event: event
-    );
+        activateFirstItem:
+            event is KeyboardEvent || _isLikelyScreenReader(event),
+        event: event);
   }
 
   void hideMenu() {
@@ -174,7 +174,8 @@ class MaterialFabMenuComponent extends Object
   }
 
   void _trigger(
-      {bool activateFirstItem = false, bool activateLastItem = false,
+      {bool activateFirstItem = false,
+      bool activateLastItem = false,
       Event event}) {
     _activateFirstItemOnInit = activateFirstItem;
     _activateLastItemOnInit = activateLastItem;

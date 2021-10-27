@@ -241,9 +241,8 @@ class DomService {
     return callback;
   }
 
-  void _scheduleInQueue(DomReadWriteFn fn, List<DomReadWriteFn> queue, {
-    bool maintainZoneOnCallbacks = true
-  }) {
+  void _scheduleInQueue(DomReadWriteFn fn, List<DomReadWriteFn> queue,
+      {bool maintainZoneOnCallbacks = true}) {
     if (maintainZoneOnCallbacks) {
       fn = Zone.current.bindCallback(fn);
     }
