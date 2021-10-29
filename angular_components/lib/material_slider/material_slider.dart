@@ -47,7 +47,16 @@ class MaterialSliderComponent implements AfterChanges, HasDisabled {
 
   /// True if the slider disabled.
   @HostBinding('class.is-disabled')
-  @HostBinding('attr.aria-disabled')
+  bool get classDisabledStr => disabled;
+
+  String get maxStr => '$max';
+
+  String get minStr => '$min';
+
+  String get valueStr => '$value';
+
+  String get leftValueStr => '$leftValue';
+
   @Input()
   bool disabled = false;
 
@@ -103,12 +112,18 @@ class MaterialSliderComponent implements AfterChanges, HasDisabled {
   /// Defaults to 0, must be strictly smaller than max.
   @Input()
   num min = 0;
+  //set minStr(String? value) {
+  //  min = int.tryParse(value ?? '0') ?? 0;
+  //}
 
   /// The maximum progress value.
   ///
   /// Defaults to 100, must be strictly larger than min.
   @Input()
   num max = 100;
+  //set maxStr(String? value) {
+  //  max = int.tryParse(value ?? '0') ?? 0;
+  //}
 
   /// The step size of the input.
   ///

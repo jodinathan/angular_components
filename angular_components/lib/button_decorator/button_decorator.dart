@@ -55,7 +55,7 @@ class ButtonDirective extends RootFocusable
 
   /// String value to be passed to aria-disabled.
   @HostBinding('attr.aria-disabled')
-  String? get disabledStr => '$disabled';
+  String get disabledStr => '$disabled';
 
   /// Is the component disabled.
   @HostBinding('class.is-disabled')

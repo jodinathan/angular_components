@@ -69,6 +69,8 @@ class MaterialSelectDropdownItemComponent<T>
   }
 
   @HostBinding('attr.aria-selected')
+  String get seletedStr => '$isSelected';
+
   @override
   bool get isSelected => super.isSelected;
 

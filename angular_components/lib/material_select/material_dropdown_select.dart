@@ -220,7 +220,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
       return _ariaActiveDescendant!;
     }
 
-    return activeModel.activeId ?? '';
+    return activeModel.activeId;
   }
 
   /// The id of the active element of the dropdown.

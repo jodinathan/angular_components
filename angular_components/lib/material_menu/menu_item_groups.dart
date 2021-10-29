@@ -107,6 +107,13 @@ class MenuItemGroupsComponent
     _closeOnPressLeft = !value;
   }
 
+  String? attributeToString(Object? value) {
+    if (value != null) {
+      return value.toString();
+    }
+    return null;
+  }
+
   bool _closeOnPressLeft = true;
 
   /// Whether the mouse is driving the selection.
@@ -186,7 +193,7 @@ class MenuItemGroupsComponent
 
   /// Highlighter to use, need to be to be provided if [highlight] is used.
   @Input()
-  late TextHighlighter highlighter;
+  TextHighlighter? highlighter;
 
   /// Part of the string to highlight.
   @Input()
@@ -195,7 +202,7 @@ class MenuItemGroupsComponent
     _highlightCache = {};
   }
 
-  String? _highlight;
+  String _highlight = '';
 
   /// CSS classes to append onto the sub-menu popups.
   ///
@@ -204,9 +211,9 @@ class MenuItemGroupsComponent
   /// this component is rendered in and need to be propagated down to any
   /// sub-menus this component will open.
   @Input()
-  String? popupClass;
+  String popupClass = '';
 
-  bool get hasHighlight => _highlight?.isNotEmpty ?? false;
+  bool get hasHighlight => _highlight.isNotEmpty;
 
   var _highlightCache = <String, List<HighlightedTextSegment>>{};
 
@@ -226,9 +233,12 @@ class MenuItemGroupsComponent
 
   /// Returns list of highlighted segments for a given input, using provided
   /// highlighter.
-  List<HighlightedTextSegment>? highlighted(String input) {
-    if (_highlightCache.containsKey(input)) return _highlightCache[input];
-    return _highlightCache[input] = highlighter.highlight(input, [_highlight]);
+  List<HighlightedTextSegment> highlighted(String input) {
+    if (_highlightCache.containsKey(input)) {
+      return _highlightCache[input] ?? [];
+    }
+    return _highlightCache[input] =
+        highlighter?.highlight(input, [_highlight]) ?? [];
   }
 
   @HostListener('mouseover')
@@ -350,10 +360,10 @@ class MenuItemGroupsComponent
     Element? element = target;
     while (element != null) {
       if (element.attributes['role'] == 'menuitem') {
-        MenuItemGroup group =
-            menu.itemGroups[int.parse(element.attributes['data-group-index']!)];
+        MenuItemGroup group = menu.itemGroups[
+            int.parse(element.attributes['data-group-index'] ?? '0')];
         MenuItem item =
-            group[int.parse(element.attributes['data-item-index']!)];
+            group[int.parse(element.attributes['data-item-index'] ?? '0')];
         return item;
       }
       element = element.parent;
@@ -421,8 +431,10 @@ class MenuItemGroupsComponent
     _disposer.dispose();
   }
 
-  SelectionModel? getSelectionModel(MenuItemGroup group) =>
-      group is MenuItemGroupWithSelection ? group.selectionModel : null;
+  SelectionModel getSelectionModel(MenuItemGroup group) =>
+      group is MenuItemGroupWithSelection
+          ? group.selectionModel
+          : SelectionModel.empty();
 
   /// Returns the value for a menu item's `aria-checked` attribute value.
   @visibleForTemplate

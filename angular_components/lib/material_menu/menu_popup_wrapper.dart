@@ -34,7 +34,7 @@ class MenuPopupWrapper implements AcceptsWidth {
 
   /// The displayed menu.
   @Input()
-  MenuModel? menu;
+  MenuModel menu = MenuModel.flat([]);
 
   /// Whether the menu is open.
   ///
@@ -94,7 +94,7 @@ class MenuPopupWrapper implements AcceptsWidth {
   ///
   /// Ignored if [menu] instance has a width set. See [AcceptsWidth.width] for
   /// more details.
-  int get width => menu?.width ?? _width;
+  int get width => menu.width; /* ?? _width; */
 
   /// Width of the menu.
   @override
@@ -110,7 +110,7 @@ class MenuPopupWrapper implements AcceptsWidth {
   ///
   /// For the meaning of this parameter, see the PopupInterface documentation.
   @Input()
-  Iterable? preferredPositions;
+  Iterable preferredPositions = [];
 }
 
 /// Provides basic accessibility-friendly methods for showing and hiding the

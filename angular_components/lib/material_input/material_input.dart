@@ -88,4 +88,11 @@ class MaterialInputComponent extends BaseSingleLineInputComponent
       ChangeDetectorRef changeDetector,
       DeferredValidator validator)
       : super(type, multiple, cd, changeDetector, validator);
+
+  String? attributeToString(Object? value) {
+    if (value != null) {
+      return value.toString();
+    }
+    return null;
+  }
 }

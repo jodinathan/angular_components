@@ -5,6 +5,7 @@
 import 'dart:async';
 
 import 'package:angular/angular.dart';
+import 'package:angular_components/angular_components.dart';
 import 'package:angular_components/src/laminate/popup/popup_source.dart';
 import 'package:angular_components/src/laminate/popup/popup_state.dart';
 
@@ -52,7 +53,7 @@ abstract class PopupInterface {
   /// positions. The popup will flatten out the list of positions and choose the
   /// first one that fits on screen.
   @Input()
-  set preferredPositions(Iterable<Object> preferredPositions);
+  set preferredPositions(Iterable<RelativePosition> preferredPositions);
 
   /// Sets the source the popup should be created relative to.
   @Input()
@@ -130,7 +131,7 @@ abstract class PopupBase implements PopupInterface {
   }
 
   @override
-  set preferredPositions(Iterable<Object> preferredPositions) {
+  set preferredPositions(Iterable<RelativePosition> preferredPositions) {
     state.preferredPositions = preferredPositions;
   }
 
@@ -172,7 +173,7 @@ abstract class PopupComposite implements PopupInterface {
   int offsetY = 0;
 
   @override
-  Iterable<Object> preferredPositions = const [];
+  Iterable<RelativePosition> preferredPositions = const [];
 
   @override
   PopupSource? source;

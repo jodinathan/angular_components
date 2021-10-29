@@ -31,7 +31,7 @@ abstract class HasComparisonRange {
   DatepickerDateRange? get primaryRange;
 
   /// `true` if time comparison is turned on.
-  bool? comparisonEnabled;
+  bool comparisonEnabled = false;
 
   /// List of [ComparisonOption]s which fall within minDate/maxDate.
   List<ComparisonOption> get validComparisonOptions;
@@ -67,7 +67,7 @@ class DateRangeChange {
 class ModelState {
   final DatepickerComparison? value;
   final CalendarState? calendarState;
-  final bool? comparisonEnabled;
+  final bool comparisonEnabled;
   final ComparisonOption? comparisonOption;
   ModelState(this.value, this.calendarState, this.comparisonEnabled,
       this.comparisonOption);
@@ -109,7 +109,8 @@ class DateRangeEditorModel
   bool shouldShowPredefinedList = true;
   bool shouldShowCustomDateRangeColumn = true;
   ComparisonOption? _comparisonOption = ComparisonOption.previousPeriod;
-  List<ComparisonOption>? _supportedComparisonOptions = defaultComparisonOptions;
+  List<ComparisonOption>? _supportedComparisonOptions =
+      defaultComparisonOptions;
   DatepickerDateRange? _customComparisonRange;
   String _comparisonTitle = '';
   Action? _lastCause;
@@ -175,10 +176,10 @@ class DateRangeEditorModel
 
   /// Whether or not time comparison is enabled.
   @override
-  bool? get comparisonEnabled => _comparisonEnabled;
+  bool get comparisonEnabled => _comparisonEnabled ?? false;
   set comparisonEnabled(bool? enabled) {
     _comparisonEnabled = enabled;
-    calendar.value = calendar.value!.select(rangeId,
+    calendar.value = calendar.value?.select(rangeId,
         previewAnchoredAtStart: calendar.value!.previewAnchoredAtStart);
     if (value?.range != null) {
       _changeValue(_withComparison(value!.range), Action.button);
@@ -236,7 +237,8 @@ class DateRangeEditorModel
   DatepickerDateRange? next() {
     final next = value?.range?.next;
     if (next == null) return null;
-    final amt = daysSpanned(value!.range!.start!, next.start!, inclusive: false);
+    final amt =
+        daysSpanned(value!.range!.start!, next.start!, inclusive: false);
     if (_customComparisonRange != null) {
       _customComparisonRange = DatepickerDateRange.custom(
           _customComparisonRange!.start!.add(days: amt),
@@ -253,7 +255,8 @@ class DateRangeEditorModel
   DatepickerDateRange? prev() {
     final prev = value?.range?.prev;
     if (prev == null) return null;
-    final amt = daysSpanned(prev.start!, value!.range!.start!, inclusive: false);
+    final amt =
+        daysSpanned(prev.start!, value!.range!.start!, inclusive: false);
     if (_customComparisonRange != null) {
       _customComparisonRange = DatepickerDateRange.custom(
           _customComparisonRange!.start!.add(days: -amt),
@@ -542,7 +545,8 @@ class DateRangeEditorModel
 
   /// Returns the list of [ComparisonOption]s that have any overlap with the
   /// [minDate] to [maxDate] for the given [range].
-  List<ComparisonOption> _getValidComparisonOptions(DatepickerDateRange? range) {
+  List<ComparisonOption> _getValidComparisonOptions(
+      DatepickerDateRange? range) {
     final validOptions = <ComparisonOption>[];
 
     // Return empty list if range doesn't support comparison.

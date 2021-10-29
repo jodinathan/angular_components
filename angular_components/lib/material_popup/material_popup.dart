@@ -490,9 +490,9 @@ class MaterialPopupComponent extends Object
     var popupContentsLayoutStream = _overlayRef!
         .measureSizeChanges()
         .asBroadcastStream(onListen: _visibleDisposer.addStreamSubscription);
-    var popupSourceLayoutStream = state.source!
-        .onDimensionsChanged(track: state.trackLayoutChanges ?? false);
-    if (!state.trackLayoutChanges!) {
+    var popupSourceLayoutStream =
+        state.source!.onDimensionsChanged(track: state.trackLayoutChanges);
+    if (!state.trackLayoutChanges) {
       popupContentsLayoutStream = popupContentsLayoutStream.take(1);
     }
 
@@ -529,7 +529,7 @@ class MaterialPopupComponent extends Object
     _changeDetector.markForCheck();
 
     // Start the reposition loop (if enabled).
-    if (state.trackLayoutChanges! && _useRepositionLoop) {
+    if (state.trackLayoutChanges && _useRepositionLoop) {
       _startRepositionLoop();
     }
 
@@ -693,7 +693,7 @@ class MaterialPopupComponent extends Object
     _repositionOffsetX = newOffsetX;
     _repositionOffsetY = newOffsetY;
 
-    if (state.constrainToViewport!) {
+    if (state.constrainToViewport) {
       // If necessary, move the popup to fit within the viewport.
       var popupRect = _overlayRef!.overlayElement.getBoundingClientRect();
       popupRect =
@@ -729,8 +729,8 @@ class MaterialPopupComponent extends Object
         _overlayRef!.state.left ?? 0, boundedViewportRect.width);
   }
 
-  Iterable? get _preferredPositions {
-    return _flatten(state.preferredPositions!).isNotEmpty
+  Iterable<RelativePosition> get _preferredPositions {
+    return _flatten(state.preferredPositions).isNotEmpty
         ? state.preferredPositions
         : _defaultPreferredPositions;
   }
@@ -739,7 +739,7 @@ class MaterialPopupComponent extends Object
   RelativePosition? _getBestPosition(
       Rectangle contentRect, Rectangle sourceRect, Rectangle containerRect) {
     // This should only be used when space constraints is enforced.
-    assert(state.enforceSpaceConstraints!);
+    assert(state.enforceSpaceConstraints);
 
     // ContainerRect kind of conflates the screen and the container together, so
     // let's pull it apart some. The top-left of the rectangle is actually how
@@ -752,7 +752,7 @@ class MaterialPopupComponent extends Object
     var containerOffset = containerRect.topLeft;
 
     // Try each position, and use the one which overlaps most with the viewport.
-    var positions = _flatten(_preferredPositions!);
+    var positions = _flatten(_preferredPositions);
     var bestPosition = positions.first;
     var bestOverlap = 0.0;
     for (var position in positions) {
@@ -800,7 +800,7 @@ class MaterialPopupComponent extends Object
 
     // Must be set first so contentSizeFuture is correct.
     _overlayRef!.state.width = null;
-    if (state.matchMinSourceWidth!) {
+    if (state.matchMinSourceWidth) {
       _overlayRef!.state.minWidth = sourceClientRect.width;
     }
 
@@ -808,12 +808,12 @@ class MaterialPopupComponent extends Object
     // _overlayRef.state.width/_overlay.state.minWidth updates are applied
     // asynchronously, and are thus not accounted for in the position
     // calculations.
-    if (state.matchMinSourceWidth!) {
+    if (state.matchMinSourceWidth) {
       contentClientRect = _resizeRectangle(contentClientRect,
           width: max(sourceClientRect.width, contentClientRect.width));
     }
 
-    if (state.enforceSpaceConstraints!) {
+    if (state.enforceSpaceConstraints) {
       // Instead of using user-provided positioning, try to determine what
       // would be the best positioning given the viewport bounds and the size
       // of the content being popped-up.
@@ -831,9 +831,9 @@ class MaterialPopupComponent extends Object
     // Find the size of the content, and move the overlay as an offset based
     // on the calculated position.
     final offsetX = isRtl
-        ? containerRect.left - state.offsetX!
-        : state.offsetX! - containerRect.left;
-    final offsetY = state.offsetY! - containerRect.top;
+        ? containerRect.left - state.offsetX
+        : state.offsetX - containerRect.left;
+    final offsetY = state.offsetY - containerRect.top;
     _overlayRef!.state
       ..left = position.originX!.calcLeft(sourceClientRect, contentClientRect) +
           offsetX

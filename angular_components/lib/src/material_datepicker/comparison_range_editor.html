@@ -6,14 +6,14 @@
 <div class="comparison-toggle-section">
   <material-toggle class="comparison-toggle"
                    [label]="comparisonHeaderMsg"
-                   [disabled]="!model.comparisonSupported"
+                   [disabled]="!comparisonSupported"
                    [(checked)]="comparisonEnabled">
   </material-toggle>
 </div>
 
-<div *ngIf="model.comparisonEnabled">
-    <material-select-item *ngFor="let option of model.validComparisonOptions"
+<div *ngIf="comparisonEnabled">
+    <material-select-item *ngFor="let option of model!.validComparisonOptions"
                           [closeOnActivate]="false"
-                          (trigger)="model.comparisonOption = option"
-                          [selected]="model.comparisonOption == option">{{comparisonOptionMsg(option)}}</material-select-item>
+                          (trigger)="model!.comparisonOption = option"
+                          [selected]="model!.comparisonOption == option">{{comparisonOptionMsg(option)}}</material-select-item>
 </div>

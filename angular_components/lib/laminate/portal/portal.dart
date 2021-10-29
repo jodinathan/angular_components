@@ -271,7 +271,7 @@ class PortalHostDirective extends BasePortalHost {
   }
 
   @Input('portalHost')
-  set portal(Portal<Object> portal) {
+  set portal(dynamic portal) {
     if (hasAttached) {
       detach().then((_) {
         if (portal != null) {

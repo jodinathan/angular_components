@@ -74,8 +74,13 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
       ..addFunction(() => _selectionChangeStreamSub?.cancel());
   }
 
-  @HostBinding('class.disabled')
   @override
+  @Input()
+  set disabled(bool v) {
+    super.disabled = v;
+  }
+
+  @HostBinding('class.disabled')
   bool get disabled => super.disabled;
 
   /// Whether the item should be hidden.
@@ -210,8 +215,10 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
       factoryRenderer != null ? factoryRenderer!(value) : null;
 
   @HostBinding('attr.aria-checked')
-  bool? get isAriaChecked =>
-      !supportsMultiSelect || hideCheckbox ? null : isSelected;
+  String get isAriaCheckedStr => '$isAriaChecked';
+
+  bool get isAriaChecked =>
+      !supportsMultiSelect || hideCheckbox ? false : isSelected;
 
   /// Whether this item should be marked as selected.
   @HostBinding('class.selected')

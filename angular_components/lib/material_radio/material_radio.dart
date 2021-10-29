@@ -97,8 +97,10 @@ class MaterialRadioComponent extends RootFocusable
   /// suggests that interaction is not allowed.
   @Input()
   @HostBinding('class.disabled')
-  @HostBinding('attr.aria-disabled')
   bool disabled = false;
+
+  @HostBinding('attr.aria-disabled')
+  String get disabledStr => disabled.toString();
 
   /// Published when the radio selection state changes.
   @Output('checkedChange')
@@ -123,7 +125,10 @@ class MaterialRadioComponent extends RootFocusable
   }
 
   @HostBinding('attr.aria-checked')
+  String get checkedStr => _checked.toString();
+
   bool get checked => _checked;
+
   bool _checked = false;
 
   /// Current icon, depends on the state of [checked].
@@ -135,6 +140,8 @@ class MaterialRadioComponent extends RootFocusable
   @HostBinding('attr.tabindex')
   @visibleForTesting
   @visibleForTemplate
+  String get tabIndexStr => tabIndex.toString();
+
   int get tabIndex => disabled ? -1 : _enabledTabIndex;
 
   int _enabledTabIndex = 0;

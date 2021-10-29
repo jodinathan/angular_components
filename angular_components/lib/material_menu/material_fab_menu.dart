@@ -57,7 +57,7 @@ class MaterialFabMenuComponent extends Object
 
   /// Popup positions for the menu popup to show up in.
   @Input()
-  List<RelativePosition>? preferredPopupPositions;
+  List<RelativePosition> preferredPopupPositions = [];
 
   StreamSubscription? _viewModelStreamSub;
 
@@ -76,9 +76,10 @@ class MaterialFabMenuComponent extends Object
   /// surfaced via clicking or hovering.
   @Input()
   set menuItem(MenuItem? menuItem) {
-    if (menuItem == null) return;
+    //if (menuItem == null) return;
 
-    viewModel = MaterialFabMenuModel(menuItem, showPopup: showPopup);
+    viewModel =
+        MaterialFabMenuModel(menuItem ?? MenuItem(''), showPopup: showPopup);
   }
 
   /// Sets the view model for this component.
@@ -99,7 +100,7 @@ class MaterialFabMenuComponent extends Object
   @Input()
   String? naviId;
 
-  MenuItem? get menuItem => _viewModel?.menuItem;
+  MenuItem get menuItem => _viewModel?.menuItem ?? MenuItem('');
 
   bool get isFabEnabled => _viewModel?.isFabEnabled ?? false;
 

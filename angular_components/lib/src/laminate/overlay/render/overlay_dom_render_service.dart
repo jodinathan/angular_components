@@ -16,7 +16,7 @@ import 'package:angular_components/utils/angular/imperative_view/imperative_view
 import 'package:angular_components/utils/browser/dom_service/dom_service.dart';
 
 /// An opaque token for the name of the overlay container, if any.
-const overlayContainerName = OpaqueToken('overlayContainerName');
+const overlayContainerName = OpaqueToken<String>('overlayContainerName');
 
 /// An opaque token of the DOM element that is the container.
 ///
@@ -25,24 +25,25 @@ const overlayContainerName = OpaqueToken('overlayContainerName');
 ///     bootstrap(RootComponent, [
 ///       provide(overlayContainerToken, useValue: overlayContainer)
 ///     ]);
-const overlayContainerToken = OpaqueToken('overlayContainer');
+const overlayContainerToken = OpaqueToken<HtmlElement>('overlayContainer');
 
 /// Where [overlayContainerToken] should be created.
-const overlayContainerParent = OpaqueToken('overlayContainerParent');
+const overlayContainerParent =
+    OpaqueToken<HtmlElement>('overlayContainerParent');
 
 /// Flag whether to use synchronous reads/writes instead of async.
 ///
 /// The reason for this is that overlays are already in a position:absolute
 /// layer in the DOM, and waiting for the next frame makes less sense and causes
 /// latency issues.
-const overlaySyncDom = OpaqueToken('overlaySyncDom');
+const overlaySyncDom = OpaqueToken<bool>('overlaySyncDom');
 
 /// Flag whether to reposition popups on every frame when trackLayoutChanges is
 /// true.
 ///
 /// This allows popups to scroll with the page if the overlay container is not
 /// part of the scrolling container.
-const overlayRepositionLoop = OpaqueToken('overlayRepositionLoop');
+const overlayRepositionLoop = OpaqueToken<bool>('overlayRepositionLoop');
 
 /// An token to provide custom viewport boundaries for popups.
 ///
@@ -80,38 +81,14 @@ class OverlayDomRenderService {
 
   OverlayDomRenderService(
       OverlayStyleConfig styleConfig,
-      @Inject(overlayContainerToken) Object container,
-      @Inject(overlayContainerName) Object containerName,
+      @Inject(overlayContainerToken) HtmlElement container,
+      @Inject(overlayContainerName) String containerName,
       this._domRuler,
       this._domService,
       this._imperativeViewUtils,
-      @Inject(overlaySyncDom) Object useDomSynchronously,
-      @Inject(overlayRepositionLoop) Object useRepositionLoop,
+      @Inject(overlaySyncDom) bool useDomSynchronously,
+      @Inject(overlayRepositionLoop) bool useRepositionLoop,
       this._zIndexer) {
-    if (container is HtmlElement) {
-      containerElement = container;
-    } else {
-      throw ArgumentError("containerElement is not of type HTMLElement");
-    }
-
-    if (containerName is String) {
-      _containerName = containerName;
-    } else {
-      throw ArgumentError("containerName is not of type String");
-    }
-
-    if (useDomSynchronously is bool) {
-      _useDomSynchronously = useDomSynchronously;
-    } else {
-      _useDomSynchronously = false;
-    }
-
-    if (useRepositionLoop is bool) {
-      _useRepositionLoop = useRepositionLoop;
-    } else {
-      useRepositionLoop = false;
-    }
-
     containerElement.attributes['name'] = _containerName;
     styleConfig.registerStyles();
     _lastZIndex = _zIndexer.peek();

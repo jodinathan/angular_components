@@ -53,7 +53,7 @@ class MaterialChipComponent<T> extends RootFocusable implements HasRenderer<T> {
   /// Chips can be deselected from the model via user interaction unless
   /// `removable` is set to false.
   @Input()
-  SelectionModel<T>? selectionModel;
+  SelectionModel<T> selectionModel = SelectionModel.empty();
 
   /// Whether the chip should show remove button, default to true.
   @Input()
@@ -73,13 +73,13 @@ class MaterialChipComponent<T> extends RootFocusable implements HasRenderer<T> {
   @Input()
   @override
   set itemRenderer(ItemRenderer<T>? value) {
-    _itemRenderer = value;
+    _itemRenderer = value ?? nullRenderer;
     _genLabel();
   }
 
-  ItemRenderer<T>? _itemRenderer = nullRenderer;
+  ItemRenderer<T> _itemRenderer = nullRenderer;
   @override
-  ItemRenderer<T>? get itemRenderer => _itemRenderer;
+  ItemRenderer<T> get itemRenderer => _itemRenderer;
 
   /// Data model to render.
   ///
@@ -99,7 +99,7 @@ class MaterialChipComponent<T> extends RootFocusable implements HasRenderer<T> {
     if (_value == null) {
       _label = null;
     } else if (!identical(_itemRenderer, nullRenderer)) {
-      _label = itemRenderer!(_value);
+      _label = itemRenderer(_value);
     }
   }
 
@@ -112,7 +112,7 @@ class MaterialChipComponent<T> extends RootFocusable implements HasRenderer<T> {
   final _remove = StreamController<dynamic>(sync: true);
 
   void removeChip(/* MouseEvent | KeyboardEvent */ event) {
-    selectionModel?.deselect(value);
+    selectionModel.deselect(value);
     _remove.add(value);
     event.preventDefault();
     event.stopPropagation();

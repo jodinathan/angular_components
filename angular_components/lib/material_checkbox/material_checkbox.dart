@@ -122,12 +122,14 @@ class MaterialCheckboxComponent
   ///
   /// `true` will go to checked and `false` will go to unchecked.
   @Input()
-  bool? indeterminateToChecked = false;
+  bool indeterminateToChecked = false;
 
   /// Whether the checkbox should not respond to events, and have a style that
   /// suggests that interaction is not allowed.
-  @HostBinding('class.disabled')
   @HostBinding('attr.aria-disabled')
+  String get disabledStr => '$disabled';
+
+  @HostBinding('class.disabled')
   @Input()
   bool disabled = false;
 
@@ -277,7 +279,7 @@ class MaterialCheckboxComponent
       _setStates();
     } else {
       assert(indeterminate);
-      _setStates(checked: indeterminateToChecked ?? false);
+      _setStates(checked: indeterminateToChecked);
     }
   }
 
