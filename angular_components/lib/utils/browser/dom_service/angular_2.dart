@@ -39,13 +39,15 @@ const domServiceModule = Module(provide: [domServiceBinding]);
 DomService? _singletonService;
 
 @Injectable()
-DomService? createDomService(@Optional() @SkipSelf() DomService? service,
+DomService createDomService(@Optional() @SkipSelf() DomService? service,
     @Optional() Disposer? disposer, NgZone zone, Window window) {
   // If DomService was bound higher up the tree use that instance. This allows
   // an application to override the service at root.
   if (service != null) return service;
 
-  if (_singletonService != null) return _singletonService;
+  if (_singletonService != null) {
+    return _singletonService!;
+  }
 
   _singletonService = DomService(zone, window);
 
@@ -54,7 +56,8 @@ DomService? createDomService(@Optional() @SkipSelf() DomService? service,
   disposer?.addFunction(() {
     _singletonService = null;
   });
-  return _singletonService;
+
+  return _singletonService!;
 }
 
 // Initializes DOM service and wires up DomService and AcxRootDomRender

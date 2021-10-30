@@ -16,7 +16,8 @@ import 'main.template.dart' as ng;
 
 Logger _logger = Logger("angular_dart_gallery");
 
-ComponentRef<app.GalleryComponent>? gallery;
+//ComponentRef<app.GalleryComponent>? gallery;
+ComponentRef<dynamic>? gallery;
 
 void main() {
   Logger.root.onRecord.listen((x) => print("${x.level}: ${x.message}"));
