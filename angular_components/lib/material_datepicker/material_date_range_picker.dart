@@ -262,12 +262,12 @@ class MaterialDateRangePickerComponent
   /// selected `range' when the user reopens the popup.
   @Input()
   set minDate(Date? date) {
-    _minDate = date;
+    _minDate = date ?? Date.today();
     model.minDate = _minDate;
   }
 
-  Date? get minDate => _minDate;
-  Date? _minDate;
+  Date get minDate => _minDate;
+  Date _minDate = Date.today();
 
   /// Dates later than `maxDate` cannot be chosen.
   ///
@@ -277,20 +277,20 @@ class MaterialDateRangePickerComponent
   /// only applied to the selected `range' when the user reopens the popup.
   @Input()
   set maxDate(Date? date) {
-    _maxDate = date;
+    _maxDate = date ?? Date.today();
     model.maxDate = _maxDate;
   }
 
-  Date? get maxDate => _maxDate;
-  Date? _maxDate;
+  Date get maxDate => _maxDate;
+  Date _maxDate = Date.today();
 
   /// The [DateFormat] used to format dates.
   @Input()
-  DateFormat? dateFormat;
+  DateFormat dateFormat = DateFormat();
 
   /// The [DateFormat] used to format dates when the input is active.
   @Input()
-  DateFormat? activeDateFormat;
+  DateFormat activeDateFormat = DateFormat();
 
   /// When 'requireFullPeriods' is true, 'prev/next' button will be disabled
   /// if previous or next period is not a full predefined period, like 'week'.

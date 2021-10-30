@@ -73,9 +73,9 @@ class MaterialTimePickerComponent extends KeyboardHandlerMixin
   final Clock _clock;
   final _disposer = Disposer.oneShot();
   final _timeChangeController = StreamController<DateTime?>.broadcast();
-  DateTime? _time;
-  bool? displayErrorPanel;
-  String? inputError;
+  DateTime _time = DateTime.now();
+  bool displayErrorPanel = false;
+  String inputError = '';
 
   /// The format used to format time.
   ///
@@ -89,10 +89,10 @@ class MaterialTimePickerComponent extends KeyboardHandlerMixin
   @Input()
   set time(DateTime? value) {
     value = utc ? value?.toUtc() : value?.toLocal();
-    if ((value?.hour != _time?.hour ||
-        value?.minute != _time?.minute ||
-        value?.isUtc != _time?.isUtc)) {
-      _time = value;
+    if ((value?.hour != _time.hour ||
+        value?.minute != _time.minute ||
+        value?.isUtc != _time.isUtc)) {
+      _time = value ?? DateTime.now();
       if (time != null) {
         selectedTime.select(time);
       } else {
@@ -108,7 +108,7 @@ class MaterialTimePickerComponent extends KeyboardHandlerMixin
   ///
   /// The picker also gets a red underline when this is set.
   @Input()
-  String? error;
+  String error = '';
 
   DateTime? get time => _withEpochDate(_time);
 
@@ -157,13 +157,13 @@ class MaterialTimePickerComponent extends KeyboardHandlerMixin
     _popupVisibleController.add(_popupVisible);
   }
 
-  DateTime? _maxTime;
-  DateTime? get maxTime => _withEpochDate(_maxTime);
+  DateTime _maxTime = DateTime.now();
+  DateTime get maxTime => _withEpochDate(_maxTime) ?? DateTime.now();
 
   /// Maximum date time that can be chosen by the user.
   @Input()
   set maxTime(DateTime? value) {
-    _maxTime = value;
+    _maxTime = value ?? DateTime.now();
     timeOptions.maxTime = _maxTime;
 
     // Validates selected time again since it may becomes invalid.
@@ -172,13 +172,13 @@ class MaterialTimePickerComponent extends KeyboardHandlerMixin
     }
   }
 
-  DateTime? _minTime;
-  DateTime? get minTime => _withEpochDate(_minTime);
+  DateTime _minTime = DateTime.now();
+  DateTime get minTime => _withEpochDate(_minTime) ?? DateTime.now();
 
   /// Minimum date time that can be chosen by the user.
   @Input()
   set minTime(DateTime? value) {
-    _minTime = _withEpochDate(value);
+    _minTime = _withEpochDate(value) ?? DateTime.now();
     timeOptions.minTime = _minTime;
 
     // Validates selected time again since it may becomes invalid.
@@ -259,7 +259,7 @@ class MaterialTimePickerComponent extends KeyboardHandlerMixin
 
   void setInputErrorText(String? errorText) {
     displayErrorPanel = (errorText != null);
-    inputError = errorText;
+    inputError = errorText ?? '';
   }
 
   /// Given a text, checks its validity and optionally sets it
@@ -267,7 +267,7 @@ class MaterialTimePickerComponent extends KeyboardHandlerMixin
   DateTime? _parseAndTrySetTime(String timeText, {bool setAsCurrent = false}) {
     final parsed = _parseTime(timeText);
     if (setAsCurrent) {
-      time = inputError == null ? parsed : _time;
+      time = inputError.isEmpty ? parsed : _time;
     }
     return time;
   }
@@ -323,10 +323,10 @@ class MaterialTimePickerComponent extends KeyboardHandlerMixin
       return required ? inputPlaceholderMsg : null;
     }
 
-    if (minTime != null && value.isBefore(minTime!)) {
-      return timeIsTooEarlyMsg(renderTime(minTime!));
-    } else if (maxTime != null && value.isAfter(maxTime!)) {
-      return timeIsTooLateMsg(renderTime(maxTime!));
+    if (value.isBefore(minTime)) {
+      return timeIsTooEarlyMsg(renderTime(minTime));
+    } else if (value.isAfter(maxTime)) {
+      return timeIsTooLateMsg(renderTime(maxTime));
     }
     return null;
   }

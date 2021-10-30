@@ -33,7 +33,7 @@ class MaterialTooltipDirective extends TooltipTarget
   final String _popupClassName;
   final Window _window;
 
-  String? _lastText;
+  String _lastText = '';
   bool _isInitialized = false;
   Tooltip? _tooltip;
   bool _canShow = true;

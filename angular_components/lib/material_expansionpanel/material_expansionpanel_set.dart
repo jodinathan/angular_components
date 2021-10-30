@@ -47,7 +47,7 @@ class MaterialExpansionPanelSet implements OnDestroy {
     _openPanel = null;
 
     for (final panel in _panels) {
-      if (panel.isExpanded!) {
+      if (panel.isExpanded) {
         if (_openPanel != null) {
           throw StateError('Should only have one panel open at a time');
         }

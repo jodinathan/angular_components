@@ -55,9 +55,9 @@
         </material-button>
       </div>
       <!--
-        <span [style.display]="showButton ? '' : 'none'">
-      -->
-        <span [style.display]="showButton">
+        <span [style.display]="showButton ? null : 'none'">
+     -->
+         <span [style.display]="showButton">
           <material-button raised buttonDecorator
                            class="custom-continue-button"
                            (trigger)="stepper1.stepForward($event, stepper1.activeStep)">

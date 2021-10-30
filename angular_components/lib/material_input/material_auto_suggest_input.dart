@@ -305,9 +305,9 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
 
   /// Tooltip shown on clear icon.
   @Input()
-  String? clearIconTooltip;
+  String clearIconTooltip = '';
 
-  bool get hasClearIconTooltip => clearIconTooltip?.isNotEmpty ?? false;
+  bool get hasClearIconTooltip => clearIconTooltip.isNotEmpty;
 
   /// Text to show if the options list is empty and not loading.
   @Input()
@@ -338,7 +338,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
 
   /// Function for use by NgFor for optionGroup to avoid recreating the
   /// DOM for the optionGroup.
-  final Function trackByIndexFn = indexIdentityFn;
+  final TrackByFn trackByIndexFn = indexIdentityFn;
 
   /// If a parent provides a [PopupSizeProvider], the provider will be used
   /// instead of the implementation of this class.
@@ -936,5 +936,12 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   @override
   void onDisabledChanged(bool? isDisabled) {
     disabled = isDisabled ?? false;
+  }
+
+  String? attributeToString(Object? value) {
+    if (value != null) {
+      return value.toString();
+    }
+    return null;
   }
 }

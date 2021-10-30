@@ -82,7 +82,7 @@
           </span>
           <dynamic-component
               *ngIf="hasCustomLabelRenderer"
-              [componentFactory]="labelFactory(group)"
+              [componentFactory]="labelFactory!(group)"
               [value]="group">
           </dynamic-component>
           <template [ngIf]="group.isNotEmpty">

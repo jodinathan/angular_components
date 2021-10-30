@@ -203,24 +203,24 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
 
   /// The [DateFormat] used to format dates.
   @Input()
-  DateFormat? dateFormat;
+  DateFormat dateFormat = DateFormat();
 
   /// The [DateFormat] used to format dates when the input is active.
   @Input()
-  DateFormat? activeDateFormat;
+  DateFormat activeDateFormat = DateFormat();
 
   final Element _elementRef;
   final DomService _domService;
   final NgZone _ngZone;
-  MenuModel? _presetsMenu;
+  MenuModel _presetsMenu = MenuModel([]);
 
   // This controls when the calendar is created.
   // By default, this is null, and the calendar will be created shortly
   // after this component is initialized. However, when you specify
   // calendarCreated as an input, the calendar will be created (and
   // destroyed) when your input is true (or false).
-  bool? _isCalendarCreated;
-  bool get isCalendarCreated => _isCalendarCreated ?? false;
+  bool _isCalendarCreated = false;
+  bool get isCalendarCreated => _isCalendarCreated;
 
   @Input('calendarCreated')
   set isCalendarCreated(bool value) {
@@ -356,13 +356,13 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
 
   @override
   void ngAfterViewInit() {
-    if (_isCalendarCreated != null) return;
+    //if (_isCalendarCreated != null) return;
 
     // Give the browser a chance to do other work before creating the
     // calendar component (for a snappier UX)
     _domService.nextFrame!.then((_) {
       _ngZone.run(() {
-        if (_isCalendarCreated != null) return;
+        //if (_isCalendarCreated != null) return;
         _isCalendarCreated = true;
       });
     });
@@ -399,13 +399,13 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
     for (var preset in _presets) {
       bool isValid = preset.range.clamp(min: minDate, max: maxDate) != null;
       if (isValid) _validPresets.add(preset);
-      if (preset.alternatives != null) {
-        for (var alternative in preset.alternatives!) {
-          bool isValidAlternative =
-              alternative.range.clamp(min: minDate, max: maxDate) != null;
-          if (isValidAlternative) _validPresets.add(alternative);
-        }
+      //if (preset.alternatives != null) {
+      for (var alternative in preset.alternatives) {
+        bool isValidAlternative =
+            alternative.range.clamp(min: minDate, max: maxDate) != null;
+        if (isValidAlternative) _validPresets.add(alternative);
       }
+      //}
       if (model.value?.range?.unclamped() == preset.range) {
         _presetSelection.select(preset);
       }
@@ -417,29 +417,29 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
     final items = <SelectableMenuItem<DatepickerPreset>>[];
     for (var preset in _presets) {
       MenuModel? subMenu;
-      if (preset.alternatives != null) {
-        final subitems = <SelectableMenuItem<DatepickerPreset>>[];
-        for (var alternative in preset.alternatives!) {
-          bool isValid = _validPresets.contains(alternative);
-          subitems.add(SelectableMenuItem(
-              cssClasses: ['preset-dropdown-item'],
-              value: alternative,
-              action: () {
-                // TODO(google): pass the event instead of null.
-                onAlternativePresetClicked(null, preset, alternative);
-                _presetSelection.select(alternative);
-              },
-              itemRenderer: _renderAlternativePreset,
-              tooltip: isValid ? '' : rangeDisabledTooltip,
-              selectableState: isValid
-                  ? SelectableOption.Selectable
-                  : SelectableOption.Disabled));
-        }
-        subMenu = MenuModel([
-          MenuItemGroupWithSelection(
-              items: subitems, selectionModel: _presetSelection)
-        ]);
+      //if (preset.alternatives != null) {
+      final subitems = <SelectableMenuItem<DatepickerPreset>>[];
+      for (var alternative in preset.alternatives) {
+        bool isValid = _validPresets.contains(alternative);
+        subitems.add(SelectableMenuItem(
+            cssClasses: ['preset-dropdown-item'],
+            value: alternative,
+            action: () {
+              // TODO(google): pass the event instead of null.
+              onAlternativePresetClicked(null, preset, alternative);
+              _presetSelection.select(alternative);
+            },
+            itemRenderer: _renderAlternativePreset,
+            tooltip: isValid ? '' : rangeDisabledTooltip,
+            selectableState: isValid
+                ? SelectableOption.Selectable
+                : SelectableOption.Disabled));
       }
+      subMenu = MenuModel([
+        MenuItemGroupWithSelection(
+            items: subitems, selectionModel: _presetSelection)
+      ]);
+      //}
       bool isValid = _validPresets.contains(preset);
       items.add(SelectableMenuItem(
           value: preset,
@@ -578,7 +578,7 @@ class DateRangeEditorComponent implements OnInit, AfterViewInit, Focusable {
 
   String get customRangeDescription => formatRange(model.range.value);
 
-  MenuModel? get presetsMenu => _presetsMenu;
+  MenuModel get presetsMenu => _presetsMenu;
 
   static final navigateBeforeMsg = Intl.message('Previous date range',
       name: 'navigateBeforeMsg',

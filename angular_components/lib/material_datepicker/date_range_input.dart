@@ -119,13 +119,15 @@ class DateRangeInputComponent implements OnInit, OnDestroy {
 
   /// The selected date range.
   @Input()
-  set range(DateRange range) {
-    if (range != _range && range.start != null && range.end != null) {
-      // Publish changes, if both endpoints are set
-      _controller.add(range);
+  set range(DateRange? range) {
+    if (range != null) {
+      if (range != _range && range.start != null && range.end != null) {
+        // Publish changes, if both endpoints are set
+        _controller.add(range);
+      }
+      _range = range;
+      //_range = range ?? DateRange(null, null);
     }
-    _range = range;
-    //_range = range ?? DateRange(null, null);
   }
 
   bool _isClearRangeSelected = false;

@@ -76,7 +76,7 @@ class MaterialInputWrapper implements HasDisabled {
 
   /// Custom error message to show when the field is required and blank.
   @Input()
-  String? requiredErrorMsg;
+  String requiredErrorMsg = '';
 
   /// Whether the input contents should be always right aligned.
   ///

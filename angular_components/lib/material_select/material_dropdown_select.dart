@@ -99,7 +99,7 @@ class MaterialDropdownSelectComponent<T> extends MaterialSelectBase<T>
   /// Function for use by NgFor for optionGroup.
   ///
   /// Avoids recreating the DOM for the optionGroup.
-  final Function trackByIndexFn = indexIdentityFn;
+  final TrackByFn trackByIndexFn = indexIdentityFn;
 
   /// Keeps track of the active item.
   final ActiveItemModel activeModel;

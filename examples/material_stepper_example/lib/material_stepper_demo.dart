@@ -36,10 +36,10 @@ class MaterialStepperGalleryConfig {}
   styleUrls: ['material_stepper_demo.scss.css'],
 )
 class StepperDemoComponent {
-  bool showButton = false;
+  bool? showButton = false;
 
   void toggleContinue() {
-    showButton = !showButton;
+    showButton = !(showButton ?? false);
   }
 
   void validDelayedCheck(AsyncAction<bool> action) {

@@ -173,7 +173,7 @@ class MaterialMultilineInputComponent extends BaseMaterialInput
   void handleChange(Event event, TextAreaElement element) {
     inputChange(
       element.value,
-      element.validity!.valid,
+      element.validity?.valid,
       element.validationMessage,
     );
     event.stopPropagation();

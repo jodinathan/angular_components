@@ -41,10 +41,10 @@ class FocusListDirective implements OnDestroy {
   int get _length => _children.length;
 
   FocusListDirective(this._ngZone, @Attribute('role') String? role,
-      @Attribute('ignoreUpAndDown') bool? ignoreUpAndDown)
+      @Attribute('ignoreUpAndDown') String? ignoreUpAndDown)
       : this.role = role ?? 'list',
-        this.ignoreUpAndDown = ignoreUpAndDown ?? false;
-  //attributeToBool(ignoreUpAndDown ?? false);
+        this.ignoreUpAndDown =
+            attributeToBool(ignoreUpAndDown, defaultValue: false);
 
   /// Whether focus movement loops from the end of the list to the beginning of
   /// the list. Default is `false`.

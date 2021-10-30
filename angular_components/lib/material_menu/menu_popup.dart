@@ -49,8 +49,8 @@ class MenuPopupComponent extends Object with FocusableMixin, MenuPopupWrapper {
     _popupClass = constructEncapsulatedCss(value, element.classes);
   }
 
-  String? get popupClass => _popupClass;
-  String? _popupClass;
+  String get popupClass => _popupClass;
+  String _popupClass = '';
 
   MenuPopupComponent(this.element);
 

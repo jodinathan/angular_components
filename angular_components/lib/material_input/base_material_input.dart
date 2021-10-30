@@ -26,7 +26,7 @@ export 'package:angular_components/forms/error_renderer.dart' show ErrorFn;
 /// Key used in the Control's error map, when there is an error.
 const String materialInputErrorKey = 'material-input-error';
 
-typedef ValidityCheck = String? Function(String? inputText);
+typedef ValidityCheck = String Function(String? inputText);
 typedef CharacterCounter = int Function(String? inputText);
 
 /// Represents which label should be shown in the BottomPanel
@@ -159,19 +159,23 @@ class BaseMaterialInput extends FocusableMixin
   @Input()
   int? maxCount;
 
-  ValidityCheck? _checkValid;
-  ValidityCheck? get checkValid => _checkValid;
+  ValidityCheck _checkValid = (v) => '';
+  ValidityCheck get checkValid => _checkValid;
   @Deprecated('Use angular2 forms API instead')
   @Input()
-  set checkValid(ValidityCheck? validFn) {
-    if (validFn == _checkValid) return; // Identical doesn't work on functions
-    _checkValid = validFn;
-    _changeDetector.markForCheck();
-    if (_cd?.control != null) {
-      // Validator was changed. Rerun validation.
-      _cd?.control?.updateValueAndValidity();
+  set checkValid(Function? validFn) {
+    if (validFn == _checkValid) return;
+
+    if (validFn != null) {
+      // Identical doesn't work on functions
+      _checkValid = validFn as ValidityCheck;
+      _changeDetector.markForCheck();
+      if (_cd?.control != null) {
+        // Validator was changed. Rerun validation.
+        _cd?.control?.updateValueAndValidity();
+      }
+      updateBottomPanelState();
     }
-    updateBottomPanelState();
   }
 
   int _inputTextLength = 0;
@@ -198,22 +202,25 @@ class BaseMaterialInput extends FocusableMixin
   @Input()
   ErrorFn? errorRenderer;
 
-  CharacterCounter? _characterCounter;
+  CharacterCounter _characterCounter = (a) => 0;
 
   /// A custom character counter function.
   ///
   /// Takes in the input text; returns how many characters the text should be
   /// considered as.
   @Input()
-  set characterCounter(CharacterCounter counterFn) {
-    _characterCounter = counterFn;
-    updateInputTextLength();
+  set characterCounter(Function? counterFn) {
+    if (counterFn != null) {
+      _characterCounter = counterFn as CharacterCounter;
+      updateInputTextLength();
+    }
   }
 
   void updateInputTextLength() {
-    _inputTextLength = _characterCounter != null
-        ? _characterCounter!(_inputText)
-        : _inputText.length;
+    _inputTextLength = _characterCounter(_inputText);
+    //_characterCounter != null
+    //? _characterCounter(_inputText)
+    // : _inputText.length;
   }
 
   /// Display character count even if maxCount is null.
@@ -266,13 +273,12 @@ class BaseMaterialInput extends FocusableMixin
       _localValidationMessage = _errorMsg;
       return {materialInputErrorKey: _localValidationMessage};
     }
-    if (checkValid != null) {
-      var _checkValidMessage = checkValid!(inputText);
-      if (_checkValidMessage != null) {
-        _localValidationMessage = _checkValidMessage;
-        return {materialInputErrorKey: _localValidationMessage};
-      } // fallthrough
-    }
+    var _checkValidMessage = checkValid(inputText);
+    if (_checkValidMessage.isNotEmpty) {
+      _localValidationMessage = _checkValidMessage;
+      return {materialInputErrorKey: _localValidationMessage};
+    } // fallthrough
+
     if (_invalid && useNativeValidation) {
       _localValidationMessage = _validationMessage;
       return {materialInputErrorKey: _localValidationMessage};
