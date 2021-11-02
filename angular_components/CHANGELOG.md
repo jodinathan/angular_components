@@ -1,3 +1,30 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+
+<!-- Current version working on -->
+## [1.1.0] - 2021-11-07
+
+### Changed
+
+- Use `ChangeDetectionStrategy.onPush` for all components.
+- Change from `Observable<ChangeRecord>` to `PropertyChangeNotifier`.
+
+### Removed
+
+- Remove `Angular2ManagedZone`. Use `NgZone` instead.
+- Remove `componentRenderer`, `labelRenderer` and `componentType`. Use `labelFactory`  and `factoryRenderer` instead.
+- Remove `ElementRef`. Use `dart:html.Element`. For example, instead of writing `component.elementRef.nativeElement`, use `component.element`.
+- Remove `GlyphComponent`. Use `MaterialIcon` instead.
+- Remove `MaterialInputComponent.checkValid`. Use `AngularForms` instead.
+- Remove `MenuItem.action`. Use `MenuItem.actionWithContext` instead.
+- Remove `SelectionModel.withList`. Use `SelectionModel.single` or `SelectionModel.multi` instead.
+- Remove `timeZoneAwareDatepickerProviders`. Use `timeZoneAwareDatepickerModule` instead.
+
 ## 1.0.3
 
 * Roll observable dependency.
@@ -1693,3 +1720,5 @@ API.
 ## 0.1.0
 
 * Initial Open Source release.
+
+[1.1.0]: https://github.com/angulardart-community/angular_components/compare/v1.0.3...v1.1.0
