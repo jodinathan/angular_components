@@ -31,3 +31,6 @@ doc/api/
 .vscode/
 !.vscode/settings.json
 .metals
+
+testing/
+gen_app/

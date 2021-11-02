@@ -48,7 +48,8 @@ import 'package:meta/meta.dart';
 
 import 'material_input.dart';
 
-typedef _InputChangeCallback = String Function(String inputText);
+typedef InputChangeCallback = dynamic Function(Object inputText,
+    {String rawValue});
 
 /// See material_auto_suggest_input.md for an overview of the component.
 /// See examples for usage.
@@ -175,7 +176,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   bool _showPopup = false;
   bool _focusPending = false;
   MaterialInputComponent? _input;
-  _InputChangeCallback? _callback;
+  InputChangeCallback? _callback;
 
   /// The current text being displayed.
   String _inputText = '';
@@ -380,7 +381,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   // representation.
   // TODO(google): Migrate to using error-panel once it gets added to acx.
   String? get errorText {
-    if (error != null) return error;
+    //if (error != null) return error;
 
     var err = _cd?.control?.errors;
     if (err != null) {
@@ -838,8 +839,8 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   }
 
   @override
-  void registerOnChange(callback) {
-    _callback = callback as _InputChangeCallback;
+  void registerOnChange(InputChangeCallback? callback) {
+    _callback = callback;
   }
 
   @override

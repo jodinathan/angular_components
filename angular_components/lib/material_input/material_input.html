@@ -124,7 +124,7 @@
        (focus)="$event.stopPropagation()">
     &nbsp;
   </div>
-  <div *ngIf="maxCount != null || showCharacterCount"
+  <div *ngIf="showCharacterCount"
        [attr.aria-label]="msgCharacterCounterAriaLabel(inputTextLength, maxCount)"
        class="counter"
        [class.invalid]="invalid">

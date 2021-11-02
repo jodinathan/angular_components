@@ -61,13 +61,13 @@ class OverlayDomRenderService {
   static const _defaultConfig = OverlayState();
   static const _paneClassName = 'pane';
 
-  HtmlElement containerElement = HtmlElement();
-  String _containerName = '';
+  final HtmlElement containerElement;
+  final String _containerName;
   final DomRuler _domRuler;
   final DomService _domService;
   final AcxImperativeViewUtils _imperativeViewUtils;
-  bool _useDomSynchronously = false;
-  bool _useRepositionLoop = false;
+  final _useDomSynchronously;
+  final _useRepositionLoop;
   final ZIndexer _zIndexer;
 
   /// Track the last z-index used by an overlay. When updating an overlay,
@@ -81,13 +81,13 @@ class OverlayDomRenderService {
 
   OverlayDomRenderService(
       OverlayStyleConfig styleConfig,
-      @Inject(overlayContainerToken) HtmlElement container,
-      @Inject(overlayContainerName) String containerName,
+      @Inject(overlayContainerToken) this.containerElement,
+      @Inject(overlayContainerName) this._containerName,
       this._domRuler,
       this._domService,
       this._imperativeViewUtils,
-      @Inject(overlaySyncDom) bool useDomSynchronously,
-      @Inject(overlayRepositionLoop) bool useRepositionLoop,
+      @Inject(overlaySyncDom) this._useDomSynchronously,
+      @Inject(overlayRepositionLoop) this._useRepositionLoop,
       this._zIndexer) {
     containerElement.attributes['name'] = _containerName;
     styleConfig.registerStyles();

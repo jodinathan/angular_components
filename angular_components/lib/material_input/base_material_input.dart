@@ -157,18 +157,18 @@ class BaseMaterialInput extends FocusableMixin
   ///
   /// Character count always is displayed when the value is non-null.
   @Input()
-  int? maxCount;
+  int maxCount = 0;
 
   ValidityCheck _checkValid = (v) => '';
   ValidityCheck get checkValid => _checkValid;
   @Deprecated('Use angular2 forms API instead')
   @Input()
-  set checkValid(Function? validFn) {
+  set checkValid(ValidityCheck? validFn) {
     if (validFn == _checkValid) return;
 
     if (validFn != null) {
       // Identical doesn't work on functions
-      _checkValid = validFn as ValidityCheck;
+      _checkValid = validFn;
       _changeDetector.markForCheck();
       if (_cd?.control != null) {
         // Validator was changed. Rerun validation.
@@ -269,7 +269,7 @@ class BaseMaterialInput extends FocusableMixin
       _localValidationMessage = requiredErrorMsg;
       return {materialInputErrorKey: _localValidationMessage};
     }
-    if (maxCount != null && inputTextLength > maxCount!) {
+    if (inputTextLength > maxCount) {
       _localValidationMessage = _errorMsg;
       return {materialInputErrorKey: _localValidationMessage};
     }

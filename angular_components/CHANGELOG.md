@@ -17,6 +17,8 @@
 * Added `ChangeDetectionStrategy.OnPush` to `material_tree_filter`
 * Added `ChangeDetectionStrategy.OnPush` to `material_tree_impl`
 * Updated `disabled` to be non nullable
+* Replaced `DomSanitizationService` with `pkg:sanitizer_html`
+
 
 ## 1.0.3
 
