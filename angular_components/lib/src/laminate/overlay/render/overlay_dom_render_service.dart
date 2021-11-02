@@ -61,13 +61,13 @@ class OverlayDomRenderService {
   static const _defaultConfig = OverlayState();
   static const _paneClassName = 'pane';
 
-  late HtmlElement containerElement;
-  late String _containerName;
+  HtmlElement containerElement = HtmlElement();
+  String _containerName = '';
   final DomRuler _domRuler;
   final DomService _domService;
   final AcxImperativeViewUtils _imperativeViewUtils;
-  late bool _useDomSynchronously;
-  late bool _useRepositionLoop;
+  bool _useDomSynchronously = false;
+  bool _useRepositionLoop = false;
   final ZIndexer _zIndexer;
 
   /// Track the last z-index used by an overlay. When updating an overlay,
