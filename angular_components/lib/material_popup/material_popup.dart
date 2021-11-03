@@ -476,9 +476,9 @@ class MaterialPopupComponent extends Object
     }));
 
     // Put the overlay in the live DOM so we can measure its size.
-    _overlayRef!.state.visibility = visibility.Visibility.Hidden;
-    _overlayRef!.overlayElement.style
-      ..display = ''
+    _overlayRef?.state.visibility = visibility.Visibility.Hidden;
+    _overlayRef?.overlayElement.style
+      ?..display = ''
       ..visibility = 'hidden';
 
     // Trigger *deferredContent.
@@ -486,30 +486,44 @@ class MaterialPopupComponent extends Object
     _changeDetector.markForCheck();
 
     // Start listening to both the popup and the source's layout.
-    var initialData = Completer<Rectangle>();
-    var popupContentsLayoutStream = _overlayRef!
-        .measureSizeChanges()
+    var initialData = Completer();
+    var popupContentsLayoutStream = _overlayRef
+        ?.measureSizeChanges()
         .asBroadcastStream(onListen: _visibleDisposer.addStreamSubscription);
     var popupSourceLayoutStream =
-        state.source!.onDimensionsChanged(track: state.trackLayoutChanges);
+        state.source?.onDimensionsChanged(track: state.trackLayoutChanges);
     if (!state.trackLayoutChanges) {
-      popupContentsLayoutStream = popupContentsLayoutStream.take(1);
+      popupContentsLayoutStream = popupContentsLayoutStream?.take(1);
     }
 
     // Merge the results of both streams.
-    var mergedLayoutStream =
-        _mergeStreams([popupContentsLayoutStream, popupSourceLayoutStream]);
+    // Remove all the nulls
+    var comboStream = [popupContentsLayoutStream, popupSourceLayoutStream]
+        .cast<Stream<Rectangle<num>>>();
+    Stream<List<Rectangle<num>>> mergedLayoutStream =
+        _mergeStreams(comboStream);
+
     _visibleDisposer
         .addStreamSubscription(mergedLayoutStream.listen((layoutRects) {
+      // TODO: Need to revisit this logic later
       // Ignore partial results.
-      if (layoutRects.every((r) => r != null)) {
-        if (!initialData.isCompleted) {
-          _onPopupOpened();
-          initialData.complete(null);
-        }
-        _initialSourceDimensions = null;
-        _schedulePositionUpdate(layoutRects[0], layoutRects[1]);
+      //if (layoutRects.every((r) => r != null)) {
+      if (!initialData.isCompleted) {
+        _onPopupOpened();
+        //initialData.complete(null);
+        initialData.complete(null);
       }
+      _initialSourceDimensions = null;
+
+      //try {
+        var rect1 = layoutRects[0];
+        var rect2 = layoutRects[1];
+
+        _schedulePositionUpdate(rect1, rect2);
+      //} catch (e) {
+      //  print(e);
+      //}
+      //}
     }));
 
     // Resolve when the popup has started opening.
@@ -792,8 +806,11 @@ class MaterialPopupComponent extends Object
   ///
   /// Returns a future that completes when the state change is submitted.
   Future _schedulePositionUpdate(
-      Rectangle<num> contentClientRect, Rectangle<num> sourceClientRect) async {
-    RelativePosition? position;
+      Rectangle<num>? contentRect, Rectangle<num>? sourceRect) async {
+    if (contentRect == null || sourceRect == null) return;
+
+    var contentClientRect = contentRect;
+    var sourceClientRect = sourceRect;
 
     var containerRect = await _overlayService.measureContainer();
     final isRtl = state.source!.isRtl == true;
@@ -813,6 +830,7 @@ class MaterialPopupComponent extends Object
           width: max(sourceClientRect.width, contentClientRect.width));
     }
 
+    RelativePosition? position;
     if (state.enforceSpaceConstraints) {
       // Instead of using user-provided positioning, try to determine what
       // would be the best positioning given the viewport bounds and the size
@@ -890,21 +908,24 @@ class _DeferredToggleable extends Toggleable {
 // which may be `null` if no response was received from a stream.
 //
 // TODO(google): This belongs as a utility not inlined here.
-Stream<List<T>> _mergeStreams<T>(List<Stream<T>?> streams) {
+Stream<List<T>> _mergeStreams<T>(List<Stream<T>> streams) {
   var streamSubscriptions = List<StreamSubscription<T>?>.filled(
       streams.length, null,
       growable: false);
   var cachedResults = List<T?>.filled(streams.length, null, growable: false);
-  late StreamController<List<T?>> streamController;
+  StreamController<List<T>>? streamController;
   streamController = StreamController<List<T>>.broadcast(
       sync: true,
       onListen: () {
         var i = 0;
         streams.forEach((stream) {
           var n = i++;
-          streamSubscriptions[n] = stream!.listen((result) {
+          streamSubscriptions[n] = stream.listen((result) {
             cachedResults[n] = result;
-            streamController.add(cachedResults);
+            var results = cachedResults.cast<T>();
+            if (results.isNotEmpty) {
+              streamController?.add(results);
+            }
           });
         });
       },
@@ -913,7 +934,7 @@ Stream<List<T>> _mergeStreams<T>(List<Stream<T>?> streams) {
           sub!.cancel();
         }
       });
-  return streamController.stream as Stream<List<T>>;
+  return streamController.stream;
 }
 
 /// Recursively flattens an arbitrarily-nested iterable.

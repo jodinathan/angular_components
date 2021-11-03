@@ -60,7 +60,7 @@ class MaterialSelectComponent<T> extends MaterialSelectBase<T>
   final TrackFunction trackByIndexFn = indexIdentityFn;
 
   bool _listAutoFocus = false;
-  int? _autoFocusIndex;
+  int _autoFocusIndex = 0;
 
   @HostBinding('attr.aria-multiselectable')
   String get isMultiSelectStr => super.isMultiSelect.toString();

@@ -16,7 +16,7 @@ import 'package:angular_components/src/laminate/overlay/overlay_state.dart';
 ///
 /// This exists to separate the ruler API from tight coupling on overlays; see
 /// [Ruler.update] for the default implementation.
-typedef AsyncApplyState<E> = Future<Object> Function(
+typedef AsyncApplyState<E> = Future<void> Function(
     OverlayState state, E element);
 
 /// A handler to return the position and size of the *content* of [element].
@@ -127,7 +127,7 @@ class OverlayRef implements PortalHost {
   // Tracks whenever [OverlayRef.onUpdate] changes.
   late StreamSubscription<Null> _stateUpdateListener;
 
-  Future<Object> _applyChanges() {
+  Future<void> _applyChanges() {
     if (_lastVisible != isVisible) {
       _lastVisible = isVisible;
       if (_onVisibleController != null) {

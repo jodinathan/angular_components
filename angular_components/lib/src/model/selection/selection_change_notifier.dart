@@ -32,7 +32,9 @@ abstract class SelectionChangeNotifier<T> implements SelectionModel<T> {
       var records = UnmodifiableListView<SelectionChangeRecord<T>>(
           _selectionChangeRecords);
       _selectionChangeRecords.clear();
-      _selectionChangeController!.add(records);
+      if (_selectionChangeController != null && records.isNotEmpty) {
+        _selectionChangeController!.add(records);
+      }
       return true;
     } else {
       return false;
@@ -55,7 +57,7 @@ abstract class SelectionChangeNotifier<T> implements SelectionModel<T> {
   @override
   bool get hasSelectionObservers {
     return _selectionChangeController != null &&
-        _selectionChangeController!.hasListener;
+        (_selectionChangeController?.hasListener ?? false);
   }
 
   @override

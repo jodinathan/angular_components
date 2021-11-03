@@ -71,9 +71,13 @@ String applyHighlighting(String htmlFragment) {
       treeSanitizer: _NullNodeTreeSanitizer());
 
   // Add syntax highlighting css classes.
-  fragment
-      .querySelectorAll('pre code')
-      .forEach((block) => highlightBlock(block));
+  try {
+    fragment
+        .querySelectorAll('pre code')
+        .forEach((block) => highlightBlock(block));
+  } catch (e) {
+    print(e);
+  }
 
   return fragment.innerHtml ?? '';
 }

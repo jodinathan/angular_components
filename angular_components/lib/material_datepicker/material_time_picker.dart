@@ -63,8 +63,8 @@ class MaterialTimePickerComponent extends KeyboardHandlerMixin
   static List<DateTime> _generateTimeOptions(int increment,
       {bool utc = false}) {
     final time = utc
-        ? _utcTime as DateTime Function(int?, [int?])
-        : _localTime as DateTime Function(int?, [int?]);
+        ? _utcTime as DateTime Function(int, [int])
+        : _localTime as DateTime Function(int, [int]);
     final minutesToTime = (minutes) => time(minutes ~/ 60, minutes % 60);
     return List<DateTime>.generate(
         minutesInDay ~/ increment, (index) => minutesToTime(index * increment));
