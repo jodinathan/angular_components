@@ -163,7 +163,7 @@ class MaterialExpansionPanel
         }));
       }
     });
-    _domService.scheduleRead(transitionCheck as void Function());
+    _domService.scheduleRead(transitionCheck);
     _disposer.addDisposable(transitionCheck);
   }
 

@@ -60,7 +60,7 @@ abstract class SelectionInputAdapter<T> implements SelectionContainer<T> {
       selection.clear();
     } else {
       assert(
-          selection is SingleSelectionModel<T>,
+          selection is SingleSelectionModel<T?>,
           'Passing selected value through `selection` input is only supported '
           'for single select.');
       selection.select(value);

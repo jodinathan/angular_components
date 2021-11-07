@@ -62,9 +62,7 @@ class MaterialTimePickerComponent extends KeyboardHandlerMixin
   /// based on [increment] in minutes.
   static List<DateTime> _generateTimeOptions(int increment,
       {bool utc = false}) {
-    final time = utc
-        ? _utcTime as DateTime Function(int, [int])
-        : _localTime as DateTime Function(int, [int]);
+    final time = utc ? _utcTime : _localTime;
     final minutesToTime = (minutes) => time(minutes ~/ 60, minutes % 60);
     return List<DateTime>.generate(
         minutesInDay ~/ increment, (index) => minutesToTime(index * increment));
@@ -94,7 +92,7 @@ class MaterialTimePickerComponent extends KeyboardHandlerMixin
         value?.isUtc != _time.isUtc)) {
       _time = value ?? DateTime.now();
       if (time != null) {
-        selectedTime.select(time);
+        selectedTime.select(time!);
       } else {
         selectedTime.clear();
       }
@@ -218,7 +216,7 @@ class MaterialTimePickerComponent extends KeyboardHandlerMixin
   String get dropdownText =>
       time != null ? renderTime(time!) : dropdownPlaceholderMsg;
   late TimeSelectionOptions timeOptions;
-  SelectionModel<DateTime?> selectedTime = SelectionModel.single();
+  SelectionModel<DateTime> selectedTime = SelectionModel.single();
   String timeInputText = "";
   String renderTime(DateTime time) => outputFormat.format(time);
 
