@@ -118,7 +118,8 @@ class FixedMaterialTabStripComponent implements AfterViewInit {
     return '${activeTabIndex == index}';
   }
 
-  String? tabId(int index) => tabIds.elementAt(index);
+  String tabId(int index) =>
+      (index < tabIds.length) ? tabIds.elementAt(index) : '';
 
   void _updateTabIndicatorTransform() {
     var width = 1 / _tabLabels.length;

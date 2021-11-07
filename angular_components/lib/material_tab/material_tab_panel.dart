@@ -54,7 +54,7 @@ class MaterialTabPanelComponent implements AfterContentInit {
   @Input()
   set activeTabIndex(index) {
     // Tabs are already initialized; this is a programmatic tab change.
-    if (_tabs != null) {
+    if (_tabs.isNotEmpty) {
       _setActiveTab(index, true);
     } else {
       // Tab buttons are not initialized; this is the initial value being set.
@@ -75,7 +75,7 @@ class MaterialTabPanelComponent implements AfterContentInit {
 
   @ContentChildren(Tab)
   set tabs(List<Tab> tabs) {
-    _previousActiveTab = (_tabs != null) ? _activeTab : null;
+    _previousActiveTab = (_tabs.isNotEmpty) ? _activeTab : null;
     _tabs = tabs;
     // TODO(google): Remove if setting of content children occur after
     // child is initialized.
@@ -107,7 +107,8 @@ class MaterialTabPanelComponent implements AfterContentInit {
   }
 
   List<Tab> _tabs = [];
-  Tab? get _activeTab => _tabs[_activeTabIndex];
+  Tab? get _activeTab =>
+      (_activeTabIndex < _tabs.length) ? _tabs[_activeTabIndex] : null;
 
   List<String> _tabLabels = [];
   List<String> get tabLabels => _tabLabels;

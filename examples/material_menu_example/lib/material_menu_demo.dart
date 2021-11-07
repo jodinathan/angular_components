@@ -295,7 +295,8 @@ class ColorMenuItem extends MenuItem<ColorMenuItem> {
       {Icon? icon, MenuModel<MenuItem>? subMenu, String secondaryLabel = ''})
       : super(label,
             icon: icon,
-            subMenu: subMenu as MenuModel<ColorMenuItem>,
+            subMenu:
+                (subMenu != null) ? subMenu as MenuModel<ColorMenuItem> : null,
             secondaryLabel: secondaryLabel, actionWithContext: (ctx) {
           selection.select(label);
         });

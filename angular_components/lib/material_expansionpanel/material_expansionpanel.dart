@@ -125,6 +125,9 @@ class MaterialExpansionPanel
     } else if (element is Element) {
       _focusOnOpenChild = RootFocusable(element);
     } else {
+      print("---");
+      print(element);
+      print("---");
       assert(
           element == null,
           'Warning expansion panel content has a #focus'
