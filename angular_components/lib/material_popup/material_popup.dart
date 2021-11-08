@@ -516,10 +516,10 @@ class MaterialPopupComponent extends Object
       _initialSourceDimensions = null;
 
       //try {
-        var rect1 = layoutRects[0];
-        var rect2 = layoutRects[1];
+      var rect1 = layoutRects[0];
+      var rect2 = layoutRects[1];
 
-        _schedulePositionUpdate(rect1, rect2);
+      _schedulePositionUpdate(rect1, rect2);
       //} catch (e) {
       //  print(e);
       //}
