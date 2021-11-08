@@ -59,8 +59,9 @@ Map<GestureDirection, bool> innerScrollableDirections(
     if (overflowX == 'auto' || overflowX == 'scroll') {
       directions[GestureDirection.left] =
           directions[GestureDirection.left]! || element.scrollLeft > 0;
-      directions[GestureDirection.right] = directions[GestureDirection.right]! ||
-          element.scrollLeft + element.clientWidth < element.scrollWidth;
+      directions[GestureDirection.right] =
+          directions[GestureDirection.right]! ||
+              element.scrollLeft + element.clientWidth < element.scrollWidth;
     }
     String overflowY = style.getPropertyValue('overflow-y');
     if (overflowY == 'auto' || overflowY == 'scroll') {
@@ -119,7 +120,8 @@ class GestureListener implements Disposable {
     _disposer = Disposer.oneShot();
     _disposer!
         .addStreamSubscription(_element!.onTouchStart.listen(_onTouchStart));
-    _disposer!.addStreamSubscription(_element!.onTouchMove.listen(_onTouchMove));
+    _disposer!
+        .addStreamSubscription(_element!.onTouchMove.listen(_onTouchMove));
     _disposer!.addStreamSubscription(_element!.onTouchEnd.listen(_onTouchEnd));
   }
 
@@ -304,7 +306,8 @@ class _Gesture {
   void _syncToLastTouchPoint() {
     Point delta = _lastSyncPoint! - _lastTouchPoint!;
     if (delta.x != 0 || delta.y != 0) {
-      _scrollController!.add(GestureEvent(delta.x as int, delta.y as int, _startingTarget));
+      _scrollController!
+          .add(GestureEvent(delta.x as int, delta.y as int, _startingTarget));
       _lastSyncPoint = _lastTouchPoint;
     }
   }

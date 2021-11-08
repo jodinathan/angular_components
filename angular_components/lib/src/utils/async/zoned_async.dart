@@ -61,7 +61,8 @@ class ZonedFuture<T> extends _ZoneRunner implements Future<T> {
   @override
   Future<T> timeout(Duration timeLimit, {onTimeout()?}) {
     return _runInZone(() {
-      return _innerFuture.timeout(timeLimit, onTimeout: onTimeout as FutureOr<T> Function()?);
+      return _innerFuture.timeout(timeLimit,
+          onTimeout: onTimeout as FutureOr<T> Function()?);
     });
   }
 

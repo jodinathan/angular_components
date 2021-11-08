@@ -496,7 +496,8 @@ abstract class StickyRowUtils {
       // as only the first instance is stuck, the re-computation is unnecessary
       // and skipped.
       if (hasStuckDuplicate && row.isTop) {
-        var duplicateRow = layout.topRows![stickyKeyToRowIndex![row.stickyKey]!];
+        var duplicateRow =
+            layout.topRows![stickyKeyToRowIndex![row.stickyKey]!];
         shouldStick = StickyRowUtils.shouldStick(
             row.isTop,
             hostTop - duplicateRow.row.rowPosition!.height,
