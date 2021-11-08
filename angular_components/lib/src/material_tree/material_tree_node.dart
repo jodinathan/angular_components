@@ -13,7 +13,6 @@ import 'package:angular_components/model/selection/selection_options.dart';
 import 'package:angular_components/model/ui/has_factory.dart';
 import 'package:angular_components/utils/async/async.dart';
 import 'package:angular_components/utils/disposer/disposer.dart';
-import 'package:quiver/core.dart';
 
 /// Returns whether [option] should be shown as expandable.
 typedef IsExpandable<T> = bool Function(T option);
@@ -48,6 +47,8 @@ class MaterialTreeNode<T> {
       _parent = _NotAParent();
     } else {
       _isExpandable = isExpandable ?? hasChildren;
+
+      // TODO: Type not match
       _parent = _root.options as Parent<T, Iterable<OptionGroup<T>>>;
     }
     // TODO(google).
@@ -79,7 +80,7 @@ class MaterialTreeNode<T> {
   OptionGroup<T> get group => _group;
   @Input()
   set group(OptionGroup<T> group) {
-    _disposer!.dispose();
+    _disposer?.dispose();
     _group = group;
     if (!expandAll) {
       _expandedNodes.clear();
@@ -89,7 +90,7 @@ class MaterialTreeNode<T> {
       if (key is MaterialTreeExpandState) {
         manualExpand = key.expanded;
         // When we receive an expansion state change event, update the option
-        _disposer!.addStreamSubscription(key.expandEvents.listen((bool newVal) {
+        _disposer?.addStreamSubscription(key.expandEvents.listen((bool newVal) {
           if (newVal == _expandedNodes.containsKey(key)) return;
           if (newVal) {
             expandOption(key);
@@ -166,7 +167,8 @@ class MaterialTreeNode<T> {
   bool isSelected(T option) => _root.selection.isSelected(option);
 
   /// Returns any child groups of [option] that are loaded.
-  Iterable<OptionGroup>? getChildGroups(option) => _expandedNodes[option];
+  Iterable<OptionGroup<T>> getChildGroups(option) =>
+      _expandedNodes[option] ?? [];
 
   /// Expands the given [option].
   ///
@@ -271,10 +273,6 @@ class MaterialTreeNode<T> {
   /// Whether to show the selection state within a dropdown.
   bool get showSelectionState => isMultiSelect || !_root.optimizeForDropdown;
 
-  /// Converts [T] into a component type (requires [useComponentRenderer]).
-  //Type? getComponentType(option) =>
-  //    _root.componentRenderer != null ? _root.componentRenderer!(option) : null;
-
   /// Converts [T] into a component factory (requires [factoryRenderer]).
   ComponentFactory? getComponentFactory(option) =>
       _root.factoryRenderer != null ? _root.factoryRenderer!(option) : null;
@@ -290,7 +288,7 @@ class MaterialTreeNode<T> {
   ///
   /// Currently a no-op if T doesn't implement [MaterialTreeExpandState].
   void onDestroy() {
-    _disposer!.dispose();
+    _disposer?.dispose();
     // Cause a NPE if we attempt to use the disposer after being destroyed
     _disposer = null;
   }

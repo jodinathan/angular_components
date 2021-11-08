@@ -15,9 +15,9 @@ export 'package:angular_components/model/selection/tree_selection_mixin.dart';
 /// TODO(google): improve the performance of the defaultComaprator.
 /// It is doing 2 * O(n log n) string conversions (which might be cheap
 /// if itemRenderer is just returning a string or expensive).
-class TreeSelectionOptions<T> extends SelectionOptions<T?>
-    with TreeSelectionMixin<T?> {
-  Map<T, List<OptionGroup<T?>>>? _parentToChildrenMap;
+class TreeSelectionOptions<T> extends SelectionOptions<T>
+    with TreeSelectionMixin<T> {
+  Map<T, List<OptionGroup<T>>> _parentToChildrenMap = {};
   final Map<T, TreeSelectionOptionData<T>> _itemsOptions;
 
   final ItemRenderer<T> _itemRenderer;
@@ -38,23 +38,24 @@ class TreeSelectionOptions<T> extends SelectionOptions<T?>
             key: (item) => (item as TreeSelectionOptionData<T>).value),
         super(const []) {
     _comparator = comparator ?? _defaultComparator;
-    _parentToChildrenMap = _generateParentToChildrenMap(listOfOptions) as Map<T, List<OptionGroup<T?>>>?;
+    _parentToChildrenMap = _generateParentToChildrenMap(listOfOptions)
+        as Map<T, List<OptionGroup<T>>>;
 
     /// Sets the actual options to start from.
-    optionGroups = _parentToChildrenMap!.remove(null) ?? [OptionGroup<T>([])];
+    optionGroups = _parentToChildrenMap.remove(null) ?? [OptionGroup<T>([])];
   }
 
   @override
-  bool hasChildren(T? e) => _parentToChildrenMap![e!]?.isNotEmpty == true;
+  bool hasChildren(T? e) => _parentToChildrenMap[e!]?.isNotEmpty == true;
 
   @override
-  DisposableFuture<List<OptionGroup<T?>>?> childrenOf(T? e, [_]) {
-    return DisposableFuture<List<OptionGroup<T?>>?>.fromValue(
-        _parentToChildrenMap![e!]);
+  DisposableFuture<List<OptionGroup<T>>> childrenOf(T? e, [_]) {
+    return DisposableFuture<List<OptionGroup<T>>>.fromValue(
+        _parentToChildrenMap[e!] ?? []);
   }
 
   @override
-  Map<T, List<OptionGroup<T?>>>? getHierarchyMap() => _parentToChildrenMap;
+  Map<T, List<OptionGroup<T>>> getHierarchyMap() => _parentToChildrenMap;
 
   @override
   T? getParent(T? child) {
