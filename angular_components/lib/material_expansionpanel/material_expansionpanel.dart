@@ -120,14 +120,14 @@ class MaterialExpansionPanel
   @ContentChild('focusOnOpen')
   @Input('focusOnOpen')
   set focusOnOpenChild(Object? element) {
+    // TODO: Need further investigation on why ElementRef is received instead of Element
     if (element is Focusable) {
       _focusOnOpenChild = element;
     } else if (element is Element) {
       _focusOnOpenChild = RootFocusable(element);
+    } else if (element is ElementRef) {
+      _focusOnOpenChild = RootFocusable(element.nativeElement);
     } else {
-      print("---");
-      print(element);
-      print("---");
       assert(
           element == null,
           'Warning expansion panel content has a #focus'
@@ -577,7 +577,7 @@ class MaterialExpansionPanel
           if (autoFocusChild != null) {
             autoFocusChild!.focus();
           } else if (byUserAction && _focusOnOpenChild != null) {
-            _focusOnOpenChild!.focus();
+            _focusOnOpenChild?.focus();
           }
         });
       }

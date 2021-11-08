@@ -53,10 +53,10 @@ abstract class HighlightAssistantMixin<T>
       : '';
 
   ItemRenderer<T>? get _highlightRenderer {
-    if ((componentRenderer == null ||
-            componentRenderer == highlightComponentRenderer) &&
-        (factoryRenderer == null ||
-            factoryRenderer == highlightFactoryRenderer)) {
+    //if ((componentRenderer == null ||
+    //        componentRenderer == highlightComponentRenderer) &&
+    if (factoryRenderer == null ||
+        factoryRenderer == highlightFactoryRenderer) {
       if (factoryRenderer == null ||
           factoryRenderer == highlightFactoryRenderer) {
         return itemRenderer ?? defaultItemRenderer;

@@ -13,6 +13,7 @@ import 'package:angular_components/model/selection/selection_options.dart';
 import 'package:angular_components/model/ui/has_factory.dart';
 import 'package:angular_components/utils/async/async.dart';
 import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:quiver/core.dart';
 
 /// Returns whether [option] should be shown as expandable.
 typedef IsExpandable<T> = bool Function(T option);
@@ -29,9 +30,9 @@ class MaterialTreeNode<T> {
   final ChangeDetectorRef _changeDetector;
 
   bool _expandAll = false;
-  late OptionGroup<T> _group;
-  Parent<T, Iterable<OptionGroup<T>>>? _parent;
-  late IsExpandable<T> _isExpandable;
+  OptionGroup<T> _group = OptionGroup([]);
+  Parent<T, Iterable<OptionGroup<T>>> _parent = _NotAParent();
+  IsExpandable<T> _isExpandable = (_) => true;
   late Selectable<T> _selectable;
 
   /// Create a new tree node.
@@ -47,7 +48,7 @@ class MaterialTreeNode<T> {
       _parent = _NotAParent();
     } else {
       _isExpandable = isExpandable ?? hasChildren;
-      _parent = _root.options as Parent<T, Iterable<OptionGroup<T>>>?;
+      _parent = _root.options as Parent<T, Iterable<OptionGroup<T>>>;
     }
     // TODO(google).
     final Object? options = _root.options;
@@ -121,7 +122,7 @@ class MaterialTreeNode<T> {
   }
 
   /// Returns whether [option] has one or more child nodes when expanded.
-  bool hasChildren(T option) => _parent!.hasChildren(option);
+  bool hasChildren(T option) => _parent.hasChildren(option);
 
   /// Returns whether [option] has the *capability* of having child nodes.
   ///
@@ -172,7 +173,7 @@ class MaterialTreeNode<T> {
   /// Returns a [Future] that completes when the children are available when
   /// expansion is triggered, otherwise immediately returns [Future<Null>].
   Future<Iterable<OptionGroup<T>>> expandOption(T option) async {
-    Iterable<OptionGroup<T>> childGroups = await _parent!.childrenOf(option);
+    Iterable<OptionGroup<T>> childGroups = await _parent.childrenOf(option);
 
     setExpandedState(option, true);
     if (expandAll && childGroups.isNotEmpty) {
@@ -262,7 +263,7 @@ class MaterialTreeNode<T> {
   // TODO(google): Rename this is to control whether to use dynamic component
   // loader.
   bool get useComponentRenderer =>
-      _root.factoryRenderer != null || _root.componentRenderer != null;
+      _root.factoryRenderer != null; // || _root.componentRenderer != null;
 
   /// Whether to use a simple text formatter to render an option.
   bool get useItemRenderer => !useComponentRenderer;
@@ -271,8 +272,8 @@ class MaterialTreeNode<T> {
   bool get showSelectionState => isMultiSelect || !_root.optimizeForDropdown;
 
   /// Converts [T] into a component type (requires [useComponentRenderer]).
-  Type? getComponentType(option) =>
-      _root.componentRenderer != null ? _root.componentRenderer!(option) : null;
+  //Type? getComponentType(option) =>
+  //    _root.componentRenderer != null ? _root.componentRenderer!(option) : null;
 
   /// Converts [T] into a component factory (requires [factoryRenderer]).
   ComponentFactory? getComponentFactory(option) =>
