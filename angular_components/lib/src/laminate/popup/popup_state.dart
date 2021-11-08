@@ -75,7 +75,8 @@ class PopupState extends Observable {
   /// If true, the popup will attempt to make intelligent decisions about
   /// positioning and layout depending on the size of the inner content and the
   /// distance to the viewport edges.
-  bool? get enforceSpaceConstraints => _backingMap[#enforceSpaceConstraints] as bool?;
+  bool? get enforceSpaceConstraints =>
+      _backingMap[#enforceSpaceConstraints] as bool?;
   set enforceSpaceConstraints(bool? enforceSpaceConstraints) {
     _backingMap[#enforceSpaceConstraints] = enforceSpaceConstraints;
   }

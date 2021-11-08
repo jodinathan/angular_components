@@ -25,8 +25,7 @@ Future<SassDocInfo> extractSassDocs(
 
   final first = stylesheet.children.firstWhereOrNull((_) => true);
   if (first is SilentComment) {
-    final second =
-        stylesheet.children.skip(1).firstWhereOrNull((_) => true);
+    final second = stylesheet.children.skip(1).firstWhereOrNull((_) => true);
     if (second is! VariableDeclaration &&
         second is! FunctionRule &&
         second is! MixinRule) {

@@ -207,10 +207,10 @@ class MaterialDateTimePickerComponent implements HasDisabled {
   void _updateDateTimeAndNotify() {
     _dateTime = _date != null && _time != null
         ? (utc
-            ? DateTime.utc(
-                _date!.year, _date!.month, _date!.day, _time!.hour, _time!.minute)
-            : DateTime(
-                _date!.year, _date!.month, _date!.day, _time!.hour, _time!.minute))
+            ? DateTime.utc(_date!.year, _date!.month, _date!.day, _time!.hour,
+                _time!.minute)
+            : DateTime(_date!.year, _date!.month, _date!.day, _time!.hour,
+                _time!.minute))
         : null;
 
     if (_dateTime != null || !required) {

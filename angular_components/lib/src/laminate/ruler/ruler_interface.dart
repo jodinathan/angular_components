@@ -120,7 +120,8 @@ abstract class RulerBase<E> implements Ruler<E> {
   void clearCssPropertiesSync(E element);
 
   /// Synchronously write [element].style[propertyName] = [propertyValue].
-  void setCssPropertySync(E element, String? propertyName, String? propertyValue);
+  void setCssPropertySync(
+      E element, String? propertyName, String? propertyValue);
 
   @override
   Stream<Rectangle> track(E element) {

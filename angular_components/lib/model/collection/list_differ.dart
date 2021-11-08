@@ -102,7 +102,8 @@ class _ObservedListDiff<T> implements ListDiff<T> {
       offset -= record.addedCount;
     }
     for (int i = entries!.length; i < event.last.object.length; i++) {
-      entries!.add(DiffEntry<T>.oldEntry(event.last.object[i] as T, i + offset));
+      entries!
+          .add(DiffEntry<T>.oldEntry(event.last.object[i] as T, i + offset));
     }
     if (removed.isNotEmpty) {
       for (int i = 0; i < entries!.length; i++) {

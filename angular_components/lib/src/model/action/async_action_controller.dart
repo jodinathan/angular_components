@@ -93,7 +93,8 @@ class AsyncActionController<V> {
               // The action should resolve [onDone] with [valueOnCancel] if
               // canceled, so, while we need to await the cancel result, we want
               // to throw it away.
-              _attachFuture(cancelRes.then(((_) => valueOnCancel!) as FutureOr<V> Function(dynamic)));
+              _attachFuture(cancelRes.then(
+                  ((_) => valueOnCancel!) as FutureOr<V> Function(dynamic)));
             }
           }
           return null;

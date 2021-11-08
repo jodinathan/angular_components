@@ -7,8 +7,9 @@ Future<void> main(List<String> args) async {
   if (args.isEmpty) {
     print('Counting number of Dart files...');
   } else {
-		print('Generated through `null_coverage.dart` everytime the `dev` branch is updated.\n');
-	}
+    print(
+        'Generated through `null_coverage.dart` everytime the `dev` branch is updated.\n');
+  }
   var count = 0;
   await Directory('lib').list(recursive: true).forEach((element) {
     if (element is File && p.extension(element.path) == '.dart') {
