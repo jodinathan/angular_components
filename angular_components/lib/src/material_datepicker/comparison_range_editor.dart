@@ -49,15 +49,19 @@ class ComparisonRangeEditorComponent {
   /// A mutable model describing a comparison date range. The only expected
   /// non-test implementation is [DateRangeEditorModel].
   @Input()
-  late HasComparisonRange model;
+  HasComparisonRange? model;
+
   final Map<ComparisonOption, String> _optionMsgCache = {};
   DatepickerDateRange? _primaryDateRange;
 
-  // Handle the comparison toggle.
-  bool get comparisonEnabled => model.comparisonEnabled!;
+  bool get comparisonSupported => model?.comparisonSupported ?? false;
 
-  set comparisonEnabled(bool enabled) {
-    model.comparisonEnabled = enabled;
+  // Handle the comparison toggle.
+  bool get comparisonEnabled => model?.comparisonEnabled ?? false;
+
+  set comparisonEnabled(bool? value) {
+    var enabled = value ?? false;
+    model?.comparisonEnabled = enabled;
     if (enabled && _scrollHost != null) {
       // When users turn on toggle, scrolls to the end to make
       // comparison options discoverable.
@@ -72,18 +76,20 @@ class ComparisonRangeEditorComponent {
 
   /// Gets display message from given option.
   String? comparisonOptionMsg(ComparisonOption option) {
-    if (_primaryDateRange != model.primaryRange) {
+    if (_primaryDateRange != model?.primaryRange) {
       _updateOptionMsg();
-      _primaryDateRange = model.primaryRange;
+      _primaryDateRange = model?.primaryRange;
     }
     return _optionMsgCache[option];
   }
 
   void _updateOptionMsg() {
-    for (var option in model.validComparisonOptions) {
-      _optionMsgCache[option] =
-          option.computeComparisonRange(model.primaryRange)?.title ??
-              option.displayName;
+    if (model != null) {
+      for (var option in model!.validComparisonOptions) {
+        _optionMsgCache[option] =
+            option.computeComparisonRange(model!.primaryRange)?.title ??
+                option.displayName;
+      }
     }
   }
 }

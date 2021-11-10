@@ -13,7 +13,8 @@ import 'package:angular_components/material_input/material_input_multiline.dart'
 import 'package:angular_components/material_input/material_number_accessor.dart';
 import 'package:angular_components/material_tooltip/material_tooltip.dart';
 
-typedef ValidityCheck = String? Function(String inputText);
+typedef ValidityCheck = String Function(String? inputText);
+typedef CharCounting = int Function(String? inputText);
 
 /// This directive applies a custom Validator to any material-input that uses
 /// the Forms API, and also has this directive.
@@ -40,17 +41,20 @@ class TextValidator {
   }
 }
 
-String? demoValidator(String inputText) {
-  if (inputText.isEmpty) return null;
+String demoValidator(String? inputText) {
+  if (inputText == null) return '';
+
+  if (inputText.isEmpty) return '';
 
   if (inputText.contains('0')) return 'Input contains 0';
 
   if (inputText.length < 5) return 'Input should be at least 5 characters.';
 
-  return null;
+  return '';
 }
 
-int countIgnoringAdCustomizers(String inputText) {
+int countIgnoringAdCustomizers(String? inputText) {
+  if (inputText == null) return 0;
   String withoutAdCutomizers = inputText.replaceAll(
       RegExp(r'({=[^}]*}*)|({=[^}]*$)', caseSensitive: false), '');
   return withoutAdCutomizers.length;
@@ -82,7 +86,7 @@ class MaterialInputDemoComponent {
   num numericValue = 88888;
   String? urlValue;
   ValidityCheck get checkValid => demoValidator;
-  Function get characterCount => countIgnoringAdCustomizers;
+  CharCounting get characterCount => countIgnoringAdCustomizers;
   late Control form;
   bool showAuto = false;
 

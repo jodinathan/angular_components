@@ -49,7 +49,7 @@ h2 {
   margin: 20px;
 }
 
-[card] {
+.card {
   display: inline-flex;
   flex: 1;
   flex-direction: column;
@@ -63,6 +63,35 @@ h2 {
   background: $mat-grey-800;
 }
 
-[flex] {
+.flex {
   justify-content: space-between;
 }
+
+/*
+.card {
+  margin: $mat-grid;
+  padding: $mat-grid;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  @include shadow-elevation();
+
+  material-dropdown-select {
+    width: $mat-grid * 25;
+    padding: $mat-grid * 2 0;
+  }
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+}
+*/

@@ -39,17 +39,17 @@ bool _parseBool(String strValue) {
 /// error.
 ///
 /// **NOTE**: inputValue must be non-null.
-@Deprecated('Angular now supports boolean properties natively, for @Attribute'
-    ' use [attributeToBool].')
-bool getBool(inputValue) {
-  if (inputValue == null) throw ArgumentError.notNull('inputValue');
+//@Deprecated('Angular now supports boolean properties natively, for @Attribute'
+//    ' use [attributeToBool].')
+//bool getBool(inputValue) {
+//  if (inputValue == null) throw ArgumentError.notNull('inputValue');
+//
+//  if (inputValue is String) return _parseBool(inputValue);
+//  if (inputValue is bool) return inputValue;
 
-  if (inputValue is String) return _parseBool(inputValue);
-  if (inputValue is bool) return inputValue;
-
-  throw ArgumentError.value(
-      inputValue, 'inputValue', 'Expected a String, or bool type');
-}
+//  throw ArgumentError.value(
+//      inputValue, 'inputValue', 'Expected a String, or bool type');
+//}
 
 /// Parses HTML attribute [String] to a [bool].
 ///
@@ -66,7 +66,7 @@ bool getBool(inputValue) {
 /// * <my-component foo> - foo attribute is present but has no value, which
 ///                        is parsed to *true*.
 /// * <my-component> - no attribute is present, parsed to [defaultValue].
-bool attributeToBool(String inputValue, {bool defaultValue = false}) {
+bool attributeToBool(String? inputValue, {bool defaultValue = false}) {
   if (inputValue == null) return defaultValue;
   return _parseBool(inputValue);
 }

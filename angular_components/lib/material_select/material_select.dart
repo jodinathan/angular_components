@@ -19,6 +19,8 @@ import 'package:angular_components/model/ui/template_support.dart';
 import 'material_select_base.dart';
 import 'material_select_item.dart';
 
+typedef TrackFunction = Object? Function(int i, dynamic d);
+
 /// Material Select is a container for selecting items from a collection,
 /// marking selected options with a check icon.
 ///
@@ -51,23 +53,25 @@ class MaterialSelectComponent<T> extends MaterialSelectBase<T>
   @HostBinding('attr.role')
   static const hostRole = 'listbox';
 
-  List<SelectionItem<T>>? _selectItems;
+  List<SelectionItem<T>> _selectItems = [];
 
   /// Function for use by NgFor for optionGroup to avoid recreating the
   /// DOM for the optionGroup.
-  final Function trackByIndexFn = indexIdentityFn;
+  final TrackFunction trackByIndexFn = indexIdentityFn;
 
   bool _listAutoFocus = false;
-  int? _autoFocusIndex;
+  int _autoFocusIndex = 0;
 
   @HostBinding('attr.aria-multiselectable')
+  String get isMultiSelectStr => super.isMultiSelect.toString();
+
   @override
   bool get isMultiSelect => super.isMultiSelect;
 
   /// The [SelectionOptions] instance providing options to render.
   @Input()
   @override
-  set options(SelectionOptions<T>? value) {
+  set options(SelectionOptions<T> value) {
     super.options = value;
   }
 
@@ -104,13 +108,13 @@ class MaterialSelectComponent<T> extends MaterialSelectBase<T>
   /// The [SelectionModel] for this container.
   @Input()
   @override
-  set selection(SelectionModel<T>? value) {
+  set selection(SelectionModel<T> value) {
     super.selection = value;
     _refreshItems();
   }
 
   @override
-  SelectionModel<T>? get selection => super.selection;
+  SelectionModel<T> get selection => super.selection;
 
   /// If selectionOptions implements Selectable, it is called to decided
   /// whether an item is disabled.
@@ -127,7 +131,13 @@ class MaterialSelectComponent<T> extends MaterialSelectBase<T>
   ///
   /// Defaults to false.
   @Input()
-  bool? disabled = false;
+  set disabled(bool? v) {
+    _disabled = v ?? false;
+  }
+
+  bool get disabled => _disabled;
+
+  bool _disabled = false;
 
   @HostBinding('attr.aria-disabled')
   String get disabledStr => '$disabled';
@@ -170,24 +180,20 @@ class MaterialSelectComponent<T> extends MaterialSelectBase<T>
 
   @override
   void ngOnInit() {
-    if (!_listAutoFocus || options == null) return;
+    if (!_listAutoFocus) return;
 
-    if (selection != null) {
-      _autoFocusIndex = selection!.isNotEmpty
-          ? options!.optionsList.indexOf(selection!.selectedValues.first)
-          : 0;
-    }
+    _autoFocusIndex = selection.isNotEmpty
+        ? options.optionsList.indexOf(selection.selectedValues.first)
+        : 0;
   }
 
   void _refreshItems() {
-    if (_selectItems == null) return;
-    if (selection != null) {
-      for (SelectionItem<T> item in _selectItems!) {
-        item.selection = selection;
-      }
+    if (_selectItems.isEmpty) return;
+    for (SelectionItem<T> item in _selectItems) {
+      item.selection = selection;
     }
     if (itemRenderer != null) {
-      for (SelectionItem<T> item in _selectItems!) {
+      for (SelectionItem<T> item in _selectItems) {
         item.itemRenderer = itemRenderer;
       }
     }

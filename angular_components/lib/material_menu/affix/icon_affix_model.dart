@@ -17,11 +17,11 @@ class IconAffix extends BaseMenuItemAffixModel {
   final Icon icon;
 
   @override
-  final String? cssClass;
+  final String cssClass;
 
-  final String? ariaLabel;
+  final String ariaLabel;
   final IconAction? _action;
-  final int? _keyCode;
+  final int _keyCode;
 
   @override
   final bool shouldCloseMenuOnTrigger;
@@ -38,21 +38,21 @@ class IconAffix extends BaseMenuItemAffixModel {
           ariaLabel: icon.ariaLabel,
           shouldCloseMenuOnTrigger: icon.shouldCloseMenuOnTrigger,
           visibility: visibility,
-          cssClass: cssClass);
+          cssClass: cssClass ?? '');
     }
 
     return IconAffix.simple(
-        icon: icon, visibility: visibility, cssClass: cssClass);
+        icon: icon, visibility: visibility, cssClass: cssClass ?? '');
   }
 
   /// Creates a simple icon without any trigger action.
   const IconAffix.simple(
       {required this.icon,
       this.visibility = IconVisibility.visible,
-      this.cssClass})
+      this.cssClass = ''})
       : _action = null,
-        ariaLabel = null,
-        _keyCode = null,
+        ariaLabel = '',
+        _keyCode = 0,
         shouldCloseMenuOnTrigger = false;
 
   /// Creates an icon that has a trigger action with a shortcut key.
@@ -63,9 +63,9 @@ class IconAffix extends BaseMenuItemAffixModel {
       int? keyCode,
       this.shouldCloseMenuOnTrigger = false,
       this.visibility = IconVisibility.visible,
-      this.cssClass})
+      this.cssClass = ''})
       : _action = action,
-        _keyCode = keyCode;
+        _keyCode = keyCode ?? 0;
 
   @override
   ComponentFactory<BaseAffixComponent>? get componentFactory =>

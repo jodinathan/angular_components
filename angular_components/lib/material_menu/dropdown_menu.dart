@@ -64,13 +64,13 @@ class DropdownMenuComponent extends Object
   @Input()
   String? buttonText;
 
-  bool? _disabled = false;
+  bool _disabled = false;
 
-  bool? get disabled => _disabled;
+  bool get disabled => _disabled;
 
   @Input()
-  set disabled(bool? d) {
-    _disabled = d;
+  set disabled(bool? disabled) {
+    _disabled = disabled ?? false;
     focusable = _focusTarget;
   }
 
@@ -109,5 +109,5 @@ class DropdownMenuComponent extends Object
   MenuPopupComponent? menuPopup;
 
   Focusable? get _focusTarget =>
-      disabled! ? null : (isExpanded ? menuPopup : dropdownButton);
+      disabled ? null : (isExpanded ? menuPopup : dropdownButton);
 }

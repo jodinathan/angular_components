@@ -6,12 +6,11 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:angular/angular.dart';
-import 'package:angular/src/meta.dart';
 import 'package:angular_components/button_decorator/button_decorator.dart';
 import 'package:angular_components/dynamic_component/dynamic_component.dart';
-import 'package:angular_components/glyph/glyph.dart';
 import 'package:angular_components/interfaces/has_disabled.dart';
 import 'package:angular_components/material_checkbox/material_checkbox.dart';
+import 'package:angular_components/material_icon/material_icon.dart';
 import 'package:angular_components/material_select/activation_handler.dart';
 import 'package:angular_components/mixins/material_dropdown_base.dart';
 import 'package:angular_components/model/selection/selection_container.dart';
@@ -33,8 +32,8 @@ import 'package:angular_components/utils/disposer/disposer.dart';
   ],
   styleUrls: ['material_select_item.scss.css'],
   directives: [
-    GlyphComponent,
     MaterialCheckboxComponent,
+    MaterialIconComponent,
     NgIf,
     DynamicComponent
   ],
@@ -46,7 +45,6 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
         OnDestroy,
         SelectionItem<T>,
         HasRenderer<T>,
-        //HasComponentRenderer,
         HasFactoryRenderer<RendersValue, T> {
   @HostBinding('class')
   static const hostClass = 'item';
@@ -74,9 +72,14 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
       ..addFunction(() => _selectionChangeStreamSub?.cancel());
   }
 
-  @HostBinding('class.disabled')
   @override
-  bool? get disabled => super.disabled;
+  @Input()
+  set disabled(bool v) {
+    super.disabled = v;
+  }
+
+  @HostBinding('class.disabled')
+  bool get disabled => super.disabled;
 
   /// Whether the item should be hidden.
   ///
@@ -115,15 +118,7 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
   /// still be passed as content).
   @Input()
   @override
-  ItemRenderer<T>? itemRenderer = nullRenderer;
-
-  /*
-  @Input()
-  @override
-  @Deprecated('Use factoryrenderer instead as it will produce more '
-      'tree-shakeable code.')
-  ComponentRenderer? componentRenderer;
-  */
+  ItemRenderer<T>? itemRenderer;
 
   /// Returns a [ComponentFactory] for dynamic component loader to use to render
   /// an item.
@@ -167,21 +162,23 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
     if (value == null) {
       return null;
     } else if (factoryRenderer == null &&
-        !identical(itemRenderer, nullRenderer)) {
+        itemRenderer != null &&
+        value != null) {
+      // !identical(itemRenderer, nullRenderer)) {
       return itemRenderer!(value!);
     }
     return null;
   }
 
-  SelectionModel<T>? _selection;
+  SelectionModel<T> _selection = SelectionModel.empty();
 
   @override
-  SelectionModel<T>? get selection => _selection;
+  SelectionModel<T> get selection => _selection;
 
   /// Selection model to update with changes.
   @Input()
   @override
-  set selection(SelectionModel<T>? sel) {
+  set selection(SelectionModel<T> sel) {
     _selection = sel;
     _supportsMultiSelect = sel is MultiSelectionModel<T>;
 
@@ -189,7 +186,7 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
     // direction to support onpush components that use this component. There may
     // be other mutable state that needs to trigger change detection.
     _selectionChangeStreamSub?.cancel();
-    _selectionChangeStreamSub = sel?.selectionChanges.listen((_) {
+    _selectionChangeStreamSub = sel.selectionChanges.listen((_) {
       _cdRef.markForCheck();
     });
   }
@@ -204,16 +201,14 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
   @Input()
   bool closeOnActivate = true;
 
-  // TODO(google): Remove after migration from ComponentRenderer is complete
-  //Type? get componentType =>
-  //    componentRenderer != null ? componentRenderer!(value) : null;
-
   ComponentFactory? get componentFactory =>
       factoryRenderer != null ? factoryRenderer!(value) : null;
 
   @HostBinding('attr.aria-checked')
-  bool? get isAriaChecked =>
-      !supportsMultiSelect || hideCheckbox ? null : isSelected;
+  String get isAriaCheckedStr => '$isAriaChecked';
+
+  bool get isAriaChecked =>
+      !supportsMultiSelect || hideCheckbox ? false : isSelected;
 
   /// Whether this item should be marked as selected.
   @HostBinding('class.selected')
@@ -221,7 +216,7 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
 
   bool get _isMarkedSelected => selected;
   bool get _isSelectedInSelectionModel =>
-      value != null && (_selection?.isSelected(value!) ?? false);
+      value != null && (_selection.isSelected(value!));
 
   void handleActivate(UIEvent e) {
     var hasCheckbox = supportsMultiSelect && !hideCheckbox;
@@ -237,11 +232,11 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
         return;
       }
     }
-    if (_selectOnActivate && _selection != null && value != null) {
-      if (!_selection!.isSelected(value!)) {
-        _selection!.select(value!);
+    if (_selectOnActivate && value != null) {
+      if (!_selection.isSelected(value!)) {
+        _selection.select(value!);
       } else if (_deselectOnActivate) {
-        _selection!.deselect(value!);
+        _selection.deselect(value!);
       }
     }
   }

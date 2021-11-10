@@ -5,6 +5,7 @@
 import 'package:angular/angular.dart';
 import 'package:ngsecurity/security.dart';
 import 'package:angular_gallery_section/components/gallery_component/gallery_info.dart';
+import 'package:sanitize_html/sanitize_html.dart' show sanitizeHtml;
 
 /// A list of all documentation directives.
 const documentationComponentDirectives = [
@@ -15,21 +16,10 @@ const documentationComponentDirectives = [
 
 class DocumentationComponent {
   @Input()
-  bool? showGeneratedDocs;
+  bool showGeneratedDocs = false;
 
-  final _sanitizedHtml = <String, SafeHtml>{};
-
-  DomSanitizationService _santizationService;
-
-  DocumentationComponent(this._santizationService);
-
-  SafeHtml getSafeHtml(String value) {
-    var html = _sanitizedHtml[value];
-    if (html == null) {
-      html = _santizationService.bypassSecurityTrustHtml(value);
-      _sanitizedHtml[value] = html;
-    }
-    return html;
+  String getSafeHtml(String value) {
+    return sanitizeHtml(value);
   }
 }
 
@@ -47,30 +37,38 @@ class DocumentationComponent {
   styleUrls: ['documentation_component.scss.css'],
 )
 class DartDocComponent extends DocumentationComponent {
-  DartDocComponent(DomSanitizationService santizationService)
-      : super(santizationService);
-
   /// The documentation to display.
   @Input()
-  DartDocInfo? doc;
+  set doc(DocInfo d) {
+    if (d is DartDocInfo) {
+      _doc = d;
+    }
+  }
+
+  DartDocInfo get doc => _doc;
+
+  DartDocInfo _doc = DartDocInfo.fromJson({});
 }
 
 /// Displays a single piece of documentation.
 ///
 /// Typically used for the generated HTML from a markdown README.
 @Component(
-  selector: 'documentation-component[markdown]',
-  directives: [SafeInnerHtmlDirective],
-  template: '<div [safeInnerHtml]="getSafeHtml(doc.contents)"></div>',
-  styleUrls: ['documentation_component.scss.css'],
-)
+    selector: 'documentation-component[markdown]',
+    template: '<div [innerHtml]="doc.contents"></div>',
+    styleUrls: ['documentation_component.scss.css'])
 class MarkdownDocComponent extends DocumentationComponent {
-  MarkdownDocComponent(DomSanitizationService santizationService)
-      : super(santizationService);
-
   /// The documentation to display.
   @Input()
-  MarkdownDocInfo? doc;
+  set doc(DocInfo d) {
+    if (d is MarkdownDocInfo) {
+      _doc = d;
+    }
+  }
+
+  MarkdownDocInfo get doc => _doc;
+
+  MarkdownDocInfo _doc = MarkdownDocInfo.fromJson({});
 }
 
 /// Displays documentation for Sass files in the gallery application.
@@ -88,10 +86,15 @@ class MarkdownDocComponent extends DocumentationComponent {
   styleUrls: ['documentation_component.scss.css'],
 )
 class SassDocComponent extends DocumentationComponent {
-  SassDocComponent(DomSanitizationService santizationService)
-      : super(santizationService);
-
   /// The documentation to display.
   @Input()
-  SassDocInfo? doc;
+  set doc(DocInfo d) {
+    if (d is SassDocInfo) {
+      _doc = d;
+    }
+  }
+
+  SassDocInfo get doc => _doc;
+
+  SassDocInfo _doc = SassDocInfo.fromJson({});
 }

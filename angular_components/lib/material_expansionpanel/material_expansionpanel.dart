@@ -119,11 +119,14 @@ class MaterialExpansionPanel
   /// Sets the focus child so that we can focus on it when the panel opens.
   @ContentChild('focusOnOpen')
   @Input('focusOnOpen')
-  set focusOnOpenChild(Element? element) {
+  set focusOnOpenChild(Object? element) {
+    // TODO: Need further investigation on why ElementRef is received instead of Element
     if (element is Focusable) {
-      _focusOnOpenChild = element as Focusable?;
+      _focusOnOpenChild = element;
     } else if (element is Element) {
       _focusOnOpenChild = RootFocusable(element);
+    } else if (element is ElementRef) {
+      _focusOnOpenChild = RootFocusable(element.nativeElement);
     } else {
       assert(
           element == null,
@@ -145,7 +148,7 @@ class MaterialExpansionPanel
           _mainPanel?.style.height = '';
           // If we just finished closing, let deferred content stop rendering
           // the panel body.
-          if (!isExpanded!) {
+          if (!isExpanded) {
             _ngZone.run(() => _contentVisible.add(false));
           }
         }));
@@ -163,7 +166,7 @@ class MaterialExpansionPanel
         }));
       }
     });
-    _domService.scheduleRead(transitionCheck as void Function());
+    _domService.scheduleRead(transitionCheck);
     _disposer.addDisposable(transitionCheck);
   }
 
@@ -224,13 +227,13 @@ class MaterialExpansionPanel
   bool closeOnSave = true;
 
   final ObservableReference<bool> _isExpanded = ObservableReference(false);
-  bool? get isExpanded => _isExpanded.value;
+  bool get isExpanded => _isExpanded.value ?? false;
 
   /// If true, the panel is expanded by default, if false, the panel is closed.
   @Input('expanded')
   set isExpanded(bool? value) {
     if (value == isExpanded) return;
-    if (value!) {
+    if (value != null && value) {
       expand(byUserAction: false);
     } else {
       collapse(byUserAction: false);
@@ -262,14 +265,14 @@ class MaterialExpansionPanel
     _changeDetector.markForCheck();
   }
 
-  bool? _disabled = false;
-  bool? get disabled => _disabled;
+  bool _disabled = false;
+  bool get disabled => _disabled;
 
   /// If true, the panel will remain in the collapsed state with no way to
   /// expand it, or if expanded by default, it will stay in expanded state.
   @Input()
   set disabled(bool? value) {
-    _disabled = value;
+    _disabled = value ?? false;
     _changeDetector.markForCheck();
   }
 
@@ -307,8 +310,7 @@ class MaterialExpansionPanel
     _groupAriaLabel = groupAriaLabel;
   }
 
-  String? get groupAriaLabel =>
-      _groupAriaLabel == null ? name : _groupAriaLabel;
+  String? get groupAriaLabel => _groupAriaLabel ?? name;
 
   /// Level of the heading.
   ///
@@ -344,17 +346,17 @@ class MaterialExpansionPanel
 
   bool get shouldShowExpandIcon {
     if (alwaysHideExpandIcon) return false;
-    return (hasCustomExpandIcon && isExpanded!)
+    return (hasCustomExpandIcon && isExpanded)
         ? alwaysShowExpandIcon
-        : !disabled!;
+        : !disabled;
   }
 
-  bool get shouldFlipExpandIcon => hasCustomExpandIcon ? false : !isExpanded!;
+  bool get shouldFlipExpandIcon => hasCustomExpandIcon ? false : !isExpanded;
 
   bool get shouldShowHiddenHeaderExpandIcon =>
       hasCustomExpandIcon || alwaysHideExpandIcon
           ? false
-          : (hideExpandedHeader && !disabled!);
+          : (hideExpandedHeader && !disabled);
 
   /// Option to set if widget should show save/cancel buttons `true` by default.
   @Input()
@@ -390,10 +392,10 @@ class MaterialExpansionPanel
       : _namedPanelMsg(groupAriaLabel!);
 
   String? get headerMsg {
-    if (disabled! || _groupAriaLabel != null) {
+    if (disabled || _groupAriaLabel != null) {
       return groupAriaLabel;
     } else {
-      return isExpanded! ? closePanelMsg : openPanelMsg;
+      return isExpanded ? closePanelMsg : openPanelMsg;
     }
   }
 
@@ -444,11 +446,11 @@ class MaterialExpansionPanel
   Stream<AsyncAction<bool>?> get cancel => _cancelController.stream;
 
   void handleHeaderClick() {
-    if (!disableHeaderExpansion) isExpanded! ? collapse() : expand();
+    if (!disableHeaderExpansion) isExpanded ? collapse() : expand();
   }
 
   void handleExpandIconClick() {
-    if (disableHeaderExpansion) isExpanded! ? collapse() : expand();
+    if (disableHeaderExpansion) isExpanded ? collapse() : expand();
   }
 
   @override
@@ -499,12 +501,12 @@ class MaterialExpansionPanel
   }
 
   Future<bool> expand({bool byUserAction = true}) {
-    if (disabled! && byUserAction) return Future.value(false);
+    if (disabled && byUserAction) return Future.value(false);
     return changeState(true, byUserAction, _openController);
   }
 
   Future<bool> collapse({bool byUserAction = true}) {
-    if (disabled! && byUserAction) return Future.value(false);
+    if (disabled && byUserAction) return Future.value(false);
     return changeState(false, byUserAction, _closeController);
   }
 
@@ -575,7 +577,7 @@ class MaterialExpansionPanel
           if (autoFocusChild != null) {
             autoFocusChild!.focus();
           } else if (byUserAction && _focusOnOpenChild != null) {
-            _focusOnOpenChild!.focus();
+            _focusOnOpenChild?.focus();
           }
         });
       }
@@ -585,7 +587,7 @@ class MaterialExpansionPanel
     return actionCtrl.action!.onDone;
   }
 
-  bool get headerHidden => isExpanded! && hideExpandedHeader;
+  bool get headerHidden => isExpanded && hideExpandedHeader;
 
   /// Sets necessary explicit heights to allow CSS transitions when expanding
   /// or collapsing.
@@ -701,4 +703,11 @@ class MaterialExpansionPanel
       name: '_msgCancel',
       desc: 'Text on cancel button.',
       meaning: 'Text on cancel button.');
+
+  String? attributeToString(Object? value) {
+    if (value != null) {
+      return value.toString();
+    }
+    return null;
+  }
 }

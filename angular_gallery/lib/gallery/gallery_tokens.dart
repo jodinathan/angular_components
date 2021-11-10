@@ -4,5 +4,5 @@
 
 import 'package:angular/di.dart';
 
-const bugUrl = OpaqueToken<String>('bugUrl');
-const sourcecodeUrl = OpaqueToken<String>('sourcecodeUrl');
+const bugUrl = OpaqueToken('bugUrl');
+const sourcecodeUrl = OpaqueToken('sourcecodeUrl');

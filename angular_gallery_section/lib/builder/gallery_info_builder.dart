@@ -42,7 +42,13 @@ class GalleryInfoBuilder extends Builder {
         extractedConfigs, await buildStep.inputLibrary, buildStep);
 
     var newAssetId = inputId.changeExtension('.gallery_info.json');
-    await buildStep.writeAsString(newAssetId, jsonEncode(resolvedConfigs));
+    var jsonData = jsonEncode(resolvedConfigs);
+
+    //print("=== Start (json data) ===");
+    //print(jsonData);
+    //print("=== End ===");
+
+    await buildStep.writeAsString(newAssetId, jsonData);
   }
 
   @override
@@ -198,24 +204,20 @@ class GalleryInfoBuilder extends Builder {
       // to the defining LibraryElement. NOTE: Collecting the types like this
       // diverges from the behavior of DartDoc which always uses the getter type
       // when they are different.
-      docs?.inputs?.forEach((input) {
-        if (input != null) {
-          var inputName = input.name;
-          //if (inputName != null) {
-          mergedInputs[inputName] = input
-            ..type = _setterType(inputName, classElement);
-          //}
-        }
+      docs?.inputs.forEach((input) {
+        var inputName = input.name;
+        //if (inputName != null) {
+        mergedInputs[inputName] = input
+          ..type = _setterType(inputName, classElement);
+        //}
       });
 
-      docs?.outputs?.forEach((output) {
-        if (output != null) {
-          var outputName = output.name;
-          //if (outputName != null) {
-          mergedOutputs[outputName] = output
-            ..type = _getterType(outputName, classElement);
-          //}
-        }
+      docs?.outputs.forEach((output) {
+        var outputName = output.name;
+        //if (outputName != null) {
+        mergedOutputs[outputName] = output
+          ..type = _getterType(outputName, classElement);
+        //}
       });
     }
 
@@ -228,8 +230,8 @@ class GalleryInfoBuilder extends Builder {
     outputs.sort((a, b) => Comparable.compare(a.name, b.name));
 
     // Assign the merged and sorted properties to the leaf class docs.
-    docs!.inputs = inputs;
-    docs.outputs = outputs;
+    docs?.inputs = inputs;
+    docs?.outputs = outputs;
 
     return docs;
   }
@@ -306,9 +308,9 @@ class GalleryInfoBuilder extends Builder {
       throw 'Error: Failed to extract demo information from: $demoClassName.';
     }
     return DemoInfo()
-      ..type = extractedDemo.name ?? ''
-      ..name = extractedDemo.name ?? ''
-      ..selector = extractedDemo.selector ?? ''
+      ..type = extractedDemo.name
+      ..name = extractedDemo.name
+      ..selector = extractedDemo.selector
       ..asset = libraryId.toString();
   }
 

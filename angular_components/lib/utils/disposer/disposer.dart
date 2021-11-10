@@ -123,10 +123,12 @@ class Disposer implements Disposable {
   }
 
   /// Registers [disposable].
-  StreamSubscription<T> addStreamSubscription<T>(
-      StreamSubscription<T> disposable) {
+  StreamSubscription<T>? addStreamSubscription<T>(
+      StreamSubscription<T>? disposable) {
     _disposeSubs ??= [];
-    _disposeSubs!.add(disposable);
+    if (disposable != null) {
+      _disposeSubs?.add(disposable);
+    }
     _checkIfAlreadyDisposed();
     return disposable;
   }

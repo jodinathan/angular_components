@@ -50,9 +50,7 @@ class MaterialInputBlurValueAccessor
   @override
   void registerOnChange(callback) {
     disposer.addStreamSubscription(input.onBlur.listen((_) {
-      if (input.inputText != null) {
-        callback(input.inputText!);
-      }
+      callback(input.inputText);
     }));
   }
 }
@@ -71,9 +69,7 @@ class MaterialInputChangeValueAccessor
   @override
   void registerOnChange(callback) {
     disposer.addStreamSubscription(input.onChange.listen((_) {
-      if (input.inputText != null) {
-        callback(input.inputText!);
-      }
+      callback(input.inputText);
     }));
   }
 }

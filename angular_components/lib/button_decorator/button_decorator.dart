@@ -33,7 +33,7 @@ class ButtonDirective extends RootFocusable
 
   final _trigger = StreamController<UIEvent>.broadcast(sync: true);
 
-  String _hostTabIndex = '0';
+  String? _hostTabIndex = '0';
   final String? _nonTabbableIndex;
   bool _shouldHandleSpaceKey;
 
@@ -60,34 +60,35 @@ class ButtonDirective extends RootFocusable
   /// Is the component disabled.
   @HostBinding('class.is-disabled')
   @Input()
-  bool? disabled = false;
+  bool disabled = false;
 
   /// Is the component tabbable.
   @Input()
   bool tabbable = true;
 
-  String? get hostTabIndex =>
-      tabbable && !disabled! ? _hostTabIndex : _nonTabbableIndex;
+  String? get hostTabIndex {
+    return tabbable && !disabled ? _hostTabIndex : _nonTabbableIndex;
+  }
 
   /// The tab index of the component.
   ///
   /// The value is used if [tabbable] is `true` and [disabled] is `false`.
   @Input()
-  set tabindex(String value) {
+  set tabindex(String? value) {
     _hostTabIndex = value;
   }
 
   /// Triggers if not disabled.
   @HostListener('click')
   void handleClick(MouseEvent mouseEvent) {
-    if (disabled!) return;
+    if (disabled) return;
     _trigger.add(mouseEvent);
   }
 
   /// Triggers on enter and space if not disabled.
   @HostListener('keypress')
   void handleKeyPress(KeyboardEvent keyboardEvent) {
-    if (disabled!) return;
+    if (disabled) return;
     if (isSpaceKey(keyboardEvent) && !_shouldHandleSpaceKey) return;
     int keyCode = keyboardEvent.keyCode;
     if (keyCode == KeyCode.ENTER || isSpaceKey(keyboardEvent)) {

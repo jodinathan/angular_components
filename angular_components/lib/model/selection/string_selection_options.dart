@@ -10,7 +10,7 @@ import 'package:angular_components/utils/async/async.dart';
 
 /// Formats [value] as a lowercase string without spaces.
 String _stringFormatSuggestion(String? value) =>
-    value!.replaceAll(' ', '').toLowerCase();
+    value?.replaceAll(' ', '').toLowerCase() ?? '';
 
 ItemRenderer<T> _defaultRenderer<T>(ItemRenderer<String> sanitizeString) =>
     newCachingItemRenderer<T>((T? value) => sanitizeString(value.toString()));
@@ -41,12 +41,12 @@ class StringSelectionOptions<T> extends SelectionOptions<T>
   static const int UNLIMITED = 9007199254740992;
 
   /// The last query passed to [filter].
-  String? _currentQuery;
+  String _currentQuery = '';
 
   /// The current limit for the filter being applied.
-  int? _currentLimit = -1;
+  int _currentLimit = -1;
 
-  List<OptionGroup<T>>? _optionGroups;
+  List<OptionGroup<T>> _optionGroups = [];
 
   /// A function that converts a single option to a filterable string.
   final ItemRenderer<T> _toFilterableString;
@@ -126,9 +126,8 @@ class StringSelectionOptions<T> extends SelectionOptions<T>
   void refilter() {
     List<OptionGroup<T>> filtered = [];
     int count = 0;
-    String? filterQuery =
-        _currentQuery == null ? '' : _sanitizeString(_currentQuery!);
-    for (var group in _optionGroups!) {
+    String? filterQuery = _sanitizeString(_currentQuery);
+    for (var group in _optionGroups) {
       if (count >= currentLimit!) break;
       var filteredGroup =
           filterOptionGroup(group, filterQuery!, currentLimit! - count);

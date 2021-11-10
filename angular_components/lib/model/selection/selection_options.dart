@@ -64,7 +64,7 @@ abstract class GroupedOptions<T> implements Disposable {
   set optionGroups(List<OptionGroup<T>> value);
 
   /// All options flattened in one list.
-  List<T>? get optionsList;
+  List<T> get optionsList;
 
   /// Dispose when the the options come from a stream.
   @override

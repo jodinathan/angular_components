@@ -13,7 +13,7 @@
        buttonDecorator
        class="group-header"
        [role]="group.isCollapsible ? 'button' : 'none'"
-       [attr.aria-expanded]="group.isCollapsible ? group.isExpanded.toString() : null"
+       [attr.aria-expanded]="attributeToString(group.isCollapsible ? group.isExpanded.toString() : null)"
        [class.is-collapsible]="group.isCollapsible"
        (trigger)="toggleExpansionIfCollapsible(group)">
     <div class="group-label">
@@ -33,13 +33,13 @@
             popupSource
             #subMenuSource="popupSource"
 
-            [autoFocus]="hasAutoFocus(activeModel?.id(item))"
-            [focusActivableItem]="activeModel?.id(item)"
+            [autoFocus]="hasAutoFocus(activeModel.id(item))"
+            [focusActivableItem]="activeModel.id(item)"
 
             role="{{group.itemsRole}}"
-            [attr.data-group-index]="i"
-            [attr.data-item-index]="j"
-            [attr.id]="activeModel?.id(item)"
+            [attr.data-group-index]="attributeToString(i)"
+            [attr.data-item-index]="attributeToString(j)"
+            [attr.id]="activeModel.id(item)"
 
             [materialTooltip]="item.tooltip"
             [showTooltipIf]="item.showTooltip"
@@ -49,10 +49,10 @@
             [ngClass]="item.cssClasses"
             [class.is-menu-parent]="isSubMenuVisible(item)"
             [attr.aria-label]="item.ariaLabel"
-            [attr.aria-disabled]="!item.enabled"
-            [attr.aria-haspopup]="item.hasSubMenu"
-            [attr.aria-expanded]="item.hasSubMenu ? isSubMenuVisible(item) : null"
-            [attr.aria-checked]="itemAriaChecked(item)"
+            [attr.aria-disabled]="attributeToString(!item.enabled)"
+            [attr.aria-haspopup]="attributeToString(item.hasSubMenu)"
+            [attr.aria-expanded]="attributeToString(item.hasSubMenu ? isSubMenuVisible(item) : null)"
+            [attr.aria-checked]="attributeToString(itemAriaChecked(item))"
 
             [closeOnActivate]="false"
             [useCheckMarks]="true"

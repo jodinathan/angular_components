@@ -19,6 +19,7 @@ DateFormat _rangeEndpointFormat(String? locale) =>
 /// Formats the date, or returns '' if the date is null.
 String formatDate(Date? date, [DateFormat? format]) =>
     date?.format(format ?? _dateFormat) ?? '';
+
 String formatRange(DateRange? range) {
   if (range == null) return '';
   if (range.start == null && range.end == null) {

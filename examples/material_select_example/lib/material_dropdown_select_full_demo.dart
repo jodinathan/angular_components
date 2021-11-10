@@ -6,7 +6,7 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:angular/angular.dart';
-import 'package:angular_forms/angular_forms.dart';
+//import 'package:angular_forms/angular_forms.dart';
 import 'package:angular_components/laminate/enums/alignment.dart';
 import 'package:angular_components/laminate/popup/module.dart';
 import 'package:angular_components/material_checkbox/material_checkbox.dart';
@@ -118,9 +118,10 @@ class MaterialDropdownSelectFullDemoComponent {
 
   // Specifying an itemRenderer avoids the selected item from knowing how to
   // display itself.
-  static final ItemRenderer _itemRenderer = newCachingItemRenderer<Language>(
-          (language) => "${language.label} (${language.code})")
-      as String? Function(dynamic);
+  static final ItemRenderer _itemRenderer = newCachingItemRenderer((item) {
+    var language = item as Language;
+    return "${language.label} (${language.code})";
+  });
 
   bool useFactoryRenderer = false;
   bool useItemRenderer = false;
@@ -207,7 +208,7 @@ class MaterialDropdownSelectFullDemoComponent {
   String get multiSelectedLanguages =>
       multiSelectModel.selectedValues.map((l) => l.uiDisplayName).join(',');
 
-  ItemRenderer<Language> get itemRenderer =>
+  ItemRenderer get itemRenderer =>
       useItemRenderer ? _itemRenderer : _displayNameRenderer;
 
   FactoryRenderer? get factoryRenderer =>
@@ -241,7 +242,7 @@ class MaterialDropdownSelectFullDemoComponent {
     }
   }
 
-  Language? selectionValue;
+  Language selectionValue = Language('', '');
   List<Language> selectionValues = [];
   String? get selectionValuesLabel {
     final size = selectionValues.length;

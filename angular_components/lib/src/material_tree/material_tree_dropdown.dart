@@ -28,6 +28,7 @@ import 'material_tree_impl.dart';
 /// A button-triggered dropdown containing a [MaterialTreeComponent].
 @Component(
   selector: 'material-tree-dropdown',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   directives: [
     DeferredContentDirective,
     KeyboardOnlyFocusIndicatorDirective,
@@ -53,16 +54,17 @@ class MaterialTreeDropdownComponent<T>
     with DropdownHandle, MaterialTreeRoot<T>, SelectionContainer<T>
     implements OnInit, Focusable {
   // Popup positioning to use when filtering is enabled.
-  static const List<Object /*RelativePosition | List<RelativePosition>*/ >
+  static const List<
+          List<RelativePosition> /*RelativePosition | List<RelativePosition>*/ >
       _popupPositionsOffset = [
-    RelativePosition.AdjacentBottomLeft,
+    [RelativePosition.AdjacentBottomLeft],
     RelativePosition.AdjacentBottomEdge,
-    RelativePosition.AdjacentTopLeft,
+    [RelativePosition.AdjacentTopLeft],
     RelativePosition.AdjacentTopEdge
   ];
 
   // Popup positioning to use when filtering is disabled.
-  static const List<Object> _popupPositionsInline =
+  static const List<RelativePosition> _popupPositionsInline =
       RelativePosition.InlinePositions;
 
   static const String _DEFAULT_PLACEHOLDER = 'Select';
@@ -71,7 +73,7 @@ class MaterialTreeDropdownComponent<T>
   bool _expandAll = false;
   String _placeholder = _DEFAULT_PLACEHOLDER;
   bool _visible = false;
-  List<Object> _customPopupPositions = [];
+  List<RelativePosition> _customPopupPositions = [];
 
   @ViewChild(MaterialTreeFilterComponent)
   MaterialTreeFilterComponent? materialTreeFilterComponent;
@@ -139,13 +141,12 @@ class MaterialTreeDropdownComponent<T>
   /// render the selected value with [labelRenderer], [itemRenderer], or
   /// [defaultItemRenderer] in that order of preference.
   String? get placeholder {
-    if (selection != null) {
-      if (selection is! MultiSelectionModel && selection!.isNotEmpty) {
-        return (labelRenderer ??
-            (itemRenderer as String? Function(dynamic)? ??
-                defaultItemRenderer))(selection!.selectedValues.first);
-      }
+    if (selection is! MultiSelectionModel && selection.isNotEmpty) {
+      return (labelRenderer ??
+          (itemRenderer as String? Function(dynamic)? ??
+              defaultItemRenderer))(selection.selectedValues.first);
     }
+
     return _placeholder;
   }
 
@@ -153,7 +154,7 @@ class MaterialTreeDropdownComponent<T>
   final bool optimizeForDropdown = true;
 
   MaterialTreeDropdownComponent(this._domService,
-      @Attribute('popupClass') String popupClass, HtmlElement element)
+      @Attribute('popupClass') String? popupClass, HtmlElement element)
       : popupClassName = constructEncapsulatedCss(popupClass, element.classes) {
     selection = SelectionModel<T>.empty();
   }
@@ -162,7 +163,7 @@ class MaterialTreeDropdownComponent<T>
   //@Input()
   //@override
   //set componentRenderer(ComponentRenderer? value) {
-  // super.componentRenderer = value;
+  //  super.componentRenderer = value;
   //}
 
   /// Specifies the factoryRenderer to use to determine the factory for
@@ -183,14 +184,14 @@ class MaterialTreeDropdownComponent<T>
   /// The available options for this contianer.
   @Input()
   @override
-  set options(SelectionOptions<T>? value) {
+  set options(SelectionOptions<T> value) {
     super.options = value;
   }
 
   /// The selection model this container represents.
   @Input()
   @override
-  set selection(SelectionModel<T>? value) {
+  set selection(SelectionModel<T> value) {
     super.selection = value;
   }
 
@@ -205,11 +206,11 @@ class MaterialTreeDropdownComponent<T>
   /// If left unset or if explicitly set to null, [_defaultPopupPositions] will
   /// be used. See [MaterialPopupComponent] for more information.
   @Input()
-  set popupPositions(List<Object> positions) {
+  set popupPositions(List<RelativePosition> positions) {
     _customPopupPositions = positions;
   }
 
-  List<Object> /*RelativePosition | List<RelativePosition>*/ get popupPositions =>
+  List<RelativePosition> /*RelativePosition | List<RelativePosition>*/ get popupPositions =>
       _customPopupPositions.isEmpty
           ? _defaultPopupPositions
           : _customPopupPositions;
@@ -219,9 +220,10 @@ class MaterialTreeDropdownComponent<T>
   ///
   /// Returns offset positioning when the filter is enabled and inline
   /// positioning when the filter is disabled.
-  List<Object> /*RelativePosition | List<RelativePosition>*/
+  // TODO: To eb relooked at later
+  List<RelativePosition> /*RelativePosition | List<RelativePosition>*/
       get _defaultPopupPositions => showFilterInsideButton
-          ? _popupPositionsOffset
+          ? [RelativePosition.AdjacentTopLeft] //_popupPositionsOffset
           : _popupPositionsInline;
 
   bool get visible => _visible;

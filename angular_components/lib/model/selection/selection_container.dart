@@ -14,10 +14,10 @@ abstract class SelectionContainer<T>
         //HasComponentRenderer<RendersValue, Object>,
         HasFactoryRenderer<RendersValue, T> {
   /// The selection model this container represents.
-  SelectionModel<T>? selection;
+  SelectionModel<T> selection = SelectionModel.empty();
 
   /// The available options for this container.
-  SelectionOptions<T>? options;
+  SelectionOptions<T> options = SelectionOptions.fromList(<T>[]);
 
   /// A simple function to render the an item to string.
   /// @override
@@ -40,7 +40,7 @@ abstract class SelectionContainer<T>
 /// A type of component which renders an item from a `SelectionModel`.
 abstract class SelectionItem<T> implements HasRenderer<T> {
   /// The selection model this item is a member of.
-  SelectionModel<T>? selection;
+  SelectionModel<T> selection = SelectionModel.empty();
 
   /// The value this component represents.
   T? value;

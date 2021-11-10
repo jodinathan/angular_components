@@ -84,9 +84,11 @@ class GalleryDocumentationExtraction extends SimpleAstVisitor<DartDocInfo> {
     }
 
     _info!.inputs = allProperties
-        .where((property) => property!.annotation == inputAnnotation);
+        .where((property) => property!.annotation == inputAnnotation)
+        .cast();
     _info!.outputs = allProperties
-        .where((property) => property!.annotation == outputAnnotation);
+        .where((property) => property!.annotation == outputAnnotation)
+        .cast();
     return _info;
   }
 
@@ -108,9 +110,9 @@ class GalleryDocumentationExtraction extends SimpleAstVisitor<DartDocInfo> {
     final name = node.name.label.name;
     final expression = node.expression;
     if (name == 'selector') {
-      _info!.selector = expression.accept(StringExtractor());
+      _info!.selector = expression.accept(StringExtractor()) ?? '';
     } else if (name == 'exportAs') {
-      _info!.exportAs = expression.accept(StringExtractor());
+      _info!.exportAs = expression.accept(StringExtractor()) ?? '';
     }
     return null;
   }
@@ -124,9 +126,10 @@ class GalleryDocumentationExtraction extends SimpleAstVisitor<DartDocInfo> {
       ..name = node.name.name
       ..deprecated = deprecatedAnnotationNode != null
       ..deprecatedMessage = deprecatedAnnotationNode?.arguments?.arguments
-          // Visit the first arg or null if no args.
-          .firstWhereOrNull((_) => true)
-          ?.accept(StringExtractor())
+              // Visit the first arg or null if no args.
+              .firstWhereOrNull((_) => true)
+              ?.accept(StringExtractor()) ??
+          ''
       ..comment = g3docMarkdownToHtml(parseComment(node.documentationComment))
       ..path = _filePath;
     node.metadata

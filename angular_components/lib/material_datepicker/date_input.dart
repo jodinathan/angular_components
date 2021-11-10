@@ -179,7 +179,7 @@ class DateInputDirective implements OnDestroy {
     // TODO(google): Participate in Forms API?
     _disposer.addStreamSubscription(_input.onChange
         .listen((String? input) => _parseDate(input!, setAsCurrent: true)));
-    _input.checkValid = (String? input) => _parseDateCached(input);
+    _input.checkValid = (String? input) => _parseDateCached(input) ?? '';
 
     _input.requiredErrorMsg = invalidDateMsg;
   }

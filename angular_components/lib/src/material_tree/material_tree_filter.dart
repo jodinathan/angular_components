@@ -16,6 +16,7 @@ import 'package:angular_components/utils/async/async.dart';
 /// A simple component that maps an input box to the [Filterable] interface.
 @Component(
   selector: 'material-tree-filter',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   directives: [materialInputDirectives, NgIf],
   templateUrl: 'material_tree_filter.html',
 )

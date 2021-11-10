@@ -53,10 +53,10 @@
                   [attr.autocomplete]="inputAutocomplete"
                   [readonly]="disabled"
                   [ngModel]="inputText"
-                  (blur)="inputBlurAction($event, textareaEl.validity.valid, textareaEl.validationMessage)"
+                  (blur)="inputBlurAction($event, textareaEl.validity?.valid, textareaEl.validationMessage)"
                   (change)="handleChange($event, textareaEl)"
                   (focus)="inputFocusAction"
-                  (input)="inputKeypress(textareaEl.value, textareaEl.validity.valid, textareaEl.validationMessage)"
+                  (input)="inputKeypress(textareaEl.value, textareaEl.validity?.valid, textareaEl.validationMessage)"
                   [tabindex]="inputTabIndex"></textarea>
       </div>
     </div>

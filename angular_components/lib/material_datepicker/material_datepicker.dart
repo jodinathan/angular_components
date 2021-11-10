@@ -158,13 +158,13 @@ class MaterialDatepickerComponent
   /// Whether changing the selected date should be disabled.
   @Input()
   set disabled(bool? value) {
-    _disabled = value;
+    _disabled = value ?? false;
     // Hide popup if visible.
-    _popupVisible = _popupVisible && !disabled!;
+    _popupVisible = _popupVisible && !disabled;
   }
 
-  bool? _disabled = false;
-  bool? get disabled => _disabled;
+  bool _disabled = false;
+  bool get disabled => _disabled;
 
   bool _popupVisible = false;
   bool get popupVisible => _popupVisible;
@@ -179,7 +179,7 @@ class MaterialDatepickerComponent
   @Input()
   set popupVisible(bool visible) {
     // Show popup only if not disabled
-    _popupVisible = visible && !disabled!;
+    _popupVisible = visible && !disabled;
     _popupVisibleController.add(_popupVisible);
     focusable = _focusTarget;
   }
@@ -201,7 +201,7 @@ class MaterialDatepickerComponent
   MaterialInputComponent? textInput;
 
   Focusable? get _focusTarget =>
-      disabled! ? null : (_popupVisible ? textInput : dropdownButton);
+      disabled ? null : (_popupVisible ? textInput : dropdownButton);
 
   /// Gets the i18n'ed "Select a date" placeholder text.
   @Input()
@@ -225,7 +225,7 @@ class MaterialDatepickerComponent
 
   /// Opens the calendar picker popup if not in a [disabled] state.
   void onTrigger() {
-    popupVisible = !disabled!;
+    popupVisible = !disabled;
   }
 
   List<SingleDayRange> get presetDates => _presetDates;
@@ -288,7 +288,7 @@ class MaterialDatepickerComponent
 
   MaterialDatepickerComponent(
       HtmlElement element,
-      @Attribute('popupClass') String popupClass,
+      @Attribute('popupClass') String? popupClass,
       @Optional() @Inject(datepickerClock) Clock? clock)
       : popupClassName = constructEncapsulatedCss(popupClass, element.classes) {
     clock ??= Clock();

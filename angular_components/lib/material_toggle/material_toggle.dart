@@ -45,7 +45,7 @@ class MaterialToggleComponent
   ///
   /// `true` is disabled and `false` is enabled.
   @Input()
-  bool? disabled = false;
+  bool disabled = false;
 
   /// Current state of the toggle button.
   ///
@@ -112,7 +112,7 @@ class MaterialToggleComponent
 
   @visibleForTesting
   void toggleChecked() {
-    if (!disabled!) {
+    if (!disabled) {
       checked = !checked;
       _controller.add(checked);
       _onTouched?.call();

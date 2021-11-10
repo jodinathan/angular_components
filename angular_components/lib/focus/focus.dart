@@ -231,8 +231,8 @@ class AutoFocusDirective extends RootFocusable implements OnInit, OnDestroy {
   /// This value should not change during the component's life.
   // TODO(google): Change to an attribute.
   @Input()
-  set autoFocus(bool value) {
-    _autoFocus = value;
+  set autoFocus(bool? value) {
+    _autoFocus = value ?? false;
   }
 
   @override

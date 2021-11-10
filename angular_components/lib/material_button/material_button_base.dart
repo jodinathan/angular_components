@@ -19,8 +19,16 @@ class MaterialButtonBase extends ButtonDirective {
 
   /// Is `true` if the button should have a box shadow that makes the button look
   /// raised.
+  bool _raised = false;
+
   @Input()
-  bool raised = false;
+  set raised(Object obj) {
+    if (obj is bool) {
+      _raised = obj;
+    }
+  }
+
+  bool get raised => _raised;
 
   /// Whether button is focused right now.
   bool get focused => _focused || _clickFocused;

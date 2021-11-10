@@ -44,7 +44,7 @@ class GalleryComponent {
 
   bool get showToc => (model.docs.length + model.demos.length) > 1;
 
-  String getDocId(DocInfo doc) => '${doc.name!.replaceAll(' ', '_')}Doc';
+  String getDocId(DocInfo doc) => '${doc.name.replaceAll(' ', '_')}Doc';
 
   String getDemoId(Demo demo) => '${demo.name}Demo';
 
@@ -65,17 +65,21 @@ class GalleryComponent {
 /// Relies on syntax highlighting from highlight.js
 /// https://github.com/highlightjs/highlight.js which must be loaded in the page
 /// first.
-String? applyHighlighting(String htmlFragment) {
+String applyHighlighting(String htmlFragment) {
   // Create a temporary document containing the fragment.
   final fragment = DocumentFragment.html(htmlFragment,
       treeSanitizer: _NullNodeTreeSanitizer());
 
   // Add syntax highlighting css classes.
-  fragment
-      .querySelectorAll('pre code')
-      .forEach((block) => highlightBlock(block));
+  try {
+    fragment
+        .querySelectorAll('pre code')
+        .forEach((block) => highlightBlock(block));
+  } catch (e) {
+    print(e);
+  }
 
-  return fragment.innerHtml;
+  return fragment.innerHtml ?? '';
 }
 
 @JS('hljs.highlightBlock')

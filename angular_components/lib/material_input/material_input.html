@@ -12,7 +12,7 @@
       <material-icon class="glyph leading"
                      icon="{{leadingGlyph}}"
                      [attr.aria-label]="leadingGlyphAriaLabel"
-                     [attr.disabled]="disabled">
+                     [attr.disabled]="attributeToString(disabled)">
       </material-icon>
     </span>
     <span *ngIf="hasLeadingText"
@@ -42,18 +42,18 @@
       <input #inputEl
              focusableElement
              class="input"
-             [attr.aria-activedescendant]="inputAriaActivedescendent"
-             [attr.aria-autocomplete]="inputAriaAutocomplete"
-             [attr.aria-expanded]="inputAriaExpanded"
-             [attr.aria-haspopup]="inputAriaHasPopup"
-             [attr.aria-invalid]="invalid"
+             [attr.aria-activedescendant]="attributeToString(inputAriaActivedescendent)"
+             [attr.aria-autocomplete]="attributeToString(inputAriaAutocomplete)"
+             [attr.aria-expanded]="attributeToString(inputAriaExpanded)"
+             [attr.aria-haspopup]="attributeToString(inputAriaHasPopup)"
+             [attr.aria-invalid]="attributeToString(invalid)"
              [attr.aria-label]="inputAriaLabel"
              [attr.aria-labelledby]="labelId"
              [attr.aria-describedby]="ariaDescribedBy"
              [attr.aria-owns]="inputAriaOwns"
              [attr.aria-controls]="inputAriaControls"
-             [attr.aria-disabled]="disabled"
-             [attr.autocomplete]="inputAutocomplete"
+             [attr.aria-disabled]="attributeToString(disabled)"
+             [attr.autocomplete]="attributeToString(inputAutocomplete)"
              [attr.role]="role"
              [ngModel]="inputText"
              (blur)="inputBlurAction($event, inputEl.validity.valid, inputEl.validationMessage)"
@@ -78,7 +78,7 @@
       <material-icon class="glyph trailing"
                      icon="{{trailingGlyph}}"
                      [attr.aria-label]="trailingGlyphAriaLabel"
-                     [attr.disabled]="disabled">
+                     [attr.disabled]="attributeToString(disabled)">
       </material-icon>
     </span>
     <ng-content select="[trailing]">
@@ -124,7 +124,7 @@
        (focus)="$event.stopPropagation()">
     &nbsp;
   </div>
-  <div *ngIf="maxCount != null || showCharacterCount"
+  <div *ngIf="showCharacterCount"
        [attr.aria-label]="msgCharacterCounterAriaLabel(inputTextLength, maxCount)"
        class="counter"
        [class.invalid]="invalid">

@@ -19,6 +19,7 @@ Future<void> writeAsset(BuildStep buildStep, String templatePath,
   final mustacheTemplate = Template(template, lenient: true);
 
   var output = mustacheTemplate.renderString(mustacheContext);
+
   // For debugging
   //print(output);
 

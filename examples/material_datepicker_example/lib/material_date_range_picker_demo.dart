@@ -6,7 +6,7 @@ import 'package:angular/angular.dart';
 import 'package:quiver/time.dart';
 import 'package:angular_components/laminate/popup/popup.dart';
 import 'package:angular_components/material_checkbox/material_checkbox.dart';
-import 'package:angular_components/material_datepicker/comparison.dart';
+//import 'package:angular_components/material_datepicker/comparison.dart';
 import 'package:angular_components/material_datepicker/date_range_input.dart';
 import 'package:angular_components/material_datepicker/material_date_range_picker.dart';
 import 'package:angular_components/material_datepicker/model.dart';
@@ -61,13 +61,13 @@ class MaterialDateRangePickerDemoComponent {
   bool isBasic = false;
   bool movingStartMaintainsLength = true;
   bool useMenuForPresets = false;
-  List<DatepickerPreset>? _defaultPresets;
-  List<DatepickerPreset>? _manyPresets;
+  List<DatepickerPreset> _defaultPresets = [];
+  List<DatepickerPreset> _manyPresets = [];
   DatepickerComparison? range;
   DatepickerComparison? rangeSimplified;
   DatepickerComparison? emptyRange;
 
-  List<DatepickerPreset>? get presets =>
+  List<DatepickerPreset> get presets =>
       longPresetList ? _manyPresets : _defaultPresets;
 
   DateRangePickerConfiguration get configuration => isBasic
@@ -79,10 +79,10 @@ class MaterialDateRangePickerDemoComponent {
     _defaultPresets = defaultPresets(clock);
     _manyPresets = manyPresets(clock);
 
-    range = DatepickerComparison.noComparison(_defaultPresets!
+    range = DatepickerComparison.noComparison(_defaultPresets
         .singleWhere((preset) => preset.range.title == 'This week')
         .range);
-    rangeSimplified = DatepickerComparison.noComparison(_defaultPresets!
+    rangeSimplified = DatepickerComparison.noComparison(_defaultPresets
         .singleWhere((preset) => preset.range.title == 'This week')
         .range);
   }

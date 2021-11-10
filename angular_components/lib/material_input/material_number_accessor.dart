@@ -91,7 +91,7 @@ abstract class BaseMaterialNumberValueAccessor<T>
   void registerOnChange(callback) {
     disposer.addStreamSubscription(_updateStream.listen((_) {
       //if (input == null) return; // Input is no longer valid
-      final rawValue = input.inputText ?? '';
+      final rawValue = input.inputText;
       final value = parseNumber(rawValue);
       // Pass the rawValue and the num value. This allows validators to process
       // whichever one they would like.
@@ -132,10 +132,10 @@ class MaterialInt64ValueAccessor
   MaterialInt64ValueAccessor(
       BaseMaterialInput input,
       @Self() NgControl control,
-      @Attribute('changeUpdate') String changeUpdateAttr,
-      @Attribute('keypressUpdate') String keypressUpdateAttr,
-      @Attribute('checkInteger') String checkInteger,
-      @Attribute('blurFormat') String blurFormat,
+      @Attribute('changeUpdate') String? changeUpdateAttr,
+      @Attribute('keypressUpdate') String? keypressUpdateAttr,
+      @Attribute('checkInteger') String? checkInteger,
+      @Attribute('blurFormat') String? blurFormat,
       @Optional() NumberFormat? numberFormat)
       : super(
             input as MaterialInputComponent,
@@ -200,10 +200,10 @@ class MaterialNumberValueAccessor
   MaterialNumberValueAccessor(
       BaseMaterialInput input,
       @Self() NgControl control,
-      @Attribute('changeUpdate') String changeUpdateAttr,
-      @Attribute('keypressUpdate') String keypressUpdateAttr,
-      @Attribute('checkInteger') String checkInteger,
-      @Attribute('blurFormat') String blurFormat,
+      @Attribute('changeUpdate') String? changeUpdateAttr,
+      @Attribute('keypressUpdate') String? keypressUpdateAttr,
+      @Attribute('checkInteger') String? checkInteger,
+      @Attribute('blurFormat') String? blurFormat,
       @Optional() NumberFormat? numberFormat)
       : this._checkInteger = attributeToBool(checkInteger, defaultValue: false),
         super(

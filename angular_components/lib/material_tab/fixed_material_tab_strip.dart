@@ -39,8 +39,8 @@ class FixedMaterialTabStripComponent implements AfterViewInit {
   final int _transitionAmount;
   final ChangeDetectorRef _changeDetector;
   int _activeTabIndex = 0;
-  String? _tabIndicatorTransform;
-  List<String>? _tabLabels;
+  String _tabIndicatorTransform = '';
+  List<String> _tabLabels = [];
   NgZone _ngZone;
 
   /// Stream of [TabChangeEvent] instances, published before the tab has
@@ -81,15 +81,15 @@ class FixedMaterialTabStripComponent implements AfterViewInit {
   /// List of tab button labels.
   @Input()
   set tabLabels(List<String>? labels) {
-    _tabLabels = labels;
+    _tabLabels = labels ?? [];
     _updateTabIndicatorTransform();
   }
 
-  List<String>? get tabLabels => _tabLabels;
+  List<String> get tabLabels => _tabLabels;
 
   /// List of tab button ids.
   @Input()
-  List<String>? tabIds;
+  List<String> tabIds = [];
 
   FixedMaterialTabStripComponent(this._changeDetector,
       @Optional() @Inject(rtlToken) bool? isRtl, this._ngZone)
@@ -118,10 +118,11 @@ class FixedMaterialTabStripComponent implements AfterViewInit {
     return '${activeTabIndex == index}';
   }
 
-  String? tabId(int index) => tabIds?.elementAt(index);
+  String tabId(int index) =>
+      (index < tabIds.length) ? tabIds.elementAt(index) : '';
 
   void _updateTabIndicatorTransform() {
-    var width = _tabLabels != null ? 1 / _tabLabels!.length : 0;
+    var width = 1 / _tabLabels.length;
     var location = _activeTabIndex * width * _transitionAmount;
     _tabIndicatorTransform = 'translateX($location%) scaleX($width)';
   }

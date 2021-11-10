@@ -20,7 +20,7 @@ import 'package:angular/angular.dart';
 )
 class NamedContentComponent {
   String get label => '$_componentName Content';
-  final String _componentName;
+  final String? _componentName;
   NamedContentComponent(@Attribute('name') this._componentName) {
     print('Named Component "$_componentName" instantiated');
   }

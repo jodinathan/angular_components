@@ -62,5 +62,5 @@ class MaterialTreeNestedSingleDemoComponent {
     _changeDetector.markForCheck();
   }
 
-  bool? allowDeselectInHierarchy;
+  bool allowDeselectInHierarchy = false;
 }

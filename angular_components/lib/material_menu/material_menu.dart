@@ -64,11 +64,11 @@ class MaterialMenuComponent extends Object
 
   /// Trigger button text. Ignored if the [MenuModel] has an icon.
   @Input()
-  String? buttonText;
+  String buttonText = '';
 
   /// Whether the menu is disabled or not.
   @Input()
-  bool? disabled = false;
+  bool disabled = false;
 
   /// Whether the menu is tabbable or not.
   @Input()
@@ -76,15 +76,15 @@ class MaterialMenuComponent extends Object
 
   /// Aria label for button trigger.
   @Input()
-  String? ariaLabel;
+  String ariaLabel = '';
 
-  String? get tooltipText => menu?.tooltipText;
+  String get tooltipText => menu.tooltipText;
 
-  bool get hasTooltip => menu?.hasTooltip ?? false;
+  bool get hasTooltip => menu.hasTooltip;
 
-  bool get hasSubmenu => menu?.itemGroups.isNotEmpty ?? false;
+  bool get hasSubmenu => menu.itemGroups.isNotEmpty;
 
-  bool get hasIcon => menu?.uiIcon != null;
+  bool get hasIcon => menu.uiIcon != null;
 
   MaterialButtonComponent? _button;
 
@@ -101,7 +101,7 @@ class MaterialMenuComponent extends Object
   }
 
   Focusable? get _focusTarget =>
-      disabled! ? null : (isExpanded ? _menuPopup : _button);
+      disabled ? null : (isExpanded ? _menuPopup : _button);
 
   @override
   void ngAfterViewInit() {

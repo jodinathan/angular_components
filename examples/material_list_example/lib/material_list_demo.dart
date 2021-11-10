@@ -51,5 +51,5 @@ class MaterialListDemoComponent {
     colorSelection.select(color);
   }
 
-  String growingItemLabel = "Growing item label";
+  String? growingItemLabel = "Growing item label";
 }

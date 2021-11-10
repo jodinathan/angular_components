@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:angular/angular.dart';
+import 'package:angular_components/angular_components.dart';
 import 'package:angular_components/model/menu/menu.dart';
 import 'package:angular_components/model/observable/observable.dart';
 import 'package:angular_components/model/ui/accepts_width.dart';
@@ -34,7 +35,7 @@ class MenuPopupWrapper implements AcceptsWidth {
 
   /// The displayed menu.
   @Input()
-  MenuModel? menu;
+  MenuModel menu = MenuModel.flat([]);
 
   /// Whether the menu is open.
   ///
@@ -94,7 +95,7 @@ class MenuPopupWrapper implements AcceptsWidth {
   ///
   /// Ignored if [menu] instance has a width set. See [AcceptsWidth.width] for
   /// more details.
-  int get width => menu?.width ?? _width;
+  int get width => menu.width; /* ?? _width; */
 
   /// Width of the menu.
   @override
@@ -110,7 +111,7 @@ class MenuPopupWrapper implements AcceptsWidth {
   ///
   /// For the meaning of this parameter, see the PopupInterface documentation.
   @Input()
-  Iterable? preferredPositions;
+  Iterable<RelativePosition> preferredPositions = [];
 }
 
 /// Provides basic accessibility-friendly methods for showing and hiding the

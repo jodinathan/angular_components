@@ -21,7 +21,7 @@ class MaterialDatepickerDemoComponent {
   Date date = Date.today();
   Date? optionalDate;
   DateRange limitToRange = DateRange(Date.today().add(years: -5), Date.today());
-  List<SingleDayRange>? predefinedDates;
+  List<SingleDayRange> predefinedDates = [];
 
   MaterialDatepickerDemoComponent() {
     var clock = Clock();

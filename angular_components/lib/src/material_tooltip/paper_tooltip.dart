@@ -68,7 +68,7 @@ Tooltip getTooltipHandle(MaterialPaperTooltipComponent tooltip) =>
                 [offsetY]="offsetY"
                 [autoDismiss]="focusContents"
                 [class]="popupClassName"
-                [source]="popupSource"
+                [source]="popupSource!"
                 [attr.role]="focusContents ? 'dialog' : 'tooltip'">
   <div class="paper-container"
        [autoFocus]="focusContents"
@@ -125,7 +125,7 @@ class MaterialPaperTooltipComponent implements DeferredContentAware, Tooltip {
   final ChangeDetectorRef _changeDetector;
 
   MaterialPaperTooltipComponent(this._tooltipController, this._changeDetector,
-      HtmlElement hostElement, @Attribute('tooltipClass') String tooltipClass)
+      HtmlElement hostElement, @Attribute('tooltipClass') String? tooltipClass)
       : popupClassName =
             constructEncapsulatedCss(tooltipClass, hostElement.classes);
 

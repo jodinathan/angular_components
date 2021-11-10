@@ -72,15 +72,15 @@ abstract class SelectionModel<T> extends Object
   @Deprecated('Use SelectionModel.single or SelectionModel.multi instead.')
   factory SelectionModel.withList(
       {List<T> selectedValues = const [],
-      KeyProvider<T?>? keyProvider,
+      KeyProvider<T>? keyProvider,
       bool allowMulti = false}) {
     if (allowMulti) {
       return SelectionModel<T>.multi(
           selectedValues: selectedValues, keyProvider: keyProvider);
     } else {
-      return SelectionModel<T?>.single(
+      return SelectionModel<T>.single(
           selected: (selectedValues.isNotEmpty) ? selectedValues.last : null,
-          keyProvider: keyProvider) as SelectionModel<T>;
+          keyProvider: keyProvider);
     }
   }
 

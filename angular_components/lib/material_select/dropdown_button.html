@@ -19,7 +19,7 @@
      [role]="ariaRole"
      [attr.aria-haspopup]="popupType"
      [attr.aria-owns]="ariaOwns"
-     [attr.aria-expanded]="ariaExpanded"
+     [attr.aria-expanded]="attributeToString(ariaExpanded)"
      [attr.aria-activedescendant]="ariaActiveDescendant">
   <span class="button-text" *ngIf="buttonText != null">{{buttonText}}</span>
   <ng-content></ng-content>

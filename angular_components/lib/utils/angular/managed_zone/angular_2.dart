@@ -13,15 +13,15 @@ export 'package:angular_components/src/utils/angular/managed_zone/managed_zone.d
 @Deprecated('Use NgZone directly instead')
 @Injectable()
 class Angular2ManagedZone extends ManagedZoneBase {
-  final NgZone _ngZone;
+  NgZone _ngZone;
 
   bool _isDisposed = false;
 
   @override
-  late Zone innerZone;
+  Zone? innerZone;
 
   @override
-  late Zone outerZone;
+  Zone? outerZone;
 
   Angular2ManagedZone(this._ngZone) {
     _ngZone.runOutsideAngular(() {

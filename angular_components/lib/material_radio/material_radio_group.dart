@@ -196,7 +196,7 @@ class MaterialRadioGroupComponent
     // Make sure current focus is in the list even if it's disabled.
     return _radioComponents
         .where((radioComponent) =>
-            !radioComponent.disabled! || radioComponent == source)
+            !radioComponent.disabled || radioComponent == source)
         .toList();
   }
 

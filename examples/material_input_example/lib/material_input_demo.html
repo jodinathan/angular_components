@@ -147,7 +147,6 @@
   <material-input class="block-width"
                   multiline
                   rows="10"
-                  type="text"
                   label="Block width also works for multiline inputs">
   </material-input>
 
@@ -172,7 +171,7 @@
                   label="Type an URL here"
                   type="url"
                   ngModel
-                  (urlValueChange)="urlValue=$event">
+                  (change)="urlValue=$event">
   </material-input>
   <p>URL input is: {{urlValue}}</p>
   <br>

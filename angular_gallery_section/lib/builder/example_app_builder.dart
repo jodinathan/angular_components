@@ -28,8 +28,14 @@ class ExampleAppBuilder extends Builder {
     final templateId = AssetId(
         'angular_gallery_section', 'lib/builder/template/index.html.mustache');
     final mustacheTemplate = Template(await buildStep.readAsString(templateId));
-    await buildStep.writeAsString(
-        newAssetId, mustacheTemplate.renderString(mustacheContext));
+
+    var renderedData = mustacheTemplate.renderString(mustacheContext);
+
+    //print("=== Start(index.html) ===");
+    //print(renderedData);
+    //print("=== End ===");
+
+    await buildStep.writeAsString(newAssetId, renderedData);
   }
 
   Future _generateMainDart(BuildStep buildStep) async {

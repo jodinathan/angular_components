@@ -3,15 +3,22 @@
 ## 2.0.0
 
 * Migrated using `dart migrate`
-* `Denomination` class throws ArgumentError for incorrect suffix
 * Migrated `angular_gallery`
 * Migrated `angular_gallery_section`
-* Mirgated `examples`
+* Migrated `examples`
 * Replaced `pkg:mustache` with `pkg:mustache_template`
+* Changed `Denomination` class to throws ArgumentError for incorrect suffix
 * Removed deprecated `componentRenderer`
-* Fixed parameters of method with `@ViewChild` annotation to nullable
-* Fixed parameters of component factory with `@Optional` annotation to nullable
-* Fixed parameters of component factory without `@Optional` annotation to non-nullable
+* Changed parameters of method with `@ViewChild` annotation to be nullable
+* Changed parameters of component factory with `@Optional` annotation to be nullable
+* Changed parameters of component factory without `@Optional` annotation be non-nullable
+* Changed parameters of component constructor with `@Attribute` annotation to be nullable
+* Added `ChangeDetectionStrategy.OnPush` to `material_tree_dropdown`
+* Added `ChangeDetectionStrategy.OnPush` to `material_tree_filter`
+* Added `ChangeDetectionStrategy.OnPush` to `material_tree_impl`
+* Updated `disabled` to be non nullable
+* Replaced `DomSanitizationService` with `pkg:sanitizer_html`
+
 
 ## 1.0.3
 

@@ -244,15 +244,15 @@ class MaterialDateRangePickerComponent
   /// Whether changing the selected date range should be disabled.
   @Input()
   set disabled(bool? value) {
-    _disabled = value;
+    _disabled = value ?? false;
     // Hide popup if visible.
-    if (_popupVisible && disabled!) close();
+    if (_popupVisible && disabled) close();
   }
 
-  bool? _disabled = false;
+  bool _disabled = false;
 
   @HostBinding('class.disabled')
-  bool? get disabled => _disabled;
+  bool get disabled => _disabled;
 
   /// Dates earlier than `minDate` cannot be chosen.
   ///
@@ -262,12 +262,12 @@ class MaterialDateRangePickerComponent
   /// selected `range' when the user reopens the popup.
   @Input()
   set minDate(Date? date) {
-    _minDate = date;
+    _minDate = date ?? Date.today();
     model.minDate = _minDate;
   }
 
-  Date? get minDate => _minDate;
-  Date? _minDate;
+  Date get minDate => _minDate;
+  Date _minDate = Date.today();
 
   /// Dates later than `maxDate` cannot be chosen.
   ///
@@ -277,20 +277,20 @@ class MaterialDateRangePickerComponent
   /// only applied to the selected `range' when the user reopens the popup.
   @Input()
   set maxDate(Date? date) {
-    _maxDate = date;
+    _maxDate = date ?? Date.today();
     model.maxDate = _maxDate;
   }
 
-  Date? get maxDate => _maxDate;
-  Date? _maxDate;
+  Date get maxDate => _maxDate;
+  Date _maxDate = Date.today();
 
   /// The [DateFormat] used to format dates.
   @Input()
-  DateFormat? dateFormat;
+  DateFormat dateFormat = DateFormat();
 
   /// The [DateFormat] used to format dates when the input is active.
   @Input()
-  DateFormat? activeDateFormat;
+  DateFormat activeDateFormat = DateFormat();
 
   /// When 'requireFullPeriods' is true, 'prev/next' button will be disabled
   /// if previous or next period is not a full predefined period, like 'week'.
@@ -403,7 +403,7 @@ class MaterialDateRangePickerComponent
       @Optional() @Inject(datepickerClock) Clock? clock,
       Clock legacyClock,
       @Optional() DatepickerConfig? config,
-      @Attribute('popupClass') String popupClass,
+      @Attribute('popupClass') String? popupClass,
       @Optional() @SkipSelf() this._popupSizeProvider,
       HtmlElement element,
       this._domService,
@@ -471,7 +471,7 @@ class MaterialDateRangePickerComponent
 
   /// Open the datepicker popup.
   void open() {
-    if (_popupVisible || disabled!) return;
+    if (_popupVisible || disabled) return;
 
     _popupVisible = true;
     _onPopupVisible.add(true);

@@ -33,7 +33,7 @@ class MaterialTooltipDirective extends TooltipTarget
   final String _popupClassName;
   final Window _window;
 
-  String? _lastText;
+  String _lastText = '';
   bool _isInitialized = false;
   Tooltip? _tooltip;
   bool _canShow = true;
@@ -53,8 +53,8 @@ class MaterialTooltipDirective extends TooltipTarget
       this._viewLoader,
       this._changeDetector,
       this._window,
-      @Attribute('initPopupAriaAttributes') String initAriaAttributes,
-      @Attribute('tooltipClass') String tooltipClass)
+      @Attribute('initPopupAriaAttributes') String? initAriaAttributes,
+      @Attribute('tooltipClass') String? tooltipClass)
       : _popupClassName =
             constructEncapsulatedCss(tooltipClass, element.classes),
         super(domPopupSourceFactory, viewContainerRef, element,
@@ -140,7 +140,7 @@ class MaterialTooltipDirective extends TooltipTarget
       ..text = _lastText
       ..tooltipRef = this;
     if (positions != null) {
-      _inkTooltip!.positions = positions;
+      _inkTooltip?.positions = positions ?? [];
     }
   }
 

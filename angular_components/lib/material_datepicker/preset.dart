@@ -19,10 +19,10 @@ class DatepickerPreset {
   final DatepickerDateRange range;
 
   /// An optional short label for the preset (e.g. "Mon - Sun").
-  final String? shortTitle;
+  String shortTitle = '';
 
   /// An optional list of related presets to display in a dropdown menu.
-  final List<DatepickerPreset>? alternatives;
+  List<DatepickerPreset> alternatives = [];
 
   /// Create a [DatepickerPreset] based on a [DatepickerDateRange].
   factory DatepickerPreset.fromRange(DatepickerDateRange range) =>
@@ -90,7 +90,7 @@ class DatepickerPreset {
 
   /// Create a [DatepickerPreset].
   DatepickerPreset(this.title, this.range,
-      {this.shortTitle, this.alternatives});
+      {this.shortTitle = '', this.alternatives = const []});
 
   static final _weekdayNames = DateFormat().dateSymbols.STANDALONESHORTWEEKDAYS;
 

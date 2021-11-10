@@ -42,5 +42,5 @@ class TabButtonComponent extends MaterialButtonBase with TabMixin {
   bool get hostClassActive => isActive || isMouseDown;
 
   @HostBinding('attr.disabled')
-  String? get hostDisabled => disabled! ? "" : null;
+  String? get hostDisabled => disabled ? "" : null;
 }

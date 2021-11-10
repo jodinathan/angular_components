@@ -63,7 +63,8 @@ class MaterialDateTimePickerComponent implements HasDisabled {
   /// which analyse historical data, this could be the current date time.
   @Input()
   DateTime? maxDateTime;
-  Date get maxDate =>
+
+  Date? get maxDate =>
       Date(maxDateTime!.year, maxDateTime!.month, maxDateTime!.day);
 
   /// Returns maximum time for time picker when selected date is maximum date.
@@ -81,7 +82,8 @@ class MaterialDateTimePickerComponent implements HasDisabled {
   /// time for which data is available for analysis.
   @Input()
   DateTime? minDateTime;
-  Date get minDate =>
+
+  Date? get minDate =>
       Date(minDateTime!.year, minDateTime!.month, minDateTime!.day);
 
   /// Returns minimum time for time picker when selected date is minimum date.
@@ -94,11 +96,11 @@ class MaterialDateTimePickerComponent implements HasDisabled {
 
   /// Increment of time dropdown options in minutes, passed on to time picker.
   @Input()
-  int? increment;
+  int increment = 1;
 
   /// Whether changing the selected date and time should be disabled.
   @Input()
-  bool? disabled = false;
+  bool disabled = false;
 
   /// Whether the date and time entry is required.
   ///
@@ -194,7 +196,7 @@ class MaterialDateTimePickerComponent implements HasDisabled {
 
   /// Sets [dateTime] to now if it's null.
   void setTimeToNowIfUnset() {
-    if (!disabled! && _time == null) {
+    if (!disabled && _time == null) {
       DateTime now = _clock.now();
       _time = now;
       _date = Date(now.year, now.month, now.day);

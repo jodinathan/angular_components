@@ -47,7 +47,7 @@ class ScorecardDemoComponent {
   int _numericValue = defaultScoreboardRange;
   int get numericValue => _numericValue;
   set numericValue(int value) {
-    if (value == null || value <= 0) return;
+    if (value <= 0) return;
     _numericValue = value;
     range = _createRange(value);
   }

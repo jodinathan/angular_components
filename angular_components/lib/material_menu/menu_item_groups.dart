@@ -80,14 +80,14 @@ class MenuItemGroupsComponent
   /// IMPORTANT: The menu model must be immutable. This component won't reflect
   /// any changes to the model's internal state
   @Input()
-  set menu(MenuModel? menu) {
+  set menu(MenuModel menu) {
     _menu = menu;
     _updateItemsAriaCheckedState(menu);
-    menu?.itemGroups.forEach(_listenForSelectionChanges);
+    menu.itemGroups.forEach(_listenForSelectionChanges);
   }
 
-  MenuModel? get menu => _menu;
-  MenuModel? _menu;
+  MenuModel get menu => _menu;
+  MenuModel _menu = MenuModel.flat([]);
 
   @ViewChildren(FocusableActivateItem)
   List<FocusableActivateItem>? focusableItems;
@@ -97,7 +97,7 @@ class MenuItemGroupsComponent
 
   List<RelativePosition> get tooltipPositions => _tooltipPositions;
 
-  int get width => menu?.width ?? 0;
+  int get width => menu.width;
 
   /// Whether the popup should be closed on left key press.
   ///
@@ -105,6 +105,13 @@ class MenuItemGroupsComponent
   @Input()
   set preventCloseOnPressLeft(bool value) {
     _closeOnPressLeft = !value;
+  }
+
+  String? attributeToString(Object? value) {
+    if (value != null) {
+      return value.toString();
+    }
+    return null;
   }
 
   bool _closeOnPressLeft = true;
@@ -186,7 +193,7 @@ class MenuItemGroupsComponent
 
   /// Highlighter to use, need to be to be provided if [highlight] is used.
   @Input()
-  late TextHighlighter highlighter;
+  TextHighlighter? highlighter;
 
   /// Part of the string to highlight.
   @Input()
@@ -195,7 +202,7 @@ class MenuItemGroupsComponent
     _highlightCache = {};
   }
 
-  String? _highlight;
+  String _highlight = '';
 
   /// CSS classes to append onto the sub-menu popups.
   ///
@@ -204,9 +211,9 @@ class MenuItemGroupsComponent
   /// this component is rendered in and need to be propagated down to any
   /// sub-menus this component will open.
   @Input()
-  String? popupClass;
+  String popupClass = '';
 
-  bool get hasHighlight => _highlight?.isNotEmpty ?? false;
+  bool get hasHighlight => _highlight.isNotEmpty;
 
   var _highlightCache = <String, List<HighlightedTextSegment>>{};
 
@@ -226,9 +233,12 @@ class MenuItemGroupsComponent
 
   /// Returns list of highlighted segments for a given input, using provided
   /// highlighter.
-  List<HighlightedTextSegment>? highlighted(String input) {
-    if (_highlightCache.containsKey(input)) return _highlightCache[input];
-    return _highlightCache[input] = highlighter.highlight(input, [_highlight]);
+  List<HighlightedTextSegment> highlighted(String input) {
+    if (_highlightCache.containsKey(input)) {
+      return _highlightCache[input] ?? [];
+    }
+    return _highlightCache[input] =
+        highlighter?.highlight(input, [_highlight]) ?? [];
   }
 
   @HostListener('mouseover')
@@ -350,10 +360,10 @@ class MenuItemGroupsComponent
     Element? element = target;
     while (element != null) {
       if (element.attributes['role'] == 'menuitem') {
-        MenuItemGroup group = menu!
-            .itemGroups[int.parse(element.attributes['data-group-index']!)];
+        MenuItemGroup group = menu.itemGroups[
+            int.parse(element.attributes['data-group-index'] ?? '0')];
         MenuItem item =
-            group[int.parse(element.attributes['data-item-index']!)];
+            group[int.parse(element.attributes['data-item-index'] ?? '0')];
         return item;
       }
       element = element.parent;
@@ -397,8 +407,8 @@ class MenuItemGroupsComponent
 
   /// Toggle the expansion of the group if it's collapsible.
   void toggleExpansionIfCollapsible(MenuItemGroup group) {
-    if (group.isCollapsible!) {
-      group.isExpanded = !group.isExpanded!;
+    if (group.isCollapsible) {
+      group.isExpanded = !group.isExpanded;
     }
   }
 
@@ -421,8 +431,10 @@ class MenuItemGroupsComponent
     _disposer.dispose();
   }
 
-  SelectionModel? getSelectionModel(MenuItemGroup group) =>
-      group is MenuItemGroupWithSelection ? group.selectionModel : null;
+  SelectionModel getSelectionModel(MenuItemGroup group) =>
+      group is MenuItemGroupWithSelection
+          ? group.selectionModel
+          : SelectionModel.empty();
 
   /// Returns the value for a menu item's `aria-checked` attribute value.
   @visibleForTemplate
@@ -480,7 +492,7 @@ class MenuItemGroupsComponent
   }
 
   void _createActiveMenuModelIfNone() {
-    if (menu != null && _idGenerator != null) {
+    if (_idGenerator != null) {
       activeModel = ActiveMenuItemModel(_idGenerator!,
           menu: menu, filterOutUnselectableItems: true);
       if (activateLastItemOnInit) {
@@ -520,8 +532,8 @@ class MenuItemGroupsComponent
     }
 
     // If the group containing the active item is collapsed, expand it.
-    for (final group in menu!.itemGroups) {
-      if (group.contains(activeModel.activeItem) && group.isCollapsible!) {
+    for (final group in menu.itemGroups) {
+      if (group.contains(activeModel.activeItem) && group.isCollapsible) {
         group.isExpanded = true;
         break;
       }
@@ -595,13 +607,13 @@ class MenuItemGroupsComponent
 
   /// Whether any children in an item's submenu are selected.
   bool _anyChildrenSelected(MenuItemGroup group, MenuItem item) =>
-      item.subMenu!.itemGroups.any((g) =>
+      item.subMenu.itemGroups.any((g) =>
           g is MenuItemGroupWithSelection &&
           g.any((i) => _isSelected(g.selectionModel, i)));
 
   /// Whether all children in an item's submenu are selected.
   bool _everyChildrenSelected(MenuItemGroup group, MenuItem item) =>
-      item.subMenu!.itemGroups.every((g) =>
+      item.subMenu.itemGroups.every((g) =>
           g is MenuItemGroupWithSelection &&
           g.every((i) => _isSelected(g.selectionModel, i)));
 }

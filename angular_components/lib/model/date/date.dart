@@ -72,7 +72,7 @@ class Date extends Comparators<Date?> {
   factory Date.parseLoose(String input, DateFormat format) =>
       Date.fromTime(format.parseLoose(input));
 
-  String format(DateFormat format) => format.format(asUtcTime());
+  String format(DateFormat? format) => format?.format(asUtcTime()) ?? '';
 
   /// Returns this [Date] as a [DateTime] at midnight UTC.
   DateTime asUtcTime() => _time;

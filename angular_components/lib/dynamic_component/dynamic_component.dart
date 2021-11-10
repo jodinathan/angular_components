@@ -65,14 +65,14 @@ class DynamicComponent implements OnDestroy, AfterChanges {
   /// The type of component to dynamically render.
   @Deprecated('Use componentFactory instead as it is more tree-shakable')
   @Input()
-  set componentType(Type dartType) {
+  set componentType(Type? dartType) {
     if (_componentType != dartType) _typeChanged = true;
     _componentType = dartType;
   }
 
   /// The component factory of the component to dynamically render.
   @Input()
-  set componentFactory(ComponentFactory component) {
+  set componentFactory(ComponentFactory? component) {
     if (_componentFactory != component) _factoryChanged = true;
     _componentFactory = component;
   }

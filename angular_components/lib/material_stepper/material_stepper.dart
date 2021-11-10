@@ -53,10 +53,10 @@ class MaterialStepperComponent {
   static const defaultSize = sizeDefault;
   List<StepDirective> steps = [];
 
-  int? _activeStepIndex;
-  int? get activeStepIndex => _activeStepIndex;
+  int _activeStepIndex = 0;
+  int get activeStepIndex => _activeStepIndex;
   set activeStepIndex(int? value) {
-    _activeStepIndex = value;
+    _activeStepIndex = value ?? 0;
     _recalculatePropertiesOfSteps();
   }
 
@@ -64,9 +64,10 @@ class MaterialStepperComponent {
 
   var _orientation = defaultOrientation;
   var _size = defaultSize;
-  String? _legalJumps;
+  String _legalJumps = '';
 
-  List<StepDirective>? _stepDirectiveList;
+  List<StepDirective> _stepDirectiveList = [];
+
   final _activeStepController =
       StreamController<StepDirective?>.broadcast(sync: true);
   final _stepAriaLabel = <StepDirective, String>{};
@@ -76,9 +77,9 @@ class MaterialStepperComponent {
     if (_stepDirectiveList == value) return;
     _stepAriaLabel.clear();
     _stepDirectiveList = value;
-    activeStepIndex ??= 0;
+    //activeStepIndex ??= 0;
     scheduleMicrotask(() {
-      _onStepsChange(_stepDirectiveList!);
+      _onStepsChange(_stepDirectiveList);
     });
   }
 
@@ -108,7 +109,7 @@ class MaterialStepperComponent {
     return _stepTo(index);
   }
 
-  void stepForward(Event event, StepDirective step) {
+  void stepForward(Event event, StepDirective? step) {
     // Prevent event from propagating up to the stepper.  This
     // is necessary for a vertical default sized stepper with
     // all jumps allowed, so that the stepper doesn't jump back
@@ -117,18 +118,18 @@ class MaterialStepperComponent {
     event.stopPropagation();
 
     AsyncActionController<bool> ctrl = AsyncActionController<bool>();
-    step.requestStepContinue(ctrl.action!);
+    step?.requestStepContinue(ctrl.action!);
     ctrl.execute(() {
-      activeStep!.complete = true;
-      if (activeStep!.isLast) {
+      activeStep?.complete = true;
+      if (activeStep != null && activeStep!.isLast) {
         stepperDone = true;
         return true;
       }
-      return _stepTo(activeStepIndex! + 1);
+      return _stepTo((activeStepIndex) + 1);
     });
   }
 
-  void stepBackward(Event event, StepDirective step) {
+  void stepBackward(Event event, StepDirective? step) {
     // Prevent event from propagating up to the stepper.  This
     // is necessary for a vertical default sized stepper with
     // all jumps allowed, so that the stepper doesn't jump back
@@ -137,10 +138,10 @@ class MaterialStepperComponent {
     event.stopPropagation();
 
     AsyncActionController<bool> ctrl = AsyncActionController<bool>();
-    step.requestStepCancel(ctrl.action!);
+    step?.requestStepCancel(ctrl.action!);
     ctrl.execute(() {
-      activeStep!.complete = false;
-      return _stepTo(activeStepIndex! - 1);
+      activeStep?.complete = false;
+      return _stepTo((activeStepIndex > 1) ? activeStepIndex - 1 : 0);
     });
   }
 
@@ -187,7 +188,7 @@ class MaterialStepperComponent {
   /// Get the step directive that is currently active.  The stepper will
   /// only have 1 step active at a time.
   StepDirective? get activeStep =>
-      steps.isNotEmpty ? steps[activeStepIndex!] : null;
+      steps.isNotEmpty ? steps[activeStepIndex] : null;
 
   /// Jumps (defined as step-switches not triggered by the Continue/Cancel
   /// buttons) that are legal.
@@ -275,14 +276,14 @@ class MaterialStepperComponent {
           s.isSelectable = false;
           break;
         case backwards:
-          s.isSelectable = i < activeStepIndex!;
+          s.isSelectable = i < activeStepIndex;
       }
       i++;
     }
   }
 
   String stepAriaLabel(StepDirective step) => _stepAriaLabel[step] ??=
-      _stepAriaAnnounce(step.index! + 1, steps.length, step.name);
+      _stepAriaAnnounce(step.index + 1, steps.length, step.name);
 
   String get stepAriaAnnounce =>
       activeStep == null ? '' : stepAriaLabel(activeStep!);

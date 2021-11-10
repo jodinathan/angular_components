@@ -48,13 +48,12 @@ class OverlayService {
   static const _defaultState = OverlayState();
   static final _logger = Logger('OverlayService');
 
-  final bool _useDomSynchronously;
+  late bool _useDomSynchronously;
   final NgZone _ngZone;
   final OverlayDomRenderService _renderService;
 
   OverlayRef _createRef(HtmlElement pane, OverlayState state) => OverlayRef(
-      _renderService.applyState as Future<Object> Function(
-          OverlayState, HtmlElement),
+      _renderService.applyState,
       _measurePane,
       _renderService.createPortalHost(pane),
       _renderService.containerElement,
@@ -70,7 +69,7 @@ class OverlayService {
 
   OverlayService(
       this._ngZone,
-      @Inject(overlaySyncDom) this._useDomSynchronously,
+      @Inject(overlaySyncDom) Object useDomSynchronously,
       this._renderService,
       @SkipSelf() @Optional() OverlayService? existingInstance) {
     assert(() {
@@ -82,5 +81,8 @@ class OverlayService {
       }
       return true;
     }());
+    if (useDomSynchronously is bool) {
+      this._useDomSynchronously = useDomSynchronously;
+    }
   }
 }

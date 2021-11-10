@@ -126,17 +126,18 @@ class DropdownButtonComponent extends Object
   /// Whether to show the bottom border of the dropdown button.
   @Input()
   set showButtonBorder(bool? value) {
-    _showButtonBorder = value;
+    _showButtonBorder = value ?? false;
   }
 
-  bool? get showButtonBorder {
-    if (_showButtonBorder != null) return _showButtonBorder;
+  bool get showButtonBorder {
+    //if (_showButtonBorder != null) return _showButtonBorder;
     // If the input field is not specified, maitain backwards compatible
     // behavior, which decides based on whether the text is null.
-    return buttonText != null;
+    //return buttonText != null;
+    return _showButtonBorder;
   }
 
-  bool? _showButtonBorder;
+  bool _showButtonBorder = false;
 
   /// Event that fires when the dropdown button is blurred.
   @Output('blur')
@@ -149,9 +150,16 @@ class DropdownButtonComponent extends Object
 
   /// Event fired when the button is clicked or keyboard activated.
   @Output()
-  Stream<UIEvent>? get trigger => _button?.trigger;
+  Stream<UIEvent> get trigger => _button?.trigger ?? Stream.empty();
 
   /// Is the component tabbable.
   @Input()
   bool tabbable = true;
+
+  String? attributeToString(Object? inputValue) {
+    if (inputValue != null) {
+      return inputValue.toString();
+    }
+    return null;
+  }
 }

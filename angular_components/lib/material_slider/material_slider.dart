@@ -47,9 +47,18 @@ class MaterialSliderComponent implements AfterChanges, HasDisabled {
 
   /// True if the slider disabled.
   @HostBinding('class.is-disabled')
-  @HostBinding('attr.aria-disabled')
+  bool get classDisabledStr => disabled;
+
+  String get maxStr => '$max';
+
+  String get minStr => '$min';
+
+  String get valueStr => '$value';
+
+  String get leftValueStr => '$leftValue';
+
   @Input()
-  bool? disabled = false;
+  bool disabled = false;
 
   bool _isTwoSided = false;
 
@@ -103,12 +112,18 @@ class MaterialSliderComponent implements AfterChanges, HasDisabled {
   /// Defaults to 0, must be strictly smaller than max.
   @Input()
   num min = 0;
+  //set minStr(String? value) {
+  //  min = int.tryParse(value ?? '0') ?? 0;
+  //}
 
   /// The maximum progress value.
   ///
   /// Defaults to 100, must be strictly larger than min.
   @Input()
   num max = 100;
+  //set maxStr(String? value) {
+  //  max = int.tryParse(value ?? '0') ?? 0;
+  //}
 
   /// The step size of the input.
   ///
@@ -223,7 +238,7 @@ class MaterialSliderComponent implements AfterChanges, HasDisabled {
 
   /// Handles mouse down events on either slider knob or the slider track.
   void mouseDown(MouseEvent event) {
-    if (disabled!) return;
+    if (disabled) return;
     if (event.button != 0) return;
     event.preventDefault();
     _setValueToMousePosition(event.page.x as int);
@@ -245,7 +260,7 @@ class MaterialSliderComponent implements AfterChanges, HasDisabled {
 
   /// Handles touch start events on either slider knob.
   void touchStart(TouchEvent event) {
-    if (disabled!) return;
+    if (disabled) return;
     event.preventDefault();
     final touch = event.targetTouches!.first;
     _setValueToMousePosition(touch.page.x as int);
@@ -270,7 +285,7 @@ class MaterialSliderComponent implements AfterChanges, HasDisabled {
   ///
   /// [isLeftKnob] true indicates that the event ocurred on the left knob.
   void knobKeyDown(KeyboardEvent event, {bool isLeftKnobPressed = false}) {
-    if (disabled!) return;
+    if (disabled) return;
     var currValue = isLeftKnobPressed ? leftValue : value;
     var newValue = currValue;
     final bigStepSize = ((max - min) / 10.0).ceil();

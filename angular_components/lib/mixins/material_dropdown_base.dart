@@ -81,7 +81,7 @@ class MaterialDropdownBase
 
   /// Preferred positions for alignment when enforceSpaceConstraints is true
   @Input()
-  List<dynamic> preferredPositions = RelativePosition.InlinePositions;
+  List<RelativePosition> preferredPositions = RelativePosition.InlinePositions;
 
   void onVisible(bool vis) {
     _visibleStream.add(vis);

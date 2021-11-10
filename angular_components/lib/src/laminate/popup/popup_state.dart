@@ -45,7 +45,7 @@ class PopupState extends Observable {
   /// Create a new popup state from [other].
   factory PopupState.from(PopupState other) {
     // TODO(google): Remove this once it's popup service has a default state.
-    if (other == null) return PopupState();
+    //if (other == null) return PopupState();
     return PopupState._(ObservableMap.from(other._backingMap));
   }
 
@@ -67,7 +67,7 @@ class PopupState extends Observable {
 
   /// If set to true, the popup should attempt to close itself when a mouse
   /// click or finger tap is detected outside of the bounds of the popup.
-  bool? get autoDismiss => _backingMap[#autoDismiss] as bool?;
+  bool get autoDismiss => _backingMap[#autoDismiss] as bool? ?? false;
   set autoDismiss(bool? autoDismiss) {
     _backingMap[#autoDismiss] = autoDismiss;
   }
@@ -75,14 +75,15 @@ class PopupState extends Observable {
   /// If true, the popup will attempt to make intelligent decisions about
   /// positioning and layout depending on the size of the inner content and the
   /// distance to the viewport edges.
-  bool? get enforceSpaceConstraints =>
-      _backingMap[#enforceSpaceConstraints] as bool?;
+  bool get enforceSpaceConstraints =>
+      _backingMap[#enforceSpaceConstraints] as bool? ?? false;
   set enforceSpaceConstraints(bool? enforceSpaceConstraints) {
     _backingMap[#enforceSpaceConstraints] = enforceSpaceConstraints;
   }
 
   /// If true, the popup will set a min-width to the width of [source].
-  bool? get matchMinSourceWidth => _backingMap[#matchMinSourceWidth] as bool?;
+  bool get matchMinSourceWidth =>
+      _backingMap[#matchMinSourceWidth] as bool? ?? false;
   set matchMinSourceWidth(bool? matchMinSourceWidth) {
     _backingMap[#matchMinSourceWidth] = matchMinSourceWidth;
   }
@@ -98,13 +99,13 @@ class PopupState extends Observable {
   }
 
   /// How much to transform the x-axis position by.
-  int? get offsetX => _backingMap[#offsetX] as int?;
+  int get offsetX => _backingMap[#offsetX] as int? ?? 0;
   set offsetX(int? offsetX) {
     _backingMap[#offsetX] = offsetX;
   }
 
   /// How much to transform the y-axis position by.
-  int? get offsetY => _backingMap[#offsetY] as int?;
+  int get offsetY => _backingMap[#offsetY] as int? ?? 0;
   set offsetY(int? offsetY) {
     _backingMap[#offsetY] = offsetY;
   }
@@ -114,19 +115,22 @@ class PopupState extends Observable {
   /// Similarly to Angular providers, this supports nested lists of
   /// [RelativePosition]s. Under the hood, we'll flatten out the list and pick
   /// the first position that fits onscreen.
-  Iterable<Object /* RelativePosition | Iterable */ >? get preferredPositions =>
-      _backingMap[#preferredPositions] as Iterable<Object>?;
-  set preferredPositions(Iterable<Object>? preferredPositions) {
+  Iterable<RelativePosition /* RelativePosition | Iterable */ >
+      get preferredPositions =>
+          _backingMap[#preferredPositions] as Iterable<RelativePosition>;
+  set preferredPositions(Iterable<RelativePosition> preferredPositions) {
     _backingMap[#preferredPositions] = preferredPositions;
   }
 
   /// Whether to track the [source] for changes.
-  bool? get trackLayoutChanges => _backingMap[#trackLayoutChanges] as bool?;
+  bool get trackLayoutChanges =>
+      _backingMap[#trackLayoutChanges] as bool? ?? false;
   set trackLayoutChanges(bool? trackLayoutChanges) {
     _backingMap[#trackLayoutChanges] = trackLayoutChanges;
   }
 
-  bool? get constrainToViewport => _backingMap[#constrainToViewport] as bool?;
+  bool get constrainToViewport =>
+      _backingMap[#constrainToViewport] as bool? ?? false;
   set constrainToViewport(bool? constrainToViewport) {
     _backingMap[#constrainToViewport] = constrainToViewport;
   }

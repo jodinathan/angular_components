@@ -71,7 +71,7 @@ class MaterialFabComponent extends MaterialButtonBase {
 
   @visibleForTemplate
   @HostBinding('attr.disabled')
-  String? get hostDisabled => disabled! ? '' : null;
+  String? get hostDisabled => disabled ? '' : null;
 
   @visibleForTemplate
   @HostBinding('attr.raised')
