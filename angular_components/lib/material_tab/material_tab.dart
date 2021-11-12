@@ -38,7 +38,7 @@ abstract class Tab extends Focusable {
     ExistingProvider(DeferredContentAware, MaterialTabComponent),
   ],
   template: '''
-        <div class="tab-content" *ngIf="active">
+        <div class="tab-content" *ngIf="active" #content>
           <ng-content></ng-content>
         </div>''',
   styleUrls: ['material_tab.scss.css'],
@@ -57,6 +57,11 @@ class MaterialTabComponent extends RootFocusable
       : _uuid = (idGenerator ?? SequentialIdGenerator.fromUUID()).nextId(),
         super(element);
 
+  @ViewChild('content')
+  set content(DivElement? div) {
+    _visible.add(div != null);
+  }
+
   /// The label for this tab.
   @override
   @Input()
@@ -65,13 +70,11 @@ class MaterialTabComponent extends RootFocusable
   @override
   void deactivate() {
     _active = false;
-    _visible.add(false);
   }
 
   @override
   void activate() {
     _active = true;
-    _visible.add(true);
   }
 
   @override

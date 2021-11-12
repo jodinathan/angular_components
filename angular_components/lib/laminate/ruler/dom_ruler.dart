@@ -12,6 +12,8 @@ import 'package:angular_components/utils/browser/dom_service/dom_service.dart';
 /// Measures and tracks size changes for HTML elements in Dart web applications.
 @Injectable()
 abstract class DomRuler implements Ruler<Element> {
+  Stream<Rectangle> track(Element element, {bool aways = false});
+
   factory DomRuler(Document document, DomService domService) = DomRulerImpl;
 }
 
@@ -61,8 +63,8 @@ class DomRulerImpl extends RulerBase<Element> implements DomRuler {
   }
 
   @override
-  Stream<Rectangle> track(Element element) {
-    if (canSyncWrite(element)) {
+  Stream<Rectangle> track(Element element, {bool aways = false}) {
+    if (canSyncWrite(element) && !aways) {
       // It is not possible to measure something not in the live DOM.
       // throw new StateError('Element is not in the live DOM document.');
       return Stream<Rectangle>.fromIterable(const [Rectangle(0, 0, 0, 0)]);
