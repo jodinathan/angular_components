@@ -16,6 +16,8 @@ import 'package:angular_components/model/selection/selection_container.dart';
 import 'package:angular_components/model/ui/has_renderer.dart';
 import 'package:angular_components/utils/id_generator/id_generator.dart';
 
+//import 'MaterialSelectItemComponent.template.dart' as templateItem;
+
 /// Container for a single item selected in a dropdown.
 ///
 /// This should only be used in select dropdowns.
@@ -66,6 +68,8 @@ class MaterialSelectDropdownItemComponent<T>
             (idGenerator ?? SequentialIdGenerator.fromUUID()).nextId(),
         super(element, dropdown, activationHandler, cdRef, role ?? 'option') {
     this.itemRenderer = defaultItemRenderer;
+    //this.factoryRenderer =
+    //    (_) => templateItem.MaterialSelectDropdownItemComponentNgFactory;
   }
 
   @HostBinding('attr.aria-selected')

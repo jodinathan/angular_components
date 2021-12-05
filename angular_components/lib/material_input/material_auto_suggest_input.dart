@@ -236,14 +236,14 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   ///   when the suggestions list opens. Also, do not clear the active item when
   ///   the search text changes.
   @Input()
-  set accessibleItemActivation(bool? value) {
-    if (value == null) return;
+  set accessibleItemActivation(bool value) {
     _accessibleItemActivation = value;
     activeModel.activateFirstItemByDefault =
         (isSingleSelect && value) || (isMultiSelect && !value);
   }
 
   bool get accessibleItemActivation => _accessibleItemActivation;
+
   bool _accessibleItemActivation = true;
 
   /// The autocomplete attribute for the inner input element.
@@ -254,7 +254,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   /// Note: Setting this field may depend on the browser implementation and is
   /// not guaranteed to turn off the autocomplete functionality.
   @Input()
-  String? inputAutocomplete;
+  String inputAutocomplete = 'on';
 
   int _limit = 10;
 
@@ -325,11 +325,6 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
 
   // Override renderer here to just add the @Input annotation and keep the
   // angular dependency out of models.
-  //@override
-  //@Input()
-  //@Deprecated('Use factoryRenderer instead as it is tree shakeable.')
-  //set componentRenderer(ComponentRenderer? value) =>
-  //    super.componentRenderer = value;
 
   /// [FactoryRenderer] used to display the item.
   @override
@@ -343,7 +338,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
 
   /// If a parent provides a [PopupSizeProvider], the provider will be used
   /// instead of the implementation of this class.
-  final PopupSizeProvider? _popupSizeDelegate;
+  PopupSizeProvider? _popupSizeDelegate;
 
   /// Control used to forward errors.
   NgControl? _cd;
@@ -394,40 +389,45 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
     return null;
   }
 
+  String _renderWithItemRender(Object? item) {
+    if (item != null && itemRenderer != null) {
+      return itemRenderer!(item as T) ?? '';
+    }
+    return '';
+  }
+
   @override
   set selection(SelectionModel<T>? selection) {
-    super.selection = selection ?? SelectionModel.empty();
+    var localSelection = selection ?? SelectionModel.empty();
+    super.selection = localSelection;
     activeModel.activateFirstItemByDefault =
         (isSingleSelect && accessibleItemActivation) ||
             (isMultiSelect && !accessibleItemActivation);
 
-    if (selection != null) {
-      if (isSingleSelect && selection.selectedValues.isNotEmpty) {
-        _lastSelectedItem = selection.selectedValues.first;
-        if (_isInitialized) {
-          // Make sure input text is initialized correctly regardless of input
-          // order. Specified input text should take precedence over selection
-          // status.
-          inputText = itemRenderer!(_lastSelectedItem as T);
-        }
+    if (isSingleSelect && localSelection.selectedValues.isNotEmpty) {
+      _lastSelectedItem = localSelection.selectedValues.first;
+      if (_isInitialized) {
+        // Make sure input text is initialized correctly regardless of input
+        // order. Specified input text should take precedence over selection
+        // status.
+        inputText = _renderWithItemRender(_lastSelectedItem);
       }
     }
+
     _selectionListener?.cancel();
-    _selectionListener = selection?.selectionChanges.listen((_) {
+    _selectionListener = localSelection.selectionChanges.listen((_) {
       // If the input fields shows the selected value then update it if the
       // selection changes or clear it if the selection model is empty.
       if (shouldClearInputOnSelection) {
         inputText = '';
       } else if (isSingleSelect) {
-        var selectedItem = selection.selectedValues.isNotEmpty
-            ? selection.selectedValues.first
+        var selectedItem = localSelection.selectedValues.isNotEmpty
+            ? localSelection.selectedValues.first
             : null;
         // Make sure that the change was not caused by this component.
         if (_lastSelectedItem != selectedItem) {
           _lastSelectedItem = selectedItem;
-          inputText = _lastSelectedItem != null
-              ? itemRenderer!(_lastSelectedItem as T)
-              : '';
+          inputText = _renderWithItemRender(_lastSelectedItem);
         }
       }
       emitSelectionChange();
@@ -448,12 +448,13 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
 
   @override
   set options(SelectionOptions<T>? options) {
-    if (options == null) return;
-    super.options = options;
-    activeModel.items = options.optionsList;
+    //if (options == null) return;
+    var localOptions = options ?? SelectionOptions.fromList([]);
+    super.options = localOptions;
+    activeModel.items = localOptions.optionsList;
     _optionsListener?.cancel();
-    _optionsListener = options.stream.listen((_) {
-      activeModel.items = options.optionsList;
+    _optionsListener = localOptions.stream.listen((_) {
+      activeModel.items = localOptions.optionsList;
       _updateItemActivation();
       _changeDetector.markForCheck();
     });
@@ -476,7 +477,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   }
 
   /// The suggestions that match the current input text.
-  List<OptionGroup>? get visibleSuggestionGroups => options.optionGroups;
+  List<OptionGroup> get visibleSuggestionGroups => options.optionGroups;
 
   bool get hasOptions => options.optionsList.isNotEmpty;
 
@@ -598,7 +599,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
       // Deselect previously selected item as the component was not asked to
       // clear the text upon selection, indicating that the selection is bound
       // to the text.
-      if (inputText != itemRenderer!(_lastSelectedItem as T)) {
+      if (inputText != _renderWithItemRender(_lastSelectedItem)) {
         selection.deselect(_lastSelectedItem as T);
         _lastSelectedItem = null;
       }
@@ -863,7 +864,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
       /// input component is not there yet, defer the focus.
       _focusPending = true;
     } else {
-      _input!.focus();
+      _input?.focus();
     }
   }
 
@@ -872,7 +873,7 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
     _isInitialized = true;
     scheduleMicrotask(() {
       if (inputText.isEmpty && _lastSelectedItem != null) {
-        _setInputText(itemRenderer!(_lastSelectedItem as T));
+        _setInputText(_renderWithItemRender(_lastSelectedItem));
       }
     });
   }
@@ -904,19 +905,19 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   }
 
   @override
-  num? getMinHeight(num positionY, num viewportHeight) {
-    return _popupSizeDelegate?.getMinHeight(positionY, viewportHeight);
+  num getMinHeight(num positionY, num viewportHeight) {
+    return _popupSizeDelegate?.getMinHeight(positionY, viewportHeight) ?? 0;
   }
 
   @override
-  num? getMinWidth(num positionX, num viewportWidth) {
-    return _popupSizeDelegate?.getMinWidth(positionX, viewportWidth);
+  num getMinWidth(num positionX, num viewportWidth) {
+    return _popupSizeDelegate?.getMinWidth(positionX, viewportWidth) ?? 0;
   }
 
   @override
-  num? getMaxHeight(num positionY, num viewportHeight) {
+  num getMaxHeight(num positionY, num viewportHeight) {
     if (_popupSizeDelegate != null) {
-      return _popupSizeDelegate!.getMaxHeight(positionY, viewportHeight);
+      return _popupSizeDelegate?.getMaxHeight(positionY, viewportHeight) ?? 0;
     } else {
       // The default max height for auto suggest input's popup.
       return 400;
@@ -924,9 +925,9 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   }
 
   @override
-  num? getMaxWidth(num positionX, num viewportWidth) {
+  num getMaxWidth(num positionX, num viewportWidth) {
     if (_popupSizeDelegate != null) {
-      return _popupSizeDelegate!.getMaxWidth(positionX, viewportWidth);
+      return _popupSizeDelegate?.getMaxWidth(positionX, viewportWidth) ?? 0;
     } else {
       // The default max height for auto suggest input's popup. This was
       // previously max width for material list.
