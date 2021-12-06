@@ -42,14 +42,13 @@ class MaterialTreeNode<T> {
   MaterialTreeNode(this._root, this._changeDetector,
       {IsExpandable<T>? isExpandable}) {
     _group = _EMPTY_OPTION_GROUP;
+
     if (!_root.supportsHierarchy) {
       _isExpandable = (_) => false;
       _parent = _NotAParent();
     } else {
       _isExpandable = isExpandable ?? hasChildren;
-
-      // TODO: Type not match
-      _parent = _root.options as Parent<T, Iterable<OptionGroup<T>>>;
+      _parent = _root.options as Parent<T, List<OptionGroup<T>>>;
     }
     // TODO(google).
     final Object? options = _root.options;
