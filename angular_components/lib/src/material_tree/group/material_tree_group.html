@@ -83,7 +83,7 @@
   </li>
   <li *ngIf="viewMoreLinkVisible">
     <div class="view-more-link-item"
-         [style.padding-left]="getIndent(visibleGroup.last)">
+         [style.padding-left]="getLastIndent(visibleGroup)">
       <div class="material-tree-shift"
            [style.padding-left]="fixedPadding">
         <a class="view-more-link"

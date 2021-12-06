@@ -130,7 +130,16 @@ class MaterialTreeGroupComponent<T> extends MaterialTreeNode<T?>
         padding += checkboxWidth;
       }
     }
+
     return '${padding}px';
+  }
+
+  String getLastIndent(OptionGroup group) {
+    if (group.isNotEmpty) {
+      return getIndent(group.last);
+    }
+
+    return '0px';
   }
 
   void handleExpansion(Event e, Object option) {
