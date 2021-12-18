@@ -51,9 +51,13 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
   final StreamController<Null> _onUpdate =
       StreamController.broadcast(sync: true);
 
-  late ElementScrollHostBase _scrollHost;
+  ElementScrollHostBase? _scrollHost;
 
-  late bool _disableAutoScroll;
+  ElementScrollHostBase get scrollHost {
+    return _scrollHost!;
+  }
+
+  bool _disableAutoScroll = false;
   bool _usePositionSticky = false;
   bool _useTouchGestureListener = true;
   bool _enableSmoothPushing = false;
@@ -67,7 +71,7 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
   }
 
   void _init() {
-    _scrollHost.dispose();
+    _scrollHost?.dispose();
     _scrollHost = ElementScrollHostBase(
         _domService, _ngZone, _gestureListenerFactory, element,
         usePositionSticky: _usePositionSticky,
@@ -160,73 +164,73 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
 
   @override
   void dispose() {
-    _scrollHost.dispose();
+    scrollHost.dispose();
     _onUpdate.close();
   }
 
   @override
-  Rectangle calcViewportRect() => _scrollHost.calcViewportRect();
+  Rectangle calcViewportRect() => scrollHost.calcViewportRect();
 
   @override
-  void scrollToPosition(int position) => _scrollHost.scrollToPosition(position);
+  void scrollToPosition(int position) => scrollHost.scrollToPosition(position);
 
   @override
-  void scrollWithDelta(int delta) => _scrollHost.scrollWithDelta(delta);
+  void scrollWithDelta(int delta) => scrollHost.scrollWithDelta(delta);
 
   @override
-  void startNativeScrollListener() => _scrollHost.startNativeScrollListener();
+  void startNativeScrollListener() => scrollHost.startNativeScrollListener();
 
   @override
-  int get scrollHeight => _scrollHost.scrollHeight;
+  int get scrollHeight => scrollHost.scrollHeight;
 
   @override
-  int get clientHeight => _scrollHost.clientHeight;
+  int get clientHeight => scrollHost.clientHeight;
 
   @override
-  Stream<ScrollHostEvent> get nativeOnScroll => _scrollHost.nativeOnScroll;
+  Stream<ScrollHostEvent> get nativeOnScroll => scrollHost.nativeOnScroll;
 
   @override
-  bool get usePositionSticky => _scrollHost.usePositionSticky;
+  bool get usePositionSticky => scrollHost.usePositionSticky;
 
   @override
-  bool get useTouchGestureListener => _scrollHost.useTouchGestureListener;
+  bool get useTouchGestureListener => scrollHost.useTouchGestureListener;
 
   @override
-  bool get throttleScrollEvents => _scrollHost.throttleScrollEvents;
+  bool get throttleScrollEvents => scrollHost.throttleScrollEvents;
 
   @override
-  GlobalEventHandlers get scrollbarHost => _scrollHost.scrollbarHost;
+  GlobalEventHandlers get scrollbarHost => scrollHost.scrollbarHost;
 
   @override
-  int get clientWidth => _scrollHost.clientWidth;
+  int get clientWidth => scrollHost.clientWidth;
 
   @override
-  num get offsetX => _scrollHost.offsetX;
+  num get offsetX => scrollHost.offsetX;
 
   @override
-  num get offsetY => _scrollHost.offsetY;
+  num get offsetY => scrollHost.offsetY;
 
   @override
-  Element get anchorElement => _scrollHost.anchorElement;
+  Element get anchorElement => scrollHost.anchorElement;
 
   @override
-  Stream<ScrollHostEvent>? get onScroll => _scrollHost.onScroll;
+  Stream<ScrollHostEvent>? get onScroll => scrollHost.onScroll;
 
   @override
-  PanController? get panController => _scrollHost.panController;
+  PanController? get panController => scrollHost.panController;
 
   @override
-  StickyController? get stickyController => _scrollHost.stickyController;
+  StickyController? get stickyController => scrollHost.stickyController;
 
   @override
-  int get scrollLength => _scrollHost.scrollLength;
+  int get scrollLength => scrollHost.scrollLength;
 
   @override
-  int get scrollPosition => _scrollHost.scrollPosition;
+  int get scrollPosition => scrollHost.scrollPosition;
 
   @override
   Stream<IntersectionObserverEntry?> onIntersection(Element? element) =>
-      _scrollHost.onIntersection(element);
+      scrollHost.onIntersection(element);
 
   @override
   void ngOnDestroy() {
@@ -234,7 +238,7 @@ class ElementScrollHost implements OnInit, OnDestroy, ElementScrollHostBase {
   }
 
   @override
-  void stopEvent(WheelEvent event) => _scrollHost.stopEvent(event);
+  void stopEvent(WheelEvent event) => scrollHost.stopEvent(event);
 }
 
 /// Provides a scroll host that uses the browser window content area.

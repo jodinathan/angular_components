@@ -70,5 +70,3 @@ dev_dependencies:
 dependency_overrides:
   angular_components:
     path: ../../angular_components
-  observable:
-    git: https://github.com/google/observable
