@@ -12,8 +12,7 @@ dependencies:
   angular_gallery_section:
     path: ../../angular_gallery_section
   build_config: ^1.0.0
-  observable: #^0.23.0
-    git: https://github.com/google/observable
+  observable: ^0.24.0
 
 dependency_overrides:
   angular_components:
