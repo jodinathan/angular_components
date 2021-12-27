@@ -4,6 +4,7 @@
 
 import 'dart:async';
 import 'dart:html';
+import 'dart:js';
 
 import 'package:angular/angular.dart';
 import 'package:angular/src/meta.dart';
@@ -18,6 +19,7 @@ import 'package:angular_components/utils/id_generator/id_generator.dart';
 import 'package:angular_forms/angular_forms.dart';
 import 'package:intl/intl.dart';
 import 'package:quiver/strings.dart' show isEmpty, isNotEmpty;
+import 'package:input_mask/input_mask.dart';
 
 import 'deferred_validator.dart';
 
@@ -58,6 +60,9 @@ class BaseMaterialInput extends FocusableMixin
   bool _required = false;
   bool _showHintOnlyOnFocus = false;
   bool _disabled = false;
+
+  /// To use with [MaterialSliderComponent]
+  num numValue = 0;
 
   /// Enable native validation (e.g. for type="url").
   bool useNativeValidation = true;
@@ -223,6 +228,10 @@ class BaseMaterialInput extends FocusableMixin
     // : _inputText.length;
   }
 
+  void sliderChange(num value) {
+    inputChange(value.toString(), true, null);
+  }
+
   /// Display character count even if maxCount is null.
   @Input()
   bool showCharacterCount = false;
@@ -292,6 +301,7 @@ class BaseMaterialInput extends FocusableMixin
   ///
   /// If false, the label disappears when text is entered into the box. If true,
   /// it instead "floats" up above the input.
+  @HostBinding('class.floatingLabel')
   @Input()
   bool floatingLabel = false;
 
@@ -352,20 +362,19 @@ class BaseMaterialInput extends FocusableMixin
   Stream<FocusEvent> get onBlur => _blurController.stream;
 
   /// Whether the input box is focused.
+  @HostBinding('class.focused')
   bool focused = false;
 
   /// Whether underline of the input box is animated.
   bool get underlineAnimated => focused;
 
-  /// Whether the floating label is visible.
-  bool get floatingLabelVisible => floatingLabel;
-
   /// Whether the floating label is animated to float above the input box.
-  bool get labelAnimated => floatingLabelVisible && (focused || hasVisibleText);
+  @HostBinding('class.focusedOrValue')
+  bool get labelAnimated => floatingLabel && (focused || hasVisibleText);
 
   /// Whether to reverse the animation of the label floating above.
   bool get labelAnimationReset =>
-      floatingLabelVisible && !focused && !hasVisibleText;
+      floatingLabel && !focused && !hasVisibleText;
 
   bool get invalid {
     if (_error?.isNotEmpty ?? false) return true;
@@ -384,7 +393,7 @@ class BaseMaterialInput extends FocusableMixin
 
   bool get hasVisibleText => inputText.isNotEmpty;
 
-  bool get labelVisible => floatingLabelVisible || !hasVisibleText;
+  bool get labelVisible => floatingLabel || !hasVisibleText;
 
   String? get ariaLabel => inputAriaLabel ?? label;
 
@@ -464,6 +473,7 @@ class BaseMaterialInput extends FocusableMixin
     // If this update is removed, ensure that the test logic of 'error message
     // updated with input change' works manually.
     updateBottomPanelState();
+    _changeDetector.markForCheck();
   }
 
   void _validate(valid, validationMessage) {
@@ -557,50 +567,9 @@ class BaseMaterialInput extends FocusableMixin
       desc: 'Error message when the input is empty and required.');
 }
 
-/// Base single line component.
-// This is for GM migration so that the code can be shared. !g3-only
-class BaseSingleLineInputComponent extends BaseMaterialInput
-    implements Focusable, ReferenceDirective, AfterViewInit, OnDestroy {
-  final ChangeDetectorRef _changeDetector;
-
-  @ViewChild('inputEl')
-  HtmlElement? inputEl;
-
-  @ViewChild('popupSourceEl')
-  Element? popupSourceEl;
-
-  /// Container element for popup positioning.
-  @override
-  Element? get elementRef => popupSourceEl;
-
-  /// The underlying <input> element.
-  ///
-  /// If you find the need to use this element in application code, you
-  /// may be building new functionality that all ACX users could benefit
-  /// from! If that's the case, please consider contributing your changes
-  /// back upstream. Feel free to contact acx-widgets@ for more guidance.
-  @override
-  HtmlElement? get inputRef => inputEl;
-
-  /// Type of input.
-  ///
-  /// It can be one of the following:
-  /// {"text", "email", "password", "url", "number", "tel", "search"}
-  String? type;
-
-  /// Whether the user can enter multiple values, separated by commas.
-  ///
-  /// Only applies when type = "email", otherwise it is ignored.
-  bool multiple = false;
-
-  final _labelId = SequentialIdGenerator.fromUUID().nextId();
-
-  String? get labelId => inputAriaLabel != null ? null : _labelId;
-
-  // Overriden to add a HostListener event.
-  @HostListener('focus')
-  @override
-  void focus() => super.focus();
+mixin BaseSingleLineInputInputs implements HasDisabled {
+  @Input()
+  bool warnMaskError = true;
 
   /// Input element tabindex.
   ///
@@ -608,6 +577,7 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
   /// behavior of floating label, input validations, etc.
   int get inputTabIndex => disabled ? -1 : 0;
 
+  @HostBinding('class.hasLeadingText')
   bool get hasLeadingText => isNotEmpty(leadingText);
   String? get leadingText => _leadingText;
   String? _leadingText;
@@ -619,7 +589,7 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
     _leadingText = value;
     // Possibly set by a directive and not a template. So default change
     // detection doesn't work without calling markForCheck.
-    _changeDetector.markForCheck();
+    markForCheck();
   }
 
   /// Any symbol to show at the leading edge of the input -- e.g. a URL link
@@ -639,7 +609,7 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
     _trailingText = value;
     // Possibly set by a directive and not a template. So default change
     // detection doesn't work without calling markForCheck.
-    _changeDetector.markForCheck();
+    markForCheck();
   }
 
   /// Any symbol to show at the trailing edge of the input -- e.g. a URL link
@@ -673,7 +643,7 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
     _rightAlign = value ?? false;
     // Possibly set by a directive and not a template. So default change
     // detection doesn't work without calling markForCheck.
-    _changeDetector.markForCheck();
+    markForCheck();
   }
 
   /// The ID of an element which should be assigned to the inner input element's
@@ -712,6 +682,80 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
   @Input()
   String? inputAriaControls;
 
+  void markForCheck();
+}
+
+/// Base single line component.
+// This is for GM migration so that the code can be shared. !g3-only
+abstract class BaseSingleLineInputComponent extends BaseMaterialInput
+    with BaseSingleLineInputInputs
+    implements Focusable, ReferenceDirective, AfterViewInit, OnDestroy, OnInit {
+  final ChangeDetectorRef _changeDetector;
+
+  bool initiated = false;
+  InputMask? _mask;
+  Future? _blinkErr;
+
+  InputElement? _inputEl;
+  @ViewChild('inputEl')
+  set inputEl(InputElement? newInput) {
+    _inputEl = newInput;
+  }
+  InputElement get inputEl => _inputEl!;
+
+  @ViewChild('popupSourceEl')
+  Element? popupSourceEl;
+
+  @ViewChild('visual')
+  set visual(HtmlElement? newValue) {
+    _visual = newValue;
+  }
+  HtmlElement? _visual;
+  HtmlElement get visual => _visual!;
+
+  /// Container element for popup positioning.
+  @override
+  Element? get elementRef => popupSourceEl;
+
+  /// The underlying <input> element.
+  ///
+  /// If you find the need to use this element in application code, you
+  /// may be building new functionality that all ACX users could benefit
+  /// from! If that's the case, please consider contributing your changes
+  /// back upstream. Feel free to contact acx-widgets@ for more guidance.
+  @override
+  InputElement get inputRef => inputEl;
+
+  Options? _maskOptions;
+
+  @Input()
+  set maskOptions(Options? newValue) {
+    _maskOptions = newValue;
+    _maskery();
+  }
+
+  Options get maskOptions => _maskOptions!;
+
+  /// Type of input.
+  ///
+  /// It can be one of the following:
+  /// {"text", "email", "password", "url", "number", "tel", "search"}
+  String? type;
+
+  /// Whether the user can enter multiple values, separated by commas.
+  ///
+  /// Only applies when type = "email", otherwise it is ignored.
+  bool multiple = false;
+
+  final _labelId = SequentialIdGenerator.fromUUID().nextId();
+
+  String? get labelId => inputAriaLabel != null ? null : _labelId;
+
+  // Overriden to add a HostListener event.
+  @HostListener('focus')
+  @override
+  void focus() => super.focus();
+
   BaseSingleLineInputComponent(String? type, String? multiple, NgControl? cd,
       this._changeDetector, DeferredValidator validator)
       : super(cd, _changeDetector, validator) {
@@ -734,6 +778,82 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
   @override
   bool get labelVisible => !(numeric && invalid) && super.labelVisible;
 
+  void _maskery() {
+    if (!initiated) {
+      return;
+    }
+
+    final current = _mask;
+
+    if (current != null) {
+      current.remove(inputEl);
+      _mask = null;
+    }
+
+    final opts = _maskOptions;
+
+    if (opts != null) {
+      final oc = opts.oncomplete;
+      opts.oncomplete = JsInterop.fn((_) {
+        inputChange(inputEl.value, true, null);
+
+        if (oc != null) {
+          oc(_);
+        }
+      });
+
+      final oi = opts.onincomplete;
+      opts.onincomplete = JsInterop.fn((_) {
+        inputChange('', false, 'Incomplete mask');
+
+        if (oi != null) {
+          oi(_);
+        }
+      });
+
+      opts.oncleared = JsInterop.fn((_) {
+        inputChange('', true, null);
+      });
+
+      if (warnMaskError) {
+        final pv = opts.postValidation;
+        opts.postValidation = JsInterop.fn((List buffer, int pos, dynamic c,
+            currentResult,
+            dynamic opts, dynamic maskset, bool strict,
+            dynamic fromCheckval) {
+          if (currentResult == false) {
+            blinkError();
+          }
+
+          if (pv != null && pv(
+              buffer,
+              pos,
+              c,
+              currentResult,
+              opts,
+              maskset,
+              strict,
+              fromCheckval) == false) {
+            blinkError();
+          }
+        });
+      }
+
+      enableInputMask().then((ev) {
+        _mask = InputMask(opts).mask(inputEl);
+      });
+    }
+  }
+
+  void blinkError() => _blinkErr ??= visual.classAnimate('errored').then(
+          (ev) => _blinkErr = null);
+
+  @override
+  void ngOnInit() {
+    initiated = true;
+    _maskery();
+  }
+
   @override
   void ngOnDestroy() {
     super.ngOnDestroy();
@@ -751,5 +871,32 @@ class BaseSingleLineInputComponent extends BaseMaterialInput
       );
     }
     event?.stopPropagation();
+  }
+
+  @override
+  void markForCheck() => _changeDetector.markForCheck();
+}
+
+extension AnimElement on Element {
+  static const eventName = 'animationend';
+
+  Future classAnimate(String className, {String? animationName}) async {
+    animationName ??= className;
+
+    void fn (Event event) {
+      final ev = event as AnimationEvent;
+
+      if (ev.animationName == animationName) {
+        removeEventListener(eventName, fn);
+        classes.remove(className);
+      }
+    }
+
+    classes.remove(className);
+
+    addEventListener(eventName, fn);
+
+    offsetWidth;
+    classes.add(className);
   }
 }

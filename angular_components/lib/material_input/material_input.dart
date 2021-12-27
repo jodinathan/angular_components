@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:angular/angular.dart';
+import 'package:angular_components/material_slider/material_slider.dart';
 import 'package:angular_forms/angular_forms.dart';
 import 'package:angular_components/focus/focus.dart';
 import 'package:angular_components/interfaces/has_disabled.dart';
@@ -69,6 +70,7 @@ const String materialInputErrorKey = 'material-input-error';
     NgModel,
     NgSwitch,
     NgSwitchWhen,
+    MaterialSliderComponent
   ],
   // TODO(google): Change to `Visibility.local` to reduce code size.
   visibility: Visibility.all,
@@ -80,6 +82,31 @@ class MaterialInputComponent extends BaseSingleLineInputComponent
 
   @HostBinding('tabIndex')
   static const hostTabIndex = -1;
+
+  @HostBinding('class.has-slider')
+  @Input('slider')
+  bool hasSlider = false;
+
+  @Input()
+  String? label;
+
+  /// The minimum progress value.
+  ///
+  /// Defaults to 0, must be strictly smaller than max.
+  @Input()
+  num min = 0;
+
+  /// The maximum progress value.
+  ///
+  /// Defaults to 100, must be strictly larger than min.
+  @Input()
+  num max = 100;
+
+  /// The step size of the input.
+  ///
+  /// Must be a positive number and a divisor of (max - min).
+  @Input()
+  num step = 1;
 
   MaterialInputComponent(
       @Attribute('type') String? type,

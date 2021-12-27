@@ -89,14 +89,21 @@ abstract class BaseMaterialNumberValueAccessor<T>
 
   @override
   void registerOnChange(callback) {
-    disposer.addStreamSubscription(_updateStream.listen((_) {
+    void _updator(_) {
       //if (input == null) return; // Input is no longer valid
       final rawValue = input.inputText;
       final value = parseNumber(rawValue);
       // Pass the rawValue and the num value. This allows validators to process
       // whichever one they would like.
       callback(value, rawValue: rawValue);
-    }));
+    }
+
+    if (input.inputText.isNotEmpty) {
+      // Necessary to update the slider value
+      _updator(null);
+    }
+
+    disposer.addStreamSubscription(_updateStream.listen(_updator));
   }
 
   /// Coerces the [String] value of the [MaterialInput] into type of [T].
@@ -191,7 +198,8 @@ class MaterialInt64ValueAccessor
 /// the default is the value only updating on a blur event.
 /// `blurFormat` attribute causes the input to be formatted on blur events.
 @Directive(
-  selector: 'material-input[type=number],material-input[type=percent]',
+  selector: 'material-input[type=number],material-input[type=percent],'
+      'material-input[slider]',
 )
 class MaterialNumberValueAccessor
     extends BaseMaterialNumberValueAccessor<num?> {
@@ -214,21 +222,32 @@ class MaterialNumberValueAccessor
             attributeToBool(blurFormat, defaultValue: false),
             numberFormat ?? NumberFormat.decimalPattern());
 
+  num? _null() {
+    this.input.numValue = 0;
+    return null;
+  }
+
   @override
   num? parseNumber(String? input) {
     // NaN is a valid parsable entity for NumberFormat, but not a value a user
     // is expected to be able to input.
-    if (input == null || input == 'NaN') return null;
+    if (input == null || input == 'NaN') {
+      return _null();
+    }
 
     try {
       if (_checkInteger && input.contains(_numberFormat!.symbols.DECIMAL_SEP)) {
         // Invalid value no longer an integer
-        return null;
+        return _null();
       }
       final value = _numberFormat!.parse(input);
-      return _checkInteger ? value.toInt() : value;
+      final newValue = _checkInteger ? value.toInt() : value;
+
+      this.input.numValue = newValue;
+
+      return newValue;
     } on FormatException {
-      return null;
+      return _null();
     }
   }
 }

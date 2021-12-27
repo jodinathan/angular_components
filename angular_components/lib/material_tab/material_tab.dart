@@ -8,12 +8,13 @@ import 'dart:html';
 import 'package:angular/angular.dart';
 import 'package:angular_components/content/deferred_content_aware.dart';
 import 'package:angular_components/focus/focus.dart';
+import 'package:angular_components/laminate/portal/portal.dart';
 import 'package:angular_components/utils/id_generator/id_generator.dart';
 
 /// Basic interface for a Tab.
 abstract class Tab extends Focusable {
   /// The label to be shown on the tab button.
-  String? get label;
+  TemplatePortal? get label;
 
   /// The unique id for the tab button.
   String get tabId;
@@ -40,9 +41,13 @@ abstract class Tab extends Focusable {
   template: '''
         <div class="tab-content" *ngIf="active" #content>
           <ng-content></ng-content>
-        </div>''',
+        </div>
+        <template portal #label="portal">
+          <ng-content select="[tab-label]"></ng-content>
+        </template>
+  ''',
   styleUrls: ['material_tab.scss.css'],
-  directives: [NgIf],
+  directives: [NgIf, TemplatePortalDirective],
 )
 class MaterialTabComponent extends RootFocusable
     implements Tab, DeferredContentAware {
@@ -64,8 +69,8 @@ class MaterialTabComponent extends RootFocusable
 
   /// The label for this tab.
   @override
-  @Input()
-  String? label;
+  @ViewChild('label')
+  TemplatePortalDirective? label;
 
   @override
   void deactivate() {

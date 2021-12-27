@@ -332,7 +332,8 @@ typedef OnTemplatePortalReady = void Function(TemplatePortal portal);
 ///       Hello {{name}}!
 ///     </template>
 @Directive(
-  selector: '[portal]',
+    selector: '[portal]',
+    exportAs: 'portal'
 )
 class TemplatePortalDirective extends TemplatePortal {
   @Output()

@@ -500,30 +500,31 @@ class MaterialPopupComponent extends Object
     // Remove all the nulls
     var comboStream = [popupContentsLayoutStream, popupSourceLayoutStream]
         .cast<Stream<Rectangle<num>>>();
-    Stream<List<Rectangle<num>>> mergedLayoutStream =
+    Stream<List<Rectangle<num>?>> mergedLayoutStream =
         _mergeStreams(comboStream);
 
     _visibleDisposer
         .addStreamSubscription(mergedLayoutStream.listen((layoutRects) {
       // TODO: Need to revisit this logic later
       // Ignore partial results.
-      //if (layoutRects.every((r) => r != null)) {
-      if (!initialData.isCompleted) {
-        _onPopupOpened();
-        //initialData.complete(null);
-        initialData.complete(null);
+      if (layoutRects.length >= 2 &&
+          layoutRects.every((element) => element != null)) {
+        if (!initialData.isCompleted) {
+          _onPopupOpened();
+          //initialData.complete(null);
+          initialData.complete(null);
+        }
+        _initialSourceDimensions = null;
+
+        //try {
+        var rect1 = layoutRects[0];
+        var rect2 = layoutRects[1];
+
+        _schedulePositionUpdate(rect1, rect2);
+        //} catch (e) {
+        //  print(e);
+        //}
       }
-      _initialSourceDimensions = null;
-
-      //try {
-      var rect1 = layoutRects[0];
-      var rect2 = layoutRects[1];
-
-      _schedulePositionUpdate(rect1, rect2);
-      //} catch (e) {
-      //  print(e);
-      //}
-      //}
     }));
 
     // Resolve when the popup has started opening.

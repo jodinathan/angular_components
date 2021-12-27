@@ -30,9 +30,6 @@ class _SingleSelectionModelImpl<T> extends Observable<ChangeRecord>
 
   @override
   bool select(T value) {
-    if (value == null) {
-      throw ArgumentError.notNull('value');
-    }
     var newKey = _keyOf(value);
     if (newKey == _selectedKey) {
       return false;

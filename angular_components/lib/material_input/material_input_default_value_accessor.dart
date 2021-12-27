@@ -23,17 +23,10 @@ import 'base_material_input.dart';
   selector: 'material-input:not([blurUpdate]):not([changeUpdate])',
 )
 class MaterialInputDefaultValueAccessor
-    extends BaseMaterialInputValueAccessor<String> {
+    extends MaterialInputChangeValueAccessor {
   MaterialInputDefaultValueAccessor(
       BaseMaterialInput input, @Self() @Optional() NgControl? control)
       : super(input, control);
-
-  @override
-  void registerOnChange(callback) {
-    disposer.addStreamSubscription(input.onKeypress.listen((value) {
-      callback(value);
-    }));
-  }
 }
 
 /// [ControlValueAccessor] to be used with a [MaterialInputComponent] that

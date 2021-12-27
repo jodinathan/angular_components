@@ -78,7 +78,8 @@ class _SingleFunctionDisposable implements Disposable {
 /// [disposable], just treat it random.
 class Disposer implements Disposable {
   List<DisposeFunction>? _disposeFunctions;
-  List<StreamSubscription<Object?>>? _disposeSubs;
+  List<StreamSubscription>? _disposeSubs;
+  List<StreamController>? _disposeCtrls;
   List<EventSink<Object?>>? _disposeSinks;
   List<Disposable>? _disposeDisposables;
   final bool _oneShot;
@@ -143,9 +144,16 @@ class Disposer implements Disposable {
 
   /// Registers [disposable].
   DisposeFunction addFunction(DisposeFunction disposable) {
-    assert(disposable != null);
     _disposeFunctions ??= [];
     _disposeFunctions!.add(disposable);
+    _checkIfAlreadyDisposed();
+    return disposable;
+  }
+
+  /// Registers [disposable].
+  StreamController addStreamController(StreamController disposable) {
+    final list = _disposeCtrls ??= [];
+    list.add(disposable);
     _checkIfAlreadyDisposed();
     return disposable;
   }
@@ -165,6 +173,18 @@ class Disposer implements Disposable {
       }
       _disposeSubs = null;
     }
+
+    final ctrls = _disposeCtrls;
+
+    if (ctrls != null && ctrls.isNotEmpty) {
+      final len = ctrls.length;
+
+      for (var i = 0; i < len; i++) {
+        ctrls[i].close();
+      }
+      _disposeCtrls = null;
+    }
+
     if (_disposeSinks != null) {
       int len = _disposeSinks!.length;
       for (var i = 0; i < len; i++) {

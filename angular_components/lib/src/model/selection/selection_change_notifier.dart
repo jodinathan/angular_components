@@ -30,9 +30,11 @@ abstract class SelectionChangeNotifier<T> implements SelectionModel<T> {
   bool deliverSelectionChanges() {
     if (hasSelectionObservers && _selectionChangeRecords.isNotEmpty) {
       var records = UnmodifiableListView<SelectionChangeRecord<T>>(
-          _selectionChangeRecords);
+          _selectionChangeRecords.toList());
+
       _selectionChangeRecords.clear();
-      if (_selectionChangeController != null && records.isNotEmpty) {
+
+      if (_selectionChangeController != null) {
         _selectionChangeController!.add(records);
       }
       return true;
@@ -46,6 +48,7 @@ abstract class SelectionChangeNotifier<T> implements SelectionModel<T> {
       {Iterable<T> added = const [], Iterable<T> removed = const []}) {
     if (hasSelectionObservers) {
       var record = SelectionChangeRecord<T>(added: added, removed: removed);
+
       if (_selectionChangeRecords.isEmpty) {
         //_selectionChangeRecords = [];
         scheduleMicrotask(deliverSelectionChanges);
@@ -84,7 +87,7 @@ class _SelectionChangeRecordImpl<T> extends ChangeRecord
       {Iterable<T> added = const [], Iterable<T> removed = const []}) {
     added = UnmodifiableListView(added);
     removed = UnmodifiableListView(removed);
-    /*    
+    /*
     added = (added != null ? UnmodifiableListView(added) : const [])
         as Iterable<T>;
     removed = (removed != null ? UnmodifiableListView(removed) : const [])

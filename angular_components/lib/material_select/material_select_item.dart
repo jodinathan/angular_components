@@ -219,6 +219,8 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
       value != null && (_selection.isSelected(value!));
 
   void handleActivate(UIEvent e) {
+    final value = this.value;
+
     var hasCheckbox = supportsMultiSelect && !hideCheckbox;
     if (closeOnActivate && !hasCheckbox) {
       _dropdown?.close();
@@ -232,11 +234,12 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
         return;
       }
     }
+
     if (_selectOnActivate && value != null) {
-      if (!_selection.isSelected(value!)) {
-        _selection.select(value!);
+      if (!_selection.isSelected(value)) {
+        _selection.select(value);
       } else if (_deselectOnActivate) {
-        _selection.deselect(value!);
+        _selection.deselect(value);
       }
     }
   }

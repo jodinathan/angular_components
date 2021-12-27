@@ -6,11 +6,11 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:angular/angular.dart';
-import 'package:angular/src/meta.dart';
 import 'package:angular_components/annotations/rtl_annotation.dart';
 import 'package:angular_components/focus/focus_item.dart';
 import 'package:angular_components/focus/focus_list.dart';
-import 'package:angular_components/material_tab/tab_button.dart';
+import 'package:angular_components/laminate/portal/portal.dart';
+import 'package:angular_components/material_button/material_button.dart';
 import 'package:angular_components/material_tab/tab_change_event.dart';
 
 /// A tab strip component with Tab-styled buttons and active tab indicator.
@@ -24,10 +24,12 @@ import 'package:angular_components/material_tab/tab_change_event.dart';
 @Component(
   selector: 'material-tab-strip',
   directives: [
+    NgIf,
     FocusListDirective,
     FocusItemDirective,
-    TabButtonComponent,
-    NgFor
+    MaterialButtonComponent,
+    NgFor,
+    PortalHostDirective
   ],
   templateUrl: 'fixed_material_tab_strip.html',
   styleUrls: ['fixed_material_tab_strip.scss.css'],
@@ -40,8 +42,12 @@ class FixedMaterialTabStripComponent implements AfterViewInit {
   final ChangeDetectorRef _changeDetector;
   int _activeTabIndex = 0;
   String _tabIndicatorTransform = '';
-  List<String> _tabLabels = [];
+  List<TemplatePortal> _tabLabels = [];
   NgZone _ngZone;
+
+  @Input()
+  @HostBinding('class.vertical')
+  bool vertical = false;
 
   /// Stream of [TabChangeEvent] instances, published before the tab has
   /// changed.
@@ -80,12 +86,12 @@ class FixedMaterialTabStripComponent implements AfterViewInit {
 
   /// List of tab button labels.
   @Input()
-  set tabLabels(List<String>? labels) {
+  set tabLabels(List<TemplatePortal>? labels) {
     _tabLabels = labels ?? [];
     _updateTabIndicatorTransform();
   }
 
-  List<String> get tabLabels => _tabLabels;
+  List<TemplatePortal> get tabLabels => _tabLabels;
 
   /// List of tab button ids.
   @Input()

@@ -5,6 +5,7 @@
 import 'dart:async';
 
 import 'package:angular/angular.dart';
+import 'package:angular_components/laminate/portal/portal.dart';
 import 'package:angular_components/material_tab/fixed_material_tab_strip.dart';
 import 'package:angular_components/material_tab/material_tab.dart';
 import 'package:angular_components/material_tab/tab_change_event.dart';
@@ -48,6 +49,10 @@ class MaterialTabPanelComponent implements AfterContentInit {
   @Input()
   bool centerTabs = false;
 
+  @Input()
+  @HostBinding('class.vertical')
+  bool vertical = false;
+
   /// Index of the active panel, 0-based.
   ///
   /// Default is 0.
@@ -83,7 +88,15 @@ class MaterialTabPanelComponent implements AfterContentInit {
   }
 
   void _initTabs() {
-    _tabLabels = _tabs.map((t) => t.label).toList().cast<String>();
+    _tabLabels = _tabs.fold([],
+            (arr, t) {
+          final label = t.label;
+
+          if (label != null) {
+            arr.add(label);
+          }
+          return arr;
+        });
     _tabIds = _tabs.map((t) => t.tabId).toList();
 
     // Setting the active tab needs to happen in the next turn as it is changing
@@ -110,8 +123,8 @@ class MaterialTabPanelComponent implements AfterContentInit {
   Tab? get _activeTab =>
       (_activeTabIndex < _tabs.length) ? _tabs[_activeTabIndex] : null;
 
-  List<String> _tabLabels = [];
-  List<String> get tabLabels => _tabLabels;
+  List<TemplatePortal> _tabLabels = [];
+  List<TemplatePortal> get tabLabels => _tabLabels;
 
   List<String> _tabIds = [];
   List<String> get tabIds => _tabIds;

@@ -8,4 +8,9 @@
   &[centerStrip] > material-tab-strip {
     margin: 0 auto;
   }
+
+  &.vertical {
+    display: flex;
+    align-items: flex-start;
+  }
 }

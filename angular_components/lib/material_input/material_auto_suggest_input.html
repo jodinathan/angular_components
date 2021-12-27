@@ -111,7 +111,7 @@
           {{suggestionGroup.uiDisplayName}}
         </span>
           <dynamic-component *ngIf="hasCustomLabelRenderer"
-              [componentFactory]="labelFactory != null ? labelFactory!(suggestionGroup) : null"
+              [componentFactory]="labelFactory!(suggestionGroup)"
               [value]="suggestionGroup"
               (mouseenter)="activeModel.activate(null)">
           </dynamic-component>

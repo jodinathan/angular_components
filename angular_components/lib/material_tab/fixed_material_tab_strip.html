@@ -5,14 +5,25 @@
 -->
 <div class="navi-bar" #navibar focusList role="tablist" loop ignoreUpAndDown>
   <div class="tab-indicator" [style.transform]="tabIndicatorTransform"></div>
-  <tab-button *ngFor="let tabLabel of tabLabels; let idx = index"
-              (trigger)="switchTo(idx)"
+  <div class="holder" *ngFor="let tabLabel of tabLabels; let idx = index"
+    [class.active]="activeTabIndex == idx">
+  <material-button
+              (trigger)="switchTo(idx)" raised
               [id]="tabId(idx)"
               class="tab-button"
-              [active]="activeTabIndex == idx"
               [attr.aria-selected]="activeStr(idx)"
-              [label]="tabLabel"
               focusItem
               role="tab">
-  </tab-button>
+    <div class="label">
+      <template [portalHost]="tabLabel"></template>
+    </div>
+  </material-button>
+  <svg xmlns="http://www.w3.org/2000/svg"
+    class="flag"
+    viewBox="0 0 100 100"
+    preserveAspectRatio="xMidYMax slice">
+    <polygon *ngIf="!vertical" points="0 50, 100 50, 50 100" />
+    <polygon *ngIf="vertical" points="0 100, 0 0, 50 50" />
+  </svg>
+  </div>
 </div>
