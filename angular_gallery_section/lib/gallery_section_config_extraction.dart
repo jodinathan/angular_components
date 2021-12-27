@@ -14,7 +14,7 @@ import 'src/common_extractors.dart';
 /// Extracts the information from @GallerySectionConfig annotations.
 ///
 /// The asset identified by [assetId] will be read using [assetReader].
-Future<Iterable<ConfigInfo?>?> extractGallerySectionConfigs(
+Future<Iterable<ConfigInfo>?> extractGallerySectionConfigs(
         AssetId assetId, AssetReader assetReader) async =>
     parseString(
       content: await assetReader.readAsString(assetId),
@@ -23,11 +23,12 @@ Future<Iterable<ConfigInfo?>?> extractGallerySectionConfigs(
 /// [AstVisitor] to extract multiple @GallerySectionConfig annotations, and
 /// the parameters they are constructed with.
 class GallerySectionConfigExtraction
-    extends SimpleAstVisitor<Iterable<ConfigInfo?>> {
+    extends SimpleAstVisitor<Iterable<ConfigInfo>> {
   @override
   visitCompilationUnit(CompilationUnit node) => node.declarations
       .map((delcaration) => delcaration.accept(_GallerySectionConfigVisitor()))
-      .where((config) => config != null);
+      .where((config) => config != null)
+      .cast<ConfigInfo>();
 }
 
 /// [AstVisitor] to extract a single @GallerySectionConfig annotation, applied
@@ -38,7 +39,7 @@ class _GallerySectionConfigVisitor extends SimpleAstVisitor<ConfigInfo> {
   ConfigInfo? config;
 
   @override
-  visitClassDeclaration(ClassDeclaration node) {
+  ConfigInfo? visitClassDeclaration(ClassDeclaration node) {
     for (final metadata in node.metadata) {
       if (metadata.name.name == 'GallerySectionConfig') {
         config = ConfigInfo();
@@ -87,7 +88,7 @@ class _GallerySectionConfigVisitor extends SimpleAstVisitor<ConfigInfo> {
 /// extracted as Strings.
 class ConfigInfo {
   String displayName = '';
-  String group = '';
+  String? group;
   Iterable<String> docs = [];
   Iterable<String> demoClassNames = [];
   String mainDemoName = '';

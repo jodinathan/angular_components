@@ -497,34 +497,31 @@ class MaterialPopupComponent extends Object
     }
 
     // Merge the results of both streams.
-    // Remove all the nulls
-    var comboStream = [popupContentsLayoutStream, popupSourceLayoutStream]
-        .cast<Stream<Rectangle<num>>>();
-    Stream<List<Rectangle<num>?>> mergedLayoutStream =
-        _mergeStreams(comboStream);
+
+    // Remove all the null Stream
+    //
+    // Note: Stream<Rectangle<num>> must be nullable for _visiableDiposer()
+    // to work without throwing Null exception during runtime
+    var comboList = [popupContentsLayoutStream, popupSourceLayoutStream]
+        .cast<Stream<Rectangle<num>?>>();
+    Stream<List<Rectangle<num>?>> mergedLayoutStream = _mergeStreams(comboList);
 
     _visibleDisposer
         .addStreamSubscription(mergedLayoutStream.listen((layoutRects) {
       // TODO: Need to revisit this logic later
       // Ignore partial results.
-      if (layoutRects.length >= 2 &&
-          layoutRects.every((element) => element != null)) {
-        if (!initialData.isCompleted) {
-          _onPopupOpened();
-          //initialData.complete(null);
-          initialData.complete(null);
-        }
-        _initialSourceDimensions = null;
 
-        //try {
-        var rect1 = layoutRects[0];
-        var rect2 = layoutRects[1];
-
-        _schedulePositionUpdate(rect1, rect2);
-        //} catch (e) {
-        //  print(e);
-        //}
+      //if (layoutRects.every((r) => r != null)) {
+      if (!initialData.isCompleted) {
+        _onPopupOpened();
+        initialData.complete(null);
       }
+      _initialSourceDimensions = null;
+
+      var rect1 = (layoutRects.isNotEmpty ? layoutRects[0] : null);
+      var rect2 = (layoutRects.length > 1 ? layoutRects[1] : null);
+
+      _schedulePositionUpdate(rect1, rect2);
     }));
 
     // Resolve when the popup has started opening.
@@ -915,6 +912,7 @@ Stream<List<T>> _mergeStreams<T>(List<Stream<T>> streams) {
       growable: false);
   var cachedResults = List<T?>.filled(streams.length, null, growable: false);
   StreamController<List<T>>? streamController;
+
   streamController = StreamController<List<T>>.broadcast(
       sync: true,
       onListen: () {

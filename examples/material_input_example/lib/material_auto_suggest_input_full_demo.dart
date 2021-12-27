@@ -114,7 +114,7 @@ class MaterialAutoSuggestInputFullDemoComponent {
   bool shouldClearInputOnSelection = false;
   bool shouldClearSelectionOnInput = true;
   bool useLabelFactory = false;
-  bool useFactoryRenderer = false;
+  bool useFactoryRenderer = true;
   bool disabled = false;
   bool showHeaderAndFooter = false;
   bool showPopup = false;

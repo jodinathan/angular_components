@@ -14,13 +14,14 @@ import 'package:angular_components/model/ui/has_renderer.dart';
   selector: '[displayNameRenderer]',
   //visibility: Visibility.all,
 )
-class DisplayNameRendererDirective<T> implements HasRenderer<T> {
+class DisplayNameRendererDirective<T> {
   final HasRenderer hasRenderer;
 
   DisplayNameRendererDirective(this.hasRenderer) {
     hasRenderer.itemRenderer = _displayNameRenderer;
   }
 
+  /*
   ItemRenderer<T>? _itemRenderer;
 
   @override
@@ -32,13 +33,8 @@ class DisplayNameRendererDirective<T> implements HasRenderer<T> {
   set itemRenderer(ItemRenderer<T>? renderer) {
     _itemRenderer = renderer;
   }
+  */
 }
-
-/*
-void displayNameRendererDirective(HasRenderer? hasRenderer) {
-  if (hasRenderer != null) hasRenderer.itemRenderer = _displayNameRenderer;
-}
-*/
 
 final _displayNameRenderer =
     (dynamic item) => (item as HasUIDisplayName).uiDisplayName;
