@@ -6,7 +6,6 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:angular/angular.dart';
-import 'package:angular/src/meta.dart';
 import 'package:angular_components/button_decorator/button_decorator.dart';
 import 'package:angular_components/content/deferred_content.dart';
 import 'package:angular_components/focus/focus.dart';
@@ -589,7 +588,7 @@ class MenuItemGroupsComponent
 
           if (!item.hasSubMenu) {
             item.ariaChecked = isSelected.toString();
-          } else if (group.selectionModel.isSingleSelect!) {
+          } else if (group.selectionModel.isSingleSelect) {
             item.ariaChecked =
                 (isSelected || _anyChildrenSelected(group, item)).toString();
           } else {

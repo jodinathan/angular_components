@@ -8,8 +8,7 @@ import 'package:angular_components/model/selection/selection_model.dart';
 class RadioGroupSingleSelectionModel<T>
     extends DelegatingSingleSelectionModel<T> {
   RadioGroupSingleSelectionModel([T? initialValue])
-      : super(SelectionModel<T>.single(
-                selected: initialValue == null ? null : initialValue)
+      : super(SelectionModel<T>.single(selected: initialValue)
             as SingleSelectionModel<T>);
   //as SingleSelectionModel<T*>);
 
@@ -17,5 +16,5 @@ class RadioGroupSingleSelectionModel<T>
   void clear() {}
 
   @override
-  bool deselect(T? value) => false;
+  bool deselect(T value) => false;
 }

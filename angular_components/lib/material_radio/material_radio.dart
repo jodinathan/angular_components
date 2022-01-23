@@ -6,7 +6,6 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:angular/angular.dart';
-import 'package:angular/src/meta.dart';
 import 'package:angular_components/focus/focus.dart';
 import 'package:angular_components/interfaces/has_disabled.dart';
 import 'package:angular_components/material_icon/material_icon.dart';
@@ -116,9 +115,9 @@ class MaterialRadioComponent extends RootFocusable
 
     if (_group != null) {
       if (isChecked) {
-        _group?.componentSelection.select(this);
+        _group!.componentSelection.select(this);
       } else {
-        _group?.componentSelection.deselect(this);
+        _group!.componentSelection.deselect(this);
       }
     }
     _onChecked.add(_checked);
@@ -133,7 +132,7 @@ class MaterialRadioComponent extends RootFocusable
 
   /// Current icon, depends on the state of [checked].
   @visibleForTemplate
-  Icon get icon => _checked ? checkedIcon : uncheckedIcon;
+  Icon get icon => checked ? checkedIcon : uncheckedIcon;
 
   /// Current tab index, depends on state of [disabled] and selection status
   /// if in group.

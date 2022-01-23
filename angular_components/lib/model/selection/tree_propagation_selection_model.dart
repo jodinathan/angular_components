@@ -34,6 +34,9 @@ class TreePropagationSelectionModel<T>
     return wasNewSelection;
   }
 
+  @override
+  bool get isSingleSelect => true;
+
   /// When given a un-selected entity, this will check the
   /// treeoptions for children and deselect them.
   @override
