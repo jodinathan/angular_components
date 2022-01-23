@@ -9,7 +9,7 @@ class _NoopSelectionModelImpl<T> implements NullSelectionModel<T> {
   const _NoopSelectionModelImpl();
 
   @override
-  final bool? isSingleSelect = null;
+  final bool isSingleSelect = true;
 
   // Selection observable.
 

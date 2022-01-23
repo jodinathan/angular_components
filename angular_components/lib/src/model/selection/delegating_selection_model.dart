@@ -14,7 +14,7 @@ class DelegatingSelectionModel<T> extends Object
   final SelectionModel<T> _delegateModel;
 
   @override
-  final bool? isSingleSelect;
+  bool isSingleSelect;
 
   DelegatingSelectionModel(this._delegateModel)
       : isSingleSelect = _delegateModel.isSingleSelect;

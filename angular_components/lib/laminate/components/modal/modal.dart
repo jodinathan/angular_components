@@ -308,10 +308,19 @@ class ModalComponent
       controller.execute(_showModalOverlay);
       _pendingOpen = controller.action!.onDone.then((completed) {
         _pendingOpen = null;
-        return completed;
+
+        if (completed == null) {
+          return false;
+        }
+
+        if (completed is bool) {
+          return completed;
+        }
+        return false;
       });
       _onOpen.add(controller.action);
     }
+
     return _pendingOpen;
   }
 

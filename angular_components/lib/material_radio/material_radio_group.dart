@@ -10,6 +10,7 @@ import 'package:angular_components/focus/focus.dart';
 import 'package:angular_components/material_radio/material_radio.dart';
 import 'package:angular_components/model/selection/selection_model.dart';
 import 'package:angular_components/utils/disposer/disposer.dart';
+import 'package:collection/collection.dart';
 
 /// Group containing multiple material radio buttons, enforcing that only one
 /// value in the group is selected.
@@ -42,7 +43,7 @@ class MaterialRadioGroupComponent
   final NgZone _ngZone;
   final _disposer = Disposer.oneShot();
 
-  List<MaterialRadioComponent> _radioComponents = <MaterialRadioComponent>[];
+  List<MaterialRadioComponent> _radioComponents = [];
 
   MaterialRadioGroupComponent(this._ngZone, @Self() @Optional() NgControl? cd) {
     // When NgControl is present on the host element, the component participates
@@ -62,7 +63,7 @@ class MaterialRadioGroupComponent
       _resetTabIndex();
       _selected = _selectedRadioComponent?.value;
       if (_valueSelection != null && _selected != null) {
-        _valueSelection!.select(_selected);
+        _valueSelection?.select(_selected);
       }
       _onChange.add(_selected);
     }));
@@ -110,8 +111,8 @@ class MaterialRadioGroupComponent
     // Since this is updating children that were already dirty-checked,
     // need to delay this change until next angular cycle.
     _ngZone.runAfterChangesObserved(() {
-      //if (_radioComponents == null) return; // Component was destroyed.
-      if (_radioComponents.isEmpty) return; // Component was destroyed.
+      //if (_radioComponents.isEmpty) return; // Component was destroyed.
+
       // Disable everything first.
       for (var radioComponent in _radioComponents) {
         radioComponent.tabbable = false;
@@ -138,6 +139,7 @@ class MaterialRadioGroupComponent
   /// Published when selection changes. Prefer `(ngModelChange)`.
   @Output('selectedChange')
   Stream<dynamic> get onChange => _onChange.stream;
+
   final _onChange = StreamController<dynamic>.broadcast();
 
   /// Selection model containing value object.
@@ -147,8 +149,7 @@ class MaterialRadioGroupComponent
     _selectionSubscription?.cancel();
     _valueSelection = value;
     _selectionSubscription = _valueSelection?.selectionChanges.listen((_) {
-      selected = _valueSelection!.selectedValues
-          .firstWhere((_) => true, orElse: () => null);
+      selected = _valueSelection?.selectedValues.firstWhereOrNull((_) => true);
     });
   }
 
@@ -171,6 +172,8 @@ class MaterialRadioGroupComponent
   dynamic _preselectedValue;
   bool _isContentInit = false;
 
+  dynamic _selected;
+
   /// Value of currently selected radio. Prefer `[ngModel]`.
   @Input()
   set selected(dynamic selectedValue) {
@@ -185,7 +188,6 @@ class MaterialRadioGroupComponent
     }
   }
 
-  dynamic _selected;
   dynamic get selected => _selected;
 
   void _moveFocus(FocusMoveEvent event) => _move(event);

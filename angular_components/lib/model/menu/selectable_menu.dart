@@ -42,7 +42,7 @@ class MenuItemGroupWithSelection<SelectionItemType>
       bool? shouldCloseMenuOnSelection})
       : shouldCloseMenuOnSelection = shouldCloseMenuOnSelection ??
             selectionModel is! MultiSelectionModel,
-        itemsRole = (selectionModel.isSingleSelect ?? true)
+        itemsRole = (selectionModel.isSingleSelect)
             ? 'menuitemradio'
             : 'menuitemcheckbox',
         super(items, label);
