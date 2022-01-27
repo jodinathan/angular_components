@@ -161,7 +161,7 @@ class MaterialPopupComponent extends Object
   List<Element> _autoDismissBlockers = [];
 
   @override
-  bool? get autoDismiss => state.autoDismiss;
+  bool get autoDismiss => state.autoDismiss;
 
   /// Whether the underlying popup should be content visible.
   bool showPopup = false;
@@ -740,6 +740,9 @@ class MaterialPopupComponent extends Object
   }
 
   Iterable<RelativePosition> get _preferredPositions {
+    print("PopState: ${state.toString()}");
+    var position = state.preferredPositions;
+
     return _flatten(state.preferredPositions).isNotEmpty
         ? state.preferredPositions
         : _defaultPreferredPositions;

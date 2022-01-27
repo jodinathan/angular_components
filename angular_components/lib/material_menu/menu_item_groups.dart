@@ -128,19 +128,19 @@ class MenuItemGroupsComponent
   bool get isKeyboardDriven => !isMouseDriven;
 
   /// Optional model that is used to track keyboard active item.
-  late ActiveItemModel _activeModel;
+  ActiveItemModel? _activeModel;
   StreamSubscription? _activeModelChange;
 
   @Input()
-  set activeModel(ActiveItemModel v) {
+  set activeModel(ActiveItemModel? v) {
     _activeModel = v;
     _activeModelChange?.cancel();
-    _activeModelChange = v.modelChanged.listen((_) {
+    _activeModelChange = v?.modelChanged.listen((_) {
       _changeDetector.markForCheck();
     });
   }
 
-  ActiveItemModel get activeModel => _activeModel;
+  ActiveItemModel? get activeModel => _activeModel;
 
   /// Whether the first item of the activeModel should be selected on init.
   ///
@@ -167,7 +167,7 @@ class MenuItemGroupsComponent
   DropdownHandle? _dropdownHandle;
 
   /// The delayed action to open the [_hoveredItem] submenu on mouse hover.
-  late DelayedAction _subMenuOpener;
+  DelayedAction? _subMenuOpener;
 
   /// The last hovered item of this menu.
   MenuItem? _hoveredItem;
@@ -181,7 +181,7 @@ class MenuItemGroupsComponent
   /// If absent, then no item should be focused initially. This is used when
   /// opening a sub-menu by keyboard shortcut, and the first menu item of the
   /// sub-menu should be selected.
-  qc.Optional<String?> _autoFocusItemId = const qc.Optional.absent();
+  qc.Optional<String> _autoFocusItemId = const qc.Optional.absent();
 
   bool isKeyboardOpenedSubmenu = false;
 
@@ -250,10 +250,10 @@ class MenuItemGroupsComponent
     if (item == null) return;
 
     // Hovering on items clear the selection.
-    activeModel.activate(null);
+    activeModel?.activate(null);
 
     _hoveredItem = item;
-    _subMenuOpener.start();
+    _subMenuOpener?.start();
   }
 
   @HostListener('mouseout')
@@ -268,7 +268,7 @@ class MenuItemGroupsComponent
     if (item == _hoveredItem) {
       _hoveredItem = null;
     }
-    _subMenuOpener.cancel();
+    _subMenuOpener?.cancel();
   }
 
   @HostListener('mousemove')
@@ -280,8 +280,9 @@ class MenuItemGroupsComponent
     _selected.add(item);
   }
 
-  void select(MenuItem item, MenuItemGroup group) {
-    item.action?.call();
+  void select(Event event, MenuItem item, MenuItemGroup group) {
+    //item.action?.call();
+    item.actionWithContext?.call(event);
 
     // Fire the event for activating the menu item. This does not mean the item
     // is selected, but merely that it was triggered (by mouse, keyboard, w/e).
@@ -302,22 +303,22 @@ class MenuItemGroupsComponent
     if (event.keyCode == KeyCode.TAB) return;
 
     var keyCode = event.keyCode;
-    var activeMenuItem = activeModel.activeItem as MenuItem?;
+    var activeMenuItem = activeModel?.activeItem as MenuItem?;
 
     switch (keyCode) {
       case KeyCode.UP:
         _activeHoveredItemIfNone();
-        activeModel.activatePrevious();
+        activeModel?.activatePrevious();
         _focusActiveItem();
         break;
       case KeyCode.DOWN:
         _activeHoveredItemIfNone();
-        activeModel.activateNext();
+        activeModel?.activateNext();
         _focusActiveItem();
         break;
       case KeyCode.RIGHT:
         if (activeMenuItem?.hasSubMenu == true) {
-          _openSubMenu(activeModel.activeItem as MenuItem,
+          _openSubMenu(activeModel?.activeItem as MenuItem,
               isOpenedByKeyboard: true);
         }
         break;
@@ -347,8 +348,8 @@ class MenuItemGroupsComponent
     // Do not open or activate the sub-menu if the menu is disabled.
     if (!item.enabled) return;
 
-    if (!activeModel.isActive(item)) {
-      activeModel.activate(item);
+    if (activeModel != null && !activeModel!.isActive(item)) {
+      activeModel!.activate(item);
     }
     isKeyboardOpenedSubmenu = isOpenedByKeyboard;
     _submenuParent = item.hasSubMenu ? item : null;
@@ -375,7 +376,7 @@ class MenuItemGroupsComponent
     MenuItem? item = _itemForTarget(event.target);
     if (item == null) return;
 
-    activeModel.activate(item);
+    activeModel?.activate(item);
   }
 
   /// Called when a material select item is triggered, whether through keypress
@@ -387,7 +388,7 @@ class MenuItemGroupsComponent
     if (item.hasSubMenu) {
       _openSubMenu(item, isOpenedByKeyboard: event is KeyboardEvent);
     } else {
-      select(item, group);
+      select(event, item, group);
     }
   }
 
@@ -450,11 +451,11 @@ class MenuItemGroupsComponent
       ? item.selectableState != SelectableOption.Hidden
       : true;
 
-  bool isItemActive(MenuItem item) => activeModel.activeItem == item;
+  bool isItemActive(MenuItem item) => activeModel?.activeItem == item;
 
   /// Returns true if the current item with ID [itemId] should be auto-focused
   /// on menu open.
-  bool hasAutoFocus(String itemId) =>
+  bool hasAutoFocus(String? itemId) =>
       _autoFocusItemId.transform((id) => id == itemId).or(false);
 
   /// Whether the subMenu of [item] is visible.
@@ -462,8 +463,8 @@ class MenuItemGroupsComponent
 
   /// Activates [_hoveredItem] if there is no active item.
   void _activeHoveredItemIfNone() {
-    if ((activeModel.activeItem == null) && (_hoveredItem != null)) {
-      activeModel.activate(_hoveredItem);
+    if ((activeModel?.activeItem == null) && (_hoveredItem != null)) {
+      activeModel?.activate(_hoveredItem);
     }
   }
 
@@ -495,13 +496,13 @@ class MenuItemGroupsComponent
       activeModel = ActiveMenuItemModel(_idGenerator!,
           menu: menu, filterOutUnselectableItems: true);
       if (activateLastItemOnInit) {
-        activeModel.activateLast();
+        activeModel?.activateLast();
         _autoFocusActiveItem();
       } else if (activateFirstItemOnInit) {
         _autoFocusActiveItem();
       } else {
         // Don't activate any item.
-        activeModel.activate(null);
+        activeModel?.activate(null);
       }
     }
   }
@@ -509,8 +510,9 @@ class MenuItemGroupsComponent
   void _autoFocusActiveItem() {
     // Set auto-focus to the currently selected list item if this menu is
     // a sub-menu and was opened via keyboard shortcut.
-    if (activeModel.activeItem != null) {
-      _autoFocusItemId = qc.Optional.of(activeModel.id(activeModel.activeItem));
+    if (activeModel?.activeItem != null) {
+      _autoFocusItemId =
+          qc.Optional.of(activeModel!.id(activeModel!.activeItem));
     }
   }
 
@@ -519,11 +521,11 @@ class MenuItemGroupsComponent
   /// The order of the displayed item must be in the same order as in the
   /// [activeModel].
   void _focusActiveItem() {
-    if (activeModel.activeItem == null) return;
+    if (activeModel?.activeItem == null) return;
 
     if (focusableItems != null) {
       for (var item in focusableItems!) {
-        if (item.key == activeModel.activeId) {
+        if (item.key == activeModel?.activeId) {
           item.focus();
           break;
         }
@@ -532,7 +534,9 @@ class MenuItemGroupsComponent
 
     // If the group containing the active item is collapsed, expand it.
     for (final group in menu.itemGroups) {
-      if (group.contains(activeModel.activeItem) && group.isCollapsible) {
+      if (activeModel != null &&
+          group.contains(activeModel!.activeItem) &&
+          group.isCollapsible) {
         group.isExpanded = true;
         break;
       }

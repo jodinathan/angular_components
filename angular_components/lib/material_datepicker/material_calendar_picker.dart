@@ -493,19 +493,22 @@ class MaterialCalendarPickerComponent
       '$year$_dateSeparator$month$_dateSeparator$day';
 
   void _renderRange(CalendarSelection selection) {
-    if (selection.start! > selection.end) return;
+    var startDate = selection.start!;
+    var endDate = selection.end!;
+
+    if (startDate > endDate) return;
 
     HtmlElement? start;
     HtmlElement? end;
-    final startMonth = _Month.fromDate(selection.start!);
-    final endMonth = _Month.fromDate(selection.end!);
+    final startMonth = _Month.fromDate(startDate);
+    final endMonth = _Month.fromDate(endDate);
     final highlightClass = 'highlight-${selection.id}';
     final boundaryClass = 'boundary-${selection.id}';
 
     if (startMonth >= _renderedMonths.first &&
         startMonth <= _renderedMonths.last) {
-      start = _container!.querySelector(_slotSelector(selection.start!))
-          as HtmlElement?;
+      start =
+          _container!.querySelector(_slotSelector(startDate)) as HtmlElement?;
       if (start == null) return;
       start.classes.add('boundary');
       start.classes.add(boundaryClass);
@@ -518,8 +521,7 @@ class MaterialCalendarPickerComponent
     }
 
     if (endMonth >= _renderedMonths.first && endMonth <= _renderedMonths.last) {
-      end = _container!.querySelector(_slotSelector(selection.end!))
-          as HtmlElement?;
+      end = _container!.querySelector(_slotSelector(endDate)) as HtmlElement?;
       if (end == null) return;
       end.classes.add('boundary');
       end.classes.add(boundaryClass);
@@ -532,20 +534,20 @@ class MaterialCalendarPickerComponent
     }
 
     // If it's out of view, we're done.
-    if (start == null && end == null) return;
+    if (start == null || end == null) return;
 
     // Highlight the active endpoint in bold.
     if (selection.id == state!.currentSelection) {
-      if (state!.previewAnchoredAtStart && end != null) {
+      if (state!.previewAnchoredAtStart) {
         end.classes.add('active');
-      } else if (start != null) {
+      } else {
         start.classes.add('active');
       }
     }
 
     var range = Range()
-      ..setStartBefore(start!)
-      ..setEndAfter(end!);
+      ..setStartBefore(start)
+      ..setEndAfter(end);
 
     // Fill in the range in the starting month.
     _highlightElements(
