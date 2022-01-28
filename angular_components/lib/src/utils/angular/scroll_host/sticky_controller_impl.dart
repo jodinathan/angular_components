@@ -391,6 +391,14 @@ class StickyContainerLayout<T> {
       _listEquals(hiddenRows, other.hiddenRows) &&
       _listEquals(_translateYs, other._translateYs);
 
+  @override
+  int get hashCode =>
+      hostPosition.hashCode ^
+      topRows.hashCode ^
+      bottomRows.hashCode ^
+      hiddenRows.hashCode ^
+      _translateYs.hashCode;
+
   bool _listEquals(List? aList, List? bList) {
     if ((aList == null) && (bList == null)) return true;
     if ((aList == null) || (bList == null)) return false;
