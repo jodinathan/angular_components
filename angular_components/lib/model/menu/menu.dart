@@ -84,9 +84,11 @@ class MenuModel<T> implements HasIcon, AcceptsWidth {
 
   /// Icon for the menu, can be displayed in the element opening the menu.
   final Icon icon;
+
   @override
   Icon? get uiIcon => icon;
-  bool get hasIcon => icon != null;
+
+  bool get hasIcon => icon != Icon.blank();
 
   /// Tooltip for the menu, can be shown in the element opening the menu.
   final String tooltipText;
@@ -157,24 +159,7 @@ class MenuItem<T> with MenuItemMixin implements HasUIDisplayName, HasIcon {
 
   // This should be final as all the other state in this class, but needs
   // to first migrate clients.
-  ActionWithContext? _actionWithContext;
-
-  /// Action to perform when user select an item in the menu.
-  ActionWithContext? get actionWithContext => _actionWithContext;
-  @Deprecated('This should be final.')
-  set actionWithContext(ActionWithContext? value) {
-    _actionWithContext = value;
-    _action = () => value!(null);
-  }
-
-  MenuAction? _action;
-
-  @Deprecated('Use actionWithContext')
-  MenuAction? get action => _action;
-  set action(MenuAction? value) {
-    _action = value;
-    _actionWithContext = (_) => value!();
-  }
+  final ActionWithContext? actionWithContext;
 
   final Icon icon;
 
@@ -206,8 +191,8 @@ class MenuItem<T> with MenuItemMixin implements HasUIDisplayName, HasIcon {
   MenuItem(this.label,
       {this.enabled = true,
       this.tooltip = '',
-      @Deprecated('Use ActionWithContext') MenuAction? action,
-      ActionWithContext? actionWithContext,
+      //@Deprecated('Use ActionWithContext') MenuAction? action,
+      this.actionWithContext,
       Icon? icon,
       this.labelAnnotation = '',
       Iterable<String>? cssClasses,
@@ -225,14 +210,6 @@ class MenuItem<T> with MenuItemMixin implements HasUIDisplayName, HasIcon {
         ariaLabel = ariaLabel ?? label {
     assert(itemSuffix == null || itemSuffixes == null,
         'Only one of itemSuffix or itemSuffixes should be provided');
-    assert(action == null || actionWithContext == null,
-        'Only one of action or actionWithContext should be provided');
-
-    if (action != null) {
-      this.action = action;
-    } else if (actionWithContext != null) {
-      this.actionWithContext = actionWithContext;
-    }
   }
 
   @override

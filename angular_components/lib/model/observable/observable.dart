@@ -215,7 +215,7 @@ abstract class ObservableViewMixin<T> implements ObservableView<T> {
     // Want to do this using stream.map so that the `changes` stream has the
     // same broadcastness/syncness as the `stream` stream.
     return stream.map((v) {
-      var change = Change(last, v);
+      var change = Change<T>(last, v);
       last = v;
       return change;
     });

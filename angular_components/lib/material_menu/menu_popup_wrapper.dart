@@ -100,7 +100,7 @@ class MenuPopupWrapper implements AcceptsWidth {
   /// Width of the menu.
   @override
   @Input()
-  set width(val) {
+  set width(dynamic val) {
     _width = getInt(val, defaultValue: 0);
     assert(_width >= 0 && _width <= 5);
   }
