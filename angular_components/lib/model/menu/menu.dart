@@ -86,7 +86,7 @@ class MenuModel<T> implements HasIcon, AcceptsWidth {
   final Icon icon;
 
   @override
-  Icon? get uiIcon => icon;
+  Icon get uiIcon => icon;
 
   bool get hasIcon => icon != Icon.blank();
 
