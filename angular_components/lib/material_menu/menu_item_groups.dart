@@ -86,7 +86,7 @@ class MenuItemGroupsComponent
   }
 
   MenuModel get menu => _menu;
-  MenuModel _menu = MenuModel.flat([]);
+  MenuModel _menu = MenuModel([]);
 
   @ViewChildren(FocusableActivateItem)
   List<FocusableActivateItem>? focusableItems;
@@ -360,10 +360,13 @@ class MenuItemGroupsComponent
     Element? element = target;
     while (element != null) {
       if (element.attributes['role'] == 'menuitem') {
-        MenuItemGroup group = menu.itemGroups[
-            int.parse(element.attributes['data-group-index'] ?? '0')];
-        MenuItem item =
-            group[int.parse(element.attributes['data-item-index'] ?? '0')];
+        var dataGroupIndex = element.attributes['data-group-index'];
+        var dataItemIndex = element.attributes['data-item-index'];
+
+        if (dataGroupIndex == null || dataItemIndex == null) return null;
+
+        MenuItemGroup group = menu.itemGroups[int.parse(dataGroupIndex)];
+        MenuItem item = group[int.parse(dataItemIndex)];
         return item;
       }
       element = element.parent;

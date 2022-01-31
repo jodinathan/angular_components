@@ -35,7 +35,7 @@ class MenuPopupWrapper implements AcceptsWidth {
 
   /// The displayed menu.
   @Input()
-  MenuModel menu = MenuModel.flat([]);
+  MenuModel menu = MenuModel([]);
 
   /// Whether the menu is open.
   ///

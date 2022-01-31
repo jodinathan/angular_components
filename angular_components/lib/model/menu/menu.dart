@@ -203,7 +203,7 @@ class MenuItem<T> with MenuItemMixin implements HasUIDisplayName, HasIcon {
             ObservableList<MenuItemAffix>.from(
                 Optional.fromNullable(itemSuffix)),
         cssClasses = BuiltList<String>((cssClasses ?? const <String>[])),
-        this.subMenu = subMenu ?? MenuModel.flat([]),
+        this.subMenu = subMenu ?? MenuModel([]),
         ariaLabel = ariaLabel ?? label {
     assert(itemSuffix == null || itemSuffixes == null,
         'Only one of itemSuffix or itemSuffixes should be provided');
@@ -246,7 +246,9 @@ abstract class MenuItemMixin implements _MenuItemBase {
 
   Icon? get uiIcon => icon;
 
-  bool get hasSubMenu => subMenu.itemGroups.isNotEmpty;
+  bool get hasSubMenu {
+    return subMenu.itemGroups.isNotEmpty;
+  }
 
   bool get hasSecondaryLabel => secondaryLabel.isNotEmpty;
 
