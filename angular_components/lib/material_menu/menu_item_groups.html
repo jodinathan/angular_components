@@ -33,13 +33,13 @@
             popupSource
             #subMenuSource="popupSource"
 
-            [autoFocus]="hasAutoFocus(activeModel.id(item))"
-            [focusActivableItem]="activeModel.id(item)"
+            [autoFocus]="hasAutoFocus(activeModel?.id(item))"
+            [focusActivableItem]="activeModel?.id(item)"
 
             role="{{group.itemsRole}}"
             [attr.data-group-index]="attributeToString(i)"
             [attr.data-item-index]="attributeToString(j)"
-            [attr.id]="activeModel.id(item)"
+            [attr.id]="activeModel?.id(item)"
 
             [materialTooltip]="item.tooltip"
             [showTooltipIf]="item.showTooltip"

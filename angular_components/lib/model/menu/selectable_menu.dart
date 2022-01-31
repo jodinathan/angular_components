@@ -139,7 +139,7 @@ class SelectableMenuItem<ItemType> extends PropertyChangeNotifier
       MenuItemAffix? itemSuffix,
       ObservableList<MenuItemAffix>? itemSuffixes})
       : _selectableState = selectableState,
-        this.subMenu = subMenu ?? MenuModel.flat([]),
+        this.subMenu = subMenu ?? MenuModel([]),
         this.icon = icon ?? Icon.blank(),
         shouldSelectOnItemClick = shouldSelectOnItemClick ?? subMenu == null,
         itemSuffixes = itemSuffixes ??

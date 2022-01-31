@@ -106,7 +106,7 @@ class MaterialPopupComponent extends Object
   final DomService _domService;
   PopupHierarchy? _hierarchy;
 
-  final List<RelativePosition> _defaultPreferredPositions = [];
+  final List<RelativePosition> _defaultPreferredPositions;
   RelativePosition? _alignmentPosition;
 
   OverlayRef? _overlayRef;
@@ -119,7 +119,7 @@ class MaterialPopupComponent extends Object
   static final _idGenerator = SequentialIdGenerator.fromUUID();
   final _uniqueId = _idGenerator.nextId();
 
-  PopupRef? _resolvedPopupRef;
+  late PopupRef _resolvedPopupRef;
 
   bool _viewInitialized = false;
 
@@ -161,7 +161,7 @@ class MaterialPopupComponent extends Object
   List<Element> _autoDismissBlockers = [];
 
   @override
-  bool? get autoDismiss => state.autoDismiss;
+  bool get autoDismiss => state.autoDismiss;
 
   /// Whether the underlying popup should be content visible.
   bool showPopup = false;
@@ -175,9 +175,9 @@ class MaterialPopupComponent extends Object
   /// The CSS transform origin based on configuration.
   String? get transformOrigin => _alignmentPosition?.animationOrigin;
 
-  String? get zIndex => _zIndex?.toString();
+  String get zIndex => _zIndex.toString();
 
-  int? _zIndex;
+  int _zIndex = 0;
 
   final ZIndexer _zIndexer;
 
@@ -254,26 +254,17 @@ class MaterialPopupComponent extends Object
   String? ariaLabel;
 
   MaterialPopupComponent(
-      @Optional()
-      @SkipSelf()
-          this._hierarchy,
-      @Optional()
-      @SkipSelf()
-          MaterialPopupComponent? parentPopup,
-      @Attribute('role')
-          String? role,
+      @Optional() @SkipSelf() this._hierarchy,
+      @Optional() @SkipSelf() MaterialPopupComponent? parentPopup,
+      @Attribute('role') String? role,
       this._ngZone,
       this._overlayService,
       this._domService,
       this._zIndexer,
-      @Inject(defaultPopupPositions)
-          Iterable<RelativePosition> _defaultPreferredPositions,
-      @Inject(overlayRepositionLoop)
-          Object useRepositionLoop,
-      @Inject(overlayViewportBoundaries)
-          Object viewportBoundaries,
-      @Optional()
-          this._popupSizeProvider,
+      @Inject(defaultPopupPositions) this._defaultPreferredPositions,
+      @Inject(overlayRepositionLoop) Object useRepositionLoop,
+      @Inject(overlayViewportBoundaries) Object viewportBoundaries,
+      @Optional() this._popupSizeProvider,
       this._changeDetector,
       this._viewContainer,
       this.elementRef)
@@ -739,10 +730,10 @@ class MaterialPopupComponent extends Object
         _overlayRef!.state.left ?? 0, boundedViewportRect.width);
   }
 
-  Iterable<RelativePosition> get _preferredPositions {
-    return _flatten(state.preferredPositions).isNotEmpty
-        ? state.preferredPositions
-        : _defaultPreferredPositions;
+  Iterable<dynamic> get _preferredPositions {
+    var pos = _flatten(state.preferredPositions);
+
+    return pos.isNotEmpty ? pos : _flatten(_defaultPreferredPositions);
   }
 
   /// Returns the best possible alignment from preferred positions.
@@ -762,7 +753,7 @@ class MaterialPopupComponent extends Object
     var containerOffset = containerRect.topLeft;
 
     // Try each position, and use the one which overlaps most with the viewport.
-    var positions = _flatten(_preferredPositions);
+    var positions = _preferredPositions;
     var bestPosition = positions.first;
     var bestOverlap = 0.0;
     for (var position in positions) {

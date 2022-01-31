@@ -116,8 +116,16 @@ class PopupState extends Observable {
   /// [RelativePosition]s. Under the hood, we'll flatten out the list and pick
   /// the first position that fits onscreen.
   Iterable<RelativePosition /* RelativePosition | Iterable */ >
-      get preferredPositions =>
-          _backingMap[#preferredPositions] as Iterable<RelativePosition>;
+      get preferredPositions {
+    var pos = _backingMap[#preferredPositions];
+
+    if (pos is List<Object>) {
+      return pos.cast<RelativePosition>();
+    } else {
+      return _backingMap[#preferredPositions] as Iterable<RelativePosition>;
+    }
+  }
+
   set preferredPositions(Iterable<RelativePosition> preferredPositions) {
     _backingMap[#preferredPositions] = preferredPositions;
   }

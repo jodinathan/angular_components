@@ -75,7 +75,7 @@ bool attributeToBool(String? inputValue, {bool defaultValue = false}) {
 ///
 /// If [inputValue] is an [int], returns it.
 /// If [inputValue] is a `null`, returns [defaultValue].
-int getInt(inputValue, {int defaultValue = 0}) {
+int getInt(dynamic inputValue, {int defaultValue = 0}) {
   if (inputValue == null) {
     return defaultValue;
   } else if (inputValue is String) {
