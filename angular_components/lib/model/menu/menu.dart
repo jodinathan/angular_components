@@ -108,9 +108,8 @@ class MenuModel<T> implements HasIcon, AcceptsWidth {
   }
 
   /// Creates a simple menu model that contains no sub-menus.
-  MenuModel.flat(List<T> items, {Icon? icon, width, this.tooltipText = ''})
-      : itemGroups = [MenuItemGroup<T>(items)],
-        this.icon = icon ?? Icon.blank() {
+  MenuModel.flat(List<T> items, {this.icon, width, this.tooltipText = ''})
+      : itemGroups = [MenuItemGroup<T>(items)] {
     this.width = width;
   }
 
@@ -160,7 +159,7 @@ class MenuItem<T> with MenuItemMixin implements HasUIDisplayName, HasIcon {
   // to first migrate clients.
   final ActionWithContext? actionWithContext;
 
-  final Icon icon;
+  final Icon? icon;
 
   /// List of rendered suffixes for this menu item.
   final ObservableList<MenuItemAffix> itemSuffixes;
@@ -192,7 +191,7 @@ class MenuItem<T> with MenuItemMixin implements HasUIDisplayName, HasIcon {
       this.tooltip = '',
       //@Deprecated('Use ActionWithContext') MenuAction? action,
       this.actionWithContext,
-      Icon? icon,
+      this.icon,
       this.labelAnnotation = '',
       Iterable<String>? cssClasses,
       MenuItemAffix? itemSuffix,
@@ -205,7 +204,6 @@ class MenuItem<T> with MenuItemMixin implements HasUIDisplayName, HasIcon {
                 Optional.fromNullable(itemSuffix)),
         cssClasses = BuiltList<String>((cssClasses ?? const <String>[])),
         this.subMenu = subMenu ?? MenuModel.flat([]),
-        this.icon = icon ?? Icon.blank(),
         ariaLabel = ariaLabel ?? label {
     assert(itemSuffix == null || itemSuffixes == null,
         'Only one of itemSuffix or itemSuffixes should be provided');
@@ -225,7 +223,7 @@ class MenuItem<T> with MenuItemMixin implements HasUIDisplayName, HasIcon {
 /// Required members to use [MenuItemMixin].
 abstract class _MenuItemBase {
   ActionWithContext? get actionWithContext;
-  Icon get icon;
+  Icon? get icon;
   String get label;
   String get secondaryLabel;
   String get tooltip;
@@ -242,7 +240,7 @@ typedef ActionWithContext = void Function(dynamic context);
 
 /// Mixin to implement trivial getters on [MenuItem].
 abstract class MenuItemMixin implements _MenuItemBase {
-  bool get hasIcon => icon != Icon.blank();
+  bool get hasIcon => icon != null;
 
   String get uiDisplayName => label;
 

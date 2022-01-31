@@ -39,7 +39,7 @@ class DelegatingMenuItem<SubMenuType> implements MenuItem<SubMenuType> {
   bool get hasSubMenu => _delegate.hasSubMenu;
 
   @override
-  Icon get icon => _delegate.icon;
+  Icon? get icon => _delegate.icon;
 
   @override
   String get labelAnnotation => _delegate.labelAnnotation;

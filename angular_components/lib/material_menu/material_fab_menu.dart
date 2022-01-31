@@ -234,7 +234,7 @@ class MaterialFabMenuModel {
   bool get isFabEnabled => menuItem.enabled;
 
   /// Name of glyph displayed within FAB circle.
-  String get glyph => menuItem.icon.name ?? '';
+  String get glyph => menuItem.icon?.name ?? '';
 
   String get ariaLabel => menuItem.label;
 
