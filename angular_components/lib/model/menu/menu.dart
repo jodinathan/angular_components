@@ -83,12 +83,12 @@ class MenuModel<T> implements HasIcon, AcceptsWidth {
   final List<MenuItemGroup<T>> itemGroups;
 
   /// Icon for the menu, can be displayed in the element opening the menu.
-  final Icon icon;
+  final Icon? icon;
 
   @override
-  Icon get uiIcon => icon;
+  Icon? get uiIcon => icon;
 
-  bool get hasIcon => icon != Icon.blank();
+  bool get hasIcon => icon != null;
 
   /// Tooltip for the menu, can be shown in the element opening the menu.
   final String tooltipText;
@@ -102,9 +102,8 @@ class MenuModel<T> implements HasIcon, AcceptsWidth {
   ///
   /// If [icon] is given, it will appear on the button that opens the menu.
   MenuModel(List<MenuItemGroup<T>> itemGroups,
-      {Icon? icon, int? width, this.tooltipText = ''})
-      : itemGroups = List<MenuItemGroup<T>>.unmodifiable(itemGroups),
-        this.icon = icon ?? Icon.blank() {
+      {this.icon, int? width, this.tooltipText = ''})
+      : itemGroups = List<MenuItemGroup<T>>.unmodifiable(itemGroups) {
     this.width = width;
   }
 

@@ -156,7 +156,7 @@ class MaterialFabMenuComponent extends Object
   }
 
   void onPopupClosed() {
-    _viewModel!.closePopup();
+    _viewModel?.closePopup();
     _hideMenuContent();
   }
 
@@ -169,7 +169,7 @@ class MaterialFabMenuComponent extends Object
   void hideMenu() {
     _hideMenuContent();
     Future.delayed(MaterialPopupComponent.SLIDE_DELAY, () {
-      _viewModel!.closePopup();
+      _viewModel?.closePopup();
     });
   }
 
@@ -177,9 +177,7 @@ class MaterialFabMenuComponent extends Object
       {bool activateFirstItem = false, bool activateLastItem = false}) {
     _activateFirstItemOnInit = activateFirstItem;
     _activateLastItemOnInit = activateLastItem;
-    //if (event != null) {
-    _viewModel!.trigger(event);
-    //}
+    _viewModel?.trigger(event);
   }
 
   void _hideMenuContent() {
