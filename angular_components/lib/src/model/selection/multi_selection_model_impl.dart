@@ -4,7 +4,7 @@
 
 part of angular_components.model.selection.selection_model;
 
-class _MultiSelectionModelImpl<T> extends Observable<ChangeRecord>
+class _MultiSelectionModelImpl<T> extends PropertyChangeNotifier
     with SelectionChangeNotifier<T>, CastIterable<T>
     implements MultiSelectionModel<T> {
   @override
@@ -66,7 +66,7 @@ class _MultiSelectionModelImpl<T> extends Observable<ChangeRecord>
   }
 
   @override
-  void selectAll(Iterable<T> values) {
+  void selectAll(Iterable<T>? values) {
     if (values == null) {
       throw ArgumentError();
     }
@@ -82,7 +82,7 @@ class _MultiSelectionModelImpl<T> extends Observable<ChangeRecord>
   }
 
   @override
-  void deselectAll(Iterable<T> values) {
+  void deselectAll(Iterable<T>? values) {
     if (values == null) {
       throw ArgumentError();
     }

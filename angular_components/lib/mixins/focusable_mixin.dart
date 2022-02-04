@@ -21,7 +21,7 @@ class FocusableMixin implements Focusable {
 
   set focusable(Focusable? component) {
     _focusable = component;
-    if (_focusPending && component != null) {
+    if (_focusPending && _focusable != null) {
       _focusPending = false;
       _focusable!.focus();
     }

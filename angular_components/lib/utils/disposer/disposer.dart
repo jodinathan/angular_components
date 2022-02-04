@@ -77,18 +77,18 @@ class _SingleFunctionDisposable implements Disposable {
 /// Note that you should not rely on the disposal sequence for each added
 /// [disposable], just treat it random.
 class Disposer implements Disposable {
-  List<DisposeFunction>? _disposeFunctions;
-  List<StreamSubscription>? _disposeSubs;
-  List<StreamController>? _disposeCtrls;
-  List<EventSink<Object?>>? _disposeSinks;
-  List<Disposable>? _disposeDisposables;
+  final List<DisposeFunction> _disposeFunctions = [];
+  final List<StreamSubscription<dynamic>> _disposeSubs = [];
+  final List<EventSink<Object>> _disposeSinks = [];
+  final List<Disposable> _disposeDisposables = [];
+  final List<StreamController> _disposeCtrls = [];
   final bool _oneShot;
   bool _disposeCalled = false;
 
   /// Pass [oneShot] as true if no disposables are meant to be added after
   /// the dispose method is called.
-  @Deprecated("Please use oneShot or multi instead")
-  Disposer({bool oneShot = false}) : _oneShot = oneShot;
+  //@Deprecated("Please use oneShot or multi instead")
+  //Disposer({bool oneShot = false}) : _oneShot = oneShot;
 
   /// Convenience constructor for one shot mode or single dispose mode.
   Disposer.oneShot() : _oneShot = true;
@@ -108,8 +108,7 @@ class Disposer implements Disposable {
     // is addressed in the language.
     dynamic disposable_ = disposable;
     if (disposable_ is Disposable) {
-      _disposeDisposables ??= [];
-      _disposeDisposables!.add(disposable as Disposable);
+      _disposeDisposables.add(disposable as Disposable);
       _checkIfAlreadyDisposed();
     } else if (disposable_ is StreamSubscription) {
       addStreamSubscription(disposable_);
@@ -124,36 +123,32 @@ class Disposer implements Disposable {
   }
 
   /// Registers [disposable].
-  StreamSubscription<T>? addStreamSubscription<T>(
-      StreamSubscription<T>? disposable) {
-    _disposeSubs ??= [];
-    if (disposable != null) {
-      _disposeSubs?.add(disposable);
-    }
+  StreamSubscription<T> addStreamSubscription<T>(
+      StreamSubscription<T> disposable) {
+    //if (disposable != null) {
+    _disposeSubs.add(disposable);
+    //}
     _checkIfAlreadyDisposed();
     return disposable;
   }
 
   /// Registers [disposable].
   EventSink<T> addEventSink<T>(EventSink<T> disposable) {
-    _disposeSinks ??= [];
-    _disposeSinks!.add(disposable);
+    _disposeSinks.add(disposable as EventSink<Object>);
     _checkIfAlreadyDisposed();
     return disposable;
   }
 
   /// Registers [disposable].
   DisposeFunction addFunction(DisposeFunction disposable) {
-    _disposeFunctions ??= [];
-    _disposeFunctions!.add(disposable);
+    _disposeFunctions.add(disposable);
     _checkIfAlreadyDisposed();
     return disposable;
   }
 
   /// Registers [disposable].
   StreamController addStreamController(StreamController disposable) {
-    final list = _disposeCtrls ??= [];
-    list.add(disposable);
+    _disposeCtrls.add(disposable);
     _checkIfAlreadyDisposed();
     return disposable;
   }
@@ -166,46 +161,48 @@ class Disposer implements Disposable {
   @mustCallSuper
   @override
   void dispose() {
-    if (_disposeSubs != null) {
-      int len = _disposeSubs!.length;
-      for (var i = 0; i < len; i++) {
-        _disposeSubs![i].cancel();
-      }
-      _disposeSubs = null;
+    int len = _disposeSubs.length;
+    for (var i = 0; i < len; i++) {
+      _disposeSubs[i].cancel();
     }
 
     final ctrls = _disposeCtrls;
 
-    if (ctrls != null && ctrls.isNotEmpty) {
+    if (ctrls.isNotEmpty) {
       final len = ctrls.length;
 
       for (var i = 0; i < len; i++) {
         ctrls[i].close();
       }
-      _disposeCtrls = null;
+
+      _disposeCtrls.clear();
     }
 
-    if (_disposeSinks != null) {
-      int len = _disposeSinks!.length;
-      for (var i = 0; i < len; i++) {
-        _disposeSinks![i].close();
-      }
-      _disposeSinks = null;
+    _disposeSubs.clear();
+    len = _disposeSinks.length;
+
+    for (var i = 0; i < len; i++) {
+      _disposeSinks[i].close();
     }
-    if (_disposeDisposables != null) {
-      int len = _disposeDisposables!.length;
-      for (var i = 0; i < len; i++) {
-        _disposeDisposables![i].dispose();
-      }
-      _disposeDisposables = null;
+
+    _disposeSinks.clear();
+
+    len = _disposeDisposables.length;
+
+    for (var i = 0; i < len; i++) {
+      _disposeDisposables[i].dispose();
     }
-    if (_disposeFunctions != null) {
-      int len = _disposeFunctions!.length;
-      for (var i = 0; i < len; i++) {
-        _disposeFunctions![i]();
-      }
-      _disposeFunctions = null;
+
+    _disposeDisposables.clear();
+
+    len = _disposeFunctions.length;
+
+    for (var i = 0; i < len; i++) {
+      _disposeFunctions[i]();
     }
+    
+    _disposeFunctions.clear();
+
     _disposeCalled = true;
   }
 }

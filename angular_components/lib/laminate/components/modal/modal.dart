@@ -62,7 +62,7 @@ abstract class Modal {
   /// Attempts to close the modal.
   ///
   /// Returns a future that completes with `true` if it succeeds.
-  Future<bool>? close();
+  Future<bool> close();
 
   /// Events that fires before making [visible] `false`.
   ///
@@ -73,7 +73,7 @@ abstract class Modal {
   /// Attempts to open the modal.
   ///
   /// Returns a future that completes with `true` if it succeeds.
-  Future<bool>? open();
+  Future<bool> open();
 
   /// Events that fire before making [visible] `true`.
   ///
@@ -245,7 +245,7 @@ class ModalComponent
   OverlayRef get resolvedOverlayRef => _resolvedOverlayRef;
 
   @HostBinding('attr.pane-id')
-  String? get uniquePaneId => _resolvedOverlayRef.uniqueId;
+  String get uniquePaneId => _resolvedOverlayRef.uniqueId ?? '';
 
   // Make the overlay hosting this modal visible.
   //
@@ -302,31 +302,47 @@ class ModalComponent
   }
 
   @override
-  Future<bool>? open() {
+  Future<bool> open() {
     if (_pendingOpen == null) {
       final controller = AsyncActionController<dynamic>();
       controller.execute(_showModalOverlay);
       _pendingOpen = controller.action!.onDone.then((completed) {
         _pendingOpen = null;
-        return completed;
+
+        if (completed == null) {
+          return false;
+        }
+
+        if (completed is bool) {
+          return completed;
+        }
+        return false;
       });
       _onOpen.add(controller.action);
     }
-    return _pendingOpen;
+
+    return _pendingOpen ?? Future.value(false);
   }
 
   @override
-  Future<bool>? close() {
+  Future<bool> close() {
     if (_pendingClose == null) {
       final controller = AsyncActionController<dynamic>();
       controller.execute(_hideModalOverlay);
       _pendingClose = controller.action!.onDone.then((completed) {
         _pendingClose = null;
-        return completed;
+        if (completed == null) {
+          return false;
+        }
+
+        if (completed is bool) {
+          return completed;
+        }
+        return false;
       });
       _onClose.add(controller.action);
     }
-    return _pendingClose;
+    return _pendingClose ?? Future.value(false);
   }
 
   @override

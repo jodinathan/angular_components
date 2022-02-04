@@ -274,10 +274,8 @@ class _StickyRow implements StickyRowPosition {
   /// Observes the position of the row's Element and its range.
   void readRowPositions() {
     rowPosition = element.getBoundingClientRect();
-    if (translateY != null) {
-      rowPosition = Rectangle(rowPosition!.left, rowPosition!.top - translateY,
-          rowPosition!.width, rowPosition!.height);
-    }
+    rowPosition = Rectangle(rowPosition!.left, rowPosition!.top - translateY,
+        rowPosition!.width, rowPosition!.height);
     rangePosition = range?.getBoundingClientRect();
   }
 
@@ -390,6 +388,14 @@ class StickyContainerLayout<T> {
       _listEquals(bottomRows, other.bottomRows) &&
       _listEquals(hiddenRows, other.hiddenRows) &&
       _listEquals(_translateYs, other._translateYs);
+
+  @override
+  int get hashCode =>
+      hostPosition.hashCode ^
+      topRows.hashCode ^
+      bottomRows.hashCode ^
+      hiddenRows.hashCode ^
+      _translateYs.hashCode;
 
   bool _listEquals(List? aList, List? bList) {
     if ((aList == null) && (bList == null)) return true;

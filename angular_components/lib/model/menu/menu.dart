@@ -83,9 +83,11 @@ class MenuModel<T> implements HasIcon, AcceptsWidth {
   final List<MenuItemGroup<T>> itemGroups;
 
   /// Icon for the menu, can be displayed in the element opening the menu.
-  final Icon icon;
+  final Icon? icon;
+
   @override
   Icon? get uiIcon => icon;
+
   bool get hasIcon => icon != null;
 
   /// Tooltip for the menu, can be shown in the element opening the menu.
@@ -100,16 +102,14 @@ class MenuModel<T> implements HasIcon, AcceptsWidth {
   ///
   /// If [icon] is given, it will appear on the button that opens the menu.
   MenuModel(List<MenuItemGroup<T>> itemGroups,
-      {Icon? icon, int? width, this.tooltipText = ''})
-      : itemGroups = List<MenuItemGroup<T>>.unmodifiable(itemGroups),
-        this.icon = icon ?? Icon.blank() {
+      {this.icon, int? width, this.tooltipText = ''})
+      : itemGroups = List<MenuItemGroup<T>>.unmodifiable(itemGroups) {
     this.width = width;
   }
 
   /// Creates a simple menu model that contains no sub-menus.
-  MenuModel.flat(List<T> items, {Icon? icon, width, this.tooltipText = ''})
-      : itemGroups = [MenuItemGroup<T>(items)],
-        this.icon = icon ?? Icon.blank() {
+  MenuModel.flat(List<T> items, {this.icon, width, this.tooltipText = ''})
+      : itemGroups = [MenuItemGroup<T>(items)] {
     this.width = width;
   }
 
@@ -157,26 +157,9 @@ class MenuItem<T> with MenuItemMixin implements HasUIDisplayName, HasIcon {
 
   // This should be final as all the other state in this class, but needs
   // to first migrate clients.
-  ActionWithContext? _actionWithContext;
+  final ActionWithContext? actionWithContext;
 
-  /// Action to perform when user select an item in the menu.
-  ActionWithContext? get actionWithContext => _actionWithContext;
-  @Deprecated('This should be final.')
-  set actionWithContext(ActionWithContext? value) {
-    _actionWithContext = value;
-    _action = () => value!(null);
-  }
-
-  MenuAction? _action;
-
-  @Deprecated('Use actionWithContext')
-  MenuAction? get action => _action;
-  set action(MenuAction? value) {
-    _action = value;
-    _actionWithContext = (_) => value!();
-  }
-
-  final Icon icon;
+  final Icon? icon;
 
   /// List of rendered suffixes for this menu item.
   final ObservableList<MenuItemAffix> itemSuffixes;
@@ -206,9 +189,9 @@ class MenuItem<T> with MenuItemMixin implements HasUIDisplayName, HasIcon {
   MenuItem(this.label,
       {this.enabled = true,
       this.tooltip = '',
-      @Deprecated('Use ActionWithContext') MenuAction? action,
-      ActionWithContext? actionWithContext,
-      Icon? icon,
+      //@Deprecated('Use ActionWithContext') MenuAction? action,
+      this.actionWithContext,
+      this.icon,
       this.labelAnnotation = '',
       Iterable<String>? cssClasses,
       MenuItemAffix? itemSuffix,
@@ -220,19 +203,10 @@ class MenuItem<T> with MenuItemMixin implements HasUIDisplayName, HasIcon {
             ObservableList<MenuItemAffix>.from(
                 Optional.fromNullable(itemSuffix)),
         cssClasses = BuiltList<String>((cssClasses ?? const <String>[])),
-        this.subMenu = subMenu ?? MenuModel.flat([]),
-        this.icon = icon ?? Icon.blank(),
+        this.subMenu = subMenu ?? MenuModel([]),
         ariaLabel = ariaLabel ?? label {
     assert(itemSuffix == null || itemSuffixes == null,
         'Only one of itemSuffix or itemSuffixes should be provided');
-    assert(action == null || actionWithContext == null,
-        'Only one of action or actionWithContext should be provided');
-
-    if (action != null) {
-      this.action = action;
-    } else if (actionWithContext != null) {
-      this.actionWithContext = actionWithContext;
-    }
   }
 
   @override
@@ -249,7 +223,7 @@ class MenuItem<T> with MenuItemMixin implements HasUIDisplayName, HasIcon {
 /// Required members to use [MenuItemMixin].
 abstract class _MenuItemBase {
   ActionWithContext? get actionWithContext;
-  Icon get icon;
+  Icon? get icon;
   String get label;
   String get secondaryLabel;
   String get tooltip;
@@ -266,13 +240,15 @@ typedef ActionWithContext = void Function(dynamic context);
 
 /// Mixin to implement trivial getters on [MenuItem].
 abstract class MenuItemMixin implements _MenuItemBase {
-  bool get hasIcon => icon != Icon.blank();
+  bool get hasIcon => icon != null;
 
   String get uiDisplayName => label;
 
   Icon? get uiIcon => icon;
 
-  bool get hasSubMenu => subMenu.itemGroups.isNotEmpty;
+  bool get hasSubMenu {
+    return subMenu.itemGroups.isNotEmpty;
+  }
 
   bool get hasSecondaryLabel => secondaryLabel.isNotEmpty;
 

@@ -6,7 +6,6 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:angular/angular.dart';
-import 'package:angular/src/meta.dart';
 import 'package:angular_components/content/deferred_content.dart';
 import 'package:angular_components/focus/focus.dart';
 import 'package:angular_components/focus/focus_trap.dart';
@@ -135,12 +134,12 @@ class MaterialFabMenuComponent extends Object
   /// Keypress callback is used to handle UP and DOWN keys.
   @override
   void handleUpKey(KeyboardEvent event) {
-    _trigger(activateLastItem: true);
+    _trigger(event, activateLastItem: true);
   }
 
   @override
   void handleDownKey(KeyboardEvent event) {
-    _trigger(activateFirstItem: true);
+    _trigger(event, activateFirstItem: true);
   }
 
   @override
@@ -157,12 +156,12 @@ class MaterialFabMenuComponent extends Object
   }
 
   void onPopupClosed() {
-    _viewModel!.closePopup();
+    _viewModel?.closePopup();
     _hideMenuContent();
   }
 
   void trigger(Event event) {
-    _trigger(
+    _trigger(event,
         activateFirstItem:
             event is KeyboardEvent || _isLikelyScreenReader(event));
   }
@@ -170,15 +169,15 @@ class MaterialFabMenuComponent extends Object
   void hideMenu() {
     _hideMenuContent();
     Future.delayed(MaterialPopupComponent.SLIDE_DELAY, () {
-      _viewModel!.closePopup();
+      _viewModel?.closePopup();
     });
   }
 
-  void _trigger(
+  void _trigger(Event event,
       {bool activateFirstItem = false, bool activateLastItem = false}) {
     _activateFirstItemOnInit = activateFirstItem;
     _activateLastItemOnInit = activateLastItem;
-    _viewModel!.trigger();
+    _viewModel?.trigger(event);
   }
 
   void _hideMenuContent() {
@@ -235,7 +234,7 @@ class MaterialFabMenuModel {
   bool get isFabEnabled => menuItem.enabled;
 
   /// Name of glyph displayed within FAB circle.
-  String get glyph => menuItem.icon.name ?? '';
+  String get glyph => menuItem.icon?.name ?? '';
 
   String get ariaLabel => menuItem.label;
 
@@ -246,11 +245,11 @@ class MaterialFabMenuModel {
 
   /// If the FAB has a sub-menu, then open the sub-menu popup, otherwise only
   /// trigger the action callback on the FAB menu item model.
-  void trigger() {
+  void trigger(Event event) {
     if (hasMenu) {
       _showPopup.value = true;
-    } else if (menuItem.action != null) {
-      menuItem.action!();
+    } else if (menuItem.actionWithContext != null) {
+      menuItem.actionWithContext!(event);
     }
   }
 

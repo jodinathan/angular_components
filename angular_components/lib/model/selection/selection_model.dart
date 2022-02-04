@@ -46,7 +46,7 @@ abstract class SelectionModel<T> extends Object
   const factory SelectionModel.empty() = NullSelectionModel<T>;
 
   /// Whether or not the selection model is single select.
-  bool? get isSingleSelect;
+  bool get isSingleSelect;
 
   /// Creates a single-selection model.
   ///
@@ -69,6 +69,7 @@ abstract class SelectionModel<T> extends Object
       {List<T> selectedValues,
       KeyProvider<T>? keyProvider}) = MultiSelectionModel<T>;
 
+  /*
   @Deprecated('Use SelectionModel.single or SelectionModel.multi instead.')
   factory SelectionModel.withList(
       {List<T> selectedValues = const [],
@@ -83,6 +84,7 @@ abstract class SelectionModel<T> extends Object
           keyProvider: keyProvider);
     }
   }
+  */
 
   /// Clears selection.
   void clear();

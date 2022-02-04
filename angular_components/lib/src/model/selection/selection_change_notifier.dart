@@ -24,15 +24,18 @@ abstract class SelectionObservable<T> {
 /// Mixin for providing [SelectionModel.selectionChanges].
 abstract class SelectionChangeNotifier<T> implements SelectionModel<T> {
   StreamController<List<SelectionChangeRecord<T>>>? _selectionChangeController;
-  List<SelectionChangeRecord<T>> _selectionChangeRecords = [];
+  List<SelectionChangeRecord<T>>? _selectionChangeRecords;
 
   @override
   bool deliverSelectionChanges() {
-    if (hasSelectionObservers && _selectionChangeRecords.isNotEmpty) {
+    if (hasSelectionObservers &&
+        _selectionChangeRecords != null &&
+        _selectionChangeRecords!.isNotEmpty) {
+      //if (hasSelectionObservers) {
       var records = UnmodifiableListView<SelectionChangeRecord<T>>(
-          _selectionChangeRecords.toList());
 
-      _selectionChangeRecords.clear();
+          _selectionChangeRecords!);
+      _selectionChangeRecords = null;
 
       if (_selectionChangeController != null) {
         _selectionChangeController!.add(records);
@@ -48,12 +51,11 @@ abstract class SelectionChangeNotifier<T> implements SelectionModel<T> {
       {Iterable<T> added = const [], Iterable<T> removed = const []}) {
     if (hasSelectionObservers) {
       var record = SelectionChangeRecord<T>(added: added, removed: removed);
-
-      if (_selectionChangeRecords.isEmpty) {
-        //_selectionChangeRecords = [];
+      if (_selectionChangeRecords == null) {
+        _selectionChangeRecords = [];
         scheduleMicrotask(deliverSelectionChanges);
       }
-      _selectionChangeRecords.add(record);
+      _selectionChangeRecords!.add(record);
     }
   }
 
@@ -85,15 +87,16 @@ class _SelectionChangeRecordImpl<T> extends ChangeRecord
 
   factory _SelectionChangeRecordImpl(
       {Iterable<T> added = const [], Iterable<T> removed = const []}) {
-    added = UnmodifiableListView(added);
-    removed = UnmodifiableListView(removed);
+    var localAdded = UnmodifiableListView(added);
+    var localRemoved = UnmodifiableListView(removed);
     /*
+
     added = (added != null ? UnmodifiableListView(added) : const [])
         as Iterable<T>;
     removed = (removed != null ? UnmodifiableListView(removed) : const [])
         as Iterable<T>;
     */
-    return _SelectionChangeRecordImpl._(added, removed);
+    return _SelectionChangeRecordImpl._(localAdded, localRemoved);
   }
 
   _SelectionChangeRecordImpl._(this.added, this.removed);

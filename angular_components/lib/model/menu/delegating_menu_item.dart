@@ -15,20 +15,14 @@ class DelegatingMenuItem<SubMenuType> implements MenuItem<SubMenuType> {
   DelegatingMenuItem(this._delegate);
 
   @override
-  MenuAction? get action => _delegate.action;
-
-  @override
-  set action(MenuAction? action) {
-    _delegate.action = action;
-  }
-
-  @override
   ActionWithContext? get actionWithContext => _delegate.actionWithContext;
 
+  /*
   @override
   set actionWithContext(ActionWithContext? actionWithContext) {
     _delegate.actionWithContext = actionWithContext;
   }
+  */
 
   @override
   bool get enabled => _delegate.enabled;
@@ -45,7 +39,7 @@ class DelegatingMenuItem<SubMenuType> implements MenuItem<SubMenuType> {
   bool get hasSubMenu => _delegate.hasSubMenu;
 
   @override
-  Icon get icon => _delegate.icon;
+  Icon? get icon => _delegate.icon;
 
   @override
   String get labelAnnotation => _delegate.labelAnnotation;

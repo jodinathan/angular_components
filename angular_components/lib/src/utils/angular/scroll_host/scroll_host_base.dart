@@ -182,7 +182,6 @@ abstract class ScrollHostBase implements ScrollHost {
     if (!usePositionSticky) {
       _elementListenersDisposer!.addStreamSubscription(
           anchorElement!.onWheel.listen((WheelEvent event) {
-        if (event is! WheelEvent) return;
         // Ignore mouse wheel event if the CTRL key, SHIFT key or META key
         // (i.e. WIN key for Windows and CMD key for Mac) is pressed.
         // This is consistent with other Google sites and ensures compatibility

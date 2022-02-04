@@ -42,7 +42,7 @@ class MenuItemGroupWithSelection<SelectionItemType>
       bool? shouldCloseMenuOnSelection})
       : shouldCloseMenuOnSelection = shouldCloseMenuOnSelection ??
             selectionModel is! MultiSelectionModel,
-        itemsRole = (selectionModel.isSingleSelect ?? true)
+        itemsRole = (selectionModel.isSingleSelect)
             ? 'menuitemradio'
             : 'menuitemcheckbox',
         super(items, label);
@@ -139,7 +139,7 @@ class SelectableMenuItem<ItemType> extends PropertyChangeNotifier
       MenuItemAffix? itemSuffix,
       ObservableList<MenuItemAffix>? itemSuffixes})
       : _selectableState = selectableState,
-        this.subMenu = subMenu ?? MenuModel.flat([]),
+        this.subMenu = subMenu ?? MenuModel([]),
         this.icon = icon ?? Icon.blank(),
         shouldSelectOnItemClick = shouldSelectOnItemClick ?? subMenu == null,
         itemSuffixes = itemSuffixes ??
