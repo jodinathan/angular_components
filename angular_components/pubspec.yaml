@@ -27,6 +27,7 @@ dependencies:
   quiver: ^3.0.1
   sass_builder: ^2.0.2
   input_mask: ^0.0.3
+  js_interop: ^0.0.1
 
 dev_dependencies:
   grinder: ^0.9.0

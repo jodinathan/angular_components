@@ -372,6 +372,10 @@ class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
   @Output('inputTextChange')
   Stream<String> get textChanged => _inputChange.stream;
 
+  // Publishes events when the item focus changes
+  @Output('activate')
+  Stream get activateChange => activeModel.modelChanged;
+
   // Stopgap to foward errors from the control to the internal material-input
   // representation.
   // TODO(google): Migrate to using error-panel once it gets added to acx.

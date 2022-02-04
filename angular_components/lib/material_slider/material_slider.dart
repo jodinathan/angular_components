@@ -150,8 +150,8 @@ class MaterialSliderComponent implements AfterChanges, HasDisabled {
           message: 'Failed assertion: ${value} >= ${min}');
       checkArgument(value <= max,
           message: 'Failed assertion: ${value} <= ${max}');
-      checkArgument(_divisible(value - min, step),
-          message: 'Failed assertion: (${value} - ${min}) % ${step} ~ 0.');
+      // checkArgument(_divisible(value - min, step),
+      //     message: 'Failed assertion: (${value} - ${min}) % ${step} ~ 0.');
 
       if (isTwoSided) {
         checkArgument(leftValue <= value,

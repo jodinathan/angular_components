@@ -200,7 +200,7 @@ class Disposer implements Disposable {
     for (var i = 0; i < len; i++) {
       _disposeFunctions[i]();
     }
-    
+
     _disposeFunctions.clear();
 
     _disposeCalled = true;

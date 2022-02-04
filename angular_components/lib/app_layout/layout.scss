@@ -40,6 +40,11 @@ material-drawer {
     }
   }
 
+  &.fixed {
+    position: fixed;
+    z-index: 99999;
+  }
+
   &[persistent] {
     transition: {
       duration: $mat-transition-desktop;

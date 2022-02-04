@@ -14,9 +14,14 @@
   overflow: hidden;
   pointer-events: none;
   z-index: 1;
+
+  &.fixed {
+    position: fixed;
+    z-index: 99999;
+  }
 }
 
-:host(.mat-drawer-expanded) {
+:host(.mat-drawer-expanded.can-close) {
   pointer-events: auto;
 }
 

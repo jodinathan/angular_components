@@ -40,5 +40,6 @@ class MaterialTemporaryDrawerComponent extends MaterialDrawerBase {
   }
 
   @Input()
+  @HostBinding('class.can-close')
   bool canClose = true;
 }

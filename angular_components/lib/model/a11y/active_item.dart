@@ -54,7 +54,7 @@ class ActiveItemModel<T> {
 
   /// Stream of model change events
   Stream get modelChanged => _modelChanged.stream;
-  final _modelChanged = StreamController.broadcast(sync: true);
+  final _modelChanged = StreamController<T?>.broadcast(sync: true);
 
   /// ID of currently active item.
   String get activeId => id(activeItem);
@@ -82,7 +82,7 @@ class ActiveItemModel<T> {
       }
     }
     _activeIndex = activateFirstItemByDefault ? 0 : -1;
-    _modelChanged.add(null);
+    _warnChange();
   }
 
   /// Currently active item.
@@ -99,7 +99,7 @@ class ActiveItemModel<T> {
     } else if (_loop) {
       _activeIndex = 0;
     }
-    _modelChanged.add(null);
+    _warnChange();
   }
 
   /// Returns the next possible active item as if activeNext was called.
@@ -123,26 +123,34 @@ class ActiveItemModel<T> {
     } else if (_loop) {
       _activeIndex = _items.length - 1;
     }
-    _modelChanged.add(null);
+    _warnChange();
   }
 
   /// Activates first element in the list.
   void activateFirst() {
     _activeIndex = _items.isEmpty ? -1 : 0;
-    _modelChanged.add(null);
+    _warnChange();
   }
 
   /// Activates last element in the list.
   void activateLast() {
     _activeIndex = _items.isEmpty ? -1 : _items.length - 1;
-    _modelChanged.add(null);
+    _warnChange();
   }
 
   /// Activates [value].
   /// If [value] is not found, the active pointer is set to none.
   void activate(T value) {
     _activeIndex = _items.indexOf(value);
-    _modelChanged.add(null);
+    _warnChange();
+  }
+
+  void _warnChange() {
+    if (_activeIndex > -1 && _activeIndex < _items.length) {
+      _modelChanged.add(_items[_activeIndex]);
+    } else {
+      _modelChanged.add(null);
+    }
   }
 
   /// Returns an unique id for [item].

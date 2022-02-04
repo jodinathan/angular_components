@@ -14,6 +14,10 @@ const animationDuration = Duration(milliseconds: 500);
 class MaterialDrawerBase implements DeferredContentAware, OnInit {
   MaterialDrawerBase({bool visible = true}) : _visible = visible;
 
+  @HostBinding('class.fixed')
+  @Input()
+  bool fixed = true;
+
   bool _visible;
 
   bool get visible => _visible;

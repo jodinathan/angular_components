@@ -110,6 +110,7 @@ class MaterialPopupComponent extends Object
   RelativePosition? _alignmentPosition;
 
   OverlayRef? _overlayRef;
+  OverlayRef get overlayRef => _overlayRef!;
 
   // Needed to implement the PopupHierarchyElement interface.
   @override
@@ -261,10 +262,14 @@ class MaterialPopupComponent extends Object
       this._overlayService,
       this._domService,
       this._zIndexer,
-      @Inject(defaultPopupPositions) this._defaultPreferredPositions,
-      @Inject(overlayRepositionLoop) Object useRepositionLoop,
-      @Inject(overlayViewportBoundaries) Object viewportBoundaries,
-      @Optional() this._popupSizeProvider,
+      @Inject(defaultPopupPositions)
+          this._defaultPreferredPositions,
+      @Inject(overlayRepositionLoop)
+          Object useRepositionLoop,
+      @Inject(overlayViewportBoundaries)
+          Object viewportBoundaries,
+      @Optional()
+          this._popupSizeProvider,
       this._changeDetector,
       this._viewContainer,
       this.elementRef)
@@ -306,7 +311,8 @@ class MaterialPopupComponent extends Object
     if (_overlayRef == null) return;
     // Copy host CSS classes for integration with Angular CSS shimming.
     var hostClassName = elementRef.className;
-    _overlayRef!.overlayElement.className += ' $hostClassName';
+
+    overlayRef.overlayElement.className += ' $hostClassName';
   }
 
   @override
@@ -338,14 +344,12 @@ class MaterialPopupComponent extends Object
     assert(_viewInitialized == false);
 
     _overlayRef = _overlayService.createOverlayRefSync();
-    if (_overlayRef != null) {
-      _disposer.addFunction(_overlayRef!.dispose);
-      _zIndex = _zIndexer.pop();
-      if (templateRef != null) {
-        var view = _viewContainer.createEmbeddedView(templateRef!);
-        for (var node in view.rootNodes) {
-          _overlayRef!.overlayElement.append(node);
-        }
+    _disposer.addFunction(overlayRef.dispose);
+    _zIndex = _zIndexer.pop();
+    if (templateRef != null) {
+      var view = _viewContainer.createEmbeddedView(templateRef!);
+      for (var node in view.rootNodes) {
+        overlayRef.overlayElement.append(node);
       }
     }
     _updateOverlayCssClass();
@@ -467,9 +471,9 @@ class MaterialPopupComponent extends Object
     }));
 
     // Put the overlay in the live DOM so we can measure its size.
-    _overlayRef?.state.visibility = visibility.Visibility.Hidden;
-    _overlayRef?.overlayElement.style
-      ?..display = ''
+    overlayRef.state.visibility = visibility.Visibility.Hidden;
+    overlayRef.overlayElement.style
+      ..display = ''
       ..visibility = 'hidden';
 
     // Trigger *deferredContent.
@@ -478,15 +482,14 @@ class MaterialPopupComponent extends Object
 
     // Start listening to both the popup and the source's layout.
     var initialData = Completer();
-    var popupContentsLayoutStream = _overlayRef
-        ?.measureSizeChanges()
+    var popupContentsLayoutStream = overlayRef
+        .measureSizeChanges()
         .asBroadcastStream(onListen: _visibleDisposer.addStreamSubscription);
     var popupSourceLayoutStream =
         state.source?.onDimensionsChanged(track: state.trackLayoutChanges);
     if (!state.trackLayoutChanges) {
-      popupContentsLayoutStream = popupContentsLayoutStream?.take(1);
+      popupContentsLayoutStream = popupContentsLayoutStream.take(1);
     }
-
     // Merge the results of both streams.
 
     // Remove all the null Stream
@@ -594,7 +597,7 @@ class MaterialPopupComponent extends Object
     var islastTriggerWithKeyboard = hierarchy.islastTriggerWithKeyboard;
     if (state.source is Focusable && islastTriggerWithKeyboard) {
       _domService.scheduleWrite(() {
-        if (_overlayRef!.overlayElement
+        if (overlayRef.overlayElement
             .contains(window.document.activeElement)) {
           (state.source as Focusable).focus();
         }
@@ -633,8 +636,8 @@ class MaterialPopupComponent extends Object
     _changeDetector.markForCheck();
 
     // Set the overlay .pane to display: none.
-    _overlayRef!.state.visibility = visibility.Visibility.None;
-    _overlayRef!.overlayElement.style.display = 'none';
+    overlayRef.state.visibility = visibility.Visibility.None;
+    overlayRef.overlayElement.style.display = 'none';
 
     // Notify listeners that the popup is not visible.
     _isVisible = false;
@@ -644,7 +647,7 @@ class MaterialPopupComponent extends Object
   Rectangle? get _sourceDimensions {
     var sourceDimensions = state.source?.dimensions;
     if (sourceDimensions == null) return null;
-    var containerRect = _overlayRef!.containerElement.getBoundingClientRect();
+    var containerRect = overlayRef.containerElement.getBoundingClientRect();
     //if (containerRect == null) return null;
     return Rectangle(
         (sourceDimensions.left - containerRect.left).round(),
@@ -666,13 +669,13 @@ class MaterialPopupComponent extends Object
     if (_repositionOffsetX != 0 || _repositionOffsetY != 0) {
       // Prevent later overlay state changes from resetting the reposition
       // transform.
-      var left = _overlayRef!.state.left;
+      var left = overlayRef.state.left;
       if (left != null) {
-        _overlayRef!.state.left = left + _repositionOffsetX;
+        overlayRef.state.left = left + _repositionOffsetX;
       }
-      var top = _overlayRef!.state.top;
+      var top = overlayRef.state.top;
       if (top != null) {
-        _overlayRef!.state.top = top + _repositionOffsetY;
+        overlayRef.state.top = top + _repositionOffsetY;
       }
       //  ..left += _repositionOffsetX
       //  ..top += _repositionOffsetY;
@@ -698,7 +701,7 @@ class MaterialPopupComponent extends Object
 
     if (state.constrainToViewport) {
       // If necessary, move the popup to fit within the viewport.
-      var popupRect = _overlayRef!.overlayElement.getBoundingClientRect();
+      var popupRect = overlayRef.overlayElement.getBoundingClientRect();
       popupRect =
           _shiftRectangle(popupRect, left: scrollShiftX, top: scrollShiftY);
       var boundedViewportRect =
@@ -709,7 +712,7 @@ class MaterialPopupComponent extends Object
       _repositionOffsetY += viewportShift.top as int;
     }
 
-    _overlayRef!.overlayElement.style.transform =
+    overlayRef.overlayElement.style.transform =
         'translate(${_repositionOffsetX}px, ${_repositionOffsetY}px)';
   }
 
@@ -723,19 +726,19 @@ class MaterialPopupComponent extends Object
     var boundedViewportRect =
         _boundRectangle(_viewportRect, _viewportBoundaries);
     minHeight = _popupSizeProvider?.getMinHeight(
-        _overlayRef!.state.top ?? 0, boundedViewportRect.height);
+        overlayRef.state.top ?? 0, boundedViewportRect.height);
     minWidth = _popupSizeProvider?.getMinWidth(
-        _overlayRef!.state.left ?? 0, boundedViewportRect.width);
+        overlayRef.state.left ?? 0, boundedViewportRect.width);
     maxHeight = _popupSizeProvider?.getMaxHeight(
-        _overlayRef!.state.top ?? 0, boundedViewportRect.height);
+        overlayRef.state.top ?? 0, boundedViewportRect.height);
     maxWidth = _popupSizeProvider?.getMaxWidth(
-        _overlayRef!.state.left ?? 0, boundedViewportRect.width);
+        overlayRef.state.left ?? 0, boundedViewportRect.width);
   }
 
-  Iterable<dynamic> get _preferredPositions {
-    var pos = _flatten(state.preferredPositions);
+  Iterable<RelativePosition> get _preferredPositions {
+    final pref = state.preferredPositions;
 
-    return pos.isNotEmpty ? pos : _flatten(_defaultPreferredPositions);
+    return pref.isNotEmpty ? pref : _defaultPreferredPositions;
   }
 
   /// Returns the best possible alignment from preferred positions.
@@ -765,8 +768,8 @@ class MaterialPopupComponent extends Object
       // Build up a tentative position for the popup. These numbers are all
       // relative to the container div.
       var containerPos = Rectangle<num>(
-          position.originX.calcLeft(sourceRect, contentRect),
-          position.originY.calcTop(sourceRect, contentRect),
+          position.originX!.calcLeft(sourceRect, contentRect),
+          position.originY!.calcTop(sourceRect, contentRect),
           contentRect.width,
           contentRect.height);
       // Now translate that into screen space.
@@ -805,9 +808,10 @@ class MaterialPopupComponent extends Object
     final isRtl = state.source!.isRtl == true;
 
     // Must be set first so contentSizeFuture is correct.
-    _overlayRef!.state.width = null;
+    overlayRef.state.width = null;
+
     if (state.matchMinSourceWidth) {
-      _overlayRef!.state.minWidth = sourceClientRect.width;
+      overlayRef.state.minWidth = sourceClientRect.width;
     }
 
     // Immediately update contentClientRect width (if applicable) since
@@ -841,13 +845,14 @@ class MaterialPopupComponent extends Object
         ? containerRect.left - state.offsetX
         : state.offsetX - containerRect.left;
     final offsetY = state.offsetY - containerRect.top;
-    _overlayRef!.state
+
+    overlayRef.state
       ..left = position.originX!.calcLeft(sourceClientRect, contentClientRect) +
           offsetX
       ..top = position.originY!.calcTop(sourceClientRect, contentClientRect) +
           offsetY
       ..visibility = visibility.Visibility.Visible;
-    _overlayRef!.overlayElement.style
+    overlayRef.overlayElement.style
       ..visibility = 'visible'
       ..display = '';
 
@@ -902,7 +907,7 @@ Stream<List<T>> _mergeStreams<T>(List<Stream<T>> streams) {
       streams.length, null,
       growable: false);
   var cachedResults = List<T?>.filled(streams.length, null, growable: false);
-  StreamController<List<T>>? streamController;
+  late final StreamController<List<T>> streamController;
 
   streamController = StreamController<List<T>>.broadcast(
       sync: true,
@@ -914,7 +919,7 @@ Stream<List<T>> _mergeStreams<T>(List<Stream<T>> streams) {
             cachedResults[n] = result;
             var results = cachedResults.cast<T>();
             if (results.isNotEmpty) {
-              streamController?.add(results);
+              streamController.add(results);
             }
           });
         });
@@ -930,9 +935,9 @@ Stream<List<T>> _mergeStreams<T>(List<Stream<T>> streams) {
 /// Recursively flattens an arbitrarily-nested iterable.
 //
 // TODO(google): This belongs as a utility not inlined here.
-Iterable _flatten(Iterable nested) sync* {
+Iterable<T> _flatten<T>(Iterable<T> nested) sync* {
   for (var item in nested) {
-    if (item is Iterable) {
+    if (item is Iterable<T>) {
       yield* _flatten(item);
     } else {
       yield item;

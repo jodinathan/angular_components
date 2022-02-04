@@ -105,7 +105,11 @@ class PopupHierarchy {
         if (events.isParentOf(blockerElement, event.target as Node?)) return;
       }
 
-      if (current.autoDismiss!) current.onAutoDismiss(event);
+      if (current.autoDismiss!) {
+        print('FUCKAUTOMISSSS');
+        window.console.log(event);
+        current.onAutoDismiss(event);
+      }
     }
   }
 

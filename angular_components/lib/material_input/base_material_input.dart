@@ -4,10 +4,8 @@
 
 import 'dart:async';
 import 'dart:html';
-import 'dart:js';
 
 import 'package:angular/angular.dart';
-import 'package:angular/src/meta.dart';
 import 'package:angular_components/focus/focus.dart';
 import 'package:angular_components/forms/error_renderer.dart' show ErrorFn;
 import 'package:angular_components/interfaces/has_disabled.dart';
@@ -20,6 +18,7 @@ import 'package:angular_forms/angular_forms.dart';
 import 'package:intl/intl.dart';
 import 'package:quiver/strings.dart' show isEmpty, isNotEmpty;
 import 'package:input_mask/input_mask.dart';
+import 'package:js_interop/js_interop.dart';
 
 import 'deferred_validator.dart';
 
@@ -778,7 +777,7 @@ abstract class BaseSingleLineInputComponent extends BaseMaterialInput
   @override
   bool get labelVisible => !(numeric && invalid) && super.labelVisible;
 
-  void _maskery() {
+  Future<void> _maskery() async {
     if (!initiated) {
       return;
     }
@@ -839,9 +838,8 @@ abstract class BaseSingleLineInputComponent extends BaseMaterialInput
         });
       }
 
-      enableInputMask().then((ev) {
-        _mask = InputMask(opts).mask(inputEl);
-      });
+      await enableInputMask();
+      _mask = InputMask(opts).mask(inputEl);
     }
   }
 

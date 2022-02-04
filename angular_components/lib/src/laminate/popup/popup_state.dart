@@ -25,7 +25,7 @@ class PopupState extends Observable {
       bool matchMinSourceWidth = false,
       int offsetX = 0,
       int offsetY = 0,
-      Iterable<Object> preferredPositions = const [],
+      Iterable<RelativePosition> preferredPositions = const [],
       PopupSource? source,
       bool trackLayoutChanges = true,
       bool constrainToViewport = true}) {
