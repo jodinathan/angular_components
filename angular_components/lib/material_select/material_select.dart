@@ -47,6 +47,7 @@ typedef TrackFunction = Object? Function(int i, dynamic d);
   ],
   templateUrl: 'material_select.html',
   styleUrls: ['material_select.scss.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 )
 class MaterialSelectComponent<T> extends MaterialSelectBase<T>
     implements HasDisabled, OnInit {

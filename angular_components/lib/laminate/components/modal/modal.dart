@@ -358,6 +358,9 @@ class ModalComponent
   }
 
   @override
+  bool get isVisible => _isVisible;
+
+  @override
   bool get hidden => _isHidden;
 
   @override

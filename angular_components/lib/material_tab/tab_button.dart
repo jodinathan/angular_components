@@ -25,8 +25,8 @@ import 'package:angular_components/material_tab/tab_mixin.dart';
 class TabButtonComponent extends MaterialButtonBase with TabMixin {
   final Element _nativeElement;
 
-  TabButtonComponent(this._nativeElement)
-      : super(_nativeElement as HtmlElement, 'tab');
+  TabButtonComponent(this._nativeElement, NgZone _zone)
+      : super(_nativeElement as HtmlElement, 'tab', _zone);
 
   @override
   Element get nativeElement => _nativeElement;

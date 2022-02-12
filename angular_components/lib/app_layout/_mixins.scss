@@ -87,12 +87,11 @@
 /// _selector is for internal use only.
 @mixin mat-temporary-drawer-width($width, $_selector...) {
   #{_drawer-content($_selector...)} {
-    left: -$width;
-    width: $width;
+    min-width: $width;
   }
 
   #{_drawer-content($hostSelector: '.mat-drawer-expanded', $_selector...)} {
-    transform: translateX(100%);
+    transform: translateX(0);
   }
 
   // We can't change the transform when the component is right aligned

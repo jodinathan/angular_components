@@ -106,8 +106,6 @@ class PopupHierarchy {
       }
 
       if (current.autoDismiss!) {
-        print('FUCKAUTOMISSSS');
-        window.console.log(event);
         current.onAutoDismiss(event);
       }
     }

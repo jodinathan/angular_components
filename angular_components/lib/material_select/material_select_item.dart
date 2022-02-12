@@ -64,8 +64,9 @@ class MaterialSelectItemComponent<T> extends ButtonDirective
       @Optional() this._activationHandler,
       this._cdRef,
       @Attribute('role') String? role,
+      NgZone _zone,
       {bool addTabIndexWhenNonTabbable = false})
-      : super(element, role ?? 'option',
+      : super(element, role ?? 'option', _zone,
             addTabIndexWhenNonTabbable: addTabIndexWhenNonTabbable) {
     _disposer
       ..addStreamSubscription(trigger.listen(handleActivate))

@@ -63,10 +63,12 @@ class MaterialSelectDropdownItemComponent<T>
       @Optional() DropdownHandle? dropdown,
       @Optional() ActivationHandler? activationHandler,
       @Optional() IdGenerator? idGenerator,
-      ChangeDetectorRef cdRef)
+      ChangeDetectorRef cdRef,
+      NgZone _zone)
       : _generatedId =
             (idGenerator ?? SequentialIdGenerator.fromUUID()).nextId(),
-        super(element, dropdown, activationHandler, cdRef, role ?? 'option') {
+        super(element, dropdown, activationHandler, cdRef, role ?? 'option',
+      _zone) {
     this.itemRenderer = defaultItemRenderer;
     //this.factoryRenderer =
     //    (_) => templateItem.MaterialSelectDropdownItemComponentNgFactory;

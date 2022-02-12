@@ -20,6 +20,7 @@ import 'package:angular_components/content/deferred_content_aware.dart';
   templateUrl: 'material_stackable_drawer.html',
   styleUrls: ['material_stackable_drawer.scss.css'],
   visibility: Visibility.all, // Injected by child elements.
+  changeDetection: ChangeDetectionStrategy.OnPush
 )
 class MaterialStackableDrawerComponent
     extends MaterialTemporaryDrawerComponent {

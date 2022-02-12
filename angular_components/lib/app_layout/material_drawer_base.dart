@@ -16,7 +16,7 @@ class MaterialDrawerBase implements DeferredContentAware, OnInit {
 
   @HostBinding('class.fixed')
   @Input()
-  bool fixed = true;
+  bool fixed = false;
 
   bool _visible;
 
@@ -42,6 +42,9 @@ class MaterialDrawerBase implements DeferredContentAware, OnInit {
   }
 
   final _visibleChange = StreamController<bool>.broadcast(sync: true);
+
+  @override
+  bool get isVisible => _visible;
 
   /// Event fired when the visibility of the drawer changes.
   ///

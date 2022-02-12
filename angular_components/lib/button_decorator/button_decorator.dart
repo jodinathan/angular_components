@@ -38,13 +38,14 @@ class ButtonDirective extends RootFocusable
   bool _shouldHandleSpaceKey;
 
   ButtonDirective(Element element, @Attribute('role') String? role,
+      NgZone _zone,
       {bool addTabIndexWhenNonTabbable = false, bool handleSpacePresses = true})
       : this.role = (role ?? 'button'),
         // Allow the subclass to define how the element should be made
         // untabbable.
         _nonTabbableIndex = addTabIndexWhenNonTabbable ? '-1' : null,
         _shouldHandleSpaceKey = handleSpacePresses,
-        super(element);
+        super(element, _zone);
 
   /// Role of this component used for a11y.
   @Input()

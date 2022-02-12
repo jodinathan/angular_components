@@ -22,9 +22,9 @@ class FocusItemDirective extends RootFocusable implements FocusableItem {
   final String role;
 
   FocusItemDirective(HtmlElement element, this._changeDetectorRef,
-      @Attribute('role') String? role)
+      @Attribute('role') String? role, NgZone _zone)
       : this.role = role ?? 'listitem',
-        super(element);
+        super(element, _zone);
 
   @HostBinding('attr.tabindex')
   String tabIndex = '0';

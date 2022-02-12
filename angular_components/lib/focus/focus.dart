@@ -3,64 +3,52 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:html' show KeyCode, KeyboardEvent, Element, HtmlElement;
+import 'dart:html' show KeyCode, KeyboardEvent, Element, HtmlElement,
+document, window;
 
 import 'package:angular/angular.dart';
 import 'package:meta/meta.dart';
-import 'package:angular_components/laminate/components/modal/modal.dart';
-import 'package:angular_components/laminate/popup/popup.dart';
 import 'package:angular_components/utils/browser/dom_service/dom_service.dart';
 import 'package:angular_components/utils/disposer/disposer.dart';
 
+import '../content/deferred_content_aware.dart';
 import 'focus_interface.dart';
 
 export 'focus_interface.dart';
 
 /// A class for components to extend if their programmatic focus
 /// should simply put focus on root element.
-class RootFocusable implements Focusable, Disposable {
-  Element? _root;
-  RootFocusable(this._root);
+class RootFocusable implements Focusable {
+  RootFocusable(this._root, this._zone);
+
+  final Element? _root;
+  final NgZone _zone;
 
   @override
   void focus() {
+    final _root = this._root;
+
     if (_root == null) return;
     // if element does not have positive tab index attribute already specified
     // or is native element.
     // NOTE: even for elements with tab index unspecified it will return
     // tabIndex as "-1" and we have to set it to "-1"
     // to actually make it focusable.
-    if (_root!.tabIndex! < 0) {
-      _root!.tabIndex = -1;
+    if (_root.tabIndex! < 0) {
+      _root.tabIndex = -1;
     }
-    _root!.focus();
-  }
 
-  @override
-  void dispose() {
-    _root = null;
-  }
-}
+    if (document.activeElement != null &&
+        document.activeElement != document.body) {
+      do {
+        document.activeElement!.blur();
+      } while (document.activeElement != null &&
+          document.activeElement != document.body);
 
-abstract class ProjectedFocus implements Focusable {
-  Future< /* Focusable | ElementRef */ dynamic> get focusDelegate;
-  Focusable? _resolvedFocusable;
-
-  @override
-  void focus() {
-    if (_resolvedFocusable != null) {
-      _resolvedFocusable!.focus();
-      return;
+      _zone.runAfterChangesObserved(_root.focus);
+    } else {
+      _root.focus();
     }
-    focusDelegate.then((delegate) {
-      assert(delegate is Focusable || delegate is Element);
-      if (delegate is Focusable) {
-        _resolvedFocusable = delegate;
-      } else {
-        _resolvedFocusable = RootFocusable(delegate);
-      }
-      _resolvedFocusable!.focus();
-    });
   }
 }
 
@@ -195,32 +183,30 @@ class AutoFocusDirective extends RootFocusable implements OnInit, OnDestroy {
   // leak detection.
   Focusable? _focusable;
   DomService _domService;
-  ModalComponent? _modal;
-  PopupRef? _popupRef;
+  DeferredContentAware? _contentAware;
 
   AutoFocusDirective(
       HtmlElement node,
       this._domService,
       @Self() @Optional() this._focusable,
-      @Optional() this._modal,
-      @Optional() this._popupRef)
-      : super(node);
+      @Optional() this._contentAware,
+      NgZone _zone)
+      : super(node, _zone);
 
   @override
   void ngOnInit() {
+    window.console.log('FOCUS?INIT $_autoFocus, $_focusable, ${this._contentAware}');
     if (!_autoFocus) return;
 
-    if (_modal != null || _popupRef != null) {
-      var isVisible = _popupRef != null
-          ? _popupRef!.isVisible
-          : _modal!.resolvedOverlayRef.isVisible;
-      _onModalOrPopupVisibleChanged(isVisible);
+    //_defocus();
 
-      var onVisibleChanged = _popupRef != null
-          ? _popupRef!.onVisibleChanged
-          : _modal!.resolvedOverlayRef.onVisibleChanged;
+    final _contentAware = this._contentAware;
+
+    if (_contentAware != null) {
+      _onModalOrPopupVisibleChanged(_contentAware.isVisible);
+
       _disposer.addStreamSubscription(
-          onVisibleChanged.listen(_onModalOrPopupVisibleChanged));
+          _contentAware.contentVisible.listen(_onModalOrPopupVisibleChanged));
     } else {
       _domService.scheduleWrite(focus);
     }
@@ -237,6 +223,7 @@ class AutoFocusDirective extends RootFocusable implements OnInit, OnDestroy {
 
   @override
   void focus() {
+    print('FOCUS? $_autoFocus, $_focusable, $this');
     if (!_autoFocus) return;
 
     if (_focusable != null) {
@@ -248,15 +235,14 @@ class AutoFocusDirective extends RootFocusable implements OnInit, OnDestroy {
 
   @override
   void ngOnDestroy() {
-    super.dispose();
     _disposer.dispose();
     _focusable = null;
     //_domService = null;
-    _modal = null;
-    _popupRef = null;
+    _contentAware = null;
   }
 
   void _onModalOrPopupVisibleChanged(bool isVisible) {
+    print('FOcusIsVis ${isVisible}');
     if (isVisible) _domService.scheduleWrite(focus);
   }
 }
@@ -270,5 +256,5 @@ class AutoFocusDirective extends RootFocusable implements OnInit, OnDestroy {
     exportAs: 'focusableElement',
     providers: [ExistingProvider(Focusable, FocusableDirective)])
 class FocusableDirective extends RootFocusable {
-  FocusableDirective(HtmlElement node) : super(node);
+  FocusableDirective(HtmlElement node, NgZone zone) : super(node, zone);
 }

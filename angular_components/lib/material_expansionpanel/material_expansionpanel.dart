@@ -123,9 +123,7 @@ class MaterialExpansionPanel
     if (element is Focusable) {
       _focusOnOpenChild = element;
     } else if (element is Element) {
-      _focusOnOpenChild = RootFocusable(element);
-    } else if (element is ElementRef) {
-      _focusOnOpenChild = RootFocusable(element.nativeElement);
+      _focusOnOpenChild = RootFocusable(element, _ngZone);
     } else {
       assert(
           element == null,
@@ -148,7 +146,7 @@ class MaterialExpansionPanel
           // If we just finished closing, let deferred content stop rendering
           // the panel body.
           if (!isExpanded) {
-            _ngZone.run(() => _contentVisible.add(false));
+            _ngZone.run(() => _visibility(false));
           }
         }));
       }
@@ -161,7 +159,7 @@ class MaterialExpansionPanel
       if (!_mainPanelHasHeightTransition) {
         _disposer.addStreamSubscription(isExpandedChange.listen((expanded) {
           // Just check for false (closed). Open (true) is always done first.
-          if (!expanded!) _contentVisible.add(false);
+          if (!expanded!) _visibility(false);
         }));
       }
     });
@@ -481,6 +479,14 @@ class MaterialExpansionPanel
     _expandCollapseButton?.focus();
   }
 
+  bool _visible = false;
+  bool get isVisible => _visible;
+
+  void _visibility(bool visible) {
+    _visible = visible;
+    _contentVisible.add(visible);
+  }
+
   final _focusMoveCtrl = StreamController<FocusMoveEvent>.broadcast(sync: true);
   @override
   Stream<FocusMoveEvent> get focusmove => _focusMoveCtrl.stream;
@@ -568,7 +574,7 @@ class MaterialExpansionPanel
       // follow ups (animation or autofocus) so that styles and deferred content
       // can update.
       _isExpanded.value = expand;
-      if (expand) _contentVisible.add(true);
+      if (expand) _visibility(true);
       if (byUserAction) _isExpandedChangeByUserAction.add(expand);
       _changeDetector.markForCheck();
       if (expand) {

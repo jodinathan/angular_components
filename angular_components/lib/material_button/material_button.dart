@@ -94,8 +94,8 @@ class MaterialButtonComponent extends MaterialButtonBase {
   }
 
   MaterialButtonComponent(HtmlElement element, AcxDarkTheme darktheme,
-      this._changeDetector, @Attribute('role') String? role)
-      : super(element, role) {
+      this._changeDetector, @Attribute('role') String? role, NgZone _zone)
+      : super(element, role, _zone) {
     //if (_changeDetector == null) throw Exception('Expecting change detector');
     darktheme.themeElement(element);
   }

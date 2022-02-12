@@ -23,12 +23,14 @@ class FocusableMixin implements Focusable {
     _focusable = component;
     if (_focusPending && _focusable != null) {
       _focusPending = false;
+      print('Focussssssss $_focusable');
       _focusable!.focus();
     }
   }
 
   @override
   void focus() {
+    print('Focussssssss222 $_focusable');
     if (_focusable == null) {
       _focusPending = true;
     } else {

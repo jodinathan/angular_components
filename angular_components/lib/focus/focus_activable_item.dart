@@ -22,7 +22,8 @@ class FocusActivableItemDirective extends RootFocusable
   @override
   String? key;
 
-  FocusActivableItemDirective(HtmlElement root) : super(root);
+  FocusActivableItemDirective(HtmlElement root, NgZone _zone) :
+        super(root, _zone);
 }
 
 /// A focusable component with a matching [key].

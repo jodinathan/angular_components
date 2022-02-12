@@ -20,6 +20,11 @@ import 'package:angular_components/utils/disposer/disposer.dart';
   changeDetection: ChangeDetectionStrategy.OnPush,
 )
 class FocusTrapComponent implements OnDestroy {
+  FocusTrapComponent(this._el) {
+    print('focustrap!');
+  }
+
+  final Element _el;
   final _disposer = Disposer.oneShot();
 
   AutoFocusDirective? _autoFocusDirective;
@@ -33,6 +38,7 @@ class FocusTrapComponent implements OnDestroy {
   set content(FocusContentWrapper? value) {
     _content = value;
     if (_content != null && _autoFocusDirective == null) {
+      print('ContentFocusing! ${_el.parent} $_content, ${_content!._element}');
       _content!._element.focus();
     }
   }
@@ -82,9 +88,9 @@ class FocusTrapComponent implements OnDestroy {
 )
 class FocusContentWrapper extends FocusableDirective {
   Element _element;
-  FocusContentWrapper(HtmlElement element)
+  FocusContentWrapper(HtmlElement element, NgZone zone)
       : _element = element,
-        super(element);
+        super(element, zone);
 
   Element get element => _element;
 }

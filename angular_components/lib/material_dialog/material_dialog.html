@@ -3,7 +3,7 @@
  for details. All rights reserved. Use of this source code is governed by a
  BSD-style license that can be found in the LICENSE file.
 -->
-<focus-trap (keyup)="onKeyUp($event)">
+<focus-trap (keyup)="onKeyUp($event)" *ngIf="visible">
   <div class="wrapper">
     <header *ngIf="shouldShowHeader" [attr.id]="headerId" role="presentation">
       <ng-content select="[header]"></ng-content>

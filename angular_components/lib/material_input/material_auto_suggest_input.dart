@@ -96,6 +96,7 @@ typedef InputChangeCallback = dynamic Function(Object inputText,
   ],
   // TODO(google): Change to `Visibility.local` to reduce code size.
   visibility: Visibility.all,
+  changeDetection: ChangeDetectionStrategy.OnPush
 )
 class MaterialAutoSuggestInputComponent<T> extends MaterialSelectBase<T>
     with

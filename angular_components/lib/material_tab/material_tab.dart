@@ -48,6 +48,7 @@ abstract class Tab extends Focusable {
   ''',
   styleUrls: ['material_tab.scss.css'],
   directives: [NgIf, TemplatePortalDirective],
+  changeDetection: ChangeDetectionStrategy.OnPush
 )
 class MaterialTabComponent extends RootFocusable
     implements Tab, DeferredContentAware {
@@ -56,30 +57,44 @@ class MaterialTabComponent extends RootFocusable
 
   final String _uuid;
   final _visible = StreamController<bool>.broadcast(sync: true);
+  final ChangeDetectorRef _cd;
 
   MaterialTabComponent(
-      HtmlElement element, @Optional() IdGenerator? idGenerator)
+      HtmlElement element, @Optional() IdGenerator? idGenerator, this._cd,
+      NgZone _zone)
       : _uuid = (idGenerator ?? SequentialIdGenerator.fromUUID()).nextId(),
-        super(element);
+        super(element, _zone);
 
   @ViewChild('content')
   set content(DivElement? div) {
-    _visible.add(div != null);
+    _visibility(div != null);
   }
+
+  bool _isVisible = false;
+  bool get isVisible => _isVisible;
 
   /// The label for this tab.
   @override
   @ViewChild('label')
   TemplatePortalDirective? label;
 
+  void _visibility(bool visible) {
+    _isVisible = visible;
+    _visible.add(visible);
+  }
+
   @override
   void deactivate() {
     _active = false;
+    _visibility(false);
+    _cd.markForCheck();
   }
 
   @override
   void activate() {
     _active = true;
+    _visibility(true);
+    _cd.markForCheck();
   }
 
   @override

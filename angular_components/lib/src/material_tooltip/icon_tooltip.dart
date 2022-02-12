@@ -126,10 +126,15 @@ class MaterialIconTooltipComponent implements DeferredContentAware {
   @ViewChild('tooltipRef')
   TooltipBehavior? tooltipBehavior;
 
+  @override
+  bool get isVisible => _paper!.isVisible;
+
+  DeferredContentAware? _paper;
+
   @ViewChild(MaterialPaperTooltipComponent)
   set deferredContentAware(DeferredContentAware? deferredContentAware) {
-    if (deferredContentAware != null) {
-      _contentVisible.addStream(deferredContentAware.contentVisible);
+    if ((_paper = deferredContentAware) != null) {
+      _contentVisible.addStream(deferredContentAware!.contentVisible);
     }
   }
 

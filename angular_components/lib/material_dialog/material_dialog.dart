@@ -6,6 +6,7 @@ import 'dart:async';
 import 'dart:html';
 
 import 'package:angular/angular.dart';
+import 'package:angular_components/angular_components.dart';
 import 'package:angular_components/focus/focus_trap.dart';
 import 'package:angular_components/laminate/components/modal/modal.dart';
 import 'package:angular_components/model/a11y/keyboard_handler_mixin.dart';
@@ -49,6 +50,7 @@ class MaterialDialogComponent
   final ChangeDetectorRef _changeDetector;
   final NgZone _ngZone;
   final ModalComponent? _modal;
+  final DeferredContentAware? _deferredContent;
   final _disposer = Disposer.oneShot();
   final _uid = SequentialIdGenerator.fromUUID().nextId();
 
@@ -61,6 +63,8 @@ class MaterialDialogComponent
   final _isInFullscreenModeStreamController = StreamController<bool>();
   bool? _isInFullscreenMode;
   bool _shouldListenForFullscreenChanges = false;
+  bool _visible = true;
+  bool get visible => _visible;
 
   MaterialDialogComponent(
     this._rootElement,
@@ -68,8 +72,23 @@ class MaterialDialogComponent
     this._changeDetector,
     this._ngZone,
     @Optional() this._modal,
+    @Optional() this._deferredContent,
   ) {
     escapeHandler = _defaultEscapeHandler;
+
+    final _deferredContent = this._deferredContent;
+
+    if (_deferredContent != null) {
+      _visible = _deferredContent.isVisible;
+
+      _disposer.addStreamSubscription(
+          _deferredContent.contentVisible.listen((vis) {
+            if (vis != visible) {
+              _visible = vis;
+              _changeDetector.markForCheck();
+            }
+          }));
+    }
   }
 
   @ViewChild('main', read: HtmlElement)

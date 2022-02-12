@@ -12,4 +12,6 @@ import 'dart:async';
 abstract class DeferredContentAware {
   /// Component publishes to this stream to control the visibility of contents.
   Stream<bool> get contentVisible;
+
+  bool get isVisible;
 }

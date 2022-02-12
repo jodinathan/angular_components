@@ -129,10 +129,15 @@ class MaterialPaperTooltipComponent implements DeferredContentAware, Tooltip {
       : popupClassName =
             constructEncapsulatedCss(tooltipClass, hostElement.classes);
 
+  @override
+  bool get isVisible => _popup?.isVisible == true;
+
+  MaterialPopupComponent? _popup;
+
   @ViewChild(MaterialPopupComponent)
   set popupChild(MaterialPopupComponent? popup) {
-    if (popup == null) return;
-    _visibleCtrl.addStream(popup.contentVisible);
+    if ((_popup = popup) == null) return;
+    _visibleCtrl.addStream(popup!.contentVisible);
   }
 
   @override
@@ -162,7 +167,7 @@ class MaterialPaperTooltipComponent implements DeferredContentAware, Tooltip {
 
   /// The element at which this tooltip is targeted.
   @Input('for')
-  set tooltipRef(TooltipTarget target) {
+  set tooltipRef(TooltipTarget? target) {
     if (target == null) return;
     _tooltipSource = target;
     target.setTooltip(tooltipHandle);

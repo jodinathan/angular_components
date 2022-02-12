@@ -57,8 +57,8 @@ import 'material_button_base.dart';
 class MaterialFabComponent extends MaterialButtonBase {
   final ChangeDetectorRef _changeDetector;
 
-  MaterialFabComponent(HtmlElement element, this._changeDetector)
-      : super(element, null);
+  MaterialFabComponent(HtmlElement element, this._changeDetector, NgZone _zone)
+      : super(element, null, _zone);
 
   @visibleForTemplate
   bool get isPressed => isMouseDown || focused;

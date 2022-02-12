@@ -39,7 +39,7 @@
   @include material-drawer-common;
   @include shadow-none;
 
-  transform: translateX(0);
+  transform: translateX(-100%);
   pointer-events: auto;
   transition-property: box-shadow, left, right, transform, width;
   transition-duration: $mat-transition-mobile-leaving;

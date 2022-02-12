@@ -61,7 +61,7 @@ class MaterialInputChangeValueAccessor
 
   @override
   void registerOnChange(callback) {
-    disposer.addStreamSubscription(input.onChange.listen((_) {
+    disposer.addStreamSubscription(input.onKeypress.listen((_) {
       callback(input.inputText);
     }));
   }
