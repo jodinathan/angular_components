@@ -160,6 +160,8 @@ $borderEasing: $mat-transition-deceleration;
 
       .box {
         position: relative;
+        flex-grow: 1;
+        display: flex;
 
         :host:not(.floatingLabel) &, :host.focusedOrValue & {
           position: static;
