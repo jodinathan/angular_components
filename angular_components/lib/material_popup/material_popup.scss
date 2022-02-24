@@ -56,6 +56,12 @@
     transition: inherit;
   }
 
+  &.overflow-visible {
+    .popup, .main {
+      overflow: visible;
+    }
+  }
+
   &.visible .popup {
     visibility: initial;
   }

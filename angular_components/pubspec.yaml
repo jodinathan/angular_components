@@ -28,6 +28,7 @@ dependencies:
   sass_builder: ^2.0.2
   input_mask: ^0.0.3
   js_interop: ^0.0.1
+  ng_color_picker: any
 
 dev_dependencies:
   grinder: ^0.9.0
@@ -38,3 +39,11 @@ dev_dependencies:
 dependency_overrides:
   input_mask:
     path: ../../input_mask
+  ng_color_picker:
+    path: ../../ng_color_picker
+  js_interop:
+    path: ../../js_interop_dart
+  dispose:
+    path: ../../dispose
+  lib_colors:
+    path: ../../lib_colors

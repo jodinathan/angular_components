@@ -208,7 +208,7 @@ class GalleryInfoBuilder extends Builder {
         var inputName = input.name;
         //if (inputName != null) {
         mergedInputs[inputName] = input
-          ..type = _setterType(inputName, classElement);
+          ..style = _setterType(inputName, classElement);
         //}
       });
 
@@ -216,7 +216,7 @@ class GalleryInfoBuilder extends Builder {
         var outputName = output.name;
         //if (outputName != null) {
         mergedOutputs[outputName] = output
-          ..type = _getterType(outputName, classElement);
+          ..style = _getterType(outputName, classElement);
         //}
       });
     }
@@ -258,7 +258,7 @@ class GalleryInfoBuilder extends Builder {
 
   /// Returns the type of setter [name] in [classElement].
   String _setterType(String name, ClassElement classElement) =>
-      classElement.getSetter(name)!.type.normalParameterTypes.first.toString();
+      classElement.getSetter(name)!.style.normalParameterTypes.first.toString();
 
   /// Returns the type of the getter [name] in [classElement].
   String _getterType(String name, ClassElement classElement) =>
@@ -308,7 +308,7 @@ class GalleryInfoBuilder extends Builder {
       throw 'Error: Failed to extract demo information from: $demoClassName.';
     }
     return DemoInfo()
-      ..type = extractedDemo.name
+      ..style = extractedDemo.name
       ..name = extractedDemo.name
       ..selector = extractedDemo.selector
       ..asset = libraryId.toString();

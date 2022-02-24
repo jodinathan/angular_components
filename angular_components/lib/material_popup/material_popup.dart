@@ -240,6 +240,9 @@ class MaterialPopupComponent extends Object
   @Input()
   bool hasBox = true;
 
+  @Input()
+  bool overflowVisible = false;
+
   /// Page elements that do not auto-dismiss the popup in addition to the popup
   /// up source element.
   @Input()
@@ -476,8 +479,6 @@ class MaterialPopupComponent extends Object
       ..display = ''
       ..visibility = 'hidden';
 
-    // Trigger *deferredContent.
-    _onContentVisible.add(true);
     _changeDetector.markForCheck();
 
     // Start listening to both the popup and the source's layout.
@@ -555,6 +556,9 @@ class MaterialPopupComponent extends Object
         _isVisible = true;
         onVisibleController.add(true);
         _onOpened.add(null);
+        // Trigger *deferredContent.
+        _onContentVisible.add(true);
+        _changeDetector.markForCheck();
       });
     } else {
       // No animation, but still need to wait for *deferredContent to render.
@@ -563,6 +567,9 @@ class MaterialPopupComponent extends Object
         _isVisible = true;
         onVisibleController.add(true);
         _onOpened.add(null);
+        // Trigger *deferredContent.
+        _onContentVisible.add(true);
+        _changeDetector.markForCheck();
       });
     }
   }
