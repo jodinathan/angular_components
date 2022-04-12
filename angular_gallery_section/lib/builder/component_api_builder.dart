@@ -23,7 +23,7 @@ class ComponentApiBuilder extends Builder {
   Future build(BuildStep buildStep) async {
     final inputId = buildStep.inputId;
     final infoList = (jsonDecode(await buildStep.readAsString(inputId)) as List)
-        .map((info) => ResolvedConfig.fromJson(info));
+        .map((info) => ResolvedConfig.loadJson(info));
 
     final mustacheContext = await _mustacheContext(infoList);
     final templateId = AssetId('angular_gallery_section',

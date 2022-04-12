@@ -80,10 +80,10 @@ class MaterialDateRangePickerDemoComponent {
     _manyPresets = manyPresets(clock);
 
     range = DatepickerComparison.noComparison(_defaultPresets
-        .singleWhere((preset) => preset.range.title == 'This week')
+        .singleWhere((preset) => preset.range.name == 'This week')
         .range);
     rangeSimplified = DatepickerComparison.noComparison(_defaultPresets
-        .singleWhere((preset) => preset.range.title == 'This week')
+        .singleWhere((preset) => preset.range.name == 'This week')
         .range);
   }
   DateRange limitToRange = DateRange(Date.today().add(years: -5), Date.today());

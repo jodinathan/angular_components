@@ -47,7 +47,7 @@ class DartDocComponent extends DocumentationComponent {
 
   DartDocInfo get doc => _doc;
 
-  DartDocInfo _doc = DartDocInfo.fromJson({});
+  DartDocInfo _doc = DartDocInfo.loadJson({});
 }
 
 /// Displays a single piece of documentation.
@@ -68,7 +68,7 @@ class MarkdownDocComponent extends DocumentationComponent {
 
   MarkdownDocInfo get doc => _doc;
 
-  MarkdownDocInfo _doc = MarkdownDocInfo.fromJson({});
+  MarkdownDocInfo _doc = MarkdownDocInfo.loadJson({});
 }
 
 /// Displays documentation for Sass files in the gallery application.
@@ -96,5 +96,5 @@ class SassDocComponent extends DocumentationComponent {
 
   SassDocInfo get doc => _doc;
 
-  SassDocInfo _doc = SassDocInfo.fromJson({});
+  SassDocInfo _doc = SassDocInfo.loadJson({});
 }

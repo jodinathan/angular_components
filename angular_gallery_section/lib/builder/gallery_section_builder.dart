@@ -32,7 +32,7 @@ class GallerySectionBuilder extends Builder {
     for (final assetId in infoAssets) {
       final infoList =
           (jsonDecode(await buildStep.readAsString(assetId)) as List)
-              .map((info) => ResolvedConfig.fromJson(info));
+              .map((info) => ResolvedConfig.loadJson(info));
 
       // There is an API page generated for every .gallery_info.json file.
       final api = <String, dynamic>{

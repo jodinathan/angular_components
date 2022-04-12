@@ -51,7 +51,7 @@ class ResolvedConfig {
     group = jsonMap['group'] as String?;
 
     docs = (jsonMap['docs'] as Iterable?)
-            ?.map((element) => DocInfo.fromJson(element)) ??
+            ?.map((element) => DocInfo.loadJson(element)) ??
         [];
     demos = (jsonMap['demos'] as Iterable?)
             ?.map((element) => DemoInfo.fromJson(element)) ??

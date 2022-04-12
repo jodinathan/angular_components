@@ -26,7 +26,7 @@ class GallerySectionSummaryBuilder extends Builder {
         in buildStep.findAssets(Glob('**/*.gallery_info.json'))) {
       final infoList =
           (jsonDecode(await buildStep.readAsString(assetId)) as List)
-              .map((info) => ResolvedConfig.fromJson(info));
+              .map((info) => ResolvedConfig.loadJson(info));
 
       if (infoList.isEmpty) continue;
 
