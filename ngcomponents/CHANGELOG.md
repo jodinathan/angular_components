@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.0.0-dev.1
+
+Nothing has changed compared to [2.0.0]. This version is published for the sole
+purpose of providing existing developers a convenient way to use on a null
+safety version of `angular_components` and to thoroughly test existing code that
+will be the basis for complete null safety migration.
+
 ## 2.0.0
 
 * Migrated using `dart migrate`
