@@ -7,8 +7,8 @@ import 'dart:html';
 
 import 'package:angular/angular.dart';
 
-import 'package:angular_components/angular_components.dart';
-import 'package:angular_components/utils/id_generator/id_generator.dart';
+import 'package:ngcomponents/angular_components.dart';
+import 'package:ngcomponents/utils/id_generator/id_generator.dart';
 import 'package:ngcomponents/focus/focus_trap.dart';
 import 'package:ngcomponents/laminate/components/modal/modal.dart';
 import 'package:ngcomponents/model/a11y/keyboard_handler_mixin.dart';

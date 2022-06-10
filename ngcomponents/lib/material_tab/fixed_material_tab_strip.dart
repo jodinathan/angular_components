@@ -10,8 +10,8 @@ import 'package:angular/src/meta.dart';
 import 'package:ngcomponents/annotations/rtl_annotation.dart';
 import 'package:ngcomponents/focus/focus_item.dart';
 import 'package:ngcomponents/focus/focus_list.dart';
-import 'package:angular_components/laminate/portal/portal.dart';
-import 'package:angular_components/material_button/material_button.dart';
+import 'package:ngcomponents/laminate/portal/portal.dart';
+import 'package:ngcomponents/material_button/material_button.dart';
 import 'package:ngcomponents/material_tab/tab_button.dart';
 import 'package:ngcomponents/material_tab/tab_change_event.dart';
 

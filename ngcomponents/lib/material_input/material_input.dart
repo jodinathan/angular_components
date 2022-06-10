@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:angular/angular.dart';
-import 'package:angular_components/material_slider/material_slider.dart';
+import 'package:ngcomponents/material_slider/material_slider.dart';
 import 'package:angular_forms/angular_forms.dart';
 import 'package:ngcomponents/focus/focus.dart';
 import 'package:ngcomponents/interfaces/has_disabled.dart';

@@ -5,10 +5,10 @@
 import 'dart:async';
 
 import 'package:angular/angular.dart';
-import 'package:angular_components/laminate/portal/portal.dart';
-import 'package:angular_components/material_tab/fixed_material_tab_strip.dart';
-import 'package:angular_components/material_tab/material_tab.dart';
-import 'package:angular_components/material_tab/tab_change_event.dart';
+import 'package:ngcomponents/laminate/portal/portal.dart';
+import 'package:ngcomponents/material_tab/fixed_material_tab_strip.dart';
+import 'package:ngcomponents/material_tab/material_tab.dart';
+import 'package:ngcomponents/material_tab/tab_change_event.dart';
 
 /// A component that creates a tab panel with navigation bar on the top.
 // TODO(google): Support Scrolling tab strip in addition to fixed with an
