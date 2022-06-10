@@ -1,0 +1,131 @@
+// Copyright (c) 2016, the Dart project authors.  Please see the AUTHORS file
+// for details. All rights reserved. Use of this source code is governed by a
+// BSD-style license that can be found in the LICENSE file.
+@use "sass:math";
+
+@import 'package:ngcomponents/css/material/material';
+
+// TODO(google): Extract and share values with scrolling tab strip.
+$tab-indicator-height: $mat-grid * .25;
+$navi-bar-margin: -1 * $tab-indicator-height;
+
+:host {
+  display: flex;
+  flex-shrink: 0;
+  width: 100%;
+
+  &.vertical {
+    width: auto;
+
+    .navi-bar {
+      flex-flow: column nowrap;
+    }
+  }
+}
+
+$easing: $mat-transition-deceleration;
+
+.navi-bar {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  white-space: nowrap;
+  width: 100%;
+
+  .holder {
+    margin: 15px 0;
+    position: relative;
+
+    .tab-button {
+      flex: 1;
+      margin: 0;
+      box-shadow: 0 0 0;
+
+      .label {
+        position: relative;
+        z-index: 2;
+      }
+    }
+
+    .flag {
+      position: absolute;
+
+      :host:not(.vertical) & {
+        width: 100%;
+        height: 0;
+        top: 100%;
+        left: 0;
+        transition: $mat-transition-fast height $mat-transition-acceleration;
+      }
+      :host.vertical & {
+        height: 100%;
+        width: 0;
+        top: 0;
+        left: 100%;
+        transition: $mat-transition-fast width $mat-transition-acceleration;
+      }
+    }
+
+    &:after {
+      content: " ";
+      position: absolute;
+      background: linear-gradient(#70a0ea,#ef7896);
+      top: -10px;
+      left: 0;
+      box-shadow: 0 0 0;
+
+      :host:not(.vertical) & {
+        width: 100%;
+        height: 0;
+        transition: $mat-transition-fast height $easing $mat-transition-fast;
+      }
+      :host.vertical & {
+        height: calc(100% + 20px);
+        width: 0;
+        transition: $mat-transition-fast width $easing $mat-transition-fast;
+      }
+    }
+
+    &.active {
+      color: white;
+
+      &:after {
+        box-shadow: 3px 1px 1px -1px rgb(0 0 0 / 9%);
+
+        :host:not(.vertical) & {
+          height: calc(100% + 20px);
+          transition: $mat-transition height $easing;
+        }
+        :host.vertical & {
+          width: 100%;
+          transition: $mat-transition width $easing;
+        }
+      }
+      .flag {
+        :host:not(.vertical) & {
+          height: 23px;
+          transition: $mat-transition height $mat-transition-acceleration
+                  (math.div($mat-transition, 100) * 65);
+        }
+        :host.vertical & {
+          width: 23px;
+          transition: $mat-transition width $mat-transition-acceleration
+                  (math.div($mat-transition, 100) * 65);
+        }
+      }
+    }
+  }
+}
+
+.tab-indicator {
+  display: none;
+  transform-origin: left center;
+  background: $mat-blue-500;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: $tab-indicator-height;
+  position: absolute;
+  transition: transform $mat-transition-standard $mat-transition-slow;
+}
